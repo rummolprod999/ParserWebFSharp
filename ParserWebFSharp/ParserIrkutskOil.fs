@@ -5,10 +5,10 @@ open AngleSharp.Dom
 open AngleSharp.Parser.Html
 
 type ParserIrkutskOil(stn : Settings.T) = 
-    inherit Parser("«Иркутская нефтяная компания»","https://tenders.irkutskoil.ru/tenders.php")
+    inherit Parser()
     let set = stn
     let url = "https://tenders.irkutskoil.ru/tenders.php"
-    static member val tenderCount = ref 0
+    
     override this.Parsing() = 
         let Page = Download.DownloadString url
         match Page with
@@ -28,5 +28,11 @@ type ParserIrkutskOil(stn : Settings.T) =
         let  urlT = match t.QuerySelector("td a") with
                     | null -> ""
                     | ur -> ur.GetAttribute("href").Trim()
-        printfn "%s" urlT
+        match urlT with
+        | "" -> Logging.Log.logger("Can not find href on page ", url)
+        | url ->
+            try
+                let T = TenderIrkutskOil(stn, url)
+                T.Parsing()
+            with ex -> Logging.Log.logger(ex, url)
         ()      

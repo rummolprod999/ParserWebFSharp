@@ -33,4 +33,4 @@ type Init(s : Settings.T, arg : Arguments) =
            P.Parsing()
        with ex -> Logging.Log.logger ex
        Logging.Log.logger "Конец парсинга"
-       Logging.Log.logger (sprintf "Добавили тендеров %d" !ParserIrkutskOil.tenderCount)
+       Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderIrkutskOil.tenderCount)

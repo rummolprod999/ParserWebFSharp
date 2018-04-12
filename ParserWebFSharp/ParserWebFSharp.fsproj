@@ -4,11 +4,15 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AbstractParser.fs" />
+    <Compile Include="ToolsFun.fs" />
+    <Compile Include="TypeExtensions.fs" />
     <Compile Include="TypesForParsing.fs" />
     <Compile Include="Settings.fs" />
     <Compile Include="Logging.fs" />
     <Compile Include="HttpLibrary.fs" />
+    <Compile Include="AbstractParser.fs" />
+    <Compile Include="AbstractTender.fs" />
+    <Compile Include="TenderIrkutskOil.fs" />
     <Compile Include="ParserIrkutskOil.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />

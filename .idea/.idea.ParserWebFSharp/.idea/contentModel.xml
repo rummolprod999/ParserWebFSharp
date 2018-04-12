@@ -18,6 +18,7 @@
     <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p="ParserWebFSharp" t="IncludeRecursive">
         <e p="AbstractParser.fs" t="Include" />
+        <e p="AbstractTender.fs" t="Include" />
         <e p="HttpLibrary.fs" t="Include" />
         <e p="Init.fs" t="Include" />
         <e p="Logging.fs" t="Include" />
@@ -25,6 +26,9 @@
         <e p="ParserWebFSharp.fsproj" t="IncludeRecursive" />
         <e p="Program.fs" t="Include" />
         <e p="Settings.fs" t="Include" />
+        <e p="TenderIrkutskOil.fs" t="Include" />
+        <e p="ToolsFun.fs" t="Include" />
+        <e p="TypeExtensions.fs" t="Include" />
         <e p="TypesForParsing.fs" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="docs" t="Include" />
