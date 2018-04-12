@@ -244,7 +244,7 @@ type TenderIrkutskOil(stn : Settings.T, urlT : string) =
                             stn.Prefix
                     let cmd20 = new MySqlCommand(insertDoc, con)
                     cmd20.Prepare()
-                    cmd20.Parameters.AddWithValue("@id_tender", idTender) |> ignore
+                    cmd20.Parameters.AddWithValue("@id_tender", !idTender) |> ignore
                     cmd20.Parameters.AddWithValue("@file_name", nameF) |> ignore
                     cmd20.Parameters.AddWithValue("@url", urlAtt) |> ignore
                     cmd20.ExecuteNonQuery() |> ignore
