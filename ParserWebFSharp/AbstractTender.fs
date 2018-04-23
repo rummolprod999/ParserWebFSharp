@@ -1,5 +1,6 @@
 namespace ParserWeb
 
+open AngleSharp.Dom
 open MySql.Data.MySqlClient
 open System.Data
 open System.IO
@@ -44,7 +45,12 @@ type Tender =
             let idEtp = int cmd7.LastInsertedId
             idEtp
     
-    member this.AddVerNumber (con : MySqlConnection) (pn : string) (stn : Settings.T) (typeFz : int): unit = 
+    member this.GetDefaultFromNull(e : IElement) = 
+        match e with
+        | null -> ""
+        | _ -> e.TextContent.Trim()
+    
+    member this.AddVerNumber (con : MySqlConnection) (pn : string) (stn : Settings.T) (typeFz : int) : unit = 
         let verNum = ref 1
         let selectTenders = 
             sprintf 

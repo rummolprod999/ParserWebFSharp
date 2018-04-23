@@ -1,4 +1,5 @@
 namespace ParserWeb
+
 open System
 open System.IO
 
@@ -19,18 +20,34 @@ type Init(s : Settings.T, arg : Arguments) =
             | false -> Directory.CreateDirectory(s.LogPathTenders) |> ignore
             | true -> ()
         match arg with
-        | IrkutskOil -> Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg <| DateTime.Now.ToString("dd_MM_yyyy")
-        
+        | IrkutskOil -> 
+            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
+                               <| DateTime.Now.ToString("dd_MM_yyyy")
+        | Akd -> 
+            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
+                               <| DateTime.Now.ToString("dd_MM_yyyy")
     
     member public this.Parsing() = 
         match arg with
         | IrkutskOil -> this.ParsingIrkutsk()
-            
-    member private this.ParsingIrkutsk() =
-       Logging.Log.logger "Начало парсинга"
-       try
-           let P = ParserIrkutskOil(s)
-           P.Parsing()
-       with ex -> Logging.Log.logger ex
-       Logging.Log.logger "Конец парсинга"
-       Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderIrkutskOil.tenderCount)
+        | Akd -> this.ParsingAkd()
+    
+    member private this.ParsingIrkutsk() = 
+        Logging.Log.logger "Начало парсинга"
+        try 
+            this.GetParser(ParserIrkutskOil(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderIrkutskOil.tenderCount)
+    
+    member private this.ParsingAkd() = 
+        Logging.Log.logger "Начало парсинга"
+        try 
+            this.GetParser(ParserAkd(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderAkd.tenderCount)
+    
+    member private this.GetParser( p : Parser) =
+        p.Parsing()
+        

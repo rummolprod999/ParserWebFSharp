@@ -14,6 +14,8 @@
     <Compile Include="AbstractTender.fs" />
     <Compile Include="TenderIrkutskOil.fs" />
     <Compile Include="ParserIrkutskOil.fs" />
+    <Compile Include="TenderAkd.fs" />
+    <Compile Include="ParserAkd.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

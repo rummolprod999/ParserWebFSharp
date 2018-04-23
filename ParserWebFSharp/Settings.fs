@@ -22,10 +22,12 @@ module Settings =
           Port : int
           ConStr : string }
     
-    let getSettings (arg: Arguments) : T = 
+    let getSettings (arg : Arguments) : T = 
         let mutable Database = ""
         let mutable TempPathTendersIrkutskOil = ""
         let mutable LogPathTendersIrkutskOil = ""
+        let mutable TempPathTendersAkd = ""
+        let mutable LogPathTendersAkd = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -39,23 +41,37 @@ module Settings =
                 if (xnode :?> XmlNode).Name = "database" then Database <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_irkutskoil" then 
                     TempPathTendersIrkutskOil <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
-                                           (xnode :?> XmlNode).InnerText
+                                                     (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_irkutskoil" then 
                     LogPathTendersIrkutskOil <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
-                                          (xnode :?> XmlNode).InnerText
+                                                    (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_akd" then 
+                    TempPathTendersAkd <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                     (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_akd" then 
+                    LogPathTendersAkd <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                    (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "server" then Server <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "port" then Port <- Int32.Parse((xnode :?> XmlNode).InnerText)
+                else 
+                    if (xnode :?> XmlNode).Name = "port" then Port <- Int32.Parse((xnode :?> XmlNode).InnerText)
             let connectstring = 
                 sprintf 
                     "Server=%s;port=%d;Database=%s;User Id=%s;password=%s;CharSet=utf8;Convert Zero Datetime=True;default command timeout=3600;Connection Timeout=3600" 
                     Server Port Database UserDb PassDb
-            let TempPathTenders = match arg with
-                                  | IrkutskOil -> TempPathTendersIrkutskOil
-            let LogPathTenders = match arg with
-                                  | IrkutskOil -> LogPathTendersIrkutskOil
+            
+            let TempPathTenders = 
+                match arg with
+                | IrkutskOil -> TempPathTendersIrkutskOil
+                | Akd -> TempPathTendersAkd
+            
+            let LogPathTenders = 
+                match arg with
+                | IrkutskOil -> LogPathTendersIrkutskOil
+                | Akd -> LogPathTendersAkd
+            
             { Database = Database
               TempPathTenders = TempPathTenders
               LogPathTenders = LogPathTenders
@@ -66,7 +82,8 @@ module Settings =
               Port = Port
               ConStr = connectstring }
         else 
-            printf "Bad file settings, goodbye" ; Environment.Exit(1)
+            printf "Bad file settings, goodbye"
+            Environment.Exit(1)
             { Database = Database
               TempPathTenders = ""
               LogPathTenders = ""
