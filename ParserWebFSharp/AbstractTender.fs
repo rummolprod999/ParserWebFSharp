@@ -20,6 +20,7 @@ type Tender =
     member this.EtpUrl = this.etpUrl
     abstract Parsing : unit -> unit
     abstract GetEtp : con:MySqlConnection -> Settings.T -> int
+    abstract GetPlacingWay : con:MySqlConnection -> string -> Settings.T -> int
     
     default this.GetEtp (con : MySqlConnection) (stn : Settings.T) : int = 
         let selectEtp = sprintf "SELECT id_etp FROM %setp WHERE name = @name AND url = @url" stn.Prefix
@@ -45,10 +46,45 @@ type Tender =
             let idEtp = int cmd7.LastInsertedId
             idEtp
     
+    default this.GetPlacingWay (con : MySqlConnection) (placingWayName : string) (stn : Settings.T) : int = 
+        let selectPlacingWay = sprintf "SELECT id_placing_way FROM %splacing_way WHERE name= @name" stn.Prefix
+        let cmd6 = new MySqlCommand(selectPlacingWay, con)
+        cmd6.Prepare()
+        cmd6.Parameters.AddWithValue("@name", placingWayName) |> ignore
+        let reader3 = cmd6.ExecuteReader()
+        match reader3.HasRows with
+        | true -> 
+            reader3.Read() |> ignore
+            let idPlacingWay = reader3.GetInt32("id_placing_way")
+            reader3.Close()
+            idPlacingWay
+        | false -> 
+            reader3.Close()
+            let conf = this.GetConformity placingWayName
+            let insertPlacingWay = 
+                sprintf "INSERT INTO %splacing_way SET name= @name, conformity = @conformity" stn.Prefix
+            let cmd7 = new MySqlCommand(insertPlacingWay, con)
+            cmd7.Prepare()
+            cmd7.Parameters.AddWithValue("@name", placingWayName) |> ignore
+            cmd7.Parameters.AddWithValue("@conformity", conf) |> ignore
+            cmd7.ExecuteNonQuery() |> ignore
+            let idPlacingWay = int cmd7.LastInsertedId
+            idPlacingWay
+    
     member this.GetDefaultFromNull(e : IElement) = 
         match e with
         | null -> ""
         | _ -> e.TextContent.Trim()
+    
+    member this.GetConformity(s : string) : int = 
+        let sLower = s.ToLower()
+        match sLower with
+        | s when s.Contains("открыт") -> 5
+        | s when s.Contains("аукцион") -> 1
+        | s when s.Contains("котиров") -> 2
+        | s when s.Contains("предложен") -> 3
+        | s when s.Contains("единств") -> 4
+        | _ -> 6
     
     member this.AddVerNumber (con : MySqlConnection) (pn : string) (stn : Settings.T) (typeFz : int) : unit = 
         let verNum = ref 1
