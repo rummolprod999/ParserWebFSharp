@@ -17,7 +17,7 @@ type ParserLsr(stn : Settings.T) =
     let options = ChromeOptions()
 
     do 
-        //options.AddArguments("headless")
+        options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
         
@@ -38,14 +38,15 @@ type ParserLsr(stn : Settings.T) =
         let wait = WebDriverWait(dr, timeoutB)
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[@id = 'tenders_search_btn']")).Displayed) |> ignore
         let btn = dr.FindElement(By.XPath("//a[@id = 'tenders_search_btn']"))
+        Thread.Sleep(2000)
         btn.Click()
-        for i in 1..2 do
-            wait.Until(fun dr -> dr.FindElement(By.XPath("//a[@id = 'tenders_search_btn']")).Displayed) |> ignore
+        for i in 1..20 do
+            //wait.Until(fun dr -> dr.FindElement(By.XPath("//a[@id = 'tenders_search_btn']")).Displayed) |> ignore
             let btn = dr.FindElement(By.XPath("//a[@id = 'tenders_search_btn']"))
             btn.Click()
-            Thread.Sleep(1000)
+            Thread.Sleep(2000)
             
-        let tenders = dr.FindElementsByXPath("//table[id = 'tenders_search_res']/tbody/tr[position() > 1]")
+        let tenders = dr.FindElementsByXPath("//table[@id = 'tenders_search_res']/tbody/tr[position() > 1]")
         for elem in tenders do 
             try 
                 this.ParserTender elem
@@ -53,9 +54,19 @@ type ParserLsr(stn : Settings.T) =
         ()
     
     member private this.ParserTender(el: IWebElement) =
-        let hrefT = el.FindElement(By.XPath("//td[1]/a"))
-        let hrefS = match hrefT with 
-                    | null -> ""
+        let hrefT = el.FindElement(By.XPath(".//td[1]/a"))
+        let href = match hrefT with 
+                    | null -> raise <| System.NullReferenceException(sprintf "href not found in %s" url)
                     | x -> x.GetAttribute("href")
-        printfn "%s" hrefS
+        let placingWay = this.GetDefaultFromNull <| el.FindElement(By.XPath(".//td[1]/a/b"))
+        let purNumT = el.FindElement(By.XPath(".//td[2]//span[contains(concat(' ', @class, ' '), ' number ')]"))
+        let purNum = match purNumT with 
+                            | null -> raise <| System.NullReferenceException(sprintf "purNum not found in %s" url)
+                            | x -> x.Text.Replace("№", "").Trim()
+        let purName = this.GetDefaultFromNull <| el.FindElement(By.XPath(".//td[2]//span[@class = 'name']"))
+        let fullNameOrg = this.GetDefaultFromNull <| el.FindElement(By.XPath(".//td[3]//span[@class = 'day']"))
+        printfn "%s" href
+        printfn "%s" placingWay
+        printfn "%s" purNum
+        printfn "%s" purName
         ()
