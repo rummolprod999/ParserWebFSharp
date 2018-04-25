@@ -276,8 +276,9 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
                     cmd14.ExecuteNonQuery() |> ignore
                     idCustomer := int cmd14.LastInsertedId
             let insertLotitem = 
-                            sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum" 
-                                stn.Prefix
+                sprintf 
+                    "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum" 
+                    stn.Prefix
             let cmd19 = new MySqlCommand(insertLotitem, con)
             cmd19.Prepare()
             cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
@@ -287,8 +288,28 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
             cmd19.ExecuteNonQuery() |> ignore
             let delivTerm = this.GetDefaultFromNull <| doc.QuerySelector("th:contains('Сроки исполнения') + td")
             let delivTerm1 = this.GetDefaultFromNull <| doc.QuerySelector("th:contains('Сроки и условия оплаты') + td")
-            match (delivTerm, delivTerm1) with 
+            match (delivTerm, delivTerm1) with
             | (x, y) & ("", "") -> ()
-            | (x, y) -> let deliv = sprintf "Сроки исполнения: %s \n Сроки и условия оплаты: %s" x y
-                        ()
+            | (x, y) -> 
+                let deliv = sprintf "Сроки исполнения: %s \n Сроки и условия оплаты: %s" x y
+                let insertCustomerRequirement = 
+                    sprintf 
+                        "INSERT INTO %scustomer_requirement SET id_lot = @id_lot, id_customer = @id_customer, delivery_term = @delivery_term" 
+                        stn.Prefix
+                let cmd16 = new MySqlCommand(insertCustomerRequirement, con)
+                cmd16.Prepare()
+                cmd16.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+                cmd16.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
+                cmd16.Parameters.AddWithValue("@delivery_term", deliv) |> ignore
+                cmd16.ExecuteNonQuery() |> ignore
+            try 
+                this.AddVerNumber con purNum stn typeFz
+            with ex -> 
+                Logging.Log.logger "Ошибка добавления версий тендера"
+                Logging.Log.logger ex
+            try 
+                this.TenderKwords con (!idTender) stn
+            with ex -> 
+                Logging.Log.logger "Ошибка добавления kwords тендера"
+                Logging.Log.logger ex
             ()
