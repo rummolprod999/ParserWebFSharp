@@ -28,6 +28,8 @@ module Settings =
         let mutable LogPathTendersIrkutskOil = ""
         let mutable TempPathTendersAkd = ""
         let mutable LogPathTendersAkd = ""
+        let mutable TempPathTendersLsr = ""
+        let mutable LogPathTendersLsr = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -47,10 +49,16 @@ module Settings =
                                                     (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_akd" then 
                     TempPathTendersAkd <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
-                                                     (xnode :?> XmlNode).InnerText
+                                              (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_akd" then 
                     LogPathTendersAkd <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
-                                                    (xnode :?> XmlNode).InnerText
+                                             (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_lsrgroup" then 
+                    TempPathTendersLsr <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                              (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_lsrgroup" then 
+                    LogPathTendersLsr <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                             (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -66,11 +74,13 @@ module Settings =
                 match arg with
                 | IrkutskOil -> TempPathTendersIrkutskOil
                 | Akd -> TempPathTendersAkd
+                | Lsr -> TempPathTendersLsr
             
             let LogPathTenders = 
                 match arg with
                 | IrkutskOil -> LogPathTendersIrkutskOil
                 | Akd -> LogPathTendersAkd
+                | Lsr -> LogPathTendersLsr
             
             { Database = Database
               TempPathTenders = TempPathTenders

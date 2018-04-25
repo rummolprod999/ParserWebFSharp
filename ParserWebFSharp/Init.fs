@@ -26,11 +26,15 @@ type Init(s : Settings.T, arg : Arguments) =
         | Akd -> 
             Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
                                <| DateTime.Now.ToString("dd_MM_yyyy")
+        | Lsr -> 
+                    Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
+                                       <| DateTime.Now.ToString("dd_MM_yyyy")
     
     member public this.Parsing() = 
         match arg with
         | IrkutskOil -> this.ParsingIrkutsk()
         | Akd -> this.ParsingAkd()
+        | Lsr -> this.ParsingLsr()
     
     member private this.ParsingIrkutsk() = 
         Logging.Log.logger "Начало парсинга"
@@ -47,6 +51,14 @@ type Init(s : Settings.T, arg : Arguments) =
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderAkd.tenderCount)
+    
+    member private this.ParsingLsr() = 
+            Logging.Log.logger "Начало парсинга"
+            try 
+                this.GetParser(ParserLsr(s))
+            with ex -> Logging.Log.logger ex
+            Logging.Log.logger "Конец парсинга"
+            Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderLsr.tenderCount)
     
     member private this.GetParser( p : Parser) =
         p.Parsing()
