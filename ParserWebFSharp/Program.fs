@@ -6,7 +6,7 @@ open System
 module Start = 
     [<EntryPoint>]
     let main argv = 
-        let arguments = "irkutskoil, akd, lsr"
+        let arguments = "irkutskoil, akd, lsr, butb"
         if argv.Length = 0 then 
             printf "Bad arguments, use %s" arguments
             Environment.Exit(1)
@@ -22,6 +22,10 @@ module Start =
         | "lsr" -> 
             let settings = Settings.getSettings (Lsr)
             let p = Init(settings, Lsr)
+            p.Parsing()
+        | "butb" -> 
+            let settings = Settings.getSettings (Butb)
+            let p = Init(settings, Butb)
             p.Parsing()
         | _ -> 
             printf "Bad arguments, use %s" arguments

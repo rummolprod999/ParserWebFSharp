@@ -12,7 +12,7 @@ open System.Threading
 type ParserLsr(stn : Settings.T) = 
     inherit Parser()
     let set = stn
-    let timeoutB = TimeSpan.FromMilliseconds(30000.)
+    let timeoutB = TimeSpan.FromSeconds(300.)
     let url = "http://zakupki.lsrgroup.ru/search"
     let options = ChromeOptions()
     

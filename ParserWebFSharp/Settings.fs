@@ -30,6 +30,8 @@ module Settings =
         let mutable LogPathTendersAkd = ""
         let mutable TempPathTendersLsr = ""
         let mutable LogPathTendersLsr = ""
+        let mutable TempPathTendersButb = ""
+        let mutable LogPathTendersButb = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -59,6 +61,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_lsrgroup" then 
                     LogPathTendersLsr <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
                                              (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_butb" then 
+                    TempPathTendersButb <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                               (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_butb" then 
+                    LogPathTendersButb <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                              (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -75,12 +83,14 @@ module Settings =
                 | IrkutskOil -> TempPathTendersIrkutskOil
                 | Akd -> TempPathTendersAkd
                 | Lsr -> TempPathTendersLsr
+                | Butb -> TempPathTendersButb
             
             let LogPathTenders = 
                 match arg with
                 | IrkutskOil -> LogPathTendersIrkutskOil
                 | Akd -> LogPathTendersAkd
                 | Lsr -> LogPathTendersLsr
+                | Butb -> LogPathTendersButb
             
             { Database = Database
               TempPathTenders = TempPathTenders

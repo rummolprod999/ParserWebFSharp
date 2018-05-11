@@ -18,6 +18,8 @@
     <Compile Include="ParserAkd.fs" />
     <Compile Include="TenderLsr.fs" />
     <Compile Include="ParserLsr.fs" />
+    <Compile Include="TenderButb.fs" />
+    <Compile Include="ParserButb.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
@@ -28,6 +30,6 @@
     <PackageReference Include="HtmlAgilityPack" Version="1.8.1" />
     <PackageReference Include="Microsoft.NETCore.App" Version="2.0.7" />
     <PackageReference Include="MySql.Data" Version="8.0.11" />
-    <PackageReference Include="Selenium.WebDriver" Version="3.11.2" />
+    <PackageReference Include="Selenium.WebDriver" Version="3.12.0" />
   </ItemGroup>
 </Project>
