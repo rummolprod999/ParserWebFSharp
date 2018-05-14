@@ -14,6 +14,7 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
     let settings = stn
     let typeFz = 36
     static member val tenderCount = ref 0
+    
     override this.Parsing() = 
         let dateUpd = datePub
         use con = new MySqlConnection(stn.ConStr)
@@ -61,11 +62,102 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
             adapter.Update(dt) |> ignore
             let Printform = "http://zakupki.butb.by/auctions/reestrauctions.html"
             let IdOrg = ref 0
+            wait.Until(fun dr -> dr.FindElement(By.XPath("//tr[contains(., 'Сведения об организаторе')]/following-sibling::tr[contains(., 'Полное наименование')]/td[2]")).Displayed) |> ignore
             let OrgName = 
                 this.GetDefaultFromNullS 
-                <| driver.FindElement
-                       (By.XPath
-                            (String.Format("//table[contains(@id, 'auctionList')]/tbody/tr[{0}]/td[8]/span[1]", page)))
+                <| this.checkElement 
+                       (driver, 
+                        "//tr[contains(., 'Сведения об организаторе')]/following-sibling::tr[contains(., 'Полное наименование')]/td[2]")
+            match OrgName with
+            | "" -> ()
+            | x -> 
+                let selectOrg = sprintf "SELECT id_organizer FROM %sorganizer WHERE full_name = @full_name" stn.Prefix
+                let cmd3 = new MySqlCommand(selectOrg, con)
+                cmd3.Prepare()
+                cmd3.Parameters.AddWithValue("@full_name", OrgName) |> ignore
+                let reader = cmd3.ExecuteReader()
+                match reader.HasRows with
+                | true -> 
+                    reader.Read() |> ignore
+                    IdOrg := reader.GetInt32("id_organizer")
+                    reader.Close()
+                | false -> 
+                    reader.Close()
+                    let addOrganizer = 
+                        sprintf 
+                            "INSERT INTO %sorganizer SET full_name = @full_name, contact_person = @contact_person, post_address = @post_address, fact_address = @fact_address, contact_email = @contact_email, inn = @inn" 
+                            stn.Prefix
+                    let postAddress = ""
+                    let contactPerson = ""
+                    let factAddress = 
+                        this.GetDefaultFromNullS 
+                        <| this.checkElement 
+                               (driver, 
+                                "//tr[contains(., 'Сведения об организаторе')]/following-sibling::tr[contains(., 'Место нахождения')]/td[2]")
+                    let inn = 
+                        this.GetDefaultFromNullS 
+                        <| this.checkElement 
+                               (driver, 
+                                "//tr[contains(., 'Сведения об организаторе')]/following-sibling::tr[contains(., 'УНП')]/td[2]")
+                    let email = 
+                        this.GetDefaultFromNullS 
+                        <| this.checkElement 
+                               (driver, 
+                                "//tr[contains(., 'Сведения об организаторе')]/following-sibling::tr[contains(., 'Адрес электронной почты')]/td[2]")
+                    let cmd5 = new MySqlCommand(addOrganizer, con)
+                    cmd5.Parameters.AddWithValue("@full_name", OrgName) |> ignore
+                    cmd5.Parameters.AddWithValue("@contact_person", contactPerson) |> ignore
+                    cmd5.Parameters.AddWithValue("@post_address", postAddress) |> ignore
+                    cmd5.Parameters.AddWithValue("@fact_address", factAddress) |> ignore
+                    cmd5.Parameters.AddWithValue("@contact_email", email) |> ignore
+                    cmd5.Parameters.AddWithValue("@inn", inn) |> ignore
+                    cmd5.ExecuteNonQuery() |> ignore
+                    IdOrg := int cmd5.LastInsertedId
+                    ()
+            let idPlacingWay = ref 0
+            let PlacingWayName = 
+                this.GetDefaultFromNullS 
+                <| this.checkElement (driver, "//tr[contains(., 'Регистрационный номер')]/following-sibling::tr[contains(., 'Вид процедуры закупки')]/td[2]")
+            match PlacingWayName with
+            | "" -> ()
+            | x -> idPlacingWay := this.GetPlacingWay con PlacingWayName settings
+            let idEtp = this.GetEtp con settings
+            let numVersion = 1
+            let mutable idRegion = 0
+            let purName = 
+                this.GetDefaultFromNullS 
+                <| this.checkElement (driver, "//tr[contains(., 'Вид закупки')]/following-sibling::tr[contains(., 'Наименование закупки')]/td[2]")
+            let href = "http://zakupki.butb.by/auctions/viewinvitation.html"
+            let insertTender = 
+                String.Format
+                    ("INSERT INTO {0}tender SET id_xml = @id_xml, purchase_number = @purchase_number, doc_publish_date = @doc_publish_date, href = @href, purchase_object_info = @purchase_object_info, type_fz = @type_fz, id_organizer = @id_organizer, id_placing_way = @id_placing_way, id_etp = @id_etp, end_date = @end_date, scoring_date = @scoring_date, bidding_date = @bidding_date, cancel = @cancel, date_version = @date_version, num_version = @num_version, notice_version = @notice_version, xml = @xml, print_form = @print_form, id_region = @id_region", 
+                     stn.Prefix)
+            let cmd9 = new MySqlCommand(insertTender, con)
+            cmd9.Prepare()
+            cmd9.Parameters.AddWithValue("@id_xml", purNum) |> ignore
+            cmd9.Parameters.AddWithValue("@purchase_number", purNum) |> ignore
+            cmd9.Parameters.AddWithValue("@doc_publish_date", datePub) |> ignore
+            cmd9.Parameters.AddWithValue("@href", href) |> ignore
+            cmd9.Parameters.AddWithValue("@purchase_object_info", purName) |> ignore
+            cmd9.Parameters.AddWithValue("@type_fz", typeFz) |> ignore
+            cmd9.Parameters.AddWithValue("@id_organizer", !IdOrg) |> ignore
+            cmd9.Parameters.AddWithValue("@id_placing_way", !idPlacingWay) |> ignore
+            cmd9.Parameters.AddWithValue("@id_etp", idEtp) |> ignore
+            cmd9.Parameters.AddWithValue("@end_date", endDate) |> ignore
+            cmd9.Parameters.AddWithValue("@scoring_date", DateTime.MinValue) |> ignore
+            cmd9.Parameters.AddWithValue("@bidding_date", biddingDate) |> ignore
+            cmd9.Parameters.AddWithValue("@cancel", cancelStatus) |> ignore
+            cmd9.Parameters.AddWithValue("@date_version", dateUpd) |> ignore
+            cmd9.Parameters.AddWithValue("@num_version", numVersion) |> ignore
+            cmd9.Parameters.AddWithValue("@notice_version", status) |> ignore
+            cmd9.Parameters.AddWithValue("@xml", href) |> ignore
+            cmd9.Parameters.AddWithValue("@print_form", Printform) |> ignore
+            cmd9.Parameters.AddWithValue("@id_region", idRegion) |> ignore
+            cmd9.ExecuteNonQuery() |> ignore
+            idTender := int cmd9.LastInsertedId
+            incr TenderButb.tenderCount
+            let documents = driver.FindElements(By.XPath("//table[contains(., 'ДОКУМЕНТЫ')]/following-sibling::table[contains(., 'Тип документа')]/tbody/tr"))
+            documents |> Seq.iter (this.ParsingDocs con !idTender)
             try 
                 this.AddVerNumber con purNum stn typeFz
             with ex -> 
@@ -77,4 +169,30 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
                 Logging.Log.logger "Ошибка добавления kwords тендера"
                 Logging.Log.logger ex
             this.Clicker driver "//input[@value = 'Вернуться']"
+            ()
+    
+    member private this.ParsingDocs (con : MySqlConnection) (idTender : int) (elem : IWebElement) = 
+        let docName = this.GetDefaultFromNullS <| this.checkElement (elem, ".//td[3]")
+        match docName with
+        | "" -> ()
+        | x -> 
+            let hrefTT = this.checkElement (elem, ".//td[4]//a")
+            
+            let hrefT = 
+                match hrefTT with
+                | null -> ""
+                | r -> r.GetAttribute("href")
+            
+            let href = sprintf "http://zakupki.butb.by%s" hrefT
+            let descr = this.GetDefaultFromNullS <| this.checkElement (elem, ".//td[2]")
+            let addAttach = 
+                sprintf 
+                    "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url, description = @description" 
+                    stn.Prefix
+            let cmd5 = new MySqlCommand(addAttach, con)
+            cmd5.Parameters.AddWithValue("@id_tender", idTender) |> ignore
+            cmd5.Parameters.AddWithValue("@file_name", x) |> ignore
+            cmd5.Parameters.AddWithValue("@url", href) |> ignore
+            cmd5.Parameters.AddWithValue("@description", descr) |> ignore
+            cmd5.ExecuteNonQuery() |> ignore
         ()

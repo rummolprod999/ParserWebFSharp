@@ -246,6 +246,7 @@ type Tender =
         while breakIt do
             try 
                 driver.FindElement(By.XPath(findPath)).Click()
+                driver.SwitchTo().DefaultContent() |> ignore
                 breakIt <- false
             with
             | ex when ex.Message.Contains("element is not attached") || !count > 30 -> 
@@ -254,6 +255,18 @@ type Tender =
             | _ -> incr count
             
     member this.GetDefaultFromNullS(e : IWebElement) = 
-            match e with
-            | null -> ""
-            | _ -> e.Text.Trim()
+        match e with
+        | null -> ""
+        | _ -> e.Text.Trim()
+    
+    member this.checkElement(driver: ChromeDriver, f : string) : IWebElement =
+        let res = try
+                    driver.FindElement(By.XPath(f))
+                  with ex -> null       
+        res
+    
+    member this.checkElement(driver: IWebElement, f : string) : IWebElement =
+        let res = try
+                    driver.FindElement(By.XPath(f))
+                  with ex -> null       
+        res
