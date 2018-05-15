@@ -7,6 +7,7 @@ open OpenQA.Selenium.Support.UI
 open System
 open System.Data
 open System.Linq
+open System.Threading
 open TypeE
 
 type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate : DateTime, biddingDate : DateTime, driver : ChromeDriver, wait : WebDriverWait, page : int, status : string) = 
@@ -62,7 +63,7 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
             adapter.Update(dt) |> ignore
             let Printform = "http://zakupki.butb.by/auctions/reestrauctions.html"
             let IdOrg = ref 0
-            wait.Until(fun dr -> dr.FindElement(By.XPath("//tr[contains(., 'Сведения об организаторе')]/following-sibling::tr[contains(., 'Полное наименование')]/td[2]")).Displayed) |> ignore
+            (*wait.Until(fun dr -> dr.FindElement(By.XPath("//tr[contains(., 'Сведения об организаторе')]/following-sibling::tr[contains(., 'Полное наименование')]/td[2]")).Displayed) |> ignore*)
             let OrgName = 
                 this.GetDefaultFromNullS 
                 <| this.checkElement 
@@ -117,7 +118,9 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
             let idPlacingWay = ref 0
             let PlacingWayName = 
                 this.GetDefaultFromNullS 
-                <| this.checkElement (driver, "//tr[contains(., 'Регистрационный номер')]/following-sibling::tr[contains(., 'Вид процедуры закупки')]/td[2]")
+                <| this.checkElement 
+                       (driver, 
+                        "//tr[contains(., 'Регистрационный номер')]/following-sibling::tr[contains(., 'Вид процедуры закупки')]/td[2]")
             match PlacingWayName with
             | "" -> ()
             | x -> idPlacingWay := this.GetPlacingWay con PlacingWayName settings
@@ -126,7 +129,9 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
             let mutable idRegion = 0
             let purName = 
                 this.GetDefaultFromNullS 
-                <| this.checkElement (driver, "//tr[contains(., 'Вид закупки')]/following-sibling::tr[contains(., 'Наименование закупки')]/td[2]")
+                <| this.checkElement 
+                       (driver, 
+                        "//tr[contains(., 'Вид закупки')]/following-sibling::tr[contains(., 'Наименование закупки')]/td[2]")
             let href = "http://zakupki.butb.by/auctions/viewinvitation.html"
             let insertTender = 
                 String.Format
@@ -156,8 +161,100 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
             cmd9.ExecuteNonQuery() |> ignore
             idTender := int cmd9.LastInsertedId
             incr TenderButb.tenderCount
-            let documents = driver.FindElements(By.XPath("//table[contains(., 'ДОКУМЕНТЫ')]/following-sibling::table[contains(., 'Тип документа')]/tbody/tr"))
+            let documents = 
+                driver.FindElements
+                    (By.XPath
+                         ("//table[contains(., 'ДОКУМЕНТЫ')]/following-sibling::table[contains(., 'Тип документа')]/tbody/tr"))
             documents |> Seq.iter (this.ParsingDocs con !idTender)
+            let cusInn = 
+                this.GetDefaultFromNullS 
+                <| this.checkElement 
+                       (driver, 
+                        "//tr[contains(., 'Сведения о заказчике')]/following-sibling::tr[contains(., 'УНП')]/td[2]")
+            let idCustomer = ref 0
+            match cusInn with
+            | "" -> ()
+            | xc -> 
+                let CustomerName = 
+                    this.GetDefaultFromNullS 
+                    <| this.checkElement 
+                           (driver, 
+                            "//tr[contains(., 'Сведения о заказчике')]/following-sibling::tr[contains(., 'Полное наименование')]/td[2]")
+                if CustomerName <> "" then 
+                    let selectCustomer = 
+                        sprintf "SELECT id_customer FROM %scustomer WHERE full_name = @full_name" stn.Prefix
+                    let cmd3 = new MySqlCommand(selectCustomer, con)
+                    cmd3.Prepare()
+                    cmd3.Parameters.AddWithValue("@full_name", CustomerName) |> ignore
+                    let reader = cmd3.ExecuteReader()
+                    match reader.HasRows with
+                    | true -> 
+                        reader.Read() |> ignore
+                        idCustomer := reader.GetInt32("id_customer")
+                        reader.Close()
+                    | false -> 
+                        reader.Close()
+                        let insertCustomer = 
+                            sprintf "INSERT INTO %scustomer SET reg_num = @reg_num, full_name = @full_name, inn = @inn" 
+                                stn.Prefix
+                        let RegNum = Guid.NewGuid().ToString()
+                        let cmd14 = new MySqlCommand(insertCustomer, con)
+                        cmd14.Prepare()
+                        cmd14.Parameters.AddWithValue("@reg_num", RegNum) |> ignore
+                        cmd14.Parameters.AddWithValue("@full_name", CustomerName) |> ignore
+                        cmd14.Parameters.AddWithValue("@inn", xc) |> ignore
+                        cmd14.ExecuteNonQuery() |> ignore
+                        idCustomer := int cmd14.LastInsertedId
+            let requirement = 
+                this.GetDefaultFromNullS 
+                <| this.checkElement 
+                       (driver, "//tr[contains(., 'Требования к квалификационным данным участников')]/td[2]//textarea")
+            let paginator = this.GetDefaultFromNullS <| this.checkElement (driver, "//span[@class = 'paginator']")
+            match paginator with
+            | "" -> Logging.Log.logger ("can not find lots page count on", purNum)
+            | pg -> 
+                let pageT = 
+                    match this.GetCountPage(pg) with
+                    | None -> 
+                        Logging.Log.logger ("can not find lots page count on", purNum)
+                        "1"
+                    | Some pr -> pr.RegexDeleteWhitespace()
+                
+                let page = Int32.Parse(pageT)
+                if page > 1 then 
+                    try 
+                        let lots = 
+                            driver.FindElements
+                                (By.XPath
+                                     ("//table[contains(., 'СВЕДЕНИЯ О ЛОТЕ')]/following-sibling::table[contains(., '№ лота')]/tbody/tr"))
+                        lots |> Seq.iter (this.GetLots(driver, !idTender, !idCustomer, requirement, con))
+                    with ex -> Logging.Log.logger ex
+                    for pge in 1..(page - 1) do
+                        try 
+                            driver.SwitchTo().DefaultContent() |> ignore
+                            wait.Until
+                                (fun dr -> dr.FindElement(By.XPath("//a[img[@title = 'Следующая страница']]")).Displayed) 
+                            |> ignore
+                            this.Clicker driver "//a[img[@title = 'Следующая страница']]"
+                            Thread.Sleep(5000)
+                            driver.SwitchTo().DefaultContent() |> ignore
+                            try 
+                                let lots = 
+                                    driver.FindElements
+                                        (By.XPath
+                                             ("//table[contains(., 'СВЕДЕНИЯ О ЛОТЕ')]/following-sibling::table[contains(., '№ лота')]/tbody/tr"))
+                                lots |> Seq.iter (this.GetLots(driver, !idTender, !idCustomer, requirement, con))
+                            with ex -> Logging.Log.logger ex
+                        with ex -> Logging.Log.logger ex
+                else 
+                    try 
+                        let lots = 
+                            driver.FindElements
+                                (By.XPath
+                                     ("//table[contains(., 'СВЕДЕНИЯ О ЛОТЕ')]/following-sibling::table[contains(., '№ лота')]/tbody/tr"))
+                        lots |> Seq.iter (this.GetLots(driver, !idTender, !idCustomer, requirement, con))
+                    with ex -> Logging.Log.logger ex
+                ()
             try 
                 this.AddVerNumber con purNum stn typeFz
             with ex -> 
@@ -183,7 +280,7 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
                 | null -> ""
                 | r -> r.GetAttribute("href")
             
-            let href = sprintf "http://zakupki.butb.by%s" hrefT
+            let href = hrefT
             let descr = this.GetDefaultFromNullS <| this.checkElement (elem, ".//td[2]")
             let addAttach = 
                 sprintf 
@@ -196,3 +293,19 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
             cmd5.Parameters.AddWithValue("@description", descr) |> ignore
             cmd5.ExecuteNonQuery() |> ignore
         ()
+    
+    member private this.GetCountPage(input : string) : string option = 
+        match input with
+        | Tools.RegexMatch1 @"Страница.+/.+(\d)." gr1 -> Some(gr1)
+        | _ -> None
+    
+    member private this.GetLots (driver : ChromeDriver, idTender : int, idCustomer : int, requirement : string, 
+                                 con : MySqlConnection) (elem : IWebElement) = 
+        let idLot = ref 0
+        match requirement with
+        | "" -> ()
+        | r -> 
+            let addReq = sprintf "INSERT INTO %srequirement SET id_lot = @id_lot, content = @content" stn.Prefix
+            let cmd = new MySqlCommand(addReq, con)
+            cmd.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+            cmd.Parameters.AddWithValue("@content", requirement) |> ignore

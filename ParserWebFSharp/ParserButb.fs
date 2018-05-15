@@ -23,6 +23,7 @@ type ParserButb(stn : Settings.T) =
     override this.Parsing() = 
         let driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
+        driver.Manage().Window.Maximize()
         try 
             try 
                 this.ParserSelen driver
