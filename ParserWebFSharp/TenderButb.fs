@@ -208,7 +208,7 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
                         cmd14.Prepare()
                         cmd14.Parameters.AddWithValue("@reg_num", RegNum) |> ignore
                         cmd14.Parameters.AddWithValue("@full_name", CustomerName) |> ignore
-                        cmd14.Parameters.AddWithValue("@inn", xc) |> ignore
+                        cmd14.Parameters.AddWithValue("@inn", cusInn) |> ignore
                         cmd14.ExecuteNonQuery() |> ignore
                         idCustomer := int cmd14.LastInsertedId
             let requirement = 
