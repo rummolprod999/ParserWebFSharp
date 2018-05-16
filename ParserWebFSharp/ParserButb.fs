@@ -93,7 +93,8 @@ type ParserButb(stn : Settings.T) =
         //Console.WriteLine(purNum)
         let status = 
             this.GetDefaultFromNull 
-            <| this.checkElement(driver, String.Format("//table[contains(@id, 'auctionList')]/tbody/tr[{0}]/td[11]/span[1]", s))
+            <| this.checkElement 
+                   (driver, String.Format("//table[contains(@id, 'auctionList')]/tbody/tr[{0}]/td[11]/span[1]", s))
         let datePubT = 
             this.GetDefaultFromNull 
             <| driver.FindElement
@@ -132,7 +133,8 @@ type ParserButb(stn : Settings.T) =
         
         let biddingDateT = 
             this.GetDefaultFromNull 
-            <| this.checkElement(driver, String.Format("//table[contains(@id, 'auctionList')]/tbody/tr[{0}]/td[10]/span[1]", s))
+            <| this.checkElement 
+                   (driver, String.Format("//table[contains(@id, 'auctionList')]/tbody/tr[{0}]/td[10]/span[1]", s))
         
         let biddingDateS = 
             match biddingDateT with
@@ -146,6 +148,7 @@ type ParserButb(stn : Settings.T) =
                 match biddingDateS.DateFromString("d.MM.yyyy") with
                 | Some d -> d
                 | None -> DateTime.MinValue
+        
         //Console.WriteLine(datePub)
         //Console.WriteLine(endDate)
         //Console.WriteLine(biddingDate)

@@ -1,2 +1,7 @@
 namespace ParserWeb
-type Arguments = | IrkutskOil | Akd | Lsr | Butb
+
+type Arguments = 
+    | IrkutskOil
+    | Akd
+    | Lsr
+    | Butb

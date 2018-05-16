@@ -38,7 +38,7 @@ type ParserAkd(stn : Settings.T) =
             | null -> ("", "")
             | ur -> (ur.GetAttribute("href").Trim(), ur.TextContent.Trim())
         match urlT with
-        | (_, "") | ("", _)  -> Logging.Log.logger ("Can not find href or purNum on page ", url)
+        | (_, "") | ("", _) -> Logging.Log.logger ("Can not find href or purNum on page ", url)
         | urlTn, purNum -> 
             let urlTen = sprintf "http://www.a-k-d.ru%s" urlTn
             try 

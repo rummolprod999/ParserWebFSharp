@@ -2,12 +2,12 @@ namespace ParserWeb
 
 open AngleSharp.Dom
 open MySql.Data.MySqlClient
+open OpenQA.Selenium
+open OpenQA.Selenium.Chrome
 open System.Data
 open System.IO
 open System.Text
 open System.Text.RegularExpressions
-open OpenQA.Selenium
-open OpenQA.Selenium.Chrome
 
 [<AbstractClass>]
 type Tender = 
@@ -24,7 +24,7 @@ type Tender =
     abstract GetEtp : con:MySqlConnection -> Settings.T -> int
     abstract GetPlacingWay : con:MySqlConnection -> string -> Settings.T -> int
     
-    default this.GetEtp (con : MySqlConnection) (stn : Settings.T) : int = 
+    override this.GetEtp (con : MySqlConnection) (stn : Settings.T) : int = 
         let selectEtp = sprintf "SELECT id_etp FROM %setp WHERE name = @name AND url = @url" stn.Prefix
         let cmd6 = new MySqlCommand(selectEtp, con)
         cmd6.Prepare()
@@ -48,7 +48,7 @@ type Tender =
             let idEtp = int cmd7.LastInsertedId
             idEtp
     
-    default this.GetPlacingWay (con : MySqlConnection) (placingWayName : string) (stn : Settings.T) : int = 
+    override this.GetPlacingWay (con : MySqlConnection) (placingWayName : string) (stn : Settings.T) : int = 
         let selectPlacingWay = sprintf "SELECT id_placing_way FROM %splacing_way WHERE name= @name" stn.Prefix
         let cmd6 = new MySqlCommand(selectPlacingWay, con)
         cmd6.Prepare()
@@ -249,24 +249,26 @@ type Tender =
                 driver.SwitchTo().DefaultContent() |> ignore
                 breakIt <- false
             with
-            | ex when ex.Message.Contains("element is not attached") || !count > 30 -> 
-                breakIt <- true
-                incr count
-            | _ -> incr count
-            
+                | ex when ex.Message.Contains("element is not attached") || !count > 30 -> 
+                    breakIt <- true
+                    incr count
+                | _ -> incr count
+    
     member this.GetDefaultFromNullS(e : IWebElement) = 
         match e with
         | null -> ""
         | _ -> e.Text.Trim()
     
-    member this.checkElement(driver: ChromeDriver, f : string) : IWebElement =
-        let res = try
-                    driver.FindElement(By.XPath(f))
-                  with ex -> null       
+    member this.checkElement (driver : ChromeDriver, f : string) : IWebElement = 
+        let res = 
+            try 
+                driver.FindElement(By.XPath(f))
+            with ex -> null
         res
     
-    member this.checkElement(driver: IWebElement, f : string) : IWebElement =
-        let res = try
-                    driver.FindElement(By.XPath(f))
-                  with ex -> null       
+    member this.checkElement (driver : IWebElement, f : string) : IWebElement = 
+        let res = 
+            try 
+                driver.FindElement(By.XPath(f))
+            with ex -> null
         res

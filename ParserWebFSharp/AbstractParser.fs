@@ -27,8 +27,9 @@ type Parser() =
                 | _ -> incr count
         ()
     
-    member this.checkElement(driver: ChromeDriver, f : string) : IWebElement =
-        let res = try
-                    driver.FindElement(By.XPath(f))
-                  with ex -> null       
+    member this.checkElement (driver : ChromeDriver, f : string) : IWebElement = 
+        let res = 
+            try 
+                driver.FindElement(By.XPath(f))
+            with ex -> null
         res

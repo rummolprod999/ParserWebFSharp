@@ -172,8 +172,13 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
                 <| this.checkElement 
                        (driver, 
                         "//tr[contains(., 'Сведения о заказчике')]/following-sibling::tr[contains(., 'УНП')]/td[2]")
+            let cusAddr = 
+                this.GetDefaultFromNullS 
+                <| this.checkElement 
+                       (driver, 
+                        "//tr[contains(., 'Сведения о заказчике')]/following-sibling::tr[contains(., 'Место нахождения')]/td[2]")
             let idCustomer = ref 0
-            match cusInn with
+            match cusAddr with
             | "" -> ()
             | xc -> 
                 let CustomerName = 

@@ -18,7 +18,7 @@ module Download =
         override this.GetWebRequest(address : Uri) = 
             let wr = base.GetWebRequest(address) :?> HttpWebRequest
             wr.Timeout <- 600000
-            wr.UserAgent <- "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:55.0) Gecko/20100101 Firefox/55.0";
+            wr.UserAgent <- "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:55.0) Gecko/20100101 Firefox/55.0"
             wr :> WebRequest
     
     let DownloadString url = 
