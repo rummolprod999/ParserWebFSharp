@@ -7,6 +7,7 @@ open OpenQA.Selenium.Support.UI
 open System
 open System.Data
 open System.Linq
+open System.Text.RegularExpressions
 open System.Threading
 open TypeE
 
@@ -207,9 +208,18 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
                         idCustomer := int cmd14.LastInsertedId
             let requirement = 
                 this.GetDefaultFromNullS 
-                <| this.checkElement 
-                       (driver, "//tr[contains(., 'Требования к квалификационным данным участников')]/td[2]//textarea")
+                <| this.checkElement (driver, "//tr[contains(., 'Требования к составу участников')]/td[2]//textarea")
             let paginator = this.GetDefaultFromNullS <| this.checkElement (driver, "//span[@class = 'paginator']")
+            let pricecheckT = 
+                this.GetDefaultFromNullS 
+                <| this.checkElement 
+                       (driver, 
+                        "//table[contains(., 'СВЕДЕНИЯ О ЛОТЕ')]/following-sibling::table[contains(., 'Стоимость,')]/tbody/tr")
+            
+            let pricecheck = 
+                match pricecheckT with
+                | "" -> false
+                | _ -> true
             match paginator with
             | "" -> Logging.Log.logger ("can not find lots page count on", purNum)
             | pg -> 
@@ -227,7 +237,7 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
                             driver.FindElements
                                 (By.XPath
                                      ("//table[contains(., 'СВЕДЕНИЯ О ЛОТЕ')]/following-sibling::table[contains(., '№ лота')]/tbody/tr"))
-                        lots |> Seq.iter (this.GetLots(driver, !idTender, !idCustomer, requirement, con))
+                        lots |> Seq.iter (this.GetLots(driver, !idTender, !idCustomer, requirement, con, pricecheck))
                     with ex -> Logging.Log.logger ex
                     for pge in 1..(page - 1) do
                         try 
@@ -243,7 +253,8 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
                                     driver.FindElements
                                         (By.XPath
                                              ("//table[contains(., 'СВЕДЕНИЯ О ЛОТЕ')]/following-sibling::table[contains(., '№ лота')]/tbody/tr"))
-                                lots |> Seq.iter (this.GetLots(driver, !idTender, !idCustomer, requirement, con))
+                                lots 
+                                |> Seq.iter (this.GetLots(driver, !idTender, !idCustomer, requirement, con, pricecheck))
                             with ex -> Logging.Log.logger ex
                         with ex -> Logging.Log.logger ex
                 else 
@@ -252,7 +263,7 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
                             driver.FindElements
                                 (By.XPath
                                      ("//table[contains(., 'СВЕДЕНИЯ О ЛОТЕ')]/following-sibling::table[contains(., '№ лота')]/tbody/tr"))
-                        lots |> Seq.iter (this.GetLots(driver, !idTender, !idCustomer, requirement, con))
+                        lots |> Seq.iter (this.GetLots(driver, !idTender, !idCustomer, requirement, con, pricecheck))
                     with ex -> Logging.Log.logger ex
                 ()
             try 
@@ -299,9 +310,49 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
         | Tools.RegexMatch1 @"Страница.+/.+(\d)." gr1 -> Some(gr1)
         | _ -> None
     
+    member private this.GetQuantity(input : string) : string option = 
+        match input with
+        | Tools.RegexMatch1 @"(\d+[\s,]*\d*)" gr1 -> Some(gr1)
+        | _ -> None
+    
+    member private this.GetOkei(input : string) : string option = 
+        match input with
+        | Tools.RegexMatch1 @"([А-Яа-я\.]+)$" gr1 -> Some(gr1)
+        | _ -> None
+    
+    member private this.GetPrice(s : string) : string = 
+        let p = s.Replace(",", ".")
+        let b = Regex.Replace(p, @"\s+", "")
+        b
+    
     member private this.GetLots (driver : ChromeDriver, idTender : int, idCustomer : int, requirement : string, 
-                                 con : MySqlConnection) (elem : IWebElement) = 
+                                 con : MySqlConnection, pricecheck : bool) (elem : IWebElement) = 
         let idLot = ref 0
+        let lotNumT = this.GetDefaultFromNullS <| this.checkElement (elem, ".//td[1]/span")
+        
+        let lotNum = 
+            match lotNumT with
+            | "" -> 0
+            | _ -> Int32.Parse(lotNumT)
+        
+        let mutable price = ""
+        if pricecheck then 
+            let priceTT = this.GetDefaultFromNullS <| this.checkElement (elem, ".//td[8]/span[1]")
+            price <- this.GetPrice(priceTT)
+        let finsource = this.GetDefaultFromNullS <| this.checkElement (elem, ".//td[7]/span")
+        let currency = this.GetDefaultFromNullS <| this.checkElement (elem, ".//td[8]/span[2]")
+        let insertLot = 
+            sprintf 
+                "INSERT INTO %slot SET id_tender = @id_tender, lot_number = @lot_number, max_price = @max_price, currency = @currency, finance_source = @finance_source" 
+                stn.Prefix
+        let cmd12 = new MySqlCommand(insertLot, con)
+        cmd12.Parameters.AddWithValue("@id_tender", idTender) |> ignore
+        cmd12.Parameters.AddWithValue("@lot_number", lotNum) |> ignore
+        cmd12.Parameters.AddWithValue("@max_price", price) |> ignore
+        cmd12.Parameters.AddWithValue("@currency", currency) |> ignore
+        cmd12.Parameters.AddWithValue("@finance_source", finsource) |> ignore
+        cmd12.ExecuteNonQuery() |> ignore
+        idLot := int cmd12.LastInsertedId
         match requirement with
         | "" -> ()
         | r -> 
@@ -309,3 +360,47 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
             let cmd = new MySqlCommand(addReq, con)
             cmd.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
             cmd.Parameters.AddWithValue("@content", requirement) |> ignore
+        let okpd2 = this.GetDefaultFromNullS <| this.checkElement (elem, ".//td[2]/span")
+        let name = this.GetDefaultFromNullS <| this.checkElement (elem, ".//td[3]/a/span")
+        let quantityT = this.GetDefaultFromNullS <| this.checkElement (elem, ".//td[4]/span")
+        
+        let quantity = 
+            match this.GetQuantity(quantityT) with
+            | None -> ""
+            | Some pr -> this.GetPrice(pr.Trim())
+        
+        let okei = 
+            match this.GetOkei(quantityT) with
+            | None -> ""
+            | Some pr -> pr.Trim()
+        
+        let insertLotitem = 
+            sprintf 
+                "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, okpd2_code = @okpd2_code, quantity_value = @quantity_value, sum = @sum, okei = @okei, customer_quantity_value = @customer_quantity_value" 
+                stn.Prefix
+        let cmd19 = new MySqlCommand(insertLotitem, con)
+        cmd19.Prepare()
+        cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+        cmd19.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+        cmd19.Parameters.AddWithValue("@name", name) |> ignore
+        cmd19.Parameters.AddWithValue("@okpd2_code", okpd2) |> ignore
+        cmd19.Parameters.AddWithValue("@quantity_value", quantity) |> ignore
+        cmd19.Parameters.AddWithValue("@sum", price) |> ignore
+        cmd19.Parameters.AddWithValue("@okei", okei) |> ignore
+        cmd19.Parameters.AddWithValue("@customer_quantity_value", quantity) |> ignore
+        cmd19.ExecuteNonQuery() |> ignore
+        let delivPlace = this.GetDefaultFromNullS <| this.checkElement (elem, ".//td[5]/span")
+        let delivTerm = this.GetDefaultFromNullS <| this.checkElement (elem, ".//td[6]/span")
+        let insertCustomerRequirement = 
+            sprintf 
+                "INSERT INTO %scustomer_requirement SET id_lot = @id_lot, id_customer = @id_customer, delivery_term = @delivery_term, delivery_place = @delivery_place, max_price = @max_price" 
+                stn.Prefix
+        let cmd16 = new MySqlCommand(insertCustomerRequirement, con)
+        cmd16.Prepare()
+        cmd16.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+        cmd16.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+        cmd16.Parameters.AddWithValue("@delivery_term", delivTerm) |> ignore
+        cmd16.Parameters.AddWithValue("@delivery_place", delivPlace) |> ignore
+        cmd16.Parameters.AddWithValue("@max_price", price) |> ignore
+        cmd16.ExecuteNonQuery() |> ignore
+        ()
