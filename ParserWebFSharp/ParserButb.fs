@@ -27,6 +27,7 @@ type ParserButb(stn : Settings.T) =
         try 
             try 
                 this.ParserSelen driver
+                driver.Manage().Cookies.DeleteAllCookies()
             with ex -> Logging.Log.logger ex
         finally
             driver.Quit()
