@@ -250,9 +250,11 @@ type Tender =
                 breakIt <- false
             with
                 | ex when ex.Message.Contains("element is not attached") || !count > 30 -> 
+                    //Logging.Log.logger ex.Message
                     breakIt <- true
                     incr count
-                | _ -> incr count
+                | e -> incr count
+                       //Logging.Log.logger e.Message
     
     member this.GetDefaultFromNullS(e : IWebElement) = 
         match e with

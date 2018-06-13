@@ -3,7 +3,7 @@ namespace ParserWeb
 open System
 open System.IO
 
-type Init(s : Settings.T, arg : Arguments) = 
+type Init(s : Settings.T, arg : Arguments) =
     
     do 
         if String.IsNullOrEmpty(s.TempPathTenders) || String.IsNullOrEmpty(s.LogPathTenders) then 
@@ -32,15 +32,19 @@ type Init(s : Settings.T, arg : Arguments) =
         | Butb -> 
             Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
                                <| DateTime.Now.ToString("dd_MM_yyyy")
+        | RosSel -> 
+            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
+                               <| DateTime.Now.ToString("dd_MM_yyyy")
     
-    member public this.Parsing() = 
+    member public this.Parsing() =
         match arg with
         | IrkutskOil -> this.ParsingIrkutsk()
         | Akd -> this.ParsingAkd()
         | Lsr -> this.ParsingLsr()
         | Butb -> this.ParsingButb()
+        | RosSel -> this.ParsingRossel()
     
-    member private this.ParsingIrkutsk() = 
+    member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
         try 
             this.GetParser(ParserIrkutskOil(s))
@@ -48,7 +52,7 @@ type Init(s : Settings.T, arg : Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderIrkutskOil.tenderCount)
     
-    member private this.ParsingAkd() = 
+    member private this.ParsingAkd() =
         Logging.Log.logger "Начало парсинга"
         try 
             this.GetParser(ParserAkd(s))
@@ -56,7 +60,7 @@ type Init(s : Settings.T, arg : Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderAkd.tenderCount)
     
-    member private this.ParsingLsr() = 
+    member private this.ParsingLsr() =
         Logging.Log.logger "Начало парсинга"
         try 
             this.GetParser(ParserLsr(s))
@@ -64,11 +68,20 @@ type Init(s : Settings.T, arg : Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderLsr.tenderCount)
     
-    member private this.GetParser(p : Parser) = p.Parsing()
-    member private this.ParsingButb() = 
+    member private this.ParsingButb() =
         Logging.Log.logger "Начало парсинга"
         try 
             this.GetParser(ParserButb(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderButb.tenderCount)
+    
+    member private this.ParsingRossel() =
+        Logging.Log.logger "Начало парсинга"
+        try 
+            this.GetParser(ParserRossel(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderRossel.tenderCount)
+    
+    member private this.GetParser(p : Parser) = p.Parsing()

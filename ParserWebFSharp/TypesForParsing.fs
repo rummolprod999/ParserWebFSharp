@@ -5,3 +5,4 @@ type Arguments =
     | Akd
     | Lsr
     | Butb
+    | RosSel

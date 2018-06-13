@@ -3,10 +3,10 @@ namespace ParserWeb
 
 open System
 
-module Start = 
+module Start =
     [<EntryPoint>]
-    let main argv = 
-        let arguments = "irkutskoil, akd, lsr, butb"
+    let main argv =
+        let arguments = "irkutskoil, akd, lsr, butb, rossel"
         if argv.Length = 0 then 
             printf "Bad arguments, use %s" arguments
             Environment.Exit(1)
@@ -26,6 +26,10 @@ module Start =
         | "butb" -> 
             let settings = Settings.getSettings (Butb)
             let p = Init(settings, Butb)
+            p.Parsing()
+        | "rossel" -> 
+            let settings = Settings.getSettings (RosSel)
+            let p = Init(settings, RosSel)
             p.Parsing()
         | _ -> 
             printf "Bad arguments, use %s" arguments
