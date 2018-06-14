@@ -49,7 +49,7 @@ type ParserRossel(stn : Settings.T) =
             "//span[contains(@class, 'c-inp-select-g-procedure-status-select') and span[contains(@class, 'c-inp-select-opener')]]"
         this.Clicker driver "//span[contains(@class, 'c-inp-option') and @data-index = '0']"
         this.Clicker driver "//input[@value = 'Найти']"
-        for i in 1..1200 do
+        for i in 1..3500 do
             //driver.Keyboard.SendKeys(OpenQA.Selenium.Keys.Down)
             let jse = driver :> IJavaScriptExecutor
             jse.ExecuteScript("window.scrollBy(0,250)", "") |> ignore
