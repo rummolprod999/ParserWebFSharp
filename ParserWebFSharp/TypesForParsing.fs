@@ -6,3 +6,5 @@ type Arguments =
     | Lsr
     | Butb
     | RosSel
+
+type RosSelRec = {Href: string; PurNum: string}

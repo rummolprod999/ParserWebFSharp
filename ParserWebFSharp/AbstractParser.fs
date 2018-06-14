@@ -1,18 +1,27 @@
 namespace ParserWeb
 
+open AngleSharp.Dom
+open AngleSharp.Parser.Html
+open HtmlAgilityPack
 open OpenQA.Selenium
 open OpenQA.Selenium.Chrome
 
 [<AbstractClass>]
-type Parser() = 
+type Parser() =
     abstract Parsing : unit -> unit
     
-    member this.GetDefaultFromNull(e : IWebElement) = 
+    member this.GetDefaultFromNull(e : IWebElement) =
         match e with
         | null -> ""
         | _ -> e.Text.Trim()
     
-    member this.Clicker (driver : ChromeDriver) (findPath : string) = 
+    member this.GetDefaultFromNullAngle (e : Html.IHtmlDocument) (a : string) =
+        let u = e.QuerySelector(a)
+        match u with
+        | null -> ""
+        | x -> x.TextContent.Trim()
+    
+    member this.Clicker (driver : ChromeDriver) (findPath : string) =
         let mutable breakIt = true
         let count = ref 0
         while breakIt do
@@ -27,8 +36,8 @@ type Parser() =
                 | _ -> incr count
         ()
     
-    member this.checkElement (driver : ChromeDriver, f : string) : IWebElement = 
-        let res = 
+    member this.checkElement (driver : ChromeDriver, f : string) : IWebElement =
+        let res =
             try 
                 driver.FindElement(By.XPath(f))
             with ex -> null
