@@ -38,6 +38,7 @@ type ParserRossel(stn : Settings.T) =
                 this.ParserSelenRosteh driver
                 this.ParserSelenRushidro driver
                 this.ParserSelenRosgeo driver
+                this.ParserSelenRosseti driver
                 driver.Manage().Cookies.DeleteAllCookies()
             with ex -> Logging.Log.logger ex
         finally
