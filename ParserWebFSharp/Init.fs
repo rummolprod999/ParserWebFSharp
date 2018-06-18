@@ -82,6 +82,13 @@ type Init(s : Settings.T, arg : Arguments) =
             this.GetParser(ParserRossel(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
-        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderRossel.tenderCount)
+        Logging.Log.logger (sprintf "Добавили коммерческих тендеров %d" !TenderRossel.tenderCount)
+        Logging.Log.logger (sprintf "Добавили ГК «Росатом» тендеров %d" !TenderRossel.tenderCountAtom)
+        Logging.Log.logger (sprintf "Добавили ПАО «Ростелеком» и подведомственных организаций тендеров %d" !TenderRossel.tenderCountRt)
+        Logging.Log.logger (sprintf "Добавили Группа ВТБ тендеров %d" !TenderRossel.tenderCountVtb)
+        Logging.Log.logger (sprintf "Добавили ГК «Ростех» тендеров %d" !TenderRossel.tenderCountRosteh)
+        Logging.Log.logger (sprintf "Добавили Группа «РусГидро» тендеров %d" !TenderRossel.tenderCountRushidro)
+        Logging.Log.logger (sprintf "Добавили Холдинг «Росгео» тендеров %d" !TenderRossel.tenderCountRosgeo)
+        Logging.Log.logger (sprintf "Добавили ПАО «Россети» тендеров %d" !TenderRossel.tenderCountRosseti)
     
     member private this.GetParser(p : Parser) = p.Parsing()
