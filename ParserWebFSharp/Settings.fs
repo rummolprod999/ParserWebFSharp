@@ -34,6 +34,8 @@ module Settings =
         let mutable LogPathTendersButb = ""
         let mutable TempPathTendersRossel = ""
         let mutable LogPathTendersRossel = ""
+        let mutable TempPathTendersNeft = ""
+        let mutable LogPathTendersNeft = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -75,6 +77,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_rossel" then 
                                     LogPathTendersRossel <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
                                                               (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_neft" then 
+                                                    TempPathTendersNeft <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                                               (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_neft" then 
+                                                    LogPathTendersNeft <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                                              (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -93,6 +101,7 @@ module Settings =
                 | Lsr -> TempPathTendersLsr
                 | Butb -> TempPathTendersButb
                 | RosSel -> TempPathTendersRossel
+                | Neft -> TempPathTendersNeft
             
             let LogPathTenders = 
                 match arg with
@@ -101,6 +110,7 @@ module Settings =
                 | Lsr -> LogPathTendersLsr
                 | Butb -> LogPathTendersButb
                 | RosSel -> LogPathTendersRossel
+                | Neft -> LogPathTendersNeft
             
             { Database = Database
               TempPathTenders = TempPathTenders

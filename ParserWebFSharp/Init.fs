@@ -35,6 +35,9 @@ type Init(s : Settings.T, arg : Arguments) =
         | RosSel -> 
             Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
                                <| DateTime.Now.ToString("dd_MM_yyyy")
+        | Neft -> 
+            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
+                               <| DateTime.Now.ToString("dd_MM_yyyy")
     
     member public this.Parsing() =
         match arg with
@@ -43,6 +46,7 @@ type Init(s : Settings.T, arg : Arguments) =
         | Lsr -> this.ParsingLsr()
         | Butb -> this.ParsingButb()
         | RosSel -> this.ParsingRossel()
+        | Neft -> this.ParsingNeft()
     
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -84,11 +88,20 @@ type Init(s : Settings.T, arg : Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили коммерческих тендеров %d" !TenderRossel.tenderCount)
         Logging.Log.logger (sprintf "Добавили ГК «Росатом» тендеров %d" !TenderRossel.tenderCountAtom)
-        Logging.Log.logger (sprintf "Добавили ПАО «Ростелеком» и подведомственных организаций тендеров %d" !TenderRossel.tenderCountRt)
+        Logging.Log.logger 
+            (sprintf "Добавили ПАО «Ростелеком» и подведомственных организаций тендеров %d" !TenderRossel.tenderCountRt)
         Logging.Log.logger (sprintf "Добавили Группа ВТБ тендеров %d" !TenderRossel.tenderCountVtb)
         Logging.Log.logger (sprintf "Добавили ГК «Ростех» тендеров %d" !TenderRossel.tenderCountRosteh)
         Logging.Log.logger (sprintf "Добавили Группа «РусГидро» тендеров %d" !TenderRossel.tenderCountRushidro)
         Logging.Log.logger (sprintf "Добавили Холдинг «Росгео» тендеров %d" !TenderRossel.tenderCountRosgeo)
         Logging.Log.logger (sprintf "Добавили ПАО «Россети» тендеров %d" !TenderRossel.tenderCountRosseti)
+    
+    member private this.ParsingNeft() =
+        Logging.Log.logger "Начало парсинга"
+        try 
+            this.GetParser(ParserNeft(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderNeft.tenderCount)
     
     member private this.GetParser(p : Parser) = p.Parsing()

@@ -78,6 +78,11 @@ type Tender =
         | null -> ""
         | _ -> e.TextContent.Trim()
     
+    member this.Get1FromRegexp (input : string) (regex : string) : string option =
+        match input with
+            | Tools.RegexMatch1 regex gr1 -> Some(gr1)
+            | _ -> None
+    
     member this.GetConformity(s : string) : int = 
         let sLower = s.ToLower()
         match sLower with

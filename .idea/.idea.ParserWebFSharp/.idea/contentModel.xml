@@ -13,6 +13,7 @@
         <e p="ParserButb.fs" t="Include" />
         <e p="ParserIrkutskOil.fs" t="Include" />
         <e p="ParserLsr.fs" t="Include" />
+        <e p="ParserNeft.fs" t="Include" />
         <e p="ParserRossel.fs" t="Include" />
         <e p="ParserWebFSharp.fsproj" t="IncludeRecursive" />
         <e p="Program.fs" t="Include" />
@@ -21,6 +22,7 @@
         <e p="TenderButb.fs" t="Include" />
         <e p="TenderIrkutskOil.fs" t="Include" />
         <e p="TenderLsr.fs" t="Include" />
+        <e p="TenderNeft.fs" t="Include" />
         <e p="TenderRossel.fs" t="Include" />
         <e p="ToolsFun.fs" t="Include" />
         <e p="TypeExtensions.fs" t="Include" />

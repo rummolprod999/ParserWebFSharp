@@ -31,6 +31,10 @@ module Start =
             let settings = Settings.getSettings (RosSel)
             let p = Init(settings, RosSel)
             p.Parsing()
+        | "neft" -> 
+            let settings = Settings.getSettings (Neft)
+            let p = Init(settings, Neft)
+            p.Parsing()
         | _ -> 
             printf "Bad arguments, use %s" arguments
             Environment.Exit(1)
