@@ -259,12 +259,12 @@ type TenderNeft(stn : Settings.T, tn : NeftRec) =
                 let oq = this.GetDefaultFromNull <| pn.QuerySelector("td:nth-child(2) span")
                 
                 let quant =
-                    match this.Get1FromRegexp oq @"([\d\.])" with
+                    match this.Get1FromRegexp oq @"([\d\.]+)" with
                     | Some dtP -> dtP
                     | None -> ""
                 
                 let okei =
-                    match this.Get1FromRegexp oq @"([^\d\. ])" with
+                    match this.Get1FromRegexp oq @"([^\d\. ]+)" with
                     | Some dtP -> dtP
                     | None -> ""
                 
@@ -281,5 +281,5 @@ type TenderNeft(stn : Settings.T, tn : NeftRec) =
                 cmd19.Parameters.AddWithValue("@quantity_value", quant) |> ignore
                 cmd19.Parameters.AddWithValue("@customer_quantity_value", quant) |> ignore
                 cmd19.Parameters.AddWithValue("@okei", okei) |> ignore
-                ()
+                cmd19.ExecuteNonQuery() |> ignore
             ()
