@@ -43,7 +43,7 @@ type ParserNeft(stn : Settings.T) =
             | null -> ""
             | ur -> ur.GetAttribute("href").Trim()
         match urlT with
-        | null -> raise <| System.NullReferenceException(sprintf "urlT not found in %s" urlT)
+        | null | "" -> raise <| System.NullReferenceException(sprintf "urlT not found in %s" urlT)
         | _ -> ()
         let url = sprintf "https://zakupki.nefteavtomatika.ru%s" urlT
         let purNameT = t.QuerySelector("td a b")

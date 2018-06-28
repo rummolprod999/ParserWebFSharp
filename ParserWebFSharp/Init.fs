@@ -38,6 +38,9 @@ type Init(s : Settings.T, arg : Arguments) =
         | Neft -> 
             Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
                                <| DateTime.Now.ToString("dd_MM_yyyy")
+        | Slav -> 
+            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
+                               <| DateTime.Now.ToString("dd_MM_yyyy")
     
     member public this.Parsing() =
         match arg with
@@ -47,6 +50,7 @@ type Init(s : Settings.T, arg : Arguments) =
         | Butb -> this.ParsingButb()
         | RosSel -> this.ParsingRossel()
         | Neft -> this.ParsingNeft()
+        | Slav -> this.ParsingSlav()
     
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -103,5 +107,15 @@ type Init(s : Settings.T, arg : Arguments) =
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderNeft.tenderCount)
+    
+    member private this.ParsingSlav() =
+        Logging.Log.logger "Начало парсинга"
+        try 
+            this.GetParser(ParserSlav(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров ОАО «Славнефть-Мегионнефтегаз» %d" !TenderSlav.tenderCountMegion)
+        Logging.Log.logger (sprintf "Добавили тендеров ООО «Байкитская НГРЭ» %d" !TenderSlav.tenderCountNgre)
+        Logging.Log.logger (sprintf "Добавили тендеров ОАО «Славнефть-ЯНОС» %d" !TenderSlav.tenderCountYanos)
     
     member private this.GetParser(p : Parser) = p.Parsing()

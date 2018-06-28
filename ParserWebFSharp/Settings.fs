@@ -5,13 +5,13 @@ open System.IO
 open System.Reflection
 open System.Xml
 
-module Settings = 
-    let PathProgram : string = 
+module Settings =
+    let PathProgram : string =
         let path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase)
         if path <> null then path.Substring(5)
         else ""
     
-    type T = 
+    type T =
         { Database : string
           TempPathTenders : string
           LogPathTenders : string
@@ -22,7 +22,7 @@ module Settings =
           Port : int
           ConStr : string }
     
-    let getSettings (arg : Arguments) : T = 
+    let getSettings (arg : Arguments) : T =
         let mutable Database = ""
         let mutable TempPathTendersIrkutskOil = ""
         let mutable LogPathTendersIrkutskOil = ""
@@ -36,6 +36,8 @@ module Settings =
         let mutable LogPathTendersRossel = ""
         let mutable TempPathTendersNeft = ""
         let mutable LogPathTendersNeft = ""
+        let mutable TempPathTendersSlav = ""
+        let mutable LogPathTendersSlav = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -72,29 +74,34 @@ module Settings =
                     LogPathTendersButb <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
                                               (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_rossel" then 
-                                    TempPathTendersRossel <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
-                                                               (xnode :?> XmlNode).InnerText
+                    TempPathTendersRossel <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_rossel" then 
-                                    LogPathTendersRossel <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
-                                                              (xnode :?> XmlNode).InnerText
+                    LogPathTendersRossel <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_neft" then 
-                                                    TempPathTendersNeft <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
-                                                                               (xnode :?> XmlNode).InnerText
+                    TempPathTendersNeft <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                               (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_neft" then 
-                                                    LogPathTendersNeft <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
-                                                                              (xnode :?> XmlNode).InnerText
+                    LogPathTendersNeft <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                              (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_slav" then 
+                    TempPathTendersSlav <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                               (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_slav" then 
+                    LogPathTendersSlav <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                              (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "server" then Server <- (xnode :?> XmlNode).InnerText
-                else 
-                    if (xnode :?> XmlNode).Name = "port" then Port <- Int32.Parse((xnode :?> XmlNode).InnerText)
-            let connectstring = 
+                else if (xnode :?> XmlNode).Name = "port" then Port <- Int32.Parse((xnode :?> XmlNode).InnerText)
+            let connectstring =
                 sprintf 
                     "Server=%s;port=%d;Database=%s;User Id=%s;password=%s;CharSet=utf8;Convert Zero Datetime=True;default command timeout=3600;Connection Timeout=3600;SslMode=none" 
                     Server Port Database UserDb PassDb
             
-            let TempPathTenders = 
+            let TempPathTenders =
                 match arg with
                 | IrkutskOil -> TempPathTendersIrkutskOil
                 | Akd -> TempPathTendersAkd
@@ -102,8 +109,9 @@ module Settings =
                 | Butb -> TempPathTendersButb
                 | RosSel -> TempPathTendersRossel
                 | Neft -> TempPathTendersNeft
+                | Slav -> TempPathTendersSlav
             
-            let LogPathTenders = 
+            let LogPathTenders =
                 match arg with
                 | IrkutskOil -> LogPathTendersIrkutskOil
                 | Akd -> LogPathTendersAkd
@@ -111,6 +119,7 @@ module Settings =
                 | Butb -> LogPathTendersButb
                 | RosSel -> LogPathTendersRossel
                 | Neft -> LogPathTendersNeft
+                | Slav -> LogPathTendersSlav
             
             { Database = Database
               TempPathTenders = TempPathTenders

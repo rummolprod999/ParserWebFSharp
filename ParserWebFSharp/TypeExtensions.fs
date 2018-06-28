@@ -4,15 +4,20 @@ open System
 open System.Globalization
 open System.Text.RegularExpressions
 
-module TypeE = 
+module TypeE =
     type System.String with
         
-        member this.DateFromString(pat : string) = 
+        member this.DateFromString(pat : string) =
             try 
                 Some(DateTime.ParseExact(this, pat, CultureInfo.InvariantCulture))
             with ex -> None
         
-        member this.DateFromStringRus(pat : string) = 
+        member this.Get1FromRegexp(regex : string) : string option =
+            match this with
+            | Tools.RegexMatch1 regex gr1 -> Some(gr1)
+            | _ -> None
+        
+        member this.DateFromStringRus(pat : string) =
             try 
                 Some(DateTime.ParseExact(this, pat, CultureInfo.CreateSpecificCulture("ru-RU")))
             with ex -> 
@@ -22,7 +27,7 @@ module TypeE =
         
         member this.RegexReplace() = Regex.Replace(this, @"\s+", " ")
         member this.RegexDeleteWhitespace() = Regex.Replace(this, @"\s+", "")
-        member this.ReplaceDate() = 
+        member this.ReplaceDate() =
             if this.Contains("января") then this.Replace(" января ", ".01.")
             elif this.Contains("февраля") then this.Replace(" февраля ", ".02.")
             elif this.Contains("марта") then this.Replace(" марта ", ".03.")
