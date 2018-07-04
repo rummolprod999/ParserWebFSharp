@@ -38,6 +38,8 @@ module Settings =
         let mutable LogPathTendersNeft = ""
         let mutable TempPathTendersSlav = ""
         let mutable LogPathTendersSlav = ""
+        let mutable TempPathTendersAero = ""
+        let mutable LogPathTendersAero = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -91,6 +93,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_slav" then 
                     LogPathTendersSlav <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
                                               (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_aero" then 
+                    TempPathTendersAero <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                               (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_aero" then 
+                    LogPathTendersAero <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                              (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -110,6 +118,7 @@ module Settings =
                 | RosSel -> TempPathTendersRossel
                 | Neft -> TempPathTendersNeft
                 | Slav -> TempPathTendersSlav
+                | Aero -> TempPathTendersAero
             
             let LogPathTenders =
                 match arg with
@@ -120,6 +129,7 @@ module Settings =
                 | RosSel -> LogPathTendersRossel
                 | Neft -> LogPathTendersNeft
                 | Slav -> LogPathTendersSlav
+                | Aero -> LogPathTendersAero
             
             { Database = Database
               TempPathTenders = TempPathTenders

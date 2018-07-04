@@ -10,6 +10,7 @@ type Arguments =
     | RosSel
     | Neft
     | Slav
+    | Aero
 
 type SlavNeft =
     | MEGION
@@ -39,3 +40,12 @@ type SlavNeftRec =
       DateEnd : DateTime
       status : string
       typeT : SlavNeft }
+
+type AeroRec =
+    { Href : string
+      PurNum : string
+      PurName : string
+      PwayName : string
+      DatePub : DateTime
+      DateEnd : DateTime
+      status : string }

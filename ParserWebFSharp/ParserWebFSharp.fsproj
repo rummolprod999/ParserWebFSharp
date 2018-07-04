@@ -26,6 +26,8 @@
     <Compile Include="ParserNeft.fs" />
     <Compile Include="TenderSlav.fs" />
     <Compile Include="ParserSlav.fs" />
+    <Compile Include="TenderAero.fs" />
+    <Compile Include="ParserAero.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

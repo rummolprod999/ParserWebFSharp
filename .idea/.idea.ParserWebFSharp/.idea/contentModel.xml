@@ -9,6 +9,7 @@
         <e p="HttpLibrary.fs" t="Include" />
         <e p="Init.fs" t="Include" />
         <e p="Logging.fs" t="Include" />
+        <e p="ParserAero.fs" t="Include" />
         <e p="ParserAkd.fs" t="Include" />
         <e p="ParserButb.fs" t="Include" />
         <e p="ParserIrkutskOil.fs" t="Include" />
@@ -19,6 +20,7 @@
         <e p="ParserWebFSharp.fsproj" t="IncludeRecursive" />
         <e p="Program.fs" t="Include" />
         <e p="Settings.fs" t="Include" />
+        <e p="TenderAero.fs" t="Include" />
         <e p="TenderAkd.fs" t="Include" />
         <e p="TenderButb.fs" t="Include" />
         <e p="TenderIrkutskOil.fs" t="Include" />

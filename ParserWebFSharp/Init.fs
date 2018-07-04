@@ -41,6 +41,9 @@ type Init(s : Settings.T, arg : Arguments) =
         | Slav -> 
             Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
                                <| DateTime.Now.ToString("dd_MM_yyyy")
+        | Aero -> 
+            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
+                               <| DateTime.Now.ToString("dd_MM_yyyy")
     
     member public this.Parsing() =
         match arg with
@@ -51,6 +54,7 @@ type Init(s : Settings.T, arg : Arguments) =
         | RosSel -> this.ParsingRossel()
         | Neft -> this.ParsingNeft()
         | Slav -> this.ParsingSlav()
+        | Aero -> this.ParsingAero()
     
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -117,5 +121,13 @@ type Init(s : Settings.T, arg : Arguments) =
         Logging.Log.logger (sprintf "Добавили тендеров ОАО «Славнефть-Мегионнефтегаз» %d" !TenderSlav.tenderCountMegion)
         Logging.Log.logger (sprintf "Добавили тендеров ООО «Байкитская НГРЭ» %d" !TenderSlav.tenderCountNgre)
         Logging.Log.logger (sprintf "Добавили тендеров ОАО «Славнефть-ЯНОС» %d" !TenderSlav.tenderCountYanos)
+    
+    member private this.ParsingAero() =
+        Logging.Log.logger "Начало парсинга"
+        try 
+            this.GetParser(ParserAero(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderAero.tenderCount)
     
     member private this.GetParser(p : Parser) = p.Parsing()
