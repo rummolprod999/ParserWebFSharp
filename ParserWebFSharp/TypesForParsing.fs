@@ -11,6 +11,7 @@ type Arguments =
     | Neft
     | Slav
     | Aero
+    | StroyTorgi
 
 type SlavNeft =
     | MEGION

@@ -17,6 +17,7 @@
         <e p="ParserNeft.fs" t="Include" />
         <e p="ParserRossel.fs" t="Include" />
         <e p="ParserSlav.fs" t="Include" />
+        <e p="ParserStroyTorgi.fs" t="Include" />
         <e p="ParserWebFSharp.fsproj" t="IncludeRecursive" />
         <e p="Program.fs" t="Include" />
         <e p="Settings.fs" t="Include" />
@@ -28,6 +29,7 @@
         <e p="TenderNeft.fs" t="Include" />
         <e p="TenderRossel.fs" t="Include" />
         <e p="TenderSlav.fs" t="Include" />
+        <e p="TenderStroyTorgi.fs" t="Include" />
         <e p="ToolsFun.fs" t="Include" />
         <e p="TypeExtensions.fs" t="Include" />
         <e p="TypesForParsing.fs" t="Include" />

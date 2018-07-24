@@ -40,6 +40,8 @@ module Settings =
         let mutable LogPathTendersSlav = ""
         let mutable TempPathTendersAero = ""
         let mutable LogPathTendersAero = ""
+        let mutable TempPathTendersStroyTorgi = ""
+        let mutable LogPathTendersStroyTorgi = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -99,6 +101,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_aero" then 
                     LogPathTendersAero <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
                                               (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_stroytorgi" then 
+                    TempPathTendersStroyTorgi <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                     (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_stroytorgi" then 
+                    LogPathTendersStroyTorgi <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                    (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -119,6 +127,7 @@ module Settings =
                 | Neft -> TempPathTendersNeft
                 | Slav -> TempPathTendersSlav
                 | Aero -> TempPathTendersAero
+                | StroyTorgi -> TempPathTendersStroyTorgi
             
             let LogPathTenders =
                 match arg with
@@ -130,6 +139,7 @@ module Settings =
                 | Neft -> LogPathTendersNeft
                 | Slav -> LogPathTendersSlav
                 | Aero -> LogPathTendersAero
+                | StroyTorgi -> LogPathTendersStroyTorgi
             
             { Database = Database
               TempPathTenders = TempPathTenders
