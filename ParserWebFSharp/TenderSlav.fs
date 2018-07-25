@@ -130,7 +130,7 @@ type TenderSlav(stn : Settings.T, tn : SlavNeftRec, typeFz : int, etpName : stri
                     stn.Prefix
             let cmd20 = new MySqlCommand(insertDoc, con)
             cmd20.Prepare()
-            cmd20.Parameters.AddWithValue("@id_tender", idTender) |> ignore
+            cmd20.Parameters.AddWithValue("@id_tender", !idTender) |> ignore
             cmd20.Parameters.AddWithValue("@file_name", tn.HrefName) |> ignore
             cmd20.Parameters.AddWithValue("@url", tn.HrefDoc) |> ignore
             cmd20.ExecuteNonQuery() |> ignore
@@ -165,7 +165,7 @@ type TenderSlav(stn : Settings.T, tn : SlavNeftRec, typeFz : int, etpName : stri
             let idLot = ref 0
             let insertLot = sprintf "INSERT INTO %slot SET id_tender = @id_tender, lot_number = @lot_number" stn.Prefix
             let cmd12 = new MySqlCommand(insertLot, con)
-            cmd12.Parameters.AddWithValue("@id_tender", idTender) |> ignore
+            cmd12.Parameters.AddWithValue("@id_tender", !idTender) |> ignore
             cmd12.Parameters.AddWithValue("@lot_number", 1) |> ignore
             cmd12.ExecuteNonQuery() |> ignore
             idLot := int cmd12.LastInsertedId

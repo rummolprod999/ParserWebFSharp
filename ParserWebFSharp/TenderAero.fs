@@ -206,7 +206,7 @@ type TenderAero(stn : Settings.T, tn : AeroRec, typeFz : int, etpName : string, 
                     "INSERT INTO %slot SET id_tender = @id_tender, lot_number = @lot_number, max_price = @max_price, currency = @currency" 
                     stn.Prefix
             let cmd12 = new MySqlCommand(insertLot, con)
-            cmd12.Parameters.AddWithValue("@id_tender", idTender) |> ignore
+            cmd12.Parameters.AddWithValue("@id_tender", !idTender) |> ignore
             cmd12.Parameters.AddWithValue("@lot_number", 1) |> ignore
             cmd12.Parameters.AddWithValue("@max_price", maxPrice) |> ignore
             cmd12.Parameters.AddWithValue("@currency", currency) |> ignore

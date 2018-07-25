@@ -100,5 +100,18 @@ type ParserStroyTorgi(stn : Settings.T) =
             match PriceT.Get1FromRegexp @"\s([^\s]+)$" with
             | Some x -> x.Trim()
             | None -> ""
-        printfn "%s" Url
+        
+        let ten =
+            { Url = Url
+              PurNum = purNum
+              PurName = !purName
+              OrgName = orgName
+              Status = status
+              Price = Price
+              Currency = Currency }
+        
+        try 
+            let T = TenderStroyTorgi(set, ten, 69, "ЭТП «СтройТорги»", "https://stroytorgi.ru/trades")
+            T.Parsing()
+        with ex -> Logging.Log.logger (ex, url)
         ()

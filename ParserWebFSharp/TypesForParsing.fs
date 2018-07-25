@@ -42,6 +42,15 @@ type SlavNeftRec =
       status : string
       typeT : SlavNeft }
 
+type StroyTorgiRec =
+    { Url : string
+      PurNum : string
+      PurName : string
+      OrgName : string
+      Status : string
+      Price : string
+      Currency : string }
+
 type AeroRec =
     { Href : string
       PurNum : string
