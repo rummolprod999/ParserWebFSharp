@@ -13,6 +13,7 @@ type TenderNeft(stn : Settings.T, tn : NeftRec) =
     let settings = stn
     let typeFz = 55
     static member val tenderCount = ref 0
+    static member val tenderUpCount = ref 0
     
     override this.Parsing() =
         let dateUpd = DateTime.Now

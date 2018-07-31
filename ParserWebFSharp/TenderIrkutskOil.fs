@@ -13,6 +13,7 @@ type TenderIrkutskOil(stn : Settings.T, urlT : string) =
     let settings = stn
     let typeFz = 30
     static member val tenderCount = ref 0
+    static member val tenderUpCount = ref 0
     
     override this.Parsing() = 
         let Page = Download.DownloadString urlT

@@ -22,6 +22,14 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
     static member val tenderCountRushidro = ref 0
     static member val tenderCountRosgeo = ref 0
     static member val tenderCountRosseti = ref 0
+    static member val tenderUpCount = ref 0
+    static member val tenderUpCountAtom = ref 0
+    static member val tenderUpCountRt = ref 0
+    static member val tenderUpCountVtb = ref 0
+    static member val tenderUpCountRosteh = ref 0
+    static member val tenderUpCountRushidro = ref 0
+    static member val tenderUpCountRosgeo = ref 0
+    static member val tenderUpCountRosseti = ref 0
     
     member private this.GetDateS(input : string) : string option =
         match input with

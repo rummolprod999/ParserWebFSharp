@@ -18,6 +18,7 @@ type TenderStroyTorgi(stn : Settings.T, tn : StroyTorgiRec, typeFz : int, etpNam
     inherit Tender(etpName, etpUrl)
     let settings = stn
     static member val tenderCount = ref 0
+    static member val tenderUpCount = ref 0
     override this.Parsing() =
         let DatePub = DateTime.Now
         let mutable DateEnd = DateTime.MinValue

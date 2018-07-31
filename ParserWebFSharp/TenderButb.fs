@@ -16,6 +16,7 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
     let settings = stn
     let typeFz = 36
     static member val tenderCount = ref 0
+    static member val tenderUpCount = ref 0
     
     override this.Parsing() = 
         let dateUpd = datePub

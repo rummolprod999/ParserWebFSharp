@@ -14,6 +14,10 @@ type TenderSlav(stn : Settings.T, tn : SlavNeftRec, typeFz : int, etpName : stri
     static member val tenderCountMegion = ref 0
     static member val tenderCountYanos = ref 0
     static member val tenderCountNgre = ref 0
+    static member val tenderUpCountMegion = ref 0
+    static member val tenderUpCountYanos = ref 0
+    static member val tenderUpCountNgre = ref 0
+    
     override this.Parsing() =
         let dateUpd = DateTime.Now
         use con = new MySqlConnection(stn.ConStr)
