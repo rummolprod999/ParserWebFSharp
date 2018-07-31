@@ -12,6 +12,7 @@ type Arguments =
     | Slav
     | Aero
     | StroyTorgi
+    | Asgor
 
 type SlavNeft =
     | MEGION
@@ -59,3 +60,16 @@ type AeroRec =
       DatePub : DateTime
       DateEnd : DateTime
       status : string }
+
+type AsgorRec =
+    { Href : string
+      PurNum : string
+      PurName : string
+      OrgName : string
+      CusName : string
+      DatePub : DateTime
+      DateEnd : DateTime
+      status : string
+      PwayName : string
+      Nmck : string
+      NameLots : string Set}

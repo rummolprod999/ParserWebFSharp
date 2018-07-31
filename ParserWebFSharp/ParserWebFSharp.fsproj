@@ -30,6 +30,8 @@
     <Compile Include="ParserAero.fs" />
     <Compile Include="TenderStroyTorgi.fs" />
     <Compile Include="ParserStroyTorgi.fs" />
+    <Compile Include="TenderAsgor.fs" />
+    <Compile Include="ParserAsgor.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

@@ -47,6 +47,9 @@ type Init(s : Settings.T, arg : Arguments) =
         | StroyTorgi -> 
             Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
                                <| DateTime.Now.ToString("dd_MM_yyyy")
+        | Asgor -> 
+            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
+                               <| DateTime.Now.ToString("dd_MM_yyyy")
     
     member public this.Parsing() =
         match arg with
@@ -59,6 +62,7 @@ type Init(s : Settings.T, arg : Arguments) =
         | Slav -> this.ParsingSlav()
         | Aero -> this.ParsingAero()
         | StroyTorgi -> this.ParsingStroyTorgi()
+        | Asgor -> this.ParsingAsgor()
     
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -68,6 +72,15 @@ type Init(s : Settings.T, arg : Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderIrkutskOil.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderIrkutskOil.tenderUpCount)
+    
+    member private this.ParsingAsgor() =
+        Logging.Log.logger "Начало парсинга"
+        try 
+            this.GetParser(ParserAsgor(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderAsgor.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderAsgor.tenderUpCount)
     
     member private this.ParsingAkd() =
         Logging.Log.logger "Начало парсинга"
