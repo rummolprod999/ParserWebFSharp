@@ -159,6 +159,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
         else 
             reader.Close()
             let mutable cancelStatus = 0
+            let mutable updated = false
             let selectDateT =
                 sprintf 
                     "SELECT id_tender, date_version, cancel FROM %stender WHERE purchase_number = @purchase_number AND type_fz = @type_fz" 
@@ -172,6 +173,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
             let dt = new DataTable()
             adapter.Fill(dt) |> ignore
             for row in dt.Rows do
+                updated <- true
                 //printfn "%A" <| (row.["date_version"])
                 match dateUpd >= ((row.["date_version"]) :?> DateTime) with
                 | true -> row.["cancel"] <- 1
@@ -271,16 +273,29 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
             cmd9.Parameters.AddWithValue("@id_region", idRegion) |> ignore
             cmd9.ExecuteNonQuery() |> ignore
             idTender := int cmd9.LastInsertedId
-            match typeFz with
-            | 42 -> incr TenderRossel.tenderCount
-            | 43 -> incr TenderRossel.tenderCountAtom
-            | 45 -> incr TenderRossel.tenderCountRt
-            | 46 -> incr TenderRossel.tenderCountVtb
-            | 47 -> incr TenderRossel.tenderCountRosteh
-            | 48 -> incr TenderRossel.tenderCountRushidro
-            | 49 -> incr TenderRossel.tenderCountRosgeo
-            | 50 -> incr TenderRossel.tenderCountRosseti
-            | _ -> ()
+            match updated with
+            | true -> 
+                match typeFz with
+                | 42 -> incr TenderRossel.tenderUpCount
+                | 43 -> incr TenderRossel.tenderUpCountAtom
+                | 45 -> incr TenderRossel.tenderUpCountRt
+                | 46 -> incr TenderRossel.tenderUpCountVtb
+                | 47 -> incr TenderRossel.tenderUpCountRosteh
+                | 48 -> incr TenderRossel.tenderUpCountRushidro
+                | 49 -> incr TenderRossel.tenderUpCountRosgeo
+                | 50 -> incr TenderRossel.tenderUpCountRosseti
+                | _ -> ()
+            | false -> 
+                match typeFz with
+                | 42 -> incr TenderRossel.tenderCount
+                | 43 -> incr TenderRossel.tenderCountAtom
+                | 45 -> incr TenderRossel.tenderCountRt
+                | 46 -> incr TenderRossel.tenderCountVtb
+                | 47 -> incr TenderRossel.tenderCountRosteh
+                | 48 -> incr TenderRossel.tenderCountRushidro
+                | 49 -> incr TenderRossel.tenderCountRosgeo
+                | 50 -> incr TenderRossel.tenderCountRosseti
+                | _ -> ()
             let lotNumber = 1
             let idLot = ref 0
             let documents = doc.QuerySelectorAll("div.w-files-b h2:contains('Документация') + ul li a")

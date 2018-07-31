@@ -41,6 +41,7 @@ type TenderNeft(stn : Settings.T, tn : NeftRec) =
             let parser = new HtmlParser()
             let doc = parser.Parse(Page)
             let mutable cancelStatus = 0
+            let mutable updated = false
             let selectDateT =
                 sprintf 
                     "SELECT id_tender, date_version, cancel FROM %stender WHERE purchase_number = @purchase_number AND type_fz = @type_fz" 
@@ -54,6 +55,7 @@ type TenderNeft(stn : Settings.T, tn : NeftRec) =
             let dt = new DataTable()
             adapter.Fill(dt) |> ignore
             for row in dt.Rows do
+                updated <- true
                 //printfn "%A" <| (row.["date_version"])
                 match dateUpd >= ((row.["date_version"]) :?> DateTime) with
                 | true -> row.["cancel"] <- 1
@@ -130,7 +132,9 @@ type TenderNeft(stn : Settings.T, tn : NeftRec) =
             cmd9.Parameters.AddWithValue("@id_region", idRegion) |> ignore
             cmd9.ExecuteNonQuery() |> ignore
             idTender := int cmd9.LastInsertedId
-            incr TenderNeft.tenderCount
+            match updated with
+            | true -> incr TenderNeft.tenderUpCount
+            | false -> incr TenderNeft.tenderCount
             let idCustomer = ref 0
             let CustomerName = tn.OrgName
             if CustomerName <> "" then 
@@ -228,7 +232,7 @@ type TenderNeft(stn : Settings.T, tn : NeftRec) =
                 match dc.QuerySelector("td:nth-child(2) span a") with
                 | null -> ""
                 | ur -> ur.GetAttribute("href").Trim()
-            if urlAtt <> "" then
+            if urlAtt <> "" then 
                 urlAtt <- sprintf "https://zakupki.nefteavtomatika.ru%s" urlAtt
                 let insertDoc =
                     sprintf 

@@ -8,27 +8,27 @@ open System.Data
 open System.Linq
 open TypeE
 
-type TenderIrkutskOil(stn : Settings.T, urlT : string) = 
+type TenderIrkutskOil(stn : Settings.T, urlT : string) =
     inherit Tender("«Иркутская нефтяная компания»", "https://tenders.irkutskoil.ru/tenders.php")
     let settings = stn
     let typeFz = 30
     static member val tenderCount = ref 0
     static member val tenderUpCount = ref 0
     
-    override this.Parsing() = 
+    override this.Parsing() =
         let Page = Download.DownloadString urlT
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get start page", urlT)
         | s -> this.ParserPage(s)
         ()
     
-    member private this.GetDateS(input : string) : string option = 
+    member private this.GetDateS(input : string) : string option =
         match input with
         | Tools.RegexMatch2 @"(\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}).+(GMT [+|-]\d{2}:\d{2})" (gr1, gr2) -> 
             Some(sprintf "%s %s" gr1 gr2)
         | _ -> None
     
-    member private this.ParserPage(p : string) = 
+    member private this.ParserPage(p : string) =
         let parser = new HtmlParser()
         let doc = parser.Parse(p)
         let purNumT = doc.QuerySelector("table.lot_list tr.Info td")
@@ -49,7 +49,7 @@ type TenderIrkutskOil(stn : Settings.T, urlT : string) =
         match this.GetDateS(pubDateS) with
         | Some dtP -> pubDateS <- dtP
         | None -> raise <| System.Exception(sprintf "can not apply regex to datePub %s" urlT)
-        let datePub = 
+        let datePub =
             match pubDateS.DateFromString("dd.MM.yyyy HH:mm 'GMT 'K") with
             | Some d -> d
             | None -> raise <| System.Exception(sprintf "can not parse datePub %s" pubDateS)
@@ -62,7 +62,7 @@ type TenderIrkutskOil(stn : Settings.T, urlT : string) =
         match this.GetDateS(endDateS) with
         | Some dtP -> endDateS <- dtP
         | None -> raise <| System.Exception(sprintf "can not apply regex to endDate %s" urlT)
-        let endDate = 
+        let endDate =
             match endDateS.DateFromString("dd.MM.yyyy HH:mm 'GMT 'K") with
             | Some d -> d
             | None -> raise <| System.Exception(sprintf "can not parse endDate %s" endDateS)
@@ -71,7 +71,7 @@ type TenderIrkutskOil(stn : Settings.T, urlT : string) =
         use con = new MySqlConnection(stn.ConStr)
         con.Open()
         let href = urlT
-        let selectTend = 
+        let selectTend =
             sprintf 
                 "SELECT id_tender FROM %stender WHERE purchase_number = @purchase_number AND date_version = @date_version AND type_fz = @type_fz" 
                 stn.Prefix
@@ -85,7 +85,8 @@ type TenderIrkutskOil(stn : Settings.T, urlT : string) =
         else 
             reader.Close()
             let mutable cancelStatus = 0
-            let selectDateT = 
+            let mutable updated = false
+            let selectDateT =
                 sprintf 
                     "SELECT id_tender, date_version, cancel FROM %stender WHERE purchase_number = @purchase_number AND type_fz = @type_fz" 
                     stn.Prefix
@@ -98,6 +99,7 @@ type TenderIrkutskOil(stn : Settings.T, urlT : string) =
             let dt = new DataTable()
             adapter.Fill(dt) |> ignore
             for row in dt.Rows do
+                updated <- true
                 //printfn "%A" <| (row.["date_version"])
                 match dateUpd >= ((row.["date_version"]) :?> DateTime) with
                 | true -> row.["cancel"] <- 1
@@ -123,7 +125,7 @@ type TenderIrkutskOil(stn : Settings.T, urlT : string) =
                     reader.Close()
                 | false -> 
                     reader.Close()
-                    let addOrganizer = 
+                    let addOrganizer =
                         sprintf 
                             "INSERT INTO %sorganizer SET full_name = @full_name, contact_phone = @contact_phone, contact_person = @contact_person, contact_email = @contact_email, inn = @inn, kpp = @kpp, post_address = @post_address" 
                             stn.Prefix
@@ -159,7 +161,7 @@ type TenderIrkutskOil(stn : Settings.T, urlT : string) =
                     reader36.Close()
                 | false -> reader36.Close()
             let idTender = ref 0
-            let insertTender = 
+            let insertTender =
                 String.Format
                     ("INSERT INTO {0}tender SET id_xml = @id_xml, purchase_number = @purchase_number, doc_publish_date = @doc_publish_date, href = @href, purchase_object_info = @purchase_object_info, type_fz = @type_fz, id_organizer = @id_organizer, id_placing_way = @id_placing_way, id_etp = @id_etp, end_date = @end_date, scoring_date = @scoring_date, bidding_date = @bidding_date, cancel = @cancel, date_version = @date_version, num_version = @num_version, notice_version = @notice_version, xml = @xml, print_form = @print_form, id_region = @id_region", 
                      stn.Prefix)
@@ -186,7 +188,9 @@ type TenderIrkutskOil(stn : Settings.T, urlT : string) =
             cmd9.Parameters.AddWithValue("@id_region", idRegion) |> ignore
             cmd9.ExecuteNonQuery() |> ignore
             idTender := int cmd9.LastInsertedId
-            incr TenderIrkutskOil.tenderCount
+            match updated with
+            | true -> incr TenderIrkutskOil.tenderUpCount
+            | false -> incr TenderIrkutskOil.tenderCount
             let lotNumber = 1
             let idLot = ref 0
             let insertLot = sprintf "INSERT INTO %slot SET id_tender = @id_tender, lot_number = @lot_number" stn.Prefix
@@ -197,7 +201,7 @@ type TenderIrkutskOil(stn : Settings.T, urlT : string) =
             idLot := int cmd12.LastInsertedId
             let idCustomer = ref 0
             if OrgName <> "" then 
-                let selectCustomer = 
+                let selectCustomer =
                     sprintf "SELECT id_customer FROM %scustomer WHERE full_name = @full_name" stn.Prefix
                 let cmd3 = new MySqlCommand(selectCustomer, con)
                 cmd3.Prepare()
@@ -210,7 +214,7 @@ type TenderIrkutskOil(stn : Settings.T, urlT : string) =
                     reader.Close()
                 | false -> 
                     reader.Close()
-                    let insertCustomer = 
+                    let insertCustomer =
                         sprintf "INSERT INTO %scustomer SET reg_num = @reg_num, full_name = @full_name, inn = @inn" 
                             stn.Prefix
                     let RegNum = Guid.NewGuid().ToString()
@@ -221,7 +225,7 @@ type TenderIrkutskOil(stn : Settings.T, urlT : string) =
                     cmd14.Parameters.AddWithValue("@inn", OrgInn) |> ignore
                     cmd14.ExecuteNonQuery() |> ignore
                     idCustomer := int cmd14.LastInsertedId
-            let insertLotitem = 
+            let insertLotitem =
                 sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name" 
                     stn.Prefix
             let cmd19 = new MySqlCommand(insertLotitem, con)
@@ -234,12 +238,12 @@ type TenderIrkutskOil(stn : Settings.T, urlT : string) =
             for dc in documents do
                 let mutable nameF = dc.TextContent
                 nameF <- nameF.Replace(": скачать >>>", "")
-                let urlAtt = 
+                let urlAtt =
                     match dc.QuerySelector("a") with
                     | null -> ""
                     | ur -> ur.GetAttribute("href").Trim()
                 if urlAtt <> "" then 
-                    let insertDoc = 
+                    let insertDoc =
                         sprintf 
                             "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url" 
                             stn.Prefix

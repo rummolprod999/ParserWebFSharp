@@ -8,7 +8,7 @@ open System.Data
 open System.Linq
 open TypeE
 
-type TenderAkd(stn : Settings.T, urlT : string, purNum : string) = 
+type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
     inherit Tender("Электронная торговая площадка для проведения торгов - Аукционный Конкурсный Дом", 
                    "http://www.a-k-d.ru/tender")
     let settings = stn
@@ -16,19 +16,19 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
     static member val tenderCount = ref 0
     static member val tenderUpCount = ref 0
     
-    override this.Parsing() = 
+    override this.Parsing() =
         let Page = Download.DownloadString urlT
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", urlT)
         | s -> this.ParserPage(s)
         ()
     
-    member private this.GetPriceS(input : string) : string option = 
+    member private this.GetPriceS(input : string) : string option =
         match input with
         | Tools.RegexMatch1 @"^(\d+[\d \.]*\.\d{2})" gr1 -> Some(gr1)
         | _ -> None
     
-    member private this.ParsingDocs (con : MySqlConnection) (idTender : int) (elem : IElement) = 
+    member private this.ParsingDocs (con : MySqlConnection) (idTender : int) (elem : IElement) =
         let docName = this.GetDefaultFromNull <| elem.QuerySelector("td.name a")
         match docName with
         | "" -> ()
@@ -36,7 +36,7 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
             let hrefT = elem.QuerySelector("td.name a").GetAttribute("href")
             let href = sprintf "http://www.a-k-d.ru%s" hrefT
             let desc = this.GetDefaultFromNull <| elem.QuerySelector("td:last-child")
-            let addAttach = 
+            let addAttach =
                 sprintf 
                     "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url, description = @description" 
                     stn.Prefix
@@ -48,7 +48,7 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
             cmd5.ExecuteNonQuery() |> ignore
         ()
     
-    member private this.ParserPage(p : string) = 
+    member private this.ParserPage(p : string) =
         let parser = new HtmlParser()
         let doc = parser.Parse(p)
         let pubDateT = doc.QuerySelector("th:contains('Публикация электронной процедуры') + td > span")
@@ -57,7 +57,7 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
         | _ -> ()
         let pubDateS = pubDateT.TextContent.Replace("г.", "").Trim().ReplaceDate().RegexReplace()
         
-        let datePub = 
+        let datePub =
             match pubDateS.DateFromString("d.MM.yyyy") with
             | Some d -> d
             | None -> 
@@ -67,12 +67,12 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
         
         let endDateT = doc.QuerySelector("th:contains('Окончание приема заявок') + td > span")
         
-        let endDateS = 
+        let endDateS =
             match endDateT with
             | null -> ""
             | _ -> endDateT.TextContent.Replace("г.", "").Trim().ReplaceDate().RegexReplace()
         
-        let endDate = 
+        let endDate =
             match endDateS.DateFromString("d.MM.yyyy HH:mm") with
             | Some d -> d
             | None -> 
@@ -82,12 +82,12 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
         
         let scoringDateT = doc.QuerySelector("th:contains('Дата окончания') + td > span")
         
-        let scoringDateS = 
+        let scoringDateS =
             match scoringDateT with
             | null -> ""
             | _ -> scoringDateT.TextContent.Replace("г.", "").Trim().ReplaceDate().RegexReplace()
         
-        let scoringDate = 
+        let scoringDate =
             match scoringDateS.DateFromString("d.MM.yyyy HH:mm") with
             | Some d -> d
             | None -> 
@@ -97,12 +97,12 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
         
         let biddingDateT = doc.QuerySelector("th:contains('Начало') + td > span")
         
-        let biddingDateS = 
+        let biddingDateS =
             match biddingDateT with
             | null -> ""
             | _ -> biddingDateT.TextContent.Replace("г.", "").Trim().ReplaceDate().RegexReplace()
         
-        let biddingDate = 
+        let biddingDate =
             match biddingDateS.DateFromString("d.MM.yyyy HH:mm") with
             | Some d -> d
             | None -> 
@@ -115,7 +115,7 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
         use con = new MySqlConnection(stn.ConStr)
         con.Open()
         let href = urlT
-        let selectTend = 
+        let selectTend =
             sprintf 
                 "SELECT id_tender FROM %stender WHERE purchase_number = @purchase_number AND  doc_publish_date = @doc_publish_date AND type_fz = @type_fz AND end_date = @end_date AND notice_version = @notice_version" 
                 stn.Prefix
@@ -131,7 +131,8 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
         else 
             reader.Close()
             let mutable cancelStatus = 0
-            let selectDateT = 
+            let mutable updated = false
+            let selectDateT =
                 sprintf 
                     "SELECT id_tender, date_version, cancel FROM %stender WHERE purchase_number = @purchase_number AND type_fz = @type_fz" 
                     stn.Prefix
@@ -144,6 +145,7 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
             let dt = new DataTable()
             adapter.Fill(dt) |> ignore
             for row in dt.Rows do
+                updated <- true
                 //printfn "%A" <| (row.["date_version"])
                 match dateUpd >= ((row.["date_version"]) :?> DateTime) with
                 | true -> row.["cancel"] <- 1
@@ -169,14 +171,14 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
                     reader.Close()
                 | false -> 
                     reader.Close()
-                    let addOrganizer = 
+                    let addOrganizer =
                         sprintf 
                             "INSERT INTO %sorganizer SET full_name = @full_name, contact_person = @contact_person, post_address = @post_address, fact_address = @fact_address" 
                             stn.Prefix
-                    let contactPerson = 
+                    let contactPerson =
                         this.GetDefaultFromNull <| doc.QuerySelector("th:contains('Контактное лицо') + td")
                     let postAddress = this.GetDefaultFromNull <| doc.QuerySelector("th:contains('Почтовый адрес') + td")
-                    let factAddress = 
+                    let factAddress =
                         this.GetDefaultFromNull <| doc.QuerySelector("th:contains('Фактический адрес') + td")
                     let cmd5 = new MySqlCommand(addOrganizer, con)
                     cmd5.Parameters.AddWithValue("@full_name", OrgName) |> ignore
@@ -187,7 +189,7 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
                     IdOrg := int cmd5.LastInsertedId
                     ()
             let idPlacingWay = ref 0
-            let PlacingWayName = 
+            let PlacingWayName =
                 this.GetDefaultFromNull <| doc.QuerySelector("th:contains('Наименование способа размещения') + td")
             match PlacingWayName with
             | "" -> ()
@@ -195,11 +197,11 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
             let idEtp = this.GetEtp con settings
             let numVersion = 1
             let mutable idRegion = 0
-            let purName = 
+            let purName =
                 this.GetDefaultFromNull 
                 <| doc.QuerySelector("th:contains('Наименование электронной процедуры') + td > span")
             let idTender = ref 0
-            let insertTender = 
+            let insertTender =
                 String.Format
                     ("INSERT INTO {0}tender SET id_xml = @id_xml, purchase_number = @purchase_number, doc_publish_date = @doc_publish_date, href = @href, purchase_object_info = @purchase_object_info, type_fz = @type_fz, id_organizer = @id_organizer, id_placing_way = @id_placing_way, id_etp = @id_etp, end_date = @end_date, scoring_date = @scoring_date, bidding_date = @bidding_date, cancel = @cancel, date_version = @date_version, num_version = @num_version, notice_version = @notice_version, xml = @xml, print_form = @print_form, id_region = @id_region", 
                      stn.Prefix)
@@ -226,21 +228,23 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
             cmd9.Parameters.AddWithValue("@id_region", idRegion) |> ignore
             cmd9.ExecuteNonQuery() |> ignore
             idTender := int cmd9.LastInsertedId
-            incr TenderAkd.tenderCount
+            match updated with
+            | true -> incr TenderAkd.tenderUpCount
+            | false -> incr TenderAkd.tenderCount
             let documents = doc.QuerySelectorAll("tbody.zen-direct-upload-container > tr")
             documents |> Seq.iter (this.ParsingDocs con !idTender)
             let lotNumber = 1
             let idLot = ref 0
             let maxPriceT = this.GetDefaultFromNull <| doc.QuerySelector("th:contains('Начальная цена') + td > span")
             
-            let maxPrice = 
+            let maxPrice =
                 match this.GetPriceS(maxPriceT) with
                 | None -> ""
                 | Some pr -> pr.RegexDeleteWhitespace()
             
-            let financeSource = 
+            let financeSource =
                 this.GetDefaultFromNull <| doc.QuerySelector("th:contains('Источник финансирования') + td")
-            let insertLot = 
+            let insertLot =
                 sprintf 
                     "INSERT INTO %slot SET id_tender = @id_tender, lot_number = @lot_number, max_price = @max_price, finance_source = @finance_source" 
                     stn.Prefix
@@ -254,7 +258,7 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
             let idCustomer = ref 0
             let CustomerName = this.GetDefaultFromNull <| doc.QuerySelector("th:contains('Заказчик') + td")
             if CustomerName <> "" then 
-                let selectCustomer = 
+                let selectCustomer =
                     sprintf "SELECT id_customer FROM %scustomer WHERE full_name = @full_name" stn.Prefix
                 let cmd3 = new MySqlCommand(selectCustomer, con)
                 cmd3.Prepare()
@@ -267,7 +271,7 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
                     reader.Close()
                 | false -> 
                     reader.Close()
-                    let insertCustomer = 
+                    let insertCustomer =
                         sprintf "INSERT INTO %scustomer SET reg_num = @reg_num, full_name = @full_name" stn.Prefix
                     let RegNum = Guid.NewGuid().ToString()
                     let cmd14 = new MySqlCommand(insertCustomer, con)
@@ -276,7 +280,7 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
                     cmd14.Parameters.AddWithValue("@full_name", CustomerName) |> ignore
                     cmd14.ExecuteNonQuery() |> ignore
                     idCustomer := int cmd14.LastInsertedId
-            let insertLotitem = 
+            let insertLotitem =
                 sprintf 
                     "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum" 
                     stn.Prefix
@@ -293,7 +297,7 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
             | (x, y) & ("", "") -> ()
             | (x, y) -> 
                 let deliv = sprintf "Сроки исполнения: %s \n Сроки и условия оплаты: %s" x y
-                let insertCustomerRequirement = 
+                let insertCustomerRequirement =
                     sprintf 
                         "INSERT INTO %scustomer_requirement SET id_lot = @id_lot, id_customer = @id_customer, delivery_term = @delivery_term" 
                         stn.Prefix

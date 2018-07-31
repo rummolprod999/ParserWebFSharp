@@ -8,27 +8,27 @@ open System.Data
 open System.Linq
 open TypeE
 
-type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : string, PlacingWayName : string, OrgName : string) = 
+type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : string, PlacingWayName : string, OrgName : string) =
     inherit Tender("«Группа ЛСР»", "http://zakupki.lsrgroup.ru")
     let settings = stn
     let typeFz = 34
     static member val tenderCount = ref 0
     static member val tenderUpCount = ref 0
     
-    override this.Parsing() = 
+    override this.Parsing() =
         let Page = Download.DownloadString urlT
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", urlT)
         | s -> this.ParserPage(s)
     
-    member private this.ParsingDocs (con : MySqlConnection) (idTender : int) (elem : IElement) = 
+    member private this.ParsingDocs (con : MySqlConnection) (idTender : int) (elem : IElement) =
         let docName = elem.TextContent.Trim()
         match docName with
         | "" -> ()
         | x -> 
             let hrefT = elem.GetAttribute("href")
             let href = sprintf "http://zakupki.lsrgroup.ru%s" hrefT
-            let addAttach = 
+            let addAttach =
                 sprintf "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url" 
                     stn.Prefix
             let cmd5 = new MySqlCommand(addAttach, con)
@@ -38,18 +38,18 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
             cmd5.ExecuteNonQuery() |> ignore
         ()
     
-    member private this.ParserPage(p : string) = 
+    member private this.ParserPage(p : string) =
         let parser = new HtmlParser()
         let doc = parser.Parse(p)
         let datePub = DateTime.Now
         let endDateT = doc.QuerySelector("li:contains('Дата окончания подачи') > span:first-child")
         
-        let endDateS = 
+        let endDateS =
             match endDateT with
             | null -> ""
             | _ -> endDateT.TextContent.Replace("г.", "").Trim().ReplaceDate().RegexReplace()
         
-        let endDate = 
+        let endDate =
             match endDateS.DateFromString("d.MM.yyyy") with
             | Some d -> d
             | None -> 
@@ -59,12 +59,12 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
         
         let scoringDateT = doc.QuerySelector("li:contains('Подведение итогов') > span:first-child")
         
-        let scoringDateS = 
+        let scoringDateS =
             match scoringDateT with
             | null -> ""
             | _ -> scoringDateT.TextContent.Replace("г.", "").Trim().ReplaceDate().RegexReplace()
         
-        let scoringDate = 
+        let scoringDate =
             match scoringDateS.DateFromString("d.MM.yyyy") with
             | Some d -> d
             | None -> 
@@ -76,7 +76,7 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
         use con = new MySqlConnection(stn.ConStr)
         con.Open()
         let href = urlT
-        let selectTend = 
+        let selectTend =
             sprintf 
                 "SELECT id_tender FROM %stender WHERE purchase_number = @purchase_number AND type_fz = @type_fz AND end_date = @end_date AND scoring_date = @scoring_date" 
                 stn.Prefix
@@ -91,7 +91,8 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
         else 
             reader.Close()
             let mutable cancelStatus = 0
-            let selectDateT = 
+            let mutable updated = false
+            let selectDateT =
                 sprintf 
                     "SELECT id_tender, date_version, cancel FROM %stender WHERE purchase_number = @purchase_number AND type_fz = @type_fz" 
                     stn.Prefix
@@ -104,6 +105,7 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
             let dt = new DataTable()
             adapter.Fill(dt) |> ignore
             for row in dt.Rows do
+                updated <- true
                 //printfn "%A" <| (row.["date_version"])
                 match dateUpd >= ((row.["date_version"]) :?> DateTime) with
                 | true -> row.["cancel"] <- 1
@@ -128,7 +130,7 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
                     reader.Close()
                 | false -> 
                     reader.Close()
-                    let addOrganizer = 
+                    let addOrganizer =
                         sprintf 
                             "INSERT INTO %sorganizer SET full_name = @full_name, contact_person = @contact_person, post_address = @post_address, fact_address = @fact_address" 
                             stn.Prefix
@@ -151,7 +153,7 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
             let numVersion = 1
             let mutable idRegion = 0
             let idTender = ref 0
-            let insertTender = 
+            let insertTender =
                 String.Format
                     ("INSERT INTO {0}tender SET id_xml = @id_xml, purchase_number = @purchase_number, doc_publish_date = @doc_publish_date, href = @href, purchase_object_info = @purchase_object_info, type_fz = @type_fz, id_organizer = @id_organizer, id_placing_way = @id_placing_way, id_etp = @id_etp, end_date = @end_date, scoring_date = @scoring_date, bidding_date = @bidding_date, cancel = @cancel, date_version = @date_version, num_version = @num_version, notice_version = @notice_version, xml = @xml, print_form = @print_form, id_region = @id_region", 
                      stn.Prefix)
@@ -178,7 +180,9 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
             cmd9.Parameters.AddWithValue("@id_region", idRegion) |> ignore
             cmd9.ExecuteNonQuery() |> ignore
             idTender := int cmd9.LastInsertedId
-            incr TenderLsr.tenderCount
+            match updated with
+            | true -> incr TenderLsr.tenderUpCount
+            | false -> incr TenderLsr.tenderCount
             let documents = doc.QuerySelectorAll("div.tender_versions a.dload")
             documents |> Seq.iter (this.ParsingDocs con !idTender)
             let lotNumber = 1
@@ -192,7 +196,7 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
             let idCustomer = ref 0
             let CustomerName = OrgName
             if CustomerName <> "" then 
-                let selectCustomer = 
+                let selectCustomer =
                     sprintf "SELECT id_customer FROM %scustomer WHERE full_name = @full_name" stn.Prefix
                 let cmd3 = new MySqlCommand(selectCustomer, con)
                 cmd3.Prepare()
@@ -205,7 +209,7 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
                     reader.Close()
                 | false -> 
                     reader.Close()
-                    let insertCustomer = 
+                    let insertCustomer =
                         sprintf "INSERT INTO %scustomer SET reg_num = @reg_num, full_name = @full_name" stn.Prefix
                     let RegNum = Guid.NewGuid().ToString()
                     let cmd14 = new MySqlCommand(insertCustomer, con)
@@ -214,7 +218,7 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
                     cmd14.Parameters.AddWithValue("@full_name", CustomerName) |> ignore
                     cmd14.ExecuteNonQuery() |> ignore
                     idCustomer := int cmd14.LastInsertedId
-            let insertLotitem = 
+            let insertLotitem =
                 sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name" 
                     stn.Prefix
             let cmd19 = new MySqlCommand(insertLotitem, con)

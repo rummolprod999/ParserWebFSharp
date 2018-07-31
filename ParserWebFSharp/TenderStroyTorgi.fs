@@ -47,6 +47,7 @@ type TenderStroyTorgi(stn : Settings.T, tn : StroyTorgiRec, typeFz : int, etpNam
             let parser = new HtmlParser()
             let doc = parser.Parse(Page)
             let mutable cancelStatus = 0
+            let mutable updated = false
             let selectDateT =
                 sprintf 
                     "SELECT id_tender, date_version, cancel FROM %stender WHERE purchase_number = @purchase_number AND type_fz = @type_fz" 
@@ -60,6 +61,7 @@ type TenderStroyTorgi(stn : Settings.T, tn : StroyTorgiRec, typeFz : int, etpNam
             let dt = new DataTable()
             adapter.Fill(dt) |> ignore
             for row in dt.Rows do
+                updated <- true
                 //printfn "%A" <| (row.["date_version"])
                 match dateUpd >= ((row.["date_version"]) :?> DateTime) with
                 | true -> row.["cancel"] <- 1
@@ -134,7 +136,9 @@ type TenderStroyTorgi(stn : Settings.T, tn : StroyTorgiRec, typeFz : int, etpNam
             cmd9.Parameters.AddWithValue("@id_region", idRegion) |> ignore
             cmd9.ExecuteNonQuery() |> ignore
             idTender := int cmd9.LastInsertedId
-            incr TenderStroyTorgi.tenderCount
+            match updated with
+            | true -> incr TenderStroyTorgi.tenderUpCount
+            | false -> incr TenderStroyTorgi.tenderCount
             let idCustomer = ref 0
             if not <| tn.OrgName.Contains("Закрытые торги") && tn.OrgName <> "" then 
                 let CustomerName = tn.OrgName
@@ -191,6 +195,7 @@ type TenderStroyTorgi(stn : Settings.T, tn : StroyTorgiRec, typeFz : int, etpNam
                         match PriceT.Get1FromRegexp @"([\d+| ]+)" with
                         | Some x -> x.Trim()
                         | None -> ""
+                    
                     Price <- Regex.Replace(Price.ToString(), @"\s+", "")
                     let QuantT =
                         match l.QuerySelector("div.lot-goods_group__amount div:nth-child(2)") with
@@ -201,6 +206,7 @@ type TenderStroyTorgi(stn : Settings.T, tn : StroyTorgiRec, typeFz : int, etpNam
                         match QuantT.Get1FromRegexp @"([\d+| ]+)" with
                         | Some x -> x.Trim()
                         | None -> ""
+                    
                     Quantity <- Regex.Replace(Quantity.ToString(), @"\s+", "")
                     let okei =
                         match QuantT.Get1FromRegexp @"\s+(.+)$" with

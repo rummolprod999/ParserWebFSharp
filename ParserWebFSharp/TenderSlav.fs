@@ -17,7 +17,6 @@ type TenderSlav(stn : Settings.T, tn : SlavNeftRec, typeFz : int, etpName : stri
     static member val tenderUpCountMegion = ref 0
     static member val tenderUpCountYanos = ref 0
     static member val tenderUpCountNgre = ref 0
-    
     override this.Parsing() =
         let dateUpd = DateTime.Now
         use con = new MySqlConnection(stn.ConStr)
@@ -35,9 +34,10 @@ type TenderSlav(stn : Settings.T, tn : SlavNeftRec, typeFz : int, etpName : stri
         cmd.Parameters.AddWithValue("@doc_publish_date", tn.DatePub) |> ignore
         let reader : MySqlDataReader = cmd.ExecuteReader()
         if reader.HasRows then reader.Close()
-        else
+        else 
             reader.Close()
             let mutable cancelStatus = 0
+            let mutable updated = false
             let selectDateT =
                 sprintf 
                     "SELECT id_tender, date_version, cancel FROM %stender WHERE purchase_number = @purchase_number AND type_fz = @type_fz AND notice_version = @notice_version" 
@@ -52,6 +52,7 @@ type TenderSlav(stn : Settings.T, tn : SlavNeftRec, typeFz : int, etpName : stri
             let dt = new DataTable()
             adapter.Fill(dt) |> ignore
             for row in dt.Rows do
+                updated <- true
                 //printfn "%A" <| (row.["date_version"])
                 match dateUpd >= ((row.["date_version"]) :?> DateTime) with
                 | true -> row.["cancel"] <- 1
@@ -125,10 +126,17 @@ type TenderSlav(stn : Settings.T, tn : SlavNeftRec, typeFz : int, etpName : stri
             cmd9.Parameters.AddWithValue("@id_region", idRegion) |> ignore
             cmd9.ExecuteNonQuery() |> ignore
             idTender := int cmd9.LastInsertedId
-            match tn.typeT with
-            | MEGION -> incr TenderSlav.tenderCountMegion
-            | YANOS -> incr TenderSlav.tenderCountYanos
-            | NGRE -> incr TenderSlav.tenderCountNgre
+            match updated with
+            | true -> 
+                match tn.typeT with
+                | MEGION -> incr TenderSlav.tenderUpCountMegion
+                | YANOS -> incr TenderSlav.tenderUpCountYanos
+                | NGRE -> incr TenderSlav.tenderUpCountNgre
+            | false -> 
+                match tn.typeT with
+                | MEGION -> incr TenderSlav.tenderCountMegion
+                | YANOS -> incr TenderSlav.tenderCountYanos
+                | NGRE -> incr TenderSlav.tenderCountNgre
             let insertDoc =
                 sprintf "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url" 
                     stn.Prefix

@@ -60,6 +60,7 @@ type TenderAero(stn : Settings.T, tn : AeroRec, typeFz : int, etpName : string, 
             let parser = new HtmlParser()
             let doc = parser.Parse(Page)
             let mutable cancelStatus = 0
+            let mutable updated = false
             let selectDateT =
                 sprintf 
                     "SELECT id_tender, date_version, cancel FROM %stender WHERE purchase_number = @purchase_number AND type_fz = @type_fz" 
@@ -73,6 +74,7 @@ type TenderAero(stn : Settings.T, tn : AeroRec, typeFz : int, etpName : string, 
             let dt = new DataTable()
             adapter.Fill(dt) |> ignore
             for row in dt.Rows do
+                updated <- true
                 //printfn "%A" <| (row.["date_version"])
                 match dateUpd >= ((row.["date_version"]) :?> DateTime) with
                 | true -> row.["cancel"] <- 1
@@ -149,7 +151,9 @@ type TenderAero(stn : Settings.T, tn : AeroRec, typeFz : int, etpName : string, 
             cmd9.Parameters.AddWithValue("@id_region", idRegion) |> ignore
             cmd9.ExecuteNonQuery() |> ignore
             idTender := int cmd9.LastInsertedId
-            incr TenderAero.tenderCount
+            match updated with
+            | true -> incr TenderAero.tenderUpCount
+            | false -> incr TenderAero.tenderCount
             let documents = doc.QuerySelectorAll("span:contains('Приложенные документы') + table tbody tr")
             documents |> Seq.iter (this.ParsingDocs con !idTender)
             let CustomerName =
