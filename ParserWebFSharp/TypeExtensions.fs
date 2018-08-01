@@ -27,6 +27,7 @@ module TypeE =
         
         member this.RegexReplace() = Regex.Replace(this, @"\s+", " ")
         member this.RegexDeleteWhitespace() = Regex.Replace(this, @"\s+", "")
+        
         member this.ReplaceDate() =
             if this.Contains("января") then this.Replace(" января ", ".01.")
             elif this.Contains("февраля") then this.Replace(" февраля ", ".02.")
@@ -40,4 +41,19 @@ module TypeE =
             elif this.Contains("октября") then this.Replace(" октября ", ".10.")
             elif this.Contains("ноября") then this.Replace(" ноября ", ".11.")
             elif this.Contains("декабря") then this.Replace(" декабря ", ".12.")
+            else this
+        
+        member this.ReplaceDateAsgor() =
+            if this.Contains("Января") then this.Replace("Января", "01")
+            elif this.Contains("Февраля") then this.Replace("Февраля", "02")
+            elif this.Contains("Марта") then this.Replace("Марта", "03")
+            elif this.Contains("Апреля") then this.Replace("Апреля", "04")
+            elif this.Contains("Мая") then this.Replace("Мая", "05")
+            elif this.Contains("Июня") then this.Replace("Июня", "06")
+            elif this.Contains("Июля") then this.Replace("Июля", "07")
+            elif this.Contains("Августа") then this.Replace("Августа", "08")
+            elif this.Contains("Сентября") then this.Replace("Сентября", "09")
+            elif this.Contains("Октября") then this.Replace("Октября", "10")
+            elif this.Contains("Ноября") then this.Replace("Ноября", "11")
+            elif this.Contains("Декабря") then this.Replace("Декабря", "12")
             else this

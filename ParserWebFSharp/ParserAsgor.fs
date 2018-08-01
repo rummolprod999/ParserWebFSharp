@@ -49,6 +49,28 @@ type ParserAsgor(stn : Settings.T) =
             | Some x -> x.Trim()
             | None -> raise <| System.NullReferenceException(sprintf "Href not found in %s %s" url HrefT)
         
+        let PubDateT =
+            match t.QuerySelector("div.date div:contains('Опубликовано:') + div") with
+            | null -> raise <| System.NullReferenceException(sprintf "PubDateT not found in %s" url)
+            | ur -> ur.TextContent.Trim()
+        
+        let dateCons = (fun (s : string) -> s.Replace("| ", "")) >> (fun (s : string) -> s.ReplaceDateAsgor())
+        
+        let datePub =
+            match (dateCons PubDateT).DateFromString("d MM yyyy HH:mm") with
+            | Some d -> d
+            | None -> raise <| System.Exception(sprintf "can not parse datePub %s" PubDateT)
+        
+        let EndDateT =
+            match t.QuerySelector("div.date div:contains('Рассмотрение заявок:') + div") with
+            | null -> ""
+            | ur -> ur.TextContent.Trim()
+        
+        let dateEnd =
+            match (dateCons EndDateT).DateFromString("d MM yyyy HH:mm") with
+            | Some d -> d
+            | None -> raise <| System.Exception(sprintf "can not parse dateEnd %s" EndDateT)
+        
         Href <- sprintf "https://etp.asgor.su%s" Href
         let OrgName =
             match t.QuerySelector("span:contains('Организатор:') + span") with
@@ -74,8 +96,29 @@ type ParserAsgor(stn : Settings.T) =
             | ur -> ur.TextContent.Trim()
         
         let mutable Nmck =
-            match NmckT.Get1FromRegexp @"([\d ,]+)\s" with
+            match NmckT.Get1FromRegexp @"([\d \.]+)\s" with
             | Some x -> Regex.Replace(x.Replace(",", ".").Trim(), @"\s+", "")
             | None -> ""
         
-        printfn "%s" Nmck
+        let pwName =
+            match t.QuerySelector("div.main-info div.type") with
+            | null -> ""
+            | ur -> ur.TextContent.Trim()
+        
+        let ten =
+            { Href = Href
+              PurNum = PurNum
+              PurName = PurName
+              OrgName = OrgName
+              CusName = CusName
+              DatePub = datePub
+              DateEnd = dateEnd
+              status = Status
+              PwayName = pwName
+              Nmck = Nmck
+              NameLots = Lots }
+        
+        try 
+            let T = TenderAsgor(set, ten, 72, "ООО \"АСГОР\"", "https://etp.asgor.su/")
+            T.Parsing()
+        with ex -> Logging.Log.logger (ex, url)
