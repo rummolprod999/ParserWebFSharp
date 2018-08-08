@@ -44,6 +44,8 @@ module Settings =
         let mutable LogPathTendersStroyTorgi = ""
         let mutable TempPathTendersAsgor = ""
         let mutable LogPathTendersAsgor = ""
+        let mutable TempPathTendersGosYakut = ""
+        let mutable LogPathTendersGosYakut = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -115,6 +117,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_asgor" then 
                     LogPathTendersAsgor <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
                                                (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_gosyakut" then 
+                    TempPathTendersGosYakut <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                   (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_gosyakut" then 
+                    LogPathTendersGosYakut <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                  (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -137,6 +145,7 @@ module Settings =
                 | Aero -> TempPathTendersAero
                 | StroyTorgi -> TempPathTendersStroyTorgi
                 | Asgor -> TempPathTendersAsgor
+                | GosYakut -> TempPathTendersGosYakut
             
             let LogPathTenders =
                 match arg with
@@ -150,6 +159,7 @@ module Settings =
                 | Aero -> LogPathTendersAero
                 | StroyTorgi -> LogPathTendersStroyTorgi
                 | Asgor -> LogPathTendersAsgor
+                | GosYakut -> LogPathTendersGosYakut
             
             { Database = Database
               TempPathTenders = TempPathTenders

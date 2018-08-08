@@ -3,6 +3,8 @@ namespace ParserWeb
 open System.Text.RegularExpressions
 
 module Tools = 
+    open AngleSharp
+
     let (|RegexMatch2|_|) (pattern : string) (input : string) = 
         let result = Regex.Match(input, pattern)
         if result.Success then 
@@ -111,3 +113,19 @@ module Tools =
         | s when s.Contains("севастоп") -> "севастоп"
         | s when s.Contains("байкон") -> "байкон"
         | _ -> ""
+    
+    let GetDateFromStringMonth(s: string) =
+        match s with 
+        | s when s.Contains("января") -> s.Replace("января", "01")
+        | s when s.Contains("февраля") -> s.Replace("февраля", "02")
+        | s when s.Contains("марта") -> s.Replace("марта", "03")
+        | s when s.Contains("апреля") -> s.Replace("апреля", "04")
+        | s when s.Contains("мая") -> s.Replace("мая", "05")
+        | s when s.Contains("июня") -> s.Replace("июня", "06")
+        | s when s.Contains("июля") -> s.Replace("июля", "07")
+        | s when s.Contains("августа") -> s.Replace("августа", "08")
+        | s when s.Contains("сентября") -> s.Replace("сентября", "09")
+        | s when s.Contains("октября") -> s.Replace("октября", "10")
+        | s when s.Contains("ноября") -> s.Replace("ноября", "11")
+        | s when s.Contains("декабря") -> s.Replace("декабря", "12")
+        | _ -> s

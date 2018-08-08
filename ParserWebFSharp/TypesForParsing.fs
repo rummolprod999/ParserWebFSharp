@@ -13,6 +13,7 @@ type Arguments =
     | Aero
     | StroyTorgi
     | Asgor
+    | GosYakut
 
 type SlavNeft =
     | MEGION
@@ -72,4 +73,15 @@ type AsgorRec =
       status : string
       PwayName : string
       Nmck : string
-      NameLots : string Set}
+      NameLots : string Set }
+
+type GosYakutRec =
+    { Href : string
+      PurNum : string
+      PurName : string
+      CusName : string
+      CusUrl : string
+      DatePub : DateTime
+      DateEnd : DateTime
+      PwayName : string
+      Nmck : string }

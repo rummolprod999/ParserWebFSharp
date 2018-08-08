@@ -32,6 +32,8 @@
     <Compile Include="ParserStroyTorgi.fs" />
     <Compile Include="TenderAsgor.fs" />
     <Compile Include="ParserAsgor.fs" />
+    <Compile Include="TenderGosYakut.fs" />
+    <Compile Include="ParserGosYakut.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

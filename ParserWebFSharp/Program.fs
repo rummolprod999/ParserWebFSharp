@@ -51,6 +51,10 @@ module Start =
             let settings = Settings.getSettings (Asgor)
             let p = Init(settings, Asgor)
             p.Parsing()
+        | "gosyakut" -> 
+            let settings = Settings.getSettings (GosYakut)
+            let p = Init(settings, GosYakut)
+            p.Parsing()
         | _ -> 
             printf "Bad arguments, use %s" arguments
             Environment.Exit(1)

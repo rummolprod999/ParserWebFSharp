@@ -13,6 +13,7 @@
         <e p="ParserAkd.fs" t="Include" />
         <e p="ParserAsgor.fs" t="Include" />
         <e p="ParserButb.fs" t="Include" />
+        <e p="ParserGosYakut.fs" t="Include" />
         <e p="ParserIrkutskOil.fs" t="Include" />
         <e p="ParserLsr.fs" t="Include" />
         <e p="ParserNeft.fs" t="Include" />
@@ -26,6 +27,7 @@
         <e p="TenderAkd.fs" t="Include" />
         <e p="TenderAsgor.fs" t="Include" />
         <e p="TenderButb.fs" t="Include" />
+        <e p="TenderGosYakut.fs" t="Include" />
         <e p="TenderIrkutskOil.fs" t="Include" />
         <e p="TenderLsr.fs" t="Include" />
         <e p="TenderNeft.fs" t="Include" />

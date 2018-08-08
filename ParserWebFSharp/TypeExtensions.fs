@@ -17,6 +17,12 @@ module TypeE =
             | Tools.RegexMatch1 regex gr1 -> Some(gr1)
             | _ -> None
         
+        member this.GetPriceFromString(?template) : string =
+            let templ = defaultArg template @"([\d, ]+)"
+            match this.Get1FromRegexp templ with
+            | Some x -> Regex.Replace(x.Replace(",", ".").Trim(), @"\s+", "")
+            | None -> ""
+        
         member this.DateFromStringRus(pat : string) =
             try 
                 Some(DateTime.ParseExact(this, pat, CultureInfo.CreateSpecificCulture("ru-RU")))
@@ -27,6 +33,7 @@ module TypeE =
         
         member this.RegexReplace() = Regex.Replace(this, @"\s+", " ")
         member this.RegexDeleteWhitespace() = Regex.Replace(this, @"\s+", "")
+        member this.RegexCutWhitespace() = Regex.Replace(this, @"\s+", " ")
         
         member this.ReplaceDate() =
             if this.Contains("января") then this.Replace(" января ", ".01.")
