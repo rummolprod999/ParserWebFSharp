@@ -34,6 +34,8 @@
     <Compile Include="ParserAsgor.fs" />
     <Compile Include="TenderGosYakut.fs" />
     <Compile Include="ParserGosYakut.fs" />
+    <Compile Include="TenderRosTend.fs" />
+    <Compile Include="ParserRostendParall.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

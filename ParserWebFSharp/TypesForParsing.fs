@@ -14,6 +14,7 @@ type Arguments =
     | StroyTorgi
     | Asgor
     | GosYakut
+    | RosTend
 
 type SlavNeft =
     | MEGION
@@ -85,3 +86,14 @@ type GosYakutRec =
       DateEnd : DateTime
       PwayName : string
       Nmck : string }
+
+type RosTendRec =
+    { Href : string
+      PurNum : string
+      PurName : string
+      DatePub : DateTime
+      Region : string
+      Nmck : string
+      DelivPlace : string
+      Currency : string
+      Page : string }
