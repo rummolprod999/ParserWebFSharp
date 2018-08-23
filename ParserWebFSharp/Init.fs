@@ -196,7 +196,7 @@ type Init(s : Settings.T, arg : Arguments) =
     member private this.ParsingRosTendParall() =
         Logging.Log.logger "Начало парсинга"
         try 
-            this.GetParser(ParserRosTendParall(s))
+            this.GetParser(ParserRosTendXml(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderRosTend.tenderCount)
