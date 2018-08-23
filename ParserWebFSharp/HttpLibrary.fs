@@ -66,3 +66,23 @@ module Download =
                 else incr count
                 Thread.Sleep(5000)
         s
+    
+    let DownloadFileSimple (url : string) (patharch : string) : FileInfo =
+        let mutable ret = null
+        let downCount = ref 0
+        let mutable cc = true
+        while cc do
+            try 
+                let wc = new WebClient()
+                wc.DownloadFile(url, patharch)
+                ret <- new FileInfo(patharch)
+                cc <- false
+            with _ -> 
+                let FileD = new FileInfo(patharch)
+                if FileD.Exists then FileD.Delete()
+                if !downCount = 0 then 
+                    Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток" url !downCount)
+                    cc <- false
+                else decr downCount
+                Thread.Sleep(5000)
+        ret
