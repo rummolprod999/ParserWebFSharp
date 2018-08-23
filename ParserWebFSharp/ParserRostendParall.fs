@@ -170,7 +170,7 @@ type ParserRosTendParall(stn : Settings.T) =
             | None -> DateTime.MinValue
         
         try 
-            let T = TenderRosTend(set, tn, 82, "ООО Тендеры и закупки", "http://rostender.info", dateEnd)
+            let T = TenderRosTend(set, tn, 82, "ООО Тендеры и закупки", "http://rostender.info", dateEnd, "")
             T.Parsing()
         with ex -> Logging.Log.logger (ex, tn.Href)
         ()

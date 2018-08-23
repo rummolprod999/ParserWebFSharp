@@ -8,7 +8,7 @@ open System.Data
 open System.Linq
 open TypeE
 
-type TenderRosTend(stn : Settings.T, tn : RosTendRec, typeFz : int, etpName : string, etpUrl : string, dateEnd : DateTime) =
+type TenderRosTend(stn : Settings.T, tn : RosTendRec, typeFz : int, etpName : string, etpUrl : string, dateEnd : DateTime, noticeVer : string) =
     inherit Tender(etpName, etpUrl)
     let settings = stn
     static member val tenderCount = ref 0
@@ -20,7 +20,7 @@ type TenderRosTend(stn : Settings.T, tn : RosTendRec, typeFz : int, etpName : st
         let href = tn.Href
         let selectTend =
             sprintf 
-                "SELECT id_tender FROM %stender WHERE purchase_number = @purchase_number AND type_fz = @type_fz AND end_date = @end_date AND doc_publish_date = @doc_publish_date" 
+                "SELECT id_tender FROM %stender WHERE purchase_number = @purchase_number AND type_fz = @type_fz AND end_date = @end_date AND doc_publish_date = @doc_publish_date AND notice_version = @notice_version" 
                 stn.Prefix
         let cmd : MySqlCommand = new MySqlCommand(selectTend, con)
         cmd.Prepare()
@@ -28,6 +28,7 @@ type TenderRosTend(stn : Settings.T, tn : RosTendRec, typeFz : int, etpName : st
         cmd.Parameters.AddWithValue("@type_fz", typeFz) |> ignore
         cmd.Parameters.AddWithValue("@end_date", dateEnd) |> ignore
         cmd.Parameters.AddWithValue("@doc_publish_date", tn.DatePub) |> ignore
+        cmd.Parameters.AddWithValue("@notice_version", noticeVer) |> ignore
         let reader : MySqlDataReader = cmd.ExecuteReader()
         if reader.HasRows then reader.Close()
         else 
@@ -96,7 +97,7 @@ type TenderRosTend(stn : Settings.T, tn : RosTendRec, typeFz : int, etpName : st
             cmd9.Parameters.AddWithValue("@cancel", cancelStatus) |> ignore
             cmd9.Parameters.AddWithValue("@date_version", dateUpd) |> ignore
             cmd9.Parameters.AddWithValue("@num_version", numVersion) |> ignore
-            cmd9.Parameters.AddWithValue("@notice_version", "") |> ignore
+            cmd9.Parameters.AddWithValue("@notice_version", noticeVer) |> ignore
             cmd9.Parameters.AddWithValue("@xml", href) |> ignore
             cmd9.Parameters.AddWithValue("@print_form", Printform) |> ignore
             cmd9.Parameters.AddWithValue("@id_region", idRegion) |> ignore
