@@ -15,6 +15,7 @@ type Arguments =
     | Asgor
     | GosYakut
     | RosTend
+    | ChPt
 
 type SlavNeft =
     | MEGION
@@ -97,3 +98,12 @@ type RosTendRec =
       DelivPlace : string
       Currency : string
       Page : string }
+
+type ChPtRec =
+    { Href : string
+      PurNum : string
+      PurName : string
+      DatePub : DateTime
+      DateEnd : DateTime
+      Nmck : string
+      Currency : string }

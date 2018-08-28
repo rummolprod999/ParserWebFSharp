@@ -48,6 +48,8 @@ module Settings =
         let mutable LogPathTendersGosYakut = ""
         let mutable TempPathTendersRosTend = ""
         let mutable LogPathTendersRosTend = ""
+        let mutable TempPathTendersChPt = ""
+        let mutable LogPathTendersChPt = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -131,6 +133,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_rostend" then 
                     LogPathTendersRosTend <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_chpt" then 
+                    TempPathTendersChPt <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                               (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_chpt" then 
+                    LogPathTendersChPt <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                              (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -155,6 +163,7 @@ module Settings =
                 | Asgor -> TempPathTendersAsgor
                 | GosYakut -> TempPathTendersGosYakut
                 | RosTend -> TempPathTendersRosTend
+                | ChPt -> TempPathTendersChPt
             
             let LogPathTenders =
                 match arg with
@@ -170,6 +179,7 @@ module Settings =
                 | Asgor -> LogPathTendersAsgor
                 | GosYakut -> LogPathTendersGosYakut
                 | RosTend -> LogPathTendersRosTend
+                | ChPt -> LogPathTendersChPt
             
             { Database = Database
               TempPathTenders = TempPathTenders

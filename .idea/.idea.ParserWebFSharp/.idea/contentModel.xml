@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="$USER_HOME$/.Rider2018.1/system/resharper-host/local/Transient/ReSharperHost/v12/SolutionCaches/_ParserWebFSharp.1417816402.00" t="ExcludeRecursive" />
+    <e p="/app" t="IncludeRecursive" />
+    <e p="/ccff4aee" t="IncludeRecursive" />
+    <e p="$APPLICATION_CONFIG_DIR$/consoles/db" t="IncludeRecursive" />
+    <e p="$APPLICATION_CONFIG_DIR$/extensions" t="IncludeRecursive" />
+    <e p="$APPLICATION_CONFIG_DIR$/scratches" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2018.2/system/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2018.2/system/resharper-host/local/Transient/ReSharperHost/v182/SolutionCaches/_ParserWebFSharp.1417816402.00" t="ExcludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
+      <e p=".git/info/exclude" t="IncludeRecursive" />
       <e p="ParserWebFSharp" t="IncludeRecursive">
         <e p="AbstractParser.fs" t="Include" />
         <e p="AbstractTender.fs" t="Include" />
@@ -13,6 +20,7 @@
         <e p="ParserAkd.fs" t="Include" />
         <e p="ParserAsgor.fs" t="Include" />
         <e p="ParserButb.fs" t="Include" />
+        <e p="ParserChPt.fs" t="Include" />
         <e p="ParserGosYakut.fs" t="Include" />
         <e p="ParserIrkutskOil.fs" t="Include" />
         <e p="ParserLsr.fs" t="Include" />
@@ -29,6 +37,7 @@
         <e p="TenderAkd.fs" t="Include" />
         <e p="TenderAsgor.fs" t="Include" />
         <e p="TenderButb.fs" t="Include" />
+        <e p="TenderChPt.fs" t="Include" />
         <e p="TenderGosYakut.fs" t="Include" />
         <e p="TenderIrkutskOil.fs" t="Include" />
         <e p="TenderLsr.fs" t="Include" />

@@ -37,6 +37,8 @@
     <Compile Include="TenderRosTend.fs" />
     <Compile Include="ParserRostendParall.fs" />
     <Compile Include="ParserRosTendXml.fs" />
+    <Compile Include="TenderChPt.fs" />
+    <Compile Include="ParserChPt.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
