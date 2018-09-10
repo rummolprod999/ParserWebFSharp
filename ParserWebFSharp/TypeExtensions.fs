@@ -17,6 +17,11 @@ module TypeE =
             | Tools.RegexMatch1 regex gr1 -> Some(gr1)
             | _ -> None
         
+        member this.Get2FromRegexp(regex : string) : (string * string) option =
+            match this with
+            | Tools.RegexMatch2 regex (gr1, gr2) -> Some(gr1, gr2)
+            | _ -> None
+        
         member this.GetPriceFromString(?template) : string =
             let templ = defaultArg template @"([\d, ]+)"
             match this.Get1FromRegexp templ with
