@@ -16,11 +16,16 @@ type Arguments =
     | GosYakut
     | RosTend
     | ChPt
+    | Tplus
 
 type SlavNeft =
     | MEGION
     | YANOS
     | NGRE
+
+type Exist =
+    | Exist
+    | NoExist
 
 type RosSelRec =
     { Href : string
@@ -107,3 +112,15 @@ type ChPtRec =
       DateEnd : DateTime
       Nmck : string
       Currency : string }
+
+type TPlusRec =
+    { Href : string
+      PurNum : string
+      PurName : string
+      DatePub : DateTime
+      DateEnd : DateTime
+      Nmck : string
+      Status : string
+      region : string
+      Page : string
+      Exist : Exist }

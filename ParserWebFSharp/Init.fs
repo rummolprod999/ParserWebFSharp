@@ -59,6 +59,9 @@ type Init(s : Settings.T, arg : Arguments) =
         | ChPt -> 
             Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
                                <| DateTime.Now.ToString("dd_MM_yyyy")
+        | Tplus -> 
+            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
+                               <| DateTime.Now.ToString("dd_MM_yyyy")
     
     member public this.Parsing() =
         match arg with
@@ -75,6 +78,7 @@ type Init(s : Settings.T, arg : Arguments) =
         | GosYakut -> this.ParsingGosYakut()
         | RosTend -> this.ParsingRosTendParall()
         | ChPt -> this.ParsingChPt()
+        | Tplus -> this.ParsingTplus()
     
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -214,5 +218,14 @@ type Init(s : Settings.T, arg : Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderChPt.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderChPt.tenderUpCount)
+    
+    member private this.ParsingTplus() =
+        Logging.Log.logger "Начало парсинга"
+        try 
+            this.GetParser(ParserTPlusParall(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderTplus.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderTplus.tenderUpCount)
     
     member private this.GetParser(p : Parser) = p.Parsing()
