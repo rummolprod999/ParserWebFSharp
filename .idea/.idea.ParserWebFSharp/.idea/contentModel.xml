@@ -26,6 +26,7 @@
         <e p="ParserRosTendXml.fs" t="Include" />
         <e p="ParserRossel.fs" t="Include" />
         <e p="ParserRostendParall.fs" t="Include" />
+        <e p="ParserSibServ.fs" t="Include" />
         <e p="ParserSlav.fs" t="Include" />
         <e p="ParserStroyTorgi.fs" t="Include" />
         <e p="ParserTPlusParall.fs" t="Include" />
@@ -43,6 +44,7 @@
         <e p="TenderNeft.fs" t="Include" />
         <e p="TenderRosTend.fs" t="Include" />
         <e p="TenderRossel.fs" t="Include" />
+        <e p="TenderSibServ.fs" t="Include" />
         <e p="TenderSlav.fs" t="Include" />
         <e p="TenderStroyTorgi.fs" t="Include" />
         <e p="TenderTPlus.fs" t="Include" />

@@ -1,6 +1,7 @@
 namespace ParserWeb
 
 open System
+open System.Collections.Generic
 
 type Arguments =
     | IrkutskOil
@@ -17,6 +18,7 @@ type Arguments =
     | RosTend
     | ChPt
     | Tplus
+    | SibServ
 
 type SlavNeft =
     | MEGION
@@ -124,3 +126,16 @@ type TPlusRec =
       region : string
       Page : string
       Exist : Exist }
+
+[<Struct>]
+type DocSibServ = 
+    { name: string
+      url: string }
+      
+type SibServRec =
+    { Href : string
+      PurNum : string
+      PurName : string
+      DatePub : DateTime
+      DateEnd : DateTime
+      DocList : List<DocSibServ> }

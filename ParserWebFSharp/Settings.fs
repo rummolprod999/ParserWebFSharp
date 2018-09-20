@@ -52,6 +52,8 @@ module Settings =
         let mutable LogPathTendersChPt = ""
         let mutable TempPathTendersTplus = ""
         let mutable LogPathTendersTplus = ""
+        let mutable TempPathTendersSibServ = ""
+        let mutable LogPathTendersSibServ = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -147,6 +149,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_tplus" then 
                     LogPathTendersTplus <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
                                                (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_sibserv" then 
+                    TempPathTendersSibServ <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_sibserv" then 
+                    LogPathTendersSibServ <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                               (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -173,6 +181,7 @@ module Settings =
                 | RosTend -> TempPathTendersRosTend
                 | ChPt -> TempPathTendersChPt
                 | Tplus -> TempPathTendersTplus
+                | SibServ -> TempPathTendersSibServ
             
             let LogPathTenders =
                 match arg with
@@ -190,6 +199,7 @@ module Settings =
                 | RosTend -> LogPathTendersRosTend
                 | ChPt -> LogPathTendersChPt
                 | Tplus -> LogPathTendersTplus
+                | SibServ -> LogPathTendersSibServ
             
             { Database = Database
               TempPathTenders = TempPathTenders

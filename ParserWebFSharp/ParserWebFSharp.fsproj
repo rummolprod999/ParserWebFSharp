@@ -41,6 +41,8 @@
     <Compile Include="ParserChPt.fs" />
     <Compile Include="TenderTPlus.fs" />
     <Compile Include="ParserTPlusParall.fs" />
+    <Compile Include="TenderSibServ.fs" />
+    <Compile Include="ParserSibServ.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

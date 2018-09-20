@@ -1,8 +1,12 @@
 namespace ParserWeb
 
+open AngleSharp
+open AngleSharp
 open System
 open System.Globalization
 open System.Text.RegularExpressions
+open HtmlAgilityPack
+open OpenQA.Selenium
 
 module TypeE =
     type System.String with
@@ -69,3 +73,42 @@ module TypeE =
             elif this.Contains("Ноября") then this.Replace("Ноября", "11")
             elif this.Contains("Декабря") then this.Replace("Декабря", "12")
             else this
+    
+    type HtmlAgilityPack.HtmlNode with
+        
+        member this.Gsn(s : string) =
+            match this.SelectSingleNode(s) with
+            | null -> ""
+            | e -> e.InnerText.Trim()
+        
+        member this.GsnAtr (s : string) (atr : string) =
+            match this.SelectSingleNode(s) with
+            | null -> ""
+            | e -> 
+                match e.Attributes.[atr] with
+                | null -> ""
+                | at -> at.Value.Trim()
+    
+    type HtmlAgilityPack.HtmlNodeNavigator with
+        
+        member this.Gsn(s : string) =
+            match this.SelectSingleNode(s) with
+            | null -> ""
+            | e -> e.Value.Trim()
+        
+        member this.GsnAtr (s : string) (atr : string) =
+            match this.SelectSingleNode(s) with
+            | null -> ""
+            | e -> 
+                match e.GetAttribute(atr, "") with
+                | null -> ""
+                | at -> at.Trim()
+    
+    type ISearchContext with
+        member this.findElementWithoutException (xpath : string) =
+            try 
+                let res = this.FindElement(By.XPath(xpath))
+                match res with
+                | null -> ""
+                | r -> r.Text.Trim()
+            with ex -> ""
