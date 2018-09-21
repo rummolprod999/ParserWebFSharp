@@ -65,6 +65,9 @@ type Init(s : Settings.T, arg : Arguments) =
         | SibServ -> 
             Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
                                <| DateTime.Now.ToString("dd_MM_yyyy")
+        | TGuru -> 
+            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
+                               <| DateTime.Now.ToString("dd_MM_yyyy")
     
     member public this.Parsing() =
         match arg with
@@ -83,6 +86,7 @@ type Init(s : Settings.T, arg : Arguments) =
         | ChPt -> this.ParsingChPt()
         | Tplus -> this.ParsingTplus()
         | SibServ -> this.ParsingSibServ()
+        | TGuru -> this.ParsingTGuru()
     
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -240,5 +244,14 @@ type Init(s : Settings.T, arg : Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderSibServ.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderSibServ.tenderUpCount)
+    
+    member private this.ParsingTGuru() =
+        Logging.Log.logger "Начало парсинга"
+        try 
+            this.GetParser(ParserTGuru(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderTGuru.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderTGuru.tenderUpCount)
     
     member private this.GetParser(p : Parser) = p.Parsing()

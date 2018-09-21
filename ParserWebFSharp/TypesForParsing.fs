@@ -19,6 +19,7 @@ type Arguments =
     | ChPt
     | Tplus
     | SibServ
+    | TGuru
 
 type SlavNeft =
     | MEGION
@@ -128,10 +129,10 @@ type TPlusRec =
       Exist : Exist }
 
 [<Struct>]
-type DocSibServ = 
-    { name: string
-      url: string }
-      
+type DocSibServ =
+    { name : string
+      url : string }
+
 type SibServRec =
     { Href : string
       PurNum : string
@@ -139,3 +140,13 @@ type SibServRec =
       DatePub : DateTime
       DateEnd : DateTime
       DocList : List<DocSibServ> }
+
+type TGuruRec =
+    { Href : string
+      PurNum : string
+      PurName : string
+      DatePub : DateTime
+      DateEnd : DateTime
+      Nmck : string
+      OrgName : string
+      RegionName : string }

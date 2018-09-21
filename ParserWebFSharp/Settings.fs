@@ -54,6 +54,8 @@ module Settings =
         let mutable LogPathTendersTplus = ""
         let mutable TempPathTendersSibServ = ""
         let mutable LogPathTendersSibServ = ""
+        let mutable TempPathTendersTGuru = ""
+        let mutable LogPathTendersTGuru = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -151,9 +153,15 @@ module Settings =
                                                (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_sibserv" then 
                     TempPathTendersSibServ <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
-                                                (xnode :?> XmlNode).InnerText
+                                                  (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_sibserv" then 
                     LogPathTendersSibServ <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                 (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_tguru" then 
+                    TempPathTendersTGuru <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_tguru" then 
+                    LogPathTendersTGuru <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
                                                (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
@@ -182,6 +190,7 @@ module Settings =
                 | ChPt -> TempPathTendersChPt
                 | Tplus -> TempPathTendersTplus
                 | SibServ -> TempPathTendersSibServ
+                | TGuru -> TempPathTendersTGuru
             
             let LogPathTenders =
                 match arg with
@@ -200,6 +209,7 @@ module Settings =
                 | ChPt -> LogPathTendersChPt
                 | Tplus -> LogPathTendersTplus
                 | SibServ -> LogPathTendersSibServ
+                | TGuru -> LogPathTendersTGuru
             
             { Database = Database
               TempPathTenders = TempPathTenders
