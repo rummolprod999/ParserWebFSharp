@@ -17,6 +17,7 @@
         <e p="ParserAero.fs" t="Include" />
         <e p="ParserAkd.fs" t="Include" />
         <e p="ParserAsgor.fs" t="Include" />
+        <e p="ParserBidMart.fs" t="Include" />
         <e p="ParserButb.fs" t="Include" />
         <e p="ParserChPt.fs" t="Include" />
         <e p="ParserGosYakut.fs" t="Include" />
@@ -37,6 +38,7 @@
         <e p="TenderAero.fs" t="Include" />
         <e p="TenderAkd.fs" t="Include" />
         <e p="TenderAsgor.fs" t="Include" />
+        <e p="TenderBidMart.fs" t="Include" />
         <e p="TenderButb.fs" t="Include" />
         <e p="TenderChPt.fs" t="Include" />
         <e p="TenderGosYakut.fs" t="Include" />

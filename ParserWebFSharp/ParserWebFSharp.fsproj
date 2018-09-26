@@ -45,6 +45,8 @@
     <Compile Include="ParserSibServ.fs" />
     <Compile Include="TenderTGuru.fs" />
     <Compile Include="ParserTGuru.fs" />
+    <Compile Include="TenderBidMart.fs" />
+    <Compile Include="ParserBidMart.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

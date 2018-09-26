@@ -56,6 +56,8 @@ module Settings =
         let mutable LogPathTendersSibServ = ""
         let mutable TempPathTendersTGuru = ""
         let mutable LogPathTendersTGuru = ""
+        let mutable TempPathTendersBidMart = ""
+        let mutable LogPathTendersBidMart = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -163,6 +165,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_tguru" then 
                     LogPathTendersTGuru <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
                                                (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_bidmart" then 
+                    TempPathTendersBidMart <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_bidmart" then 
+                    LogPathTendersBidMart <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -191,6 +199,7 @@ module Settings =
                 | Tplus -> TempPathTendersTplus
                 | SibServ -> TempPathTendersSibServ
                 | TGuru -> TempPathTendersTGuru
+                | BidMart -> TempPathTendersBidMart
             
             let LogPathTenders =
                 match arg with
@@ -210,6 +219,7 @@ module Settings =
                 | Tplus -> LogPathTendersTplus
                 | SibServ -> LogPathTendersSibServ
                 | TGuru -> LogPathTendersTGuru
+                | BidMart -> LogPathTendersBidMart
             
             { Database = Database
               TempPathTenders = TempPathTenders

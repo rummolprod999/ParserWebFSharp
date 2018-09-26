@@ -44,6 +44,10 @@ module TypeE =
         member this.RegexDeleteWhitespace() = Regex.Replace(this, @"\s+", "")
         member this.RegexCutWhitespace() = Regex.Replace(this, @"\s+", " ")
         
+        member this.GetNmck() =
+            let tmp = this.Replace(",", ".").RegexDeleteWhitespace()
+            tmp
+        
         member this.ReplaceDate() =
             if this.Contains("января") then this.Replace(" января ", ".01.")
             elif this.Contains("февраля") then this.Replace(" февраля ", ".02.")

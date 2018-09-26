@@ -20,6 +20,7 @@ type Arguments =
     | Tplus
     | SibServ
     | TGuru
+    | BidMart
 
 type SlavNeft =
     | MEGION
@@ -150,3 +151,12 @@ type TGuruRec =
       Nmck : string
       OrgName : string
       RegionName : string }
+
+type BidMartRec =
+    { Href : string
+      PurNum : string
+      PurName : string
+      DatePub : DateTime
+      DateEnd : DateTime
+      Nmck : string
+      Quant : string }
