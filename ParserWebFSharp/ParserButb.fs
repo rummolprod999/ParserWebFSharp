@@ -8,7 +8,7 @@ open System.Linq
 open System.Threading
 open TypeE
 
-type ParserButb(stn : Settings.T) = 
+type ParserButb(stn : Settings.T) =
     inherit Parser()
     let set = stn
     let timeoutB = TimeSpan.FromSeconds(120.)
@@ -20,7 +20,7 @@ type ParserButb(stn : Settings.T) =
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
     
-    override this.Parsing() = 
+    override this.Parsing() =
         let driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
         driver.Manage().Window.Maximize()
@@ -32,7 +32,7 @@ type ParserButb(stn : Settings.T) =
         finally
             driver.Quit()
     
-    member private this.ParserSelen(driver : ChromeDriver) = 
+    member private this.ParserSelen(driver : ChromeDriver) =
         let wait = new WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
@@ -40,13 +40,22 @@ type ParserButb(stn : Settings.T) =
             (fun dr -> 
             dr.FindElement(By.XPath("//table[contains(@id, 'auctionList')]//a[contains(., 'Дата публикации')]")).Displayed) 
         |> ignore
-        this.Clicker driver "//table[contains(@id, 'auctionList')]//a[contains(., 'Дата публикации')]"
+        let jse = driver :> IJavaScriptExecutor
+        try 
+            jse.ExecuteScript
+                ("var s = document.querySelector('table.iceDatTbl thead th:nth-child(4) a'); s.click();", "") |> ignore
+        with ex -> Logging.Log.logger ex
+        //this.Clicker driver "//table[contains(@id, 'auctionList')]//a[contains(., 'Дата публикации')]"
         Thread.Sleep(5000)
         wait.Until
             (fun dr -> 
             dr.FindElement(By.XPath("//table[contains(@id, 'auctionList')]//a[contains(., 'Дата публикации')]")).Displayed) 
         |> ignore
-        this.Clicker driver "//table[contains(@id, 'auctionList')]//a[contains(., 'Дата публикации')]"
+        //this.Clicker driver "//table[contains(@id, 'auctionList')]//a[contains(., 'Дата публикации')]"
+        try 
+            jse.ExecuteScript
+                ("var s = document.querySelector('table.iceDatTbl thead th:nth-child(4) a'); s.click();", "") |> ignore
+        with ex -> Logging.Log.logger ex
         Thread.Sleep(5000)
         for i in 1..3 do
             match i with
@@ -61,7 +70,7 @@ type ParserButb(stn : Settings.T) =
                         this.ParserTender driver s
                     with ex -> Logging.Log.logger ex
     
-    member private this.Parser2 (driver : ChromeDriver) (s : int) (m : int) = 
+    member private this.Parser2 (driver : ChromeDriver) (s : int) (m : int) =
         let mutable tmp = m
         driver.SwitchTo().DefaultContent() |> ignore
         while tmp <> 1 do
@@ -75,38 +84,38 @@ type ParserButb(stn : Settings.T) =
         this.ParserTender driver s
         ()
     
-    member private this.ParserTender (driver : ChromeDriver) (s : int) = 
+    member private this.ParserTender (driver : ChromeDriver) (s : int) =
         let wait = new WebDriverWait(driver, timeoutB)
         Thread.Sleep(5000)
         wait.Until
             (fun dr -> 
             dr.FindElement(By.XPath(String.Format("//table[contains(@id, 'auctionList')]/tbody/tr[{0}]/td[2]/a", s))).Displayed) 
         |> ignore
-        let purNumT = 
+        let purNumT =
             driver.FindElement
                 (By.XPath(String.Format("//table[contains(@id, 'auctionList')]/tbody/tr[{0}]/td[1]/span[1]", s)))
         
-        let purNum = 
+        let purNum =
             match purNumT with
             | null -> raise <| System.NullReferenceException(sprintf "purNum not found in %s" url)
             | x -> x.Text.Trim()
         
         //Console.WriteLine(purNum)
-        let status = 
+        let status =
             this.GetDefaultFromNull 
             <| this.checkElement 
                    (driver, String.Format("//table[contains(@id, 'auctionList')]/tbody/tr[{0}]/td[11]/span[1]", s))
-        let datePubT = 
+        let datePubT =
             this.GetDefaultFromNull 
             <| driver.FindElement
                    (By.XPath(String.Format("//table[contains(@id, 'auctionList')]/tbody/tr[{0}]/td[4]/span[1]", s)))
         
-        let datePubS = 
+        let datePubS =
             match datePubT with
             | null -> ""
             | _ -> datePubT.Trim()
         
-        let datePub = 
+        let datePub =
             match datePubS.DateFromString("d.MM.yyyy") with
             | Some d -> d
             | None -> 
@@ -114,17 +123,17 @@ type ParserButb(stn : Settings.T) =
                 | Some d -> d
                 | None -> raise <| System.Exception(sprintf "can not parse datePubS %s, %s" datePubS url)
         
-        let endDateT = 
+        let endDateT =
             this.GetDefaultFromNull 
             <| driver.FindElement
                    (By.XPath(String.Format("//table[contains(@id, 'auctionList')]/tbody/tr[{0}]/td[8]/span[1]", s)))
         
-        let endDateS = 
+        let endDateS =
             match endDateT with
             | null -> ""
             | _ -> endDateT.Trim()
         
-        let endDate = 
+        let endDate =
             match endDateS.DateFromString("d.MM.yyyy") with
             | Some d -> d
             | None -> 
@@ -132,17 +141,17 @@ type ParserButb(stn : Settings.T) =
                 | Some d -> d
                 | None -> raise <| System.Exception(sprintf "can not parse endDateS %s, %s" endDateS url)
         
-        let biddingDateT = 
+        let biddingDateT =
             this.GetDefaultFromNull 
             <| this.checkElement 
                    (driver, String.Format("//table[contains(@id, 'auctionList')]/tbody/tr[{0}]/td[10]/span[1]", s))
         
-        let biddingDateS = 
+        let biddingDateS =
             match biddingDateT with
             | null -> ""
             | _ -> biddingDateT.Trim()
         
-        let biddingDate = 
+        let biddingDate =
             match biddingDateS.DateFromString("d.MM.yyyy HH:mm") with
             | Some d -> d
             | None -> 
