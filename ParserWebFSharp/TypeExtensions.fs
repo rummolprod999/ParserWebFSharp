@@ -16,10 +16,25 @@ module TypeE =
                 Some(DateTime.ParseExact(this, pat, CultureInfo.InvariantCulture))
             with ex -> None
         
+        member this.DateFromString(pat : string, exc : string) =
+            match this.DateFromString(pat) with 
+            | None -> Error(exc)
+            | Some d -> Success(d)
+        
         member this.Get1FromRegexp(regex : string) : string option =
             match this with
             | Tools.RegexMatch1 regex gr1 -> Some(gr1)
             | _ -> None
+        
+        member this.Get1Optional(regex : string) =
+            match this.Get1FromRegexp(regex) with
+            | None -> Success("")
+            | Some e -> Success(e.Trim())
+        
+        member this.Get1(regex : string, exc : string) =
+            match this.Get1FromRegexp(regex) with
+            | None -> Error(exc)
+            | Some e -> Success(e.Trim())
         
         member this.Get2FromRegexp(regex : string) : (string * string) option =
             match this with
@@ -109,6 +124,7 @@ module TypeE =
                 | at -> at.Trim()
     
     type ISearchContext with
+        
         member this.findElementWithoutException (xpath : string) =
             try 
                 let res = this.FindElement(By.XPath(xpath))
@@ -116,3 +132,19 @@ module TypeE =
                 | null -> ""
                 | r -> r.Text.Trim()
             with ex -> ""
+        
+        member this.findElementWithoutException (xpath : string, exc : string) =
+            try 
+                let res = this.FindElement(By.XPath(xpath))
+                match res with
+                | null -> Error(exc)
+                | r -> Success(r.Text.Trim())
+            with ex -> Error(exc)
+        
+        member this.findElementWithoutExceptionOptional (xpath : string, exc : string) =
+            try 
+                let res = this.FindElement(By.XPath(xpath))
+                match res with
+                | null -> Success("")
+                | r -> Success(r.Text.Trim())
+            with ex -> Success("")

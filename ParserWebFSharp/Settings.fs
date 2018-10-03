@@ -58,6 +58,8 @@ module Settings =
         let mutable LogPathTendersTGuru = ""
         let mutable TempPathTendersBidMart = ""
         let mutable LogPathTendersBidMart = ""
+        let mutable TempPathTendersComita = ""
+        let mutable LogPathTendersComita = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -171,6 +173,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_bidmart" then 
                     LogPathTendersBidMart <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_comita" then 
+                    TempPathTendersComita <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                 (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_comita" then 
+                    LogPathTendersComita <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -200,6 +208,7 @@ module Settings =
                 | SibServ -> TempPathTendersSibServ
                 | TGuru -> TempPathTendersTGuru
                 | BidMart -> TempPathTendersBidMart
+                | Comita -> TempPathTendersComita
             
             let LogPathTenders =
                 match arg with
@@ -220,6 +229,7 @@ module Settings =
                 | SibServ -> LogPathTendersSibServ
                 | TGuru -> LogPathTendersTGuru
                 | BidMart -> LogPathTendersBidMart
+                | Comita -> LogPathTendersComita
             
             { Database = Database
               TempPathTenders = TempPathTenders

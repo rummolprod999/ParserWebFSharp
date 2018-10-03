@@ -5,6 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ToolsFun.fs" />
+    <Compile Include="TenderBuilder.fs" />
     <Compile Include="TypeExtensions.fs" />
     <Compile Include="TypesForParsing.fs" />
     <Compile Include="Settings.fs" />
@@ -47,6 +48,8 @@
     <Compile Include="ParserTGuru.fs" />
     <Compile Include="TenderBidMart.fs" />
     <Compile Include="ParserBidMart.fs" />
+    <Compile Include="TenderComita.fs" />
+    <Compile Include="ParserComita.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

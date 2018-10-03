@@ -21,6 +21,7 @@ type Arguments =
     | SibServ
     | TGuru
     | BidMart
+    | Comita
 
 type SlavNeft =
     | MEGION
@@ -160,3 +161,13 @@ type BidMartRec =
       DateEnd : DateTime
       Nmck : string
       Quant : string }
+      
+type ComitaRec =
+    { Href : string
+      PurNum : string
+      PurName : string
+      DatePub : DateTime
+      DateEnd : DateTime
+      Nmck : string
+      Currency : string
+      Status: string }
