@@ -9,6 +9,8 @@ open HtmlAgilityPack
 open OpenQA.Selenium
 
 module TypeE =
+    open System.Collections.Generic
+    
     type System.String with
         
         member this.DateFromString(pat : string) =
@@ -17,7 +19,7 @@ module TypeE =
             with ex -> None
         
         member this.DateFromString(pat : string, exc : string) =
-            match this.DateFromString(pat) with 
+            match this.DateFromString(pat) with
             | None -> Error(exc)
             | Some d -> Success(d)
         
@@ -132,6 +134,16 @@ module TypeE =
                 | null -> ""
                 | r -> r.Text.Trim()
             with ex -> ""
+        
+        member this.findElementsWithoutException (xpath : string) =
+            try 
+                let res = this.FindElements(By.XPath(xpath))
+                match res with
+                | null -> 
+                    new Collections.ObjectModel.ReadOnlyCollection<IWebElement>((new List<IWebElement>()) :> IList<IWebElement>)
+                | r -> r
+            with ex -> 
+                new Collections.ObjectModel.ReadOnlyCollection<IWebElement>((new List<IWebElement>()) :> IList<IWebElement>)
         
         member this.findElementWithoutException (xpath : string, exc : string) =
             try 
