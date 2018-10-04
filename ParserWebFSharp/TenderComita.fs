@@ -192,16 +192,8 @@ type TenderComita(stn : Settings.T, tn : ComitaRec, typeFz : int, etpName : stri
                     cmd14.ExecuteNonQuery() |> ignore
                     idCustomer := int cmd14.LastInsertedId
             let lots = driver.findElementsWithoutException ("//tbody[@ng-repeat = 'data in dataTableLots']/tr")
+            let LotNum = ref 1
             for lot in lots do
-                let LotNum =
-                    match lot.findElementWithoutException ("./td[1]") with
-                    | "" -> 1
-                    | x -> 
-                        let b, ln = Int32.TryParse(x.Trim())
-                        match ln with
-                        | 0 -> 1
-                        | x -> x
-                
                 let LotName =
                     match lot.findElementWithoutException ("./td[@class = 'ng-binding'][2]") with
                     | "" -> ""
@@ -219,11 +211,12 @@ type TenderComita(stn : Settings.T, tn : ComitaRec, typeFz : int, etpName : stri
                         stn.Prefix
                 let cmd12 = new MySqlCommand(insertLot, con)
                 cmd12.Parameters.AddWithValue("@id_tender", !idTender) |> ignore
-                cmd12.Parameters.AddWithValue("@lot_number", 1) |> ignore
+                cmd12.Parameters.AddWithValue("@lot_number", !LotNum) |> ignore
                 cmd12.Parameters.AddWithValue("@max_price", Nmck) |> ignore
                 cmd12.Parameters.AddWithValue("@currency", tn.Currency) |> ignore
                 cmd12.ExecuteNonQuery() |> ignore
                 idLot := int cmd12.LastInsertedId
+                incr LotNum
                 let insertLotitem =
                     sprintf 
                         "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum" 
