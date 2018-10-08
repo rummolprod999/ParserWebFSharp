@@ -34,7 +34,8 @@ type Exist =
 
 type RosSelRec =
     { Href : string
-      PurNum : string }
+      PurNum : string
+      PurName : string }
 
 type NeftRec =
     { Href : string
@@ -161,7 +162,7 @@ type BidMartRec =
       DateEnd : DateTime
       Nmck : string
       Quant : string }
-      
+
 type ComitaRec =
     { Href : string
       PurNum : string
@@ -170,4 +171,4 @@ type ComitaRec =
       DateEnd : DateTime
       Nmck : string
       Currency : string
-      Status: string }
+      Status : string }

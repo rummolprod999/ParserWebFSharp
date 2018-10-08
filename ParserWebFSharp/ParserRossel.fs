@@ -242,10 +242,16 @@ type ParserRossel(stn : Settings.T) =
             match hrefT with
             | null -> raise <| System.NullReferenceException(sprintf "href not found in %s" url)
             | x -> x.GetAttribute("href")
+        let PurNameT = t.FindElement(By.XPath(".//div[@class = 'g-proc-name']/a"))
+        let purName =
+            match PurNameT with
+            | null -> raise <| System.NullReferenceException(sprintf "purName not found in %s" url)
+            | x -> x.Text.Trim()
         
         let ten =
             { Href = href
-              PurNum = purNum }
+              PurNum = purNum
+              PurName = purName }
         
         try 
             let T = TenderRossel(set, ten, tFz)

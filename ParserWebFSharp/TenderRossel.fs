@@ -58,14 +58,15 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
         | x -> 
             let hrefT = elem.GetAttribute("href")
             let href = hrefT
-            let addAttach =
-                sprintf "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url" 
-                    stn.Prefix
-            let cmd5 = new MySqlCommand(addAttach, con)
-            cmd5.Parameters.AddWithValue("@id_tender", idTender) |> ignore
-            cmd5.Parameters.AddWithValue("@file_name", x) |> ignore
-            cmd5.Parameters.AddWithValue("@url", href) |> ignore
-            cmd5.ExecuteNonQuery() |> ignore
+            if href <> "#" then 
+                let addAttach =
+                    sprintf "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url" 
+                        stn.Prefix
+                let cmd5 = new MySqlCommand(addAttach, con)
+                cmd5.Parameters.AddWithValue("@id_tender", idTender) |> ignore
+                cmd5.Parameters.AddWithValue("@file_name", x) |> ignore
+                cmd5.Parameters.AddWithValue("@url", href) |> ignore
+                cmd5.ExecuteNonQuery() |> ignore
         ()
     
     override this.Parsing() =
@@ -77,12 +78,8 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
     member private this.ParserPage(p : string) =
         let parser = new HtmlParser()
         let doc = parser.Parse(p)
-        let purNameT = doc.QuerySelector("h1")
-        match purNameT with
-        | null -> raise <| System.NullReferenceException(sprintf "purName not found in %s" tn.Href)
-        | _ -> ()
-        let purName = purNameT.TextContent.Trim()
-        let pubDateT = doc.QuerySelector("td:contains('Дата публикации:') + td > p")
+        let purName = tn.PurName
+        let pubDateT = doc.QuerySelector("td:contains('Публикация извещения') + td > p")
         match pubDateT with
         | null -> raise <| System.NullReferenceException(sprintf "pubDate not found in %s" tn.Href)
         | _ -> ()
@@ -95,7 +92,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
             | Some d -> d
             | None -> raise <| System.Exception(sprintf "can not parse datePub %s" pubDateS)
         
-        let endDateT = doc.QuerySelector("td:contains('Дата окончания регистрации:') + td > p")
+        let endDateT = doc.QuerySelector("td:contains('Прием заявок') + td > p")
         match endDateT with
         | null -> raise <| System.NullReferenceException(sprintf "endDate not found in %s" tn.Href)
         | _ -> ()
@@ -109,7 +106,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
             | None -> raise <| System.Exception(sprintf "can not parse endDate %s" endDateS)
         
         let dateUpd = DateTime.Now
-        let biddingDateT = doc.QuerySelector("td:contains('Дата проведения торгов:') + td > p")
+        let biddingDateT = doc.QuerySelector("td:contains('Проведение торгов') + td > p")
         
         let mutable biddingDateS =
             match biddingDateT with
@@ -123,7 +120,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
             | Some d -> d
             | None -> DateTime.MinValue
         
-        let scoringDateT = doc.QuerySelector("td:contains('Дата и время рассмотрения заявок:') + td > p")
+        let scoringDateT = doc.QuerySelector("td:contains('Рассмотрение заявок') + td > p")
         
         let mutable scoringDateS =
             match scoringDateT with
@@ -137,7 +134,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
             | Some d -> d
             | None -> DateTime.MinValue
         
-        let status = (this.GetDefaultFromNull <| doc.QuerySelector("div.g-proc-num + p")).Replace("Статус: ", "")
+        let status = (this.GetDefaultFromNull <| doc.QuerySelector("div.steps__item--active div.steps__title > p"))
         use con = new MySqlConnection(stn.ConStr)
         con.Open()
         let href = tn.Href
@@ -183,9 +180,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
             adapter.Update(dt) |> ignore
             let Printform = href
             let IdOrg = ref 0
-            let OrgName =
-                this.GetDefaultFromNull 
-                <| doc.QuerySelector("h2:contains('Организатор') + table tr:nth-child(1) td:nth-child(2) > p")
+            let OrgName = this.GetDefaultFromNull <| doc.QuerySelector("td:contains('Организатор') + td > p")
             match OrgName with
             | "" -> ()
             | x -> 
@@ -205,14 +200,10 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
                         sprintf 
                             "INSERT INTO %sorganizer SET full_name = @full_name, contact_person = @contact_person, post_address = @post_address, fact_address = @fact_address, contact_phone = @contact_phone" 
                             stn.Prefix
-                    let contactPerson =
-                        this.GetDefaultFromNull 
-                        <| doc.QuerySelector("h2:contains('Организатор') + table tr:nth-child(2) td:nth-child(2) > p")
+                    let contactPerson = ""
                     let postAddress = ""
                     let factAddress = ""
-                    let phone =
-                        this.GetDefaultFromNull 
-                        <| doc.QuerySelector("h2:contains('Организатор') + table tr:nth-child(3) td:nth-child(2) > p")
+                    let phone = ""
                     let cmd5 = new MySqlCommand(addOrganizer, con)
                     cmd5.Parameters.AddWithValue("@full_name", OrgName) |> ignore
                     cmd5.Parameters.AddWithValue("@contact_person", contactPerson) |> ignore
@@ -223,7 +214,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
                     IdOrg := int cmd5.LastInsertedId
                     ()
             let PlacingWayName =
-                this.GetDefaultFromNull <| doc.QuerySelector("h1 + table tr:nth-child(2) td:nth-child(2) > p")
+                this.GetDefaultFromNull <| doc.QuerySelector("td:contains('Способ проведения') + td > p")
             let idPlacingWay = ref 0
             match PlacingWayName with
             | "" -> ()
@@ -296,99 +287,105 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
                 | 49 -> incr TenderRossel.tenderCountRosgeo
                 | 50 -> incr TenderRossel.tenderCountRosseti
                 | _ -> ()
-            let lotNumber = 1
-            let idLot = ref 0
-            let documents = doc.QuerySelectorAll("div.w-files-b h2:contains('Документация') + ul li a")
+            let documents = doc.QuerySelectorAll("ul.documents__list > li > a")
             documents |> Seq.iter (this.ParsingDocs con !idTender)
-            let priceT = this.GetDefaultFromNull <| doc.QuerySelector("div.w-price-b p")
-            
-            let price =
-                match this.GetPrice(priceT) with
-                | Some dtP -> this.GetPriceClear dtP
-                | None -> ""
-            
-            let currency =
-                match doc.QuerySelector("div.w-price-b p span") with
-                | null -> ""
-                | x -> x.GetAttribute("title").Trim()
-            
-            let insertLot =
-                sprintf 
-                    "INSERT INTO %slot SET id_tender = @id_tender, lot_number = @lot_number, max_price = @max_price, currency = @currency" 
-                    stn.Prefix
-            let cmd12 = new MySqlCommand(insertLot, con)
-            cmd12.Parameters.AddWithValue("@id_tender", !idTender) |> ignore
-            cmd12.Parameters.AddWithValue("@lot_number", lotNumber) |> ignore
-            cmd12.Parameters.AddWithValue("@max_price", price) |> ignore
-            cmd12.Parameters.AddWithValue("@currency", currency) |> ignore
-            cmd12.ExecuteNonQuery() |> ignore
-            idLot := int cmd12.LastInsertedId
-            let idCustomer = ref 0
-            let CustomerName =
-                this.GetDefaultFromNull <| doc.QuerySelector("td:contains('Название организации:') + td > p")
-            if CustomerName <> "" then 
-                let selectCustomer =
-                    sprintf "SELECT id_customer FROM %scustomer WHERE full_name = @full_name" stn.Prefix
-                let cmd3 = new MySqlCommand(selectCustomer, con)
-                cmd3.Prepare()
-                cmd3.Parameters.AddWithValue("@full_name", CustomerName) |> ignore
-                let reader = cmd3.ExecuteReader()
-                match reader.HasRows with
-                | true -> 
-                    reader.Read() |> ignore
-                    idCustomer := reader.GetInt32("id_customer")
-                    reader.Close()
-                | false -> 
-                    reader.Close()
-                    let insertCustomer =
-                        sprintf "INSERT INTO %scustomer SET reg_num = @reg_num, full_name = @full_name, inn = @inn" 
-                            stn.Prefix
-                    let RegNum = Guid.NewGuid().ToString()
-                    let inn = this.GetDefaultFromNull <| doc.QuerySelector("td:contains('ИНН заказчика:') + td > p")
-                    let cmd14 = new MySqlCommand(insertCustomer, con)
-                    cmd14.Prepare()
-                    cmd14.Parameters.AddWithValue("@reg_num", RegNum) |> ignore
-                    cmd14.Parameters.AddWithValue("@full_name", CustomerName) |> ignore
-                    cmd14.Parameters.AddWithValue("@inn", inn) |> ignore
-                    cmd14.ExecuteNonQuery() |> ignore
-                    idCustomer := int cmd14.LastInsertedId
-            let insertLotitem =
-                sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name" 
-                    stn.Prefix
-            let cmd19 = new MySqlCommand(insertLotitem, con)
-            cmd19.Prepare()
-            cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
-            cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
-            cmd19.Parameters.AddWithValue("@name", purName) |> ignore
-            cmd19.ExecuteNonQuery() |> ignore
-            let delivPlace = this.GetDefaultFromNull <| doc.QuerySelector("td:contains('Место поставки') + td > p")
-            let applGuarAmountT = this.GetDefaultFromNull <| doc.QuerySelector("p:contains('Обеспечение заявки:')")
-            
-            let applGuarAmount =
-                match this.GetApplGuarAmount(applGuarAmountT) with
-                | Some dtP -> this.GetPriceClear dtP
-                | None -> ""
-            
-            let contrGuarAmountT = this.GetDefaultFromNull <| doc.QuerySelector("p:contains('Обеспечение контракта:')")
-            
-            let contrGuarAmount =
-                match this.GetApplGuarAmount(contrGuarAmountT) with
-                | Some dtP -> this.GetPriceClear dtP
-                | None -> ""
-            
-            let insertCustomerRequirement =
-                sprintf 
-                    "INSERT INTO %scustomer_requirement SET id_lot = @id_lot, id_customer = @id_customer, delivery_place = @delivery_place, max_price = @max_price, application_guarantee_amount = @application_guarantee_amount, contract_guarantee_amount = @contract_guarantee_amount" 
-                    stn.Prefix
-            let cmd16 = new MySqlCommand(insertCustomerRequirement, con)
-            cmd16.Prepare()
-            cmd16.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
-            cmd16.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
-            cmd16.Parameters.AddWithValue("@delivery_place", delivPlace) |> ignore
-            cmd16.Parameters.AddWithValue("@max_price", price) |> ignore
-            cmd16.Parameters.AddWithValue("@application_guarantee_amount", applGuarAmount) |> ignore
-            cmd16.Parameters.AddWithValue("@contract_guarantee_amount", contrGuarAmount) |> ignore
-            cmd16.ExecuteNonQuery() |> ignore
+            let lotNumber = ref 1
+            let lots = doc.QuerySelectorAll("div.lot-item")
+            for l in lots do
+                let idLot = ref 0
+                let priceT = this.GetDefaultFromNull <| l.QuerySelector("div.lot-item__sum")
+                
+                let price =
+                    match this.GetPrice(priceT) with
+                    | Some dtP -> this.GetPriceClear dtP
+                    | None -> ""
+                
+                let currency =
+                    match l.QuerySelector("div.lot-item__sum > span") with
+                    | null -> ""
+                    | x -> x.GetAttribute("title").Trim()
+                
+                let insertLot =
+                    sprintf 
+                        "INSERT INTO %slot SET id_tender = @id_tender, lot_number = @lot_number, max_price = @max_price, currency = @currency" 
+                        stn.Prefix
+                let cmd12 = new MySqlCommand(insertLot, con)
+                cmd12.Parameters.AddWithValue("@id_tender", !idTender) |> ignore
+                cmd12.Parameters.AddWithValue("@lot_number", !lotNumber) |> ignore
+                cmd12.Parameters.AddWithValue("@max_price", price) |> ignore
+                cmd12.Parameters.AddWithValue("@currency", currency) |> ignore
+                cmd12.ExecuteNonQuery() |> ignore
+                idLot := int cmd12.LastInsertedId
+                let idCustomer = ref 0
+                let CustomerName =
+                    this.GetDefaultFromNull <| l.QuerySelector("td:contains('Название организации') + td > p")
+                if CustomerName <> "" then 
+                    let selectCustomer =
+                        sprintf "SELECT id_customer FROM %scustomer WHERE full_name = @full_name" stn.Prefix
+                    let cmd3 = new MySqlCommand(selectCustomer, con)
+                    cmd3.Prepare()
+                    cmd3.Parameters.AddWithValue("@full_name", CustomerName) |> ignore
+                    let reader = cmd3.ExecuteReader()
+                    match reader.HasRows with
+                    | true -> 
+                        reader.Read() |> ignore
+                        idCustomer := reader.GetInt32("id_customer")
+                        reader.Close()
+                    | false -> 
+                        reader.Close()
+                        let insertCustomer =
+                            sprintf "INSERT INTO %scustomer SET reg_num = @reg_num, full_name = @full_name, inn = @inn" 
+                                stn.Prefix
+                        let RegNum = Guid.NewGuid().ToString()
+                        let inn = this.GetDefaultFromNull <| l.QuerySelector("td:contains('ИНН') + td > p")
+                        let cmd14 = new MySqlCommand(insertCustomer, con)
+                        cmd14.Prepare()
+                        cmd14.Parameters.AddWithValue("@reg_num", RegNum) |> ignore
+                        cmd14.Parameters.AddWithValue("@full_name", CustomerName) |> ignore
+                        cmd14.Parameters.AddWithValue("@inn", inn) |> ignore
+                        cmd14.ExecuteNonQuery() |> ignore
+                        idCustomer := int cmd14.LastInsertedId
+                let insertLotitem =
+                    sprintf 
+                        "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name" 
+                        stn.Prefix
+                let cmd19 = new MySqlCommand(insertLotitem, con)
+                cmd19.Prepare()
+                cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+                cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
+                cmd19.Parameters.AddWithValue("@name", purName) |> ignore
+                cmd19.ExecuteNonQuery() |> ignore
+                let delivPlace = this.GetDefaultFromNull <| l.QuerySelector("td:contains('Место поставки') + td > p")
+                let applGuarAmountT =
+                    this.GetDefaultFromNull <| l.QuerySelector("p:contains('Обеспечение заявки:') + span")
+                
+                let applGuarAmount =
+                    match this.GetApplGuarAmount(applGuarAmountT) with
+                    | Some dtP -> this.GetPriceClear dtP
+                    | None -> ""
+                
+                let contrGuarAmountT =
+                    this.GetDefaultFromNull <| l.QuerySelector("p:contains('Обеспечение контракта:') + span")
+                
+                let contrGuarAmount =
+                    match this.GetApplGuarAmount(contrGuarAmountT) with
+                    | Some dtP -> this.GetPriceClear dtP
+                    | None -> ""
+                
+                let insertCustomerRequirement =
+                    sprintf 
+                        "INSERT INTO %scustomer_requirement SET id_lot = @id_lot, id_customer = @id_customer, delivery_place = @delivery_place, max_price = @max_price, application_guarantee_amount = @application_guarantee_amount, contract_guarantee_amount = @contract_guarantee_amount" 
+                        stn.Prefix
+                let cmd16 = new MySqlCommand(insertCustomerRequirement, con)
+                cmd16.Prepare()
+                cmd16.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+                cmd16.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+                cmd16.Parameters.AddWithValue("@delivery_place", delivPlace) |> ignore
+                cmd16.Parameters.AddWithValue("@max_price", price) |> ignore
+                cmd16.Parameters.AddWithValue("@application_guarantee_amount", applGuarAmount) |> ignore
+                cmd16.Parameters.AddWithValue("@contract_guarantee_amount", contrGuarAmount) |> ignore
+                cmd16.ExecuteNonQuery() |> ignore
+                incr lotNumber
             try 
                 this.AddVerNumber con tn.PurNum stn typeFz
             with ex -> 
