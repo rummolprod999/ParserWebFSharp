@@ -11,7 +11,7 @@ type ParserIrkutskOil(stn : Settings.T) =
     let url = "https://tenders.irkutskoil.ru/tenders.php"
     
     override this.Parsing() = 
-        let Page = Download.DownloadString url
+        let Page = Download.DownloadStringIrkutsk url
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get start page", url)
         | s -> 
