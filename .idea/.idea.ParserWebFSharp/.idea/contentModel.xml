@@ -21,6 +21,7 @@
         <e p="ParserButb.fs" t="Include" />
         <e p="ParserChPt.fs" t="Include" />
         <e p="ParserComita.fs" t="Include" />
+        <e p="ParserEshopRzd.fs" t="Include" />
         <e p="ParserGosYakut.fs" t="Include" />
         <e p="ParserIrkutskOil.fs" t="Include" />
         <e p="ParserLsr.fs" t="Include" />
@@ -44,6 +45,7 @@
         <e p="TenderButb.fs" t="Include" />
         <e p="TenderChPt.fs" t="Include" />
         <e p="TenderComita.fs" t="Include" />
+        <e p="TenderEshopRzd.fs" t="Include" />
         <e p="TenderGosYakut.fs" t="Include" />
         <e p="TenderIrkutskOil.fs" t="Include" />
         <e p="TenderLsr.fs" t="Include" />

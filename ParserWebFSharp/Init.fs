@@ -20,59 +20,8 @@ type Init(s : Settings.T, arg : Arguments) =
             | false -> Directory.CreateDirectory(s.LogPathTenders) |> ignore
             | true -> ()
         match arg with
-        | IrkutskOil -> 
-            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
-                               <| DateTime.Now.ToString("dd_MM_yyyy")
-        | Akd -> 
-            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
-                               <| DateTime.Now.ToString("dd_MM_yyyy")
-        | Lsr -> 
-            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
-                               <| DateTime.Now.ToString("dd_MM_yyyy")
-        | Butb -> 
-            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
-                               <| DateTime.Now.ToString("dd_MM_yyyy")
-        | RosSel -> 
-            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
-                               <| DateTime.Now.ToString("dd_MM_yyyy")
-        | Neft -> 
-            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
-                               <| DateTime.Now.ToString("dd_MM_yyyy")
-        | Slav -> 
-            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
-                               <| DateTime.Now.ToString("dd_MM_yyyy")
-        | Aero -> 
-            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
-                               <| DateTime.Now.ToString("dd_MM_yyyy")
-        | StroyTorgi -> 
-            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
-                               <| DateTime.Now.ToString("dd_MM_yyyy")
-        | Asgor -> 
-            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
-                               <| DateTime.Now.ToString("dd_MM_yyyy")
-        | GosYakut -> 
-            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
-                               <| DateTime.Now.ToString("dd_MM_yyyy")
-        | RosTend -> 
-            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
-                               <| DateTime.Now.ToString("dd_MM_yyyy")
-        | ChPt -> 
-            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
-                               <| DateTime.Now.ToString("dd_MM_yyyy")
-        | Tplus -> 
-            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
-                               <| DateTime.Now.ToString("dd_MM_yyyy")
-        | SibServ -> 
-            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
-                               <| DateTime.Now.ToString("dd_MM_yyyy")
-        | TGuru -> 
-            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
-                               <| DateTime.Now.ToString("dd_MM_yyyy")
-        | BidMart -> 
-            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
-                               <| DateTime.Now.ToString("dd_MM_yyyy")
-        | _ -> 
-            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar arg 
+        | x -> 
+            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar x 
                                <| DateTime.Now.ToString("dd_MM_yyyy")
     
     member public this.Parsing() =
@@ -95,6 +44,7 @@ type Init(s : Settings.T, arg : Arguments) =
         | TGuru -> this.ParsingTGuru()
         | BidMart -> this.ParsingBidMart()
         | Comita -> this.ParsingComita()
+        | EshopRzd -> this.ParsingEshopRzd()
     
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -279,5 +229,14 @@ type Init(s : Settings.T, arg : Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderComita.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderComita.tenderUpCount)
+    
+    member private this.ParsingEshopRzd() =
+        Logging.Log.logger "Начало парсинга"
+        try 
+            this.GetParser(ParserEshopRzd(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderEshopRzd.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderEshopRzd.tenderUpCount)
     
     member private this.GetParser(p : Parser) = p.Parsing()

@@ -60,6 +60,8 @@ module Settings =
         let mutable LogPathTendersBidMart = ""
         let mutable TempPathTendersComita = ""
         let mutable LogPathTendersComita = ""
+        let mutable TempPathTendersEshopRzd = ""
+        let mutable LogPathTendersEshopRzd = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -179,6 +181,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_comita" then 
                     LogPathTendersComita <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
                                                 (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_eshoprzd" then 
+                    TempPathTendersEshopRzd <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                   (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_eshoprzd" then 
+                    LogPathTendersEshopRzd <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                  (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -209,6 +217,7 @@ module Settings =
                 | TGuru -> TempPathTendersTGuru
                 | BidMart -> TempPathTendersBidMart
                 | Comita -> TempPathTendersComita
+                | EshopRzd -> TempPathTendersEshopRzd
             
             let LogPathTenders =
                 match arg with
@@ -230,6 +239,7 @@ module Settings =
                 | TGuru -> LogPathTendersTGuru
                 | BidMart -> LogPathTendersBidMart
                 | Comita -> LogPathTendersComita
+                | EshopRzd -> LogPathTendersEshopRzd
             
             { Database = Database
               TempPathTenders = TempPathTenders

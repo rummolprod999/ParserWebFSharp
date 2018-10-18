@@ -22,6 +22,7 @@ type Arguments =
     | TGuru
     | BidMart
     | Comita
+    | EshopRzd
 
 type SlavNeft =
     | MEGION
@@ -172,3 +173,15 @@ type ComitaRec =
       Nmck : string
       Currency : string
       Status : string }
+
+type EshopRzdRec =
+    { Href : string
+      PurNum : string
+      PurName : string
+      CusName : string
+      DatePub : DateTime
+      DateEnd : DateTime
+      Status : string
+      Nmck : string
+      Currency : string
+      RegionName : string }
