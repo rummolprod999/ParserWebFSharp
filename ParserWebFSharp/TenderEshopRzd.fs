@@ -191,7 +191,7 @@ type TenderEshopRzd(stn : Settings.T, tn : EshopRzdRec, typeFz : int, etpName : 
             cmd12.Parameters.AddWithValue("@currency", tn.Currency) |> ignore
             cmd12.ExecuteNonQuery() |> ignore
             idLot := int cmd12.LastInsertedId
-            let documents = driver.findElementsWithoutException("//tr[@ng-repeat='file in purchase.attachment']/td/a")
+            let documents = driver.findElementsWithoutException ("//tr[@ng-repeat='file in purchase.attachment']/td/a")
             for doc in documents do
                 let docName = doc.Text.RegexCutWhitespace()
                 match docName with
@@ -207,13 +207,16 @@ type TenderEshopRzd(stn : Settings.T, tn : EshopRzdRec, typeFz : int, etpName : 
                     cmd5.Parameters.AddWithValue("@file_name", x) |> ignore
                     cmd5.Parameters.AddWithValue("@url", href) |> ignore
                     cmd5.ExecuteNonQuery() |> ignore
-            let purObjects = driver.findElementsWithoutException("//div[@class = 'panel ng-scope panel-default']")
-            for po in purObjects do 
-                let nameT = po.findElementWithoutException("//div[i[contains(., 'ОКПД2:')]]")
-                let okpd2T = po.findElementWithoutException("//div[i[contains(., 'ОКПД2:')]]/i")
+            let purObjects = driver.findElementsWithoutException ("//div[@class = 'panel ng-scope panel-default']")
+            for po in purObjects do
+                let nameT = po.findElementWithoutException (".//div[i[contains(., 'ОКПД2:')]]")
+                let okpd2T = po.findElementWithoutException (".//div[i[contains(., 'ОКПД2:')]]/i")
                 let name = nameT.Replace(okpd2T, "").Trim()
                 let okpd2 = okpd2T.Replace("ОКПД2:", "").Trim()
-                let insertLotitem = sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, okpd2_code = @okpd2_code" stn.Prefix
+                let insertLotitem =
+                    sprintf 
+                        "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, okpd2_code = @okpd2_code" 
+                        stn.Prefix
                 let cmd19 = new MySqlCommand(insertLotitem, con)
                 cmd19.Prepare()
                 cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
@@ -222,4 +225,42 @@ type TenderEshopRzd(stn : Settings.T, tn : EshopRzdRec, typeFz : int, etpName : 
                 cmd19.Parameters.AddWithValue("@okpd2_code", okpd2) |> ignore
                 cmd19.ExecuteNonQuery() |> ignore
                 ()
+            let delivPlace =
+                driver.findElementWithoutException ("//td[contains(., 'Адрес поставки')]/following-sibling::td")
+            let delivTerm =
+                driver.findElementWithoutException 
+                    ("//td[contains(., 'Планируемый месяц исполнения договора')]/following-sibling::td")
+            if delivPlace <> "" || delivTerm <> "" then 
+                let insertCustomerRequirement =
+                    sprintf 
+                        "INSERT INTO %scustomer_requirement SET id_lot = @id_lot, id_customer = @id_customer, delivery_place = @delivery_place, delivery_term = @delivery_term" 
+                        stn.Prefix
+                let cmd16 = new MySqlCommand(insertCustomerRequirement, con)
+                cmd16.Prepare()
+                cmd16.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+                cmd16.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+                cmd16.Parameters.AddWithValue("@delivery_place", delivPlace) |> ignore
+                cmd16.Parameters.AddWithValue("@delivery_term", delivTerm) |> ignore
+                cmd16.ExecuteNonQuery() |> ignore
+            let requirement =
+                driver.findElementWithoutException 
+                    ("//td[contains(., 'Минимально необходимые требования')]/following-sibling::td")
+            if requirement <> "" then 
+                let insertRequirement =
+                    sprintf "INSERT INTO %srequirement SET id_lot = @id_lot, content = @content" stn.Prefix
+                let cmd44 = new MySqlCommand(insertRequirement, con)
+                cmd44.Prepare()
+                cmd44.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+                cmd44.Parameters.AddWithValue("@content", requirement) |> ignore
+                cmd44.ExecuteNonQuery() |> ignore
+            try 
+                this.AddVerNumber con tn.PurNum stn typeFz
+            with ex -> 
+                Logging.Log.logger "Ошибка добавления версий тендера"
+                Logging.Log.logger ex
+            try 
+                this.TenderKwords con (!idTender) stn
+            with ex -> 
+                Logging.Log.logger "Ошибка добавления kwords тендера"
+                Logging.Log.logger ex
             ()
