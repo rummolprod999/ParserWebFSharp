@@ -23,6 +23,7 @@ type Arguments =
     | BidMart
     | Comita
     | EshopRzd
+    | YarRegion
 
 type SlavNeft =
     | MEGION
@@ -185,3 +186,13 @@ type EshopRzdRec =
       Nmck : string
       Currency : string
       RegionName : string }
+
+type YarRegionRec =
+    { Href : string
+      PurNum : string
+      PurName : string
+      CusName : string
+      DatePub : DateTime
+      DateEnd : DateTime
+      Status : string
+      Nmck : string }

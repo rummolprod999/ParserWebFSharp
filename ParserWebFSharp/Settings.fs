@@ -62,6 +62,8 @@ module Settings =
         let mutable LogPathTendersComita = ""
         let mutable TempPathTendersEshopRzd = ""
         let mutable LogPathTendersEshopRzd = ""
+        let mutable TempPathTendersYarRegion = ""
+        let mutable LogPathTendersYarRegion = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -187,6 +189,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_eshoprzd" then 
                     LogPathTendersEshopRzd <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
                                                   (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_yarregion" then 
+                    TempPathTendersYarRegion <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                    (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_yarregion" then 
+                    LogPathTendersYarRegion <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                   (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -218,6 +226,7 @@ module Settings =
                 | BidMart -> TempPathTendersBidMart
                 | Comita -> TempPathTendersComita
                 | EshopRzd -> TempPathTendersEshopRzd
+                | YarRegion -> TempPathTendersYarRegion
             
             let LogPathTenders =
                 match arg with
@@ -240,6 +249,7 @@ module Settings =
                 | BidMart -> LogPathTendersBidMart
                 | Comita -> LogPathTendersComita
                 | EshopRzd -> LogPathTendersEshopRzd
+                | YarRegion -> LogPathTendersYarRegion
             
             { Database = Database
               TempPathTenders = TempPathTenders

@@ -7,6 +7,7 @@ open System.Globalization
 open System.Text.RegularExpressions
 open HtmlAgilityPack
 open OpenQA.Selenium
+open OpenQA.Selenium.Support.UI
 
 module TypeE =
     open System.Collections.Generic
@@ -160,3 +161,10 @@ module TypeE =
                 | null -> Success("")
                 | r -> Success(r.Text.Trim())
             with ex -> Success("")
+    
+    type IWebElement with
+        member this.findAttributeWithoutException (attr : string, exc : string) =
+            try 
+                let attr = this.GetAttribute(attr)
+                Success(attr)
+            with ex -> Error(exc)
