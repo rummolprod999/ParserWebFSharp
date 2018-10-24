@@ -29,6 +29,11 @@ module TypeE =
             | Tools.RegexMatch1 regex gr1 -> Some(gr1)
             | _ -> None
         
+        member this.Get1FromRegexpOrDefaul(regex : string) : string =
+            match this with
+            | Tools.RegexMatch1 regex gr1 -> gr1
+            | _ -> ""
+        
         member this.Get1Optional(regex : string) =
             match this.Get1FromRegexp(regex) with
             | None -> Success("")

@@ -193,6 +193,6 @@ type YarRegionRec =
       PurName : string
       CusName : string
       DatePub : DateTime
-      DateEnd : DateTime
+      mutable DateEnd : DateTime
       Status : string
       Nmck : string }
