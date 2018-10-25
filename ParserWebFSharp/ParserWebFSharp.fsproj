@@ -54,6 +54,8 @@
     <Compile Include="ParserEshopRzd.fs" />
     <Compile Include="TenderYarRegion.fs" />
     <Compile Include="ParserYarRegion.fs" />
+    <Compile Include="TenderBtg.fs" />
+    <Compile Include="ParserBtg.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

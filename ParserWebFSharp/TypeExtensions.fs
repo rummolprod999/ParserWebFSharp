@@ -49,6 +49,11 @@ module TypeE =
             | Tools.RegexMatch2 regex (gr1, gr2) -> Some(gr1, gr2)
             | _ -> None
         
+        member this.Get2FromRegexpOptional(regex : string, exc : string) =
+            match this with
+            | Tools.RegexMatch2 regex (gr1, gr2) -> Success(gr1, gr2)
+            | _ -> Error(exc)
+        
         member this.GetPriceFromString(?template) : string =
             let templ = defaultArg template @"([\d, ]+)"
             match this.Get1FromRegexp templ with
@@ -115,6 +120,11 @@ module TypeE =
                 match e.Attributes.[atr] with
                 | null -> ""
                 | at -> at.Value.Trim()
+        
+        member this.getAttrWithoutException (atr : string) =
+            match this.Attributes.[atr] with
+            | null -> ""
+            | at -> at.Value.Trim()
     
     type HtmlAgilityPack.HtmlNodeNavigator with
         
