@@ -25,6 +25,7 @@ type Arguments =
     | EshopRzd
     | YarRegion
     | Btg
+    | Vend
 
 type SlavNeft =
     | MEGION
@@ -197,7 +198,7 @@ type YarRegionRec =
       mutable DateEnd : DateTime
       Status : string
       Nmck : string }
-      
+
 type BtgRec =
     { Href : string
       PurNum : string
@@ -207,3 +208,12 @@ type BtgRec =
       DateEnd : DateTime
       PwName : string
       OrgName : string }
+
+type VendRec =
+    { Href : string
+      PurNum : string
+      PurName : string
+      DatePub : DateTime
+      DateEnd : DateTime
+      PwName : string
+      OrgInn : string }

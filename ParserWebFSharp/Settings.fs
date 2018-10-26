@@ -66,6 +66,8 @@ module Settings =
         let mutable LogPathTendersYarRegion = ""
         let mutable TempPathTendersBtg = ""
         let mutable LogPathTendersBtg = ""
+        let mutable TempPathTendersVend = ""
+        let mutable LogPathTendersVend = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -199,10 +201,16 @@ module Settings =
                                                    (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_btg" then 
                     TempPathTendersBtg <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
-                                                    (xnode :?> XmlNode).InnerText
+                                              (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_btg" then 
                     LogPathTendersBtg <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
-                                                   (xnode :?> XmlNode).InnerText
+                                             (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_vend" then 
+                    TempPathTendersVend <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                               (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_vend" then 
+                    LogPathTendersVend <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                              (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -236,6 +244,7 @@ module Settings =
                 | EshopRzd -> TempPathTendersEshopRzd
                 | YarRegion -> TempPathTendersYarRegion
                 | Btg -> TempPathTendersBtg
+                | Vend -> TempPathTendersVend
             
             let LogPathTenders =
                 match arg with
@@ -260,6 +269,7 @@ module Settings =
                 | EshopRzd -> LogPathTendersEshopRzd
                 | YarRegion -> LogPathTendersYarRegion
                 | Btg -> LogPathTendersBtg
+                | Vend -> LogPathTendersVend
             
             { Database = Database
               TempPathTenders = TempPathTenders

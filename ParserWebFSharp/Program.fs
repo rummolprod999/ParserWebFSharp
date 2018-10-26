@@ -96,6 +96,10 @@ module Start =
             let settings = Settings.getSettings (Btg)
             let p = Init(settings, Btg)
             p.Parsing()
+        | "vend" -> 
+            let settings = Settings.getSettings (Vend)
+            let p = Init(settings, Vend)
+            p.Parsing()
         | _ -> 
             printf "Bad arguments, use %s" arguments
             Environment.Exit(1)

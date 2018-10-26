@@ -35,6 +35,7 @@
         <e p="ParserStroyTorgi.fs" t="Include" />
         <e p="ParserTGuru.fs" t="Include" />
         <e p="ParserTPlusParall.fs" t="Include" />
+        <e p="ParserVend.fs" t="Include" />
         <e p="ParserWebFSharp.fsproj" t="IncludeRecursive" />
         <e p="ParserYarRegion.fs" t="Include" />
         <e p="Program.fs" t="Include" />
@@ -60,6 +61,7 @@
         <e p="TenderStroyTorgi.fs" t="Include" />
         <e p="TenderTGuru.fs" t="Include" />
         <e p="TenderTPlus.fs" t="Include" />
+        <e p="TenderVend.fs" t="Include" />
         <e p="TenderYarRegion.fs" t="Include" />
         <e p="ToolsFun.fs" t="Include" />
         <e p="TypeExtensions.fs" t="Include" />
