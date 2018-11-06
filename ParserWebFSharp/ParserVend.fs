@@ -41,8 +41,8 @@ type ParserVend(stn : Settings.T) =
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
         wait.Until
-            (fun dr -> 
-            dr.FindElement(By.XPath("//div[contains(@class, 'pagination-container')]/following-sibling::div[@class = 'divList']")).Displayed) |> ignore
+            (fun dr -> dr.FindElement(By.XPath("//div[contains(@class, 'pagination-container')]/following-sibling::div[@class = 'divList']")).Displayed) 
+        |> ignore
         this.ParserListTenders driver
         this.GetNextPage driver wait
         for t in listTenders do
@@ -59,7 +59,7 @@ type ParserVend(stn : Settings.T) =
         ()
     
     member private this.GetNextPage (driver : ChromeDriver) (wait : WebDriverWait) =
-        for i in 1..20 do
+        for i in 1..10 do
             try 
                 driver.SwitchTo().DefaultContent() |> ignore
                 this.Clicker driver <| "//li[@class = 'PagedList-skipToNext']/a"
@@ -67,7 +67,8 @@ type ParserVend(stn : Settings.T) =
                 driver.SwitchTo().DefaultContent() |> ignore
                 wait.Until
                     (fun dr -> 
-                    dr.FindElement(By.XPath("//div[contains(@class, 'pagination-container')]/following-sibling::div[@class = 'divList']")).Displayed) |> ignore
+                    dr.FindElement(By.XPath("//div[contains(@class, 'pagination-container')]/following-sibling::div[@class = 'divList']")).Displayed) 
+                |> ignore
                 this.ParserListTenders driver
             with ex -> Logging.Log.logger (ex)
         ()
@@ -81,14 +82,17 @@ type ParserVend(stn : Settings.T) =
             let tenders =
                 driver.FindElementsByXPath
                     ("//div[contains(@class, 'pagination-container')]/following-sibling::div[@class = 'divList']")
-            for t in tenders do
-                try 
+            try 
+                for t in tenders do
                     this.ParserTenders driver t
-                with
-                    | :? OpenQA.Selenium.StaleElementReferenceException -> count <- count-1
-                                                                           if count = 0 then Logging.Log.logger ("reload tenders page fail")
-                    | ex -> Logging.Log.logger (ex)
-                            statement <- false
+                statement <- false
+            with
+                | :? OpenQA.Selenium.StaleElementReferenceException -> 
+                    count <- count - 1
+                    if count = 0 then Logging.Log.logger ("reload tenders page fail")
+                | ex -> 
+                    Logging.Log.logger (ex)
+                    statement <- false
             statement <- false
         ()
     
