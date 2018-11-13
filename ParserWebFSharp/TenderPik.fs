@@ -184,9 +184,10 @@ type TenderPik(stn : Settings.T, tn : PikRec, typeFz : int, etpName : string, et
             cmd5.Prepare()
             for d in tn.Docs do
                 cmd5.Parameters.AddWithValue("@id_tender", idTender) |> ignore
-                cmd5.Parameters.AddWithValue("@file_name", "") |> ignore
+                cmd5.Parameters.AddWithValue("@file_name", "Документация") |> ignore
                 cmd5.Parameters.AddWithValue("@url", d) |> ignore
-                cmd5.Parameters.AddWithValue("@description", "Документация") |> ignore
+                cmd5.Parameters.AddWithValue("@description", "") |> ignore
+                cmd5.ExecuteNonQuery() |> ignore
             try 
                 this.AddVerNumber con tn.PurNum stn typeFz
             with ex -> 
