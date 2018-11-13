@@ -220,7 +220,7 @@ type TenderStroyTorgi(stn : Settings.T, tn : StroyTorgiRec, typeFz : int, etpNam
                     let cmd19 = new MySqlCommand(insertLotitem, con)
                     cmd19.Prepare()
                     cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
-                    cmd19.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+                    cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
                     cmd19.Parameters.AddWithValue("@name", name) |> ignore
                     cmd19.Parameters.AddWithValue("@okpd_name", "") |> ignore
                     cmd19.Parameters.AddWithValue("@quantity_value", Quantity) |> ignore

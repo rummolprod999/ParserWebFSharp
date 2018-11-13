@@ -224,7 +224,7 @@ type TenderComita(stn : Settings.T, tn : ComitaRec, typeFz : int, etpName : stri
                 let cmd19 = new MySqlCommand(insertLotitem, con)
                 cmd19.Prepare()
                 cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
-                cmd19.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+                cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
                 cmd19.Parameters.AddWithValue("@name", LotName) |> ignore
                 cmd19.Parameters.AddWithValue("@sum", Nmck) |> ignore
                 cmd19.ExecuteNonQuery() |> ignore

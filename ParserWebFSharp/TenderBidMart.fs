@@ -110,7 +110,7 @@ type TenderBidMart(stn : Settings.T, tn : BidMartRec, typeFz : int, etpName : st
             let cmd19 = new MySqlCommand(insertLotitem, con)
             cmd19.Prepare()
             cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
-            cmd19.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+            cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
             cmd19.Parameters.AddWithValue("@name", tn.PurName) |> ignore
             cmd19.Parameters.AddWithValue("@sum", tn.Nmck) |> ignore
             cmd19.Parameters.AddWithValue("@quantity_value", tn.Quant) |> ignore

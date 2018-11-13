@@ -183,7 +183,7 @@ type TenderBtg(stn : Settings.T, tn : BtgRec, typeFz : int, etpName : string, et
             let cmd19 = new MySqlCommand(insertLotitem, con)
             cmd19.Prepare()
             cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
-            cmd19.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+            cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
             cmd19.Parameters.AddWithValue("@name", tn.PurName) |> ignore
             cmd19.Parameters.AddWithValue("@sum", "") |> ignore
             cmd19.ExecuteNonQuery() |> ignore
@@ -208,7 +208,7 @@ type TenderBtg(stn : Settings.T, tn : BtgRec, typeFz : int, etpName : string, et
                         "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url, description = @description" 
                         stn.Prefix
                 let cmd5 = new MySqlCommand(addAttach, con)
-                cmd5.Parameters.AddWithValue("@id_tender", idTender) |> ignore
+                cmd5.Parameters.AddWithValue("@id_tender", !idTender) |> ignore
                 cmd5.Parameters.AddWithValue("@file_name", d.name) |> ignore
                 cmd5.Parameters.AddWithValue("@url", d.url) |> ignore
                 cmd5.Parameters.AddWithValue("@description", "") |> ignore

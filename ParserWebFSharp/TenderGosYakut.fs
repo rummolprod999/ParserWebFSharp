@@ -192,7 +192,7 @@ type TenderGosYakut(stn : Settings.T, tn : GosYakutRec, typeFz : int, etpName : 
             let cmd19 = new MySqlCommand(insertLotitem, con)
             cmd19.Prepare()
             cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
-            cmd19.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+            cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
             cmd19.Parameters.AddWithValue("@name", name) |> ignore
             cmd19.Parameters.AddWithValue("@sum", tn.Nmck) |> ignore
             cmd19.Parameters.AddWithValue("@okpd2_code", Okpd2) |> ignore

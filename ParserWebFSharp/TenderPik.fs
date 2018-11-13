@@ -172,7 +172,7 @@ type TenderPik(stn : Settings.T, tn : PikRec, typeFz : int, etpName : string, et
             let cmd19 = new MySqlCommand(insertLotitem, con)
             cmd19.Prepare()
             cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
-            cmd19.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+            cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
             cmd19.Parameters.AddWithValue("@name", tn.PurName) |> ignore
             cmd19.Parameters.AddWithValue("@sum", "") |> ignore
             cmd19.ExecuteNonQuery() |> ignore
@@ -183,7 +183,7 @@ type TenderPik(stn : Settings.T, tn : PikRec, typeFz : int, etpName : string, et
             let cmd5 = new MySqlCommand(addAttach, con)
             cmd5.Prepare()
             for d in tn.Docs do
-                cmd5.Parameters.AddWithValue("@id_tender", idTender) |> ignore
+                cmd5.Parameters.AddWithValue("@id_tender", !idTender) |> ignore
                 cmd5.Parameters.AddWithValue("@file_name", "Документация") |> ignore
                 cmd5.Parameters.AddWithValue("@url", d) |> ignore
                 cmd5.Parameters.AddWithValue("@description", "") |> ignore

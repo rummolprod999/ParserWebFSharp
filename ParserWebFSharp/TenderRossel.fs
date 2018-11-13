@@ -379,7 +379,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
                 let cmd16 = new MySqlCommand(insertCustomerRequirement, con)
                 cmd16.Prepare()
                 cmd16.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
-                cmd16.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+                cmd16.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
                 cmd16.Parameters.AddWithValue("@delivery_place", delivPlace) |> ignore
                 cmd16.Parameters.AddWithValue("@max_price", price) |> ignore
                 cmd16.Parameters.AddWithValue("@application_guarantee_amount", applGuarAmount) |> ignore

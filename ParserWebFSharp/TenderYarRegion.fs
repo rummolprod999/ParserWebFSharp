@@ -224,7 +224,7 @@ type TenderYarRegion(stn : Settings.T, tn : YarRegionRec, typeFz : int, etpName 
                             "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url" 
                             stn.Prefix
                     let cmd5 = new MySqlCommand(addAttach, con)
-                    cmd5.Parameters.AddWithValue("@id_tender", idTender) |> ignore
+                    cmd5.Parameters.AddWithValue("@id_tender", !idTender) |> ignore
                     cmd5.Parameters.AddWithValue("@file_name", x) |> ignore
                     cmd5.Parameters.AddWithValue("@url", href) |> ignore
                     cmd5.ExecuteNonQuery() |> ignore
@@ -258,7 +258,7 @@ type TenderYarRegion(stn : Settings.T, tn : YarRegionRec, typeFz : int, etpName 
                 let cmd16 = new MySqlCommand(insertCustomerRequirement, con)
                 cmd16.Prepare()
                 cmd16.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
-                cmd16.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+                cmd16.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
                 cmd16.Parameters.AddWithValue("@delivery_place", delivPlace) |> ignore
                 cmd16.Parameters.AddWithValue("@delivery_term", delivTerm) |> ignore
                 cmd16.ExecuteNonQuery() |> ignore

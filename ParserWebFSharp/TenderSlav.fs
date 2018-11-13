@@ -187,7 +187,7 @@ type TenderSlav(stn : Settings.T, tn : SlavNeftRec, typeFz : int, etpName : stri
             let cmd19 = new MySqlCommand(insertLotitem, con)
             cmd19.Prepare()
             cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
-            cmd19.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+            cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
             cmd19.Parameters.AddWithValue("@name", tn.PurName) |> ignore
             cmd19.ExecuteNonQuery() |> ignore
             try 

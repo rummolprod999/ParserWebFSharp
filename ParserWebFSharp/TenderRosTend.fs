@@ -126,7 +126,7 @@ type TenderRosTend(stn : Settings.T, tn : RosTendRec, typeFz : int, etpName : st
             let cmd19 = new MySqlCommand(insertLotitem, con)
             cmd19.Prepare()
             cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
-            cmd19.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+            cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
             cmd19.Parameters.AddWithValue("@name", tn.PurName) |> ignore
             cmd19.Parameters.AddWithValue("@sum", tn.Nmck) |> ignore
             cmd19.ExecuteNonQuery() |> ignore
@@ -138,7 +138,7 @@ type TenderRosTend(stn : Settings.T, tn : RosTendRec, typeFz : int, etpName : st
                 let cmd16 = new MySqlCommand(insertCustomerRequirement, con)
                 cmd16.Prepare()
                 cmd16.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
-                cmd16.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+                cmd16.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
                 cmd16.Parameters.AddWithValue("@delivery_place", tn.DelivPlace) |> ignore
                 cmd16.ExecuteNonQuery() |> ignore
             try 

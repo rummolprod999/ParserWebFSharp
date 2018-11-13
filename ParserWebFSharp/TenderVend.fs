@@ -209,7 +209,7 @@ type TenderVend(stn : Settings.T, tn : VendRec, typeFz : int, etpName : string, 
                         "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url, description = @description" 
                         stn.Prefix
                 let cmd5 = new MySqlCommand(addAttach, con)
-                cmd5.Parameters.AddWithValue("@id_tender", idTender) |> ignore
+                cmd5.Parameters.AddWithValue("@id_tender", !idTender) |> ignore
                 cmd5.Parameters.AddWithValue("@file_name", d.name) |> ignore
                 cmd5.Parameters.AddWithValue("@url", d.url) |> ignore
                 cmd5.Parameters.AddWithValue("@description", "") |> ignore
@@ -241,7 +241,7 @@ type TenderVend(stn : Settings.T, tn : VendRec, typeFz : int, etpName : string, 
                     let cmd19 = new MySqlCommand(insertLotitem, con)
                     cmd19.Prepare()
                     cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
-                    cmd19.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+                    cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
                     cmd19.Parameters.AddWithValue("@name", pname) |> ignore
                     cmd19.Parameters.AddWithValue("@sum", "") |> ignore
                     cmd19.Parameters.AddWithValue("@price", "") |> ignore
@@ -269,7 +269,7 @@ type TenderVend(stn : Settings.T, tn : VendRec, typeFz : int, etpName : string, 
                         let cmd16 = new MySqlCommand(insertCustomerRequirement, con)
                         cmd16.Prepare()
                         cmd16.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
-                        cmd16.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+                        cmd16.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
                         cmd16.Parameters.AddWithValue("@delivery_place", delivPlace) |> ignore
                         cmd16.Parameters.AddWithValue("@delivery_term", delivTerm) |> ignore
                         cmd16.ExecuteNonQuery() |> ignore

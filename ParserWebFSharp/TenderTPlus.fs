@@ -135,7 +135,7 @@ type TenderTplus(stn : Settings.T, tn : TPlusRec, typeFz : int, etpName : string
             let cmd19 = new MySqlCommand(insertLotitem, con)
             cmd19.Prepare()
             cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
-            cmd19.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+            cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
             cmd19.Parameters.AddWithValue("@name", LotName) |> ignore
             cmd19.Parameters.AddWithValue("@sum", tn.Nmck) |> ignore
             cmd19.Parameters.AddWithValue("@price", Price) |> ignore
@@ -154,7 +154,7 @@ type TenderTplus(stn : Settings.T, tn : TPlusRec, typeFz : int, etpName : string
                 let cmd16 = new MySqlCommand(insertCustomerRequirement, con)
                 cmd16.Prepare()
                 cmd16.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
-                cmd16.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+                cmd16.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
                 cmd16.Parameters.AddWithValue("@delivery_place", DelivPlace) |> ignore
                 cmd16.ExecuteNonQuery() |> ignore
             try 
