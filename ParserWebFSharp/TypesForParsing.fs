@@ -26,6 +26,7 @@ type Arguments =
     | YarRegion
     | Btg
     | Vend
+    | Pik
 
 type SlavNeft =
     | MEGION
@@ -217,3 +218,13 @@ type VendRec =
       DateEnd : DateTime
       PwName : string
       OrgInn : string }
+
+type PikRec =
+    { Href : string
+      PurNum : string
+      PurName : string
+      DatePub : DateTime
+      DateEnd : DateTime
+      Docs : List<string>
+      Person : string
+      OrgName : string }

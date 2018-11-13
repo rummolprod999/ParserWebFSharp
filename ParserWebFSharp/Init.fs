@@ -48,6 +48,7 @@ type Init(s : Settings.T, arg : Arguments) =
         | YarRegion -> this.ParsingYarRegion()
         | Btg -> this.ParsingBtg()
         | Vend -> this.ParsingVend()
+        | Pik -> this.ParsingPik()
     
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -268,5 +269,14 @@ type Init(s : Settings.T, arg : Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderVend.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderVend.tenderUpCount)
+    
+    member private this.ParsingPik() =
+        Logging.Log.logger "Начало парсинга"
+        try 
+            this.GetParser(ParserPik(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderPik.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderPik.tenderUpCount)
     
     member private this.GetParser(p : Parser) = p.Parsing()

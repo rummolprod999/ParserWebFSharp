@@ -58,6 +58,8 @@
     <Compile Include="ParserBtg.fs" />
     <Compile Include="TenderVend.fs" />
     <Compile Include="ParserVend.fs" />
+    <Compile Include="TenderPik.fs" />
+    <Compile Include="ParserPik.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
