@@ -27,6 +27,7 @@ type Arguments =
     | Btg
     | Vend
     | Pik
+    | NorNic
 
 type SlavNeft =
     | MEGION
@@ -227,4 +228,17 @@ type PikRec =
       DateEnd : DateTime
       Docs : List<string>
       Person : string
+      OrgName : string }
+      
+type NorNicRec =
+    { Href : string
+      PurNum : string
+      PurName : string
+      DatePub : DateTime
+      DateEnd : DateTime
+      CusName : string
+      CusAddress : string
+      PwName : string
+      PersonEmail : string
+      PersonTel : string
       OrgName : string }

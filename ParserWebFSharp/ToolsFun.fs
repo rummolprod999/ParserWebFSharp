@@ -5,6 +5,8 @@ open ICSharpCode.SharpZipLib.Tar
 open Newtonsoft.Json
 open Newtonsoft.Json.Linq
 open System
+open System.Security.Cryptography
+open System.Text
 open System.Data
 open System.IO
 open System.IO.Compression
@@ -12,6 +14,7 @@ open System.Text.RegularExpressions
 
 module Tools =
     open AngleSharp
+    open OpenQA.Selenium
     
     let (|RegexMatch2|_|) (pattern : string) (input : string) =
         let result = Regex.Match(input, pattern)
@@ -28,6 +31,22 @@ module Tools =
             | fst :: [] -> Some(fst)
             | _ -> None
         else None
+    
+    let inline InlineFEWE (x : ^a) (s : string) =
+        try 
+            let res = (^a : (member FindElement : By -> IWebElement) (x, By.XPath(s)))
+            match res with
+            | null -> ""
+            | r -> r.Text.Trim()
+        with ex -> ""
+    
+    let createMD5 (s : string) : string =
+        use md5Hash = MD5.Create()
+        let data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(s))
+        let sBuilder = new StringBuilder()
+        for i in data do
+            sBuilder.Append(i.ToString("x2")) |> ignore
+        sBuilder.ToString()
     
     let GetRegionString(s : string) : string =
         let sLower = s.ToLower()
