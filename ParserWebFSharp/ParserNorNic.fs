@@ -40,6 +40,7 @@ type ParserNorNic(stn : Settings.T) =
         for p in urls do
             try 
                 this.ParserUrl p driver
+                listTenders.Clear()
             with ex -> Logging.Log.logger (ex)
     
     member private this.ParserUrl (url : string) (driver : ChromeDriver) =
