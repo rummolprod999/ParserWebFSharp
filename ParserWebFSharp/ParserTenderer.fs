@@ -12,7 +12,7 @@ open System.Collections.Generic
 type ParserTenderer(stn : Settings.T) =
     inherit Parser()
     let set = stn
-    let pageC = 200
+    let pageC = 250
     let spage = "http://www.tenderer.ru/kom/"
     let listPathTenders = new List<string>()
     
