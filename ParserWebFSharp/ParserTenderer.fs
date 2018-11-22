@@ -54,7 +54,7 @@ type ParserTenderer(stn : Settings.T) =
             let parser = new HtmlParser()
             let documents = parser.Parse(s)
             let mutable tens = documents.QuerySelectorAll("div.tender_table ul li")
-            if tens.Length = 0 then false
+            if tens.Length < 2 then false
             else 
                 for t in tens.Skip(1) do
                     try 
