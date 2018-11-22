@@ -31,7 +31,11 @@ type ParserTenderer(stn : Settings.T) =
             let parser = new HtmlParser()
             let documents = parser.Parse(s)
             let tensurl = documents.QuerySelectorAll("div.page_tenders li a[href $='index.html']")
-            tensurl |> Seq.iter (fun x -> listPathTenders.Add(x.GetAttribute("href").Trim()))
+            tensurl
+            |> Seq.iter (fun x -> 
+                   let el = x.GetAttribute("href").Trim()
+                   if el.Contains("http://") then listPathTenders.Add(el)
+                   else listPathTenders.Add(sprintf "http://www.tenderer.ru%s" el))
             ()
     
     member private this.ParserUrl url =
