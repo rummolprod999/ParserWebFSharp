@@ -28,6 +28,7 @@ type Arguments =
     | Vend
     | Pik
     | NorNic
+    | Tenderer
 
 type SlavNeft =
     | MEGION
@@ -242,3 +243,15 @@ type NorNicRec =
       PersonEmail : string
       PersonTel : string
       OrgName : string }
+      
+type TendererRec =
+    { Href : string
+      PurNum : string
+      PurName : string
+      DatePub : DateTime
+      DateEnd : DateTime
+      DateBidding : DateTime
+      Nmck : string
+      Currency : string
+      OrgName : string
+      RegionName : string }

@@ -11,6 +11,8 @@ module Settings =
         if path <> null then path.Substring(5)
         else ""
     
+    let mutable internal UserTenderer = ""
+    
     type T =
         { Database : string
           TempPathTenders : string
@@ -72,6 +74,8 @@ module Settings =
         let mutable LogPathTendersPik = ""
         let mutable TempPathTendersNorNic = ""
         let mutable LogPathTendersNorNic = ""
+        let mutable TempPathTendersTenderer = ""
+        let mutable LogPathTendersTenderer = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -227,10 +231,17 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_nornic" then 
                     LogPathTendersNorNic <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
                                                 (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_tenderer" then 
+                    TempPathTendersTenderer <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                   (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_tenderer" then 
+                    LogPathTendersTenderer <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                  (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "server" then Server <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "usertenderer" then UserTenderer <- (xnode :?> XmlNode).InnerText
                 else if (xnode :?> XmlNode).Name = "port" then Port <- Int32.Parse((xnode :?> XmlNode).InnerText)
             let connectstring =
                 sprintf 
@@ -263,6 +274,7 @@ module Settings =
                 | Vend -> TempPathTendersVend
                 | Pik -> TempPathTendersPik
                 | NorNic -> TempPathTendersNorNic
+                | Tenderer -> TempPathTendersTenderer
             
             let LogPathTenders =
                 match arg with
@@ -290,6 +302,7 @@ module Settings =
                 | Vend -> LogPathTendersVend
                 | Pik -> LogPathTendersPik
                 | NorNic -> LogPathTendersNorNic
+                | Tenderer -> LogPathTendersTenderer
             
             { Database = Database
               TempPathTenders = TempPathTenders

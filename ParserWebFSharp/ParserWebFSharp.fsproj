@@ -62,6 +62,8 @@
     <Compile Include="ParserPik.fs" />
     <Compile Include="TenderNorNic.fs" />
     <Compile Include="ParserNorNic.fs" />
+    <Compile Include="TenderTenderer.fs" />
+    <Compile Include="ParserTenderer.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
