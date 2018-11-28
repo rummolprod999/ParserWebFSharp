@@ -29,6 +29,7 @@ type Arguments =
     | Pik
     | NorNic
     | Tenderer
+    | Samolet
 
 type SlavNeft =
     | MEGION
@@ -255,3 +256,11 @@ type TendererRec =
       Currency : string
       OrgName : string
       RegionName : string }
+      
+type SamoletRec =
+    { Href : string
+      PurNum : string
+      PurName : string
+      DatePub : DateTime
+      DateEnd : DateTime
+      DelivPlace : string }

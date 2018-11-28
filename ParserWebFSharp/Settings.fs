@@ -76,6 +76,8 @@ module Settings =
         let mutable LogPathTendersNorNic = ""
         let mutable TempPathTendersTenderer = ""
         let mutable LogPathTendersTenderer = ""
+        let mutable TempPathTendersSamolet = ""
+        let mutable LogPathTendersSamolet = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -237,6 +239,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_tenderer" then 
                     LogPathTendersTenderer <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
                                                   (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_samolet" then 
+                    TempPathTendersSamolet <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_samolet" then 
+                    LogPathTendersSamolet <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar 
+                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -275,6 +283,7 @@ module Settings =
                 | Pik -> TempPathTendersPik
                 | NorNic -> TempPathTendersNorNic
                 | Tenderer -> TempPathTendersTenderer
+                | Samolet -> TempPathTendersSamolet
             
             let LogPathTenders =
                 match arg with
@@ -303,6 +312,7 @@ module Settings =
                 | Pik -> LogPathTendersPik
                 | NorNic -> LogPathTendersNorNic
                 | Tenderer -> LogPathTendersTenderer
+                | Samolet -> LogPathTendersSamolet
             
             { Database = Database
               TempPathTenders = TempPathTenders

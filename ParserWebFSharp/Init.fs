@@ -51,6 +51,7 @@ type Init(s : Settings.T, arg : Arguments) =
         | Pik -> this.ParsingPik()
         | NorNic -> this.ParsingNorNic()
         | Tenderer -> this.ParsingTenderer()
+        | Samolet -> this.ParsingSamolet()
     
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -298,5 +299,14 @@ type Init(s : Settings.T, arg : Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderTenderer.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderTenderer.tenderUpCount)
+    
+    member private this.ParsingSamolet() =
+        Logging.Log.logger "Начало парсинга"
+        try 
+            this.GetParser(ParserSamolet(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderSamolet.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderSamolet.tenderUpCount)
     
     member private this.GetParser(p : Parser) = p.Parsing()
