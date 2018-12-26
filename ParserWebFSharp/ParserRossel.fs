@@ -24,7 +24,12 @@ type ParserRossel(stn : Settings.T) =
         match input with
         | Tools.RegexMatch1 @"№(.+) \(" gr1 -> Some(gr1)
         | _ -> None
-    
+        
+    member private this.GetPurNumNew(input : string) : string option =
+        match input with
+        | Tools.RegexMatch1 @"(.+)\s+\(" gr1 -> Some(gr1)
+        | _ -> None
+        
     override this.Parsing() =
         let driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
@@ -51,11 +56,11 @@ type ParserRossel(stn : Settings.T) =
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed) 
         |> ignore
         this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
-        this.Clicker driver "//a[contains(., 'Очистить критерии поиска')]"
+        (*this.Clicker driver "//a[contains(., 'Очистить критерии поиска')]"
         this.Clicker driver 
             "//span[contains(@class, 'c-inp-select-g-procedure-status-select') and span[contains(@class, 'c-inp-select-opener')]]"
-        this.Clicker driver "//span[contains(@class, 'c-inp-option') and @data-index = '0']"
-        this.Clicker driver "//input[@value = 'Найти']"
+        this.Clicker driver "//span[contains(@class, 'c-inp-option') and @data-index = '0']"*)
+        this.Clicker driver "//button[contains( . , 'Найти')]"
         for i in 1..3500 do
             //driver.Keyboard.SendKeys(OpenQA.Selenium.Keys.Down)
             let jse = driver :> IJavaScriptExecutor
@@ -75,7 +80,7 @@ type ParserRossel(stn : Settings.T) =
         this.Clicker driver "//span[contains(@class, 'c-inp-option') and @data-index = '0']"
         this.Clicker driver "//span[contains(@class, 'placeholder') and contains(., 'Торговые секции')]"
         this.Clicker driver "//label[. = 'ГК «Росатом»']"
-        this.Clicker driver "//input[@value = 'Найти']"
+        this.Clicker driver "//button[contains( . , 'Найти')]"
         for i in 1..3500 do
             //driver.Keyboard.SendKeys(OpenQA.Selenium.Keys.Down)
             let jse = driver :> IJavaScriptExecutor
@@ -95,7 +100,7 @@ type ParserRossel(stn : Settings.T) =
         this.Clicker driver "//span[contains(@class, 'c-inp-option') and @data-index = '0']"
         this.Clicker driver "//span[contains(@class, 'placeholder') and contains(., 'Торговые секции')]"
         this.Clicker driver "//label[. = 'ПАО «Ростелеком» и подведомственных организаций']"
-        this.Clicker driver "//input[@value = 'Найти']"
+        this.Clicker driver "//button[contains( . , 'Найти')]"
         for i in 1..3500 do
             //driver.Keyboard.SendKeys(OpenQA.Selenium.Keys.Down)
             let jse = driver :> IJavaScriptExecutor
@@ -115,7 +120,7 @@ type ParserRossel(stn : Settings.T) =
         this.Clicker driver "//span[contains(@class, 'c-inp-option') and @data-index = '0']"
         this.Clicker driver "//span[contains(@class, 'placeholder') and contains(., 'Торговые секции')]"
         this.Clicker driver "//label[. = 'Группа ВТБ']"
-        this.Clicker driver "//input[@value = 'Найти']"
+        this.Clicker driver "//button[contains( . , 'Найти')]"
         for i in 1..3500 do
             //driver.Keyboard.SendKeys(OpenQA.Selenium.Keys.Down)
             let jse = driver :> IJavaScriptExecutor
@@ -135,7 +140,7 @@ type ParserRossel(stn : Settings.T) =
         this.Clicker driver "//span[contains(@class, 'c-inp-option') and @data-index = '0']"
         this.Clicker driver "//span[contains(@class, 'placeholder') and contains(., 'Торговые секции')]"
         this.Clicker driver "//label[. = 'ГК «Ростех»']"
-        this.Clicker driver "//input[@value = 'Найти']"
+        this.Clicker driver "//button[contains( . , 'Найти')]"
         for i in 1..3500 do
             //driver.Keyboard.SendKeys(OpenQA.Selenium.Keys.Down)
             let jse = driver :> IJavaScriptExecutor
@@ -155,7 +160,7 @@ type ParserRossel(stn : Settings.T) =
         this.Clicker driver "//span[contains(@class, 'c-inp-option') and @data-index = '0']"
         this.Clicker driver "//span[contains(@class, 'placeholder') and contains(., 'Торговые секции')]"
         this.Clicker driver "//label[. = 'Группа «РусГидро»']"
-        this.Clicker driver "//input[@value = 'Найти']"
+        this.Clicker driver "//button[contains( . , 'Найти')]"
         for i in 1..3500 do
             //driver.Keyboard.SendKeys(OpenQA.Selenium.Keys.Down)
             let jse = driver :> IJavaScriptExecutor
@@ -175,7 +180,7 @@ type ParserRossel(stn : Settings.T) =
         this.Clicker driver "//span[contains(@class, 'c-inp-option') and @data-index = '0']"
         this.Clicker driver "//span[contains(@class, 'placeholder') and contains(., 'Торговые секции')]"
         this.Clicker driver "//label[. = 'ПАО «Россети»']"
-        this.Clicker driver "//input[@value = 'Найти']"
+        this.Clicker driver "//button[contains( . , 'Найти')]"
         for i in 1..3500 do
             //driver.Keyboard.SendKeys(OpenQA.Selenium.Keys.Down)
             let jse = driver :> IJavaScriptExecutor
@@ -195,7 +200,7 @@ type ParserRossel(stn : Settings.T) =
         this.Clicker driver "//span[contains(@class, 'c-inp-option') and @data-index = '0']"
         this.Clicker driver "//span[contains(@class, 'placeholder') and contains(., 'Торговые секции')]"
         this.Clicker driver "//label[. = 'Холдинг «Росгео»']"
-        this.Clicker driver "//input[@value = 'Найти']"
+        this.Clicker driver "//button[contains( . , 'Найти')]"
         for i in 1..3500 do
             //driver.Keyboard.SendKeys(OpenQA.Selenium.Keys.Down)
             let jse = driver :> IJavaScriptExecutor
@@ -204,7 +209,7 @@ type ParserRossel(stn : Settings.T) =
     
     member private this.ParserListTenders(driver : ChromeDriver) =
         driver.SwitchTo().DefaultContent() |> ignore
-        let tenders = driver.FindElementsByXPath("//div[@id = 'table-div']/div[@class = 'w-search-item-b']")
+        let tenders = driver.FindElementsByXPath("//div[@id = 'auction_search_results']/div[@class = 'search-results__item']")
         for t in tenders do
             try 
                 this.ParserTenders driver t
@@ -212,7 +217,7 @@ type ParserRossel(stn : Settings.T) =
     
     member private this.ParserTenders (driver : ChromeDriver) (t : IWebElement) =
         //driver.SwitchTo().DefaultContent() |> ignore
-        let purNumT = t.FindElement(By.XPath(".//a[@class = 'g-link']"))
+        let purNumT = t.FindElement(By.XPath(".//a[@class = 'search-results__link']"))
         
         let purNumM =
             match purNumT with
@@ -220,7 +225,7 @@ type ParserRossel(stn : Settings.T) =
             | x -> x.Text.Trim()
         
         let purNum =
-            match this.GetPurNum(purNumM) with
+            match this.GetPurNumNew(purNumM) with
             | None -> raise <| System.NullReferenceException(sprintf "purNum not found in %s" purNumM)
             | Some pr -> pr.Trim()
         
@@ -236,13 +241,13 @@ type ParserRossel(stn : Settings.T) =
         | _ -> ()
     
     member private this.ParserSelect (driver : ChromeDriver) (t : IWebElement) (purNum : string) (tFz : int) =
-        let hrefT = t.FindElement(By.XPath(".//a[@class = 'g-link']"))
+        let hrefT = t.FindElement(By.XPath(".//a[@class = 'search-results__link']"))
         
         let href =
             match hrefT with
             | null -> raise <| System.NullReferenceException(sprintf "href not found in %s" url)
             | x -> x.GetAttribute("href")
-        let PurNameT = t.FindElement(By.XPath(".//div[@class = 'g-proc-name']/a"))
+        let PurNameT = t.FindElement(By.XPath(".//div[@class = 'search-results__subject']/a"))
         let purName =
             match PurNameT with
             | null -> raise <| System.NullReferenceException(sprintf "purName not found in %s" url)

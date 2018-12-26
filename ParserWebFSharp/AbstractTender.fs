@@ -256,7 +256,7 @@ type Tender =
             with
                 | ex when ex.Message.Contains("element is not attached") || !count > 30 -> 
                     //Logging.Log.logger ex.Message
-                    breakIt <- true
+                    breakIt <- false
                     incr count
                 | e -> incr count
                        //Logging.Log.logger e.Message
