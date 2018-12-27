@@ -41,13 +41,13 @@ type ParserRossel(stn : Settings.T) =
         try
             try
                 this.ParserSelen driver
-                this.ParserSelenAtom driver
+                (*this.ParserSelenAtom driver
                 this.ParserSelenRt driver
                 this.ParserSelenVtb driver
                 this.ParserSelenRosteh driver
                 this.ParserSelenRushidro driver
                 this.ParserSelenRosgeo driver
-                this.ParserSelenRosseti driver
+                this.ParserSelenRosseti driver*)
                 driver.Manage().Cookies.DeleteAllCookies()
             with ex -> Logging.Log.logger ex
         finally
