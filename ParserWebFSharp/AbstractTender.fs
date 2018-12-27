@@ -5,7 +5,6 @@ open MySql.Data.MySqlClient
 open OpenQA.Selenium
 open OpenQA.Selenium.Chrome
 open System.Data
-open System.IO
 open System.Text
 open System.Text.RegularExpressions
 

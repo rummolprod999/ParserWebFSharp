@@ -3,12 +3,6 @@ namespace ParserWeb
 open MySql.Data.MySqlClient
 open System
 open System.Data
-open System.Linq
-open System.Threading
-open TypeE
-open HtmlAgilityPack
-open System.Collections.Generic
-open System.Web
 
 type TenderPik(stn : Settings.T, tn : PikRec, typeFz : int, etpName : string, etpUrl : string) =
     inherit Tender(etpName, etpUrl)

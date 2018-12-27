@@ -2,9 +2,7 @@ namespace ParserWeb
 
 open System
 open System.Collections.Generic
-open System.Linq
 open System.Threading
-open System.Text.RegularExpressions
 open TypeE
 open OpenQA.Selenium
 open OpenQA.Selenium.Chrome

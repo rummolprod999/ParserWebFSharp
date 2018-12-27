@@ -5,7 +5,6 @@ open AngleSharp.Parser.Html
 open MySql.Data.MySqlClient
 open System
 open System.Data
-open System.Linq
 open TypeE
 
 type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =

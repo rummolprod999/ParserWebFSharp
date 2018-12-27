@@ -1,14 +1,9 @@
 namespace ParserWeb
 
 open System
-open System.Collections.Generic
-open System.Data
-open System.Globalization
 open System.IO
-open System.Linq
 open System.Net
 open System.Text
-open System.Text.RegularExpressions
 open System.Threading
 open System.Threading.Tasks
 

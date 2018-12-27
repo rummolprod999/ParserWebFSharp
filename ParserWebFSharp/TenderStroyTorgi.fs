@@ -1,17 +1,10 @@
 namespace ParserWeb
 
-open AngleSharp
-open AngleSharp.Dom
 open AngleSharp.Parser.Html
 open MySql.Data.MySqlClient
-open OpenQA.Selenium
-open OpenQA.Selenium.Chrome
-open OpenQA.Selenium.Support.UI
 open System
 open System.Data
-open System.Linq
 open System.Text.RegularExpressions
-open System.Threading
 open TypeE
 
 type TenderStroyTorgi(stn : Settings.T, tn : StroyTorgiRec, typeFz : int, etpName : string, etpUrl : string) =

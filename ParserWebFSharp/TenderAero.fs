@@ -5,7 +5,6 @@ open AngleSharp.Parser.Html
 open MySql.Data.MySqlClient
 open System
 open System.Data
-open System.Linq
 open TypeE
 
 type TenderAero(stn : Settings.T, tn : AeroRec, typeFz : int, etpName : string, etpUrl : string) =

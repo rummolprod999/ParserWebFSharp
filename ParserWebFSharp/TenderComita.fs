@@ -3,12 +3,9 @@ namespace ParserWeb
 open MySql.Data.MySqlClient
 open System
 open System.Data
-open System.Linq
 open System.Threading
 open TypeE
-open OpenQA.Selenium
 open OpenQA.Selenium.Chrome
-open OpenQA.Selenium.Support.UI
 
 type TenderComita(stn : Settings.T, tn : ComitaRec, typeFz : int, etpName : string, etpUrl : string, driver : ChromeDriver) =
     inherit Tender(etpName, etpUrl)

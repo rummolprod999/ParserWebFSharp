@@ -5,8 +5,6 @@ open AngleSharp.Parser.Html
 open MySql.Data.MySqlClient
 open System
 open System.Data
-open System.Linq
-open TypeE
 
 type TenderNeft(stn : Settings.T, tn : NeftRec) =
     inherit Tender("АО «Нефтеавтоматика»", "https://zakupki.nefteavtomatika.ru")

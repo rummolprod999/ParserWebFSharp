@@ -3,9 +3,6 @@ namespace ParserWeb
 open MySql.Data.MySqlClient
 open System
 open System.Data
-open System.Linq
-open TypeE
-open HtmlAgilityPack
 
 type TenderTenderer(stn : Settings.T, tn : TendererRec, typeFz : int, etpName : string, etpUrl : string) =
     inherit Tender(etpName, etpUrl)

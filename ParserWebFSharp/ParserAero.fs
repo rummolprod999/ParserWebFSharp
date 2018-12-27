@@ -1,11 +1,8 @@
 namespace ParserWeb
 
-open AngleSharp
 open AngleSharp.Dom
 open AngleSharp.Parser.Html
-open OpenQA.Selenium
 open System
-open System.Linq
 open TypeE
 
 type ParserAero(stn : Settings.T) =

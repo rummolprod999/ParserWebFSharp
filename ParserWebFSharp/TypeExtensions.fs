@@ -1,13 +1,9 @@
 namespace ParserWeb
 
-open AngleSharp
-open AngleSharp
 open System
 open System.Globalization
 open System.Text.RegularExpressions
-open HtmlAgilityPack
 open OpenQA.Selenium
-open OpenQA.Selenium.Support.UI
 
 module TypeE =
     open System.Collections.Generic

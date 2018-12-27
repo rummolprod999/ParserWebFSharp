@@ -1,15 +1,10 @@
 namespace ParserWeb
 
-open AngleSharp
 open AngleSharp.Dom
 open AngleSharp.Parser.Html
-open OpenQA.Selenium
 open OpenQA.Selenium.Chrome
-open OpenQA.Selenium.Support.UI
 open System
-open System.Linq
 open System.Text.RegularExpressions
-open System.Threading
 open TypeE
 
 type ParserStroyTorgi(stn : Settings.T) =

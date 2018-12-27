@@ -1,12 +1,8 @@
 namespace ParserWeb
 
-open AngleSharp.Dom
-open AngleSharp.Parser.Html
 open MySql.Data.MySqlClient
 open System
 open System.Data
-open System.Linq
-open TypeE
 
 type TenderRosTend(stn : Settings.T, tn : RosTendRec, typeFz : int, etpName : string, etpUrl : string, dateEnd : DateTime, noticeVer : string) =
     inherit Tender(etpName, etpUrl)

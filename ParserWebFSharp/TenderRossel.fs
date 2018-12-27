@@ -5,9 +5,7 @@ open AngleSharp.Parser.Html
 open MySql.Data.MySqlClient
 open System
 open System.Data
-open System.Linq
 open System.Text.RegularExpressions
-open System.Threading
 open TypeE
 
 type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =

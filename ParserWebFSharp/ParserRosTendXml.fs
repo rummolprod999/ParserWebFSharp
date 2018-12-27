@@ -1,18 +1,13 @@
 namespace ParserWeb
 
-open AngleSharp
 open Newtonsoft.Json
 open Newtonsoft.Json.Linq
 open System
-open System.Collections.Generic
 open System.IO
 open System.Linq
 open System.Text
-open System.Text.RegularExpressions
 open System.Threading
-open System.Threading.Tasks
 open System.Xml
-open TypeE
 
 type ParserRosTendXml(stn : Settings.T) =
     inherit Parser()

@@ -1,12 +1,8 @@
 namespace ParserWeb
 
-open AngleSharp
 open AngleSharp.Dom
 open AngleSharp.Parser.Html
-open OpenQA.Selenium
 open System
-open System.Linq
-open System.Text.RegularExpressions
 open TypeE
 
 type ParserChPt(stn : Settings.T) =

@@ -1,8 +1,6 @@
 namespace ParserWeb
 
 open System
-open System.Data
-open System.Globalization
 open System.IO
 open System.Text
 open System.Threading

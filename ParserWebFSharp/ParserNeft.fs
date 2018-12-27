@@ -2,8 +2,6 @@ namespace ParserWeb
 
 open AngleSharp.Dom
 open AngleSharp.Parser.Html
-open System
-open System.Linq
 open TypeE
 
 type ParserNeft(stn : Settings.T) =

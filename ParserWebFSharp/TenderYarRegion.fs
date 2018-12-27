@@ -3,7 +3,6 @@ namespace ParserWeb
 open MySql.Data.MySqlClient
 open System
 open System.Data
-open System.Linq
 open System.Threading
 open TypeE
 open OpenQA.Selenium

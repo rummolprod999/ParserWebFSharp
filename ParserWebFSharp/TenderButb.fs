@@ -6,7 +6,6 @@ open OpenQA.Selenium.Chrome
 open OpenQA.Selenium.Support.UI
 open System
 open System.Data
-open System.Linq
 open System.Text.RegularExpressions
 open System.Threading
 open TypeE

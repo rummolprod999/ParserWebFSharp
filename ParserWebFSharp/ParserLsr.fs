@@ -1,12 +1,9 @@
 namespace ParserWeb
 
-open AngleSharp.Dom
-open AngleSharp.Parser.Html
 open OpenQA.Selenium
 open OpenQA.Selenium.Chrome
 open OpenQA.Selenium.Support.UI
 open System
-open System.Linq
 open System.Threading
 
 type ParserLsr(stn : Settings.T) = 

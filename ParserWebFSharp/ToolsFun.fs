@@ -2,18 +2,14 @@ namespace ParserWeb
 
 open ICSharpCode.SharpZipLib.GZip
 open ICSharpCode.SharpZipLib.Tar
-open Newtonsoft.Json
 open Newtonsoft.Json.Linq
 open System
 open System.Security.Cryptography
 open System.Text
-open System.Data
 open System.IO
-open System.IO.Compression
 open System.Text.RegularExpressions
 
 module Tools =
-    open AngleSharp
     open OpenQA.Selenium
     
     let (|RegexMatch2|_|) (pattern : string) (input : string) =

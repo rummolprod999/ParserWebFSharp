@@ -1,8 +1,6 @@
 namespace ParserWeb
 
 open AngleSharp.Dom
-open AngleSharp.Parser.Html
-open HtmlAgilityPack
 open OpenQA.Selenium
 open OpenQA.Selenium.Chrome
 
@@ -31,7 +29,7 @@ type Parser() =
                 breakIt <- false
             with
                 | ex when ex.Message.Contains("element is not attached") || !count > 30 -> 
-                    breakIt <- true
+                    breakIt <- false
                     incr count
                 | _ -> incr count
         ()

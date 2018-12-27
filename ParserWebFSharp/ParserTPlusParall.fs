@@ -1,16 +1,10 @@
 namespace ParserWeb
 
-open AngleSharp
-open AngleSharp
-open AngleSharp
 open AngleSharp.Dom
 open AngleSharp.Parser.Html
-open OpenQA.Selenium
 open System
 open MySql.Data.MySqlClient
 open System.Collections.Generic
-open System.Linq
-open System.Text.RegularExpressions
 open System.Threading
 open System.Threading.Tasks
 open TypeE

@@ -1,11 +1,9 @@
 namespace ParserWeb
 
-open AngleSharp.Dom
 open AngleSharp.Parser.Html
 open MySql.Data.MySqlClient
 open System
 open System.Data
-open System.Linq
 open TypeE
 
 type TenderTplus(stn : Settings.T, tn : TPlusRec, typeFz : int, etpName : string, etpUrl : string, Page : string) =

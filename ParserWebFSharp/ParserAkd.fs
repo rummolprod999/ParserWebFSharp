@@ -2,8 +2,6 @@ namespace ParserWeb
 
 open AngleSharp.Dom
 open AngleSharp.Parser.Html
-open System
-open System.Linq
 
 type ParserAkd(stn : Settings.T) = 
     inherit Parser()

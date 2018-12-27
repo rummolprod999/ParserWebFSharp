@@ -5,8 +5,6 @@ open AngleSharp.Parser.Html
 open MySql.Data.MySqlClient
 open System
 open System.Data
-open System.Linq
-open TypeE
 
 type TenderGosYakut(stn : Settings.T, tn : GosYakutRec, typeFz : int, etpName : string, etpUrl : string) =
     inherit Tender(etpName, etpUrl)
