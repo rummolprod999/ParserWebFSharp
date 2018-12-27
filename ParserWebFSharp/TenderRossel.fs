@@ -101,7 +101,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
         let endDate =
             match endDateS.DateFromString("dd.MM.yy HH:mm:ss") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "can not parse endDate %s" endDateS)
+            | None -> datePub
         
         let dateUpd = DateTime.Now
         let biddingDateT = doc.QuerySelector("td:contains('Проведение торгов') + td > p")
