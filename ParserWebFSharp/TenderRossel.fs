@@ -97,7 +97,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
         let mutable endDateS = endDateT.TextContent.Trim()
         match this.GetDateS(endDateS) with
         | Some dtP -> endDateS <- dtP
-        | None -> raise <| System.Exception(sprintf "can not apply regex to endDate %s" tn.Href)
+        | None -> endDateS <- ""
         let endDate =
             match endDateS.DateFromString("dd.MM.yy HH:mm:ss") with
             | Some d -> d
