@@ -17,7 +17,7 @@ type ParserRossel(stn : Settings.T) =
     let pageReloader (driver : ChromeDriver) =
                 for i in 1..5000 do
                     let jse = driver :> IJavaScriptExecutor
-                    jse.ExecuteScript("window.scrollBy(0,350)", "") |> ignore
+                    jse.ExecuteScript("window.scrollBy(0,250)", "") |> ignore
                     Thread.Sleep(100)
     do
         options.AddArguments("headless")
@@ -60,6 +60,8 @@ type ParserRossel(stn : Settings.T) =
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
         |> ignore
         this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
+        this.Clicker driver "//span[span[contains(., 'Прием заявок')]]/following-sibling::span"
+        this.Clicker driver "//li/span[. = 'Работа коммиссии']"
         (*this.Clicker driver "//a[contains(., 'Очистить критерии поиска')]"
         this.Clicker driver
             "//span[contains(@class, 'c-inp-select-g-procedure-status-select') and span[contains(@class, 'c-inp-select-opener')]]"
@@ -75,12 +77,15 @@ type ParserRossel(stn : Settings.T) =
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
         |> ignore
         this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
-        this.Clicker driver "//a[contains(., 'Очистить критерии поиска')]"
+        this.Clicker driver "//span[span[contains(., 'Прием заявок')]]/following-sibling::span"
+        this.Clicker driver "//li/span[. = 'Работа коммиссии']"
+        this.Clicker driver "//span[contains(., 'Коммерческие закупки и закупки по 223-ФЗ')]/following-sibling::label/i"
+        this.Clicker driver "//label[contains(., 'Коммерческие закупки и закупки по 223-ФЗ')]"
+        this.Clicker driver "//label[. = 'ГК «Росатом»']"
+        (*this.Clicker driver "//a[contains(., 'Очистить критерии поиска')]"
         this.Clicker driver
             "//span[contains(@class, 'c-inp-select-g-procedure-status-select') and span[contains(@class, 'c-inp-select-opener')]]"
-        this.Clicker driver "//span[contains(@class, 'c-inp-option') and @data-index = '0']"
-        this.Clicker driver "//span[contains(@class, 'placeholder') and contains(., 'Торговые секции')]"
-        this.Clicker driver "//label[. = 'ГК «Росатом»']"
+        this.Clicker driver "//span[contains(@class, 'c-inp-option') and @data-index = '0']"*)
         this.Clicker driver "//button[contains( . , 'Найти')]"
         pageReloader driver
         this.ParserListTenders driver
