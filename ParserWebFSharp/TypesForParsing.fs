@@ -30,6 +30,7 @@ type Arguments =
     | NorNic
     | Tenderer
     | Samolet
+    | Ariba
 
 type SlavNeft =
     | MEGION
@@ -231,7 +232,7 @@ type PikRec =
       Docs : List<string>
       Person : string
       OrgName : string }
-      
+
 type NorNicRec =
     { Href : string
       PurNum : string
@@ -244,7 +245,7 @@ type NorNicRec =
       PersonEmail : string
       PersonTel : string
       OrgName : string }
-      
+
 type TendererRec =
     { Href : string
       PurNum : string
@@ -256,11 +257,21 @@ type TendererRec =
       Currency : string
       OrgName : string
       RegionName : string }
-      
+
 type SamoletRec =
     { Href : string
       PurNum : string
       PurName : string
       DatePub : DateTime
       DateEnd : DateTime
+      DelivPlace : string }
+
+type AribaRec =
+    { Href : string
+      PurNum : string
+      PurName : string
+      DatePub : DateTime
+      DateEnd : DateTime
+      Nmck : string
+      OrgName : string
       DelivPlace : string }
