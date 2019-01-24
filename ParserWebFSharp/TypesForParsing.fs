@@ -274,4 +274,6 @@ type AribaRec =
       DateEnd : DateTime
       Nmck : string
       OrgName : string
+      PwName : string
+      Categories : string list
       DelivPlace : string }

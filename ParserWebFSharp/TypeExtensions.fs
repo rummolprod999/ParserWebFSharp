@@ -87,6 +87,21 @@ module TypeE =
             elif this.Contains("декабря") then this.Replace(" декабря ", ".12.")
             else this
         
+        member this.ReplaceDateAriba() =
+            if this.Contains("янв") then this.Replace(" янв ", ".01.")
+            elif this.Contains("фев") then this.Replace(" фев ", ".02.")
+            elif this.Contains("мар") then this.Replace(" мар ", ".03.")
+            elif this.Contains("апр") then this.Replace(" апр ", ".04.")
+            elif this.Contains("мая") then this.Replace(" мая ", ".05.")
+            elif this.Contains("июн") then this.Replace(" июн ", ".06.")
+            elif this.Contains("июл") then this.Replace(" июл ", ".07.")
+            elif this.Contains("авг") then this.Replace(" авг ", ".08.")
+            elif this.Contains("сен") then this.Replace(" сен ", ".09.")
+            elif this.Contains("окт") then this.Replace(" окт ", ".10.")
+            elif this.Contains("ноя") then this.Replace(" ноя ", ".11.")
+            elif this.Contains("дек") then this.Replace(" дек ", ".12.")
+            else this
+            
         member this.ReplaceDateAsgor() =
             if this.Contains("Января") then this.Replace("Января", "01")
             elif this.Contains("Февраля") then this.Replace("Февраля", "02")
