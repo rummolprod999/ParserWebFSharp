@@ -124,7 +124,7 @@ type ParserAriba(stn : Settings.T) =
                 let delivPlace = Tools.InlineFEWE i ".//td[contains(., 'Адреса доставки или предоставления услуг')]/following-sibling::td"
                 let Categories = Tools.InlineFEWE i ".//td[contains(., 'Категории товаров и услуг')]/following-sibling::td"
                 let catList = Categories.Split(",") |> Seq.map (fun x -> x.Trim()) |> Seq.toList
-                let catList = purNum :: catList
+                let catList = purName :: catList
                 let priceT = Tools.InlineFEWE i ".//td[contains(@class, 'adse-ADQSRR-title')]/b"
                 let price = match priceT.Get1FromRegexp """\$([\d ,\.]+)$""" with
                             | Some p -> p
