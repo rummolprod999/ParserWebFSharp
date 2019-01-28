@@ -21,6 +21,7 @@ type ParserAriba(stn : Settings.T) =
         //options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
+        options.AddArguments("disable-dev-shm-usage")
 
     override this.Parsing() =
         let driver = new ChromeDriver("/usr/local/bin", options)
@@ -136,9 +137,20 @@ type ParserAriba(stn : Settings.T) =
                 let! datePub = datePubT.DateFromString("d.MM.yyyy", sprintf "datePub not parse %s" datePubT)
                 let! dateEndTT = i.findElementWithoutException (".//span[contains(., 'Закрывается')]/following-sibling::span[1]",
                                       sprintf "dateEndTT not found %s" i.Text)
-                let dateEndT = dateEndTT.Replace("PST", "").ReplaceDateAriba().Trim()
+                let mutable tz = PST
+                let dateEndT = match dateEndTT with
+                               | x when x.Contains("PST") ->
+                                   tz <- PST
+                                   dateEndTT.Replace("PST", "").ReplaceDateAriba().Trim()
+
+                               | x when x.Contains("PDT") ->
+                                   tz <- PDT
+                                   dateEndTT.Replace("PDT", "").ReplaceDateAriba().Trim()
+                               | x -> x
                 let! dateEndP = dateEndT.DateFromString("d.MM.yyyy H:mm", sprintf "dateEndP not parse %s" dateEndT)
-                let dateEnd = dateEndP +%% 11.
+                let dateEnd = match tz with
+                              | PST -> dateEndP +%% 11.
+                              | PDT -> dateEndP +%% 10.
                 let ten =
                     { Href = url
                       PurNum = purNum

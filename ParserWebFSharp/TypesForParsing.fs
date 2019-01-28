@@ -3,6 +3,8 @@ namespace ParserWeb
 open System
 open System.Collections.Generic
 
+type TZ = | PST | PDT
+
 type Arguments =
     | IrkutskOil
     | Akd
