@@ -15,8 +15,8 @@ type ParserRossel(stn : Settings.T) =
     let urlk = "https://www.roseltorg.ru/procedures/search"
     let listTenders = new List<TenderRossel>()
     let options = ChromeOptions()
-    let pageReloader (driver : ChromeDriver) =
-                for i in 1..5000 do
+    let pageReloader (driver : ChromeDriver) (x: int)=
+                for i in 1..x do
                     let jse = driver :> IJavaScriptExecutor
                     jse.ExecuteScript("window.scrollBy(0,250)", "") |> ignore
                     Thread.Sleep(100)
@@ -68,7 +68,7 @@ type ParserRossel(stn : Settings.T) =
             "//span[contains(@class, 'c-inp-select-g-procedure-status-select') and span[contains(@class, 'c-inp-select-opener')]]"
         this.Clicker driver "//span[contains(@class, 'c-inp-option') and @data-index = '0']"*)
         this.Clicker driver "//button[contains( . , 'Найти')]"
-        pageReloader driver
+        pageReloader driver 5000
         this.ParserListTenders driver
 
     member private this.ParserSelenAtom(driver : ChromeDriver) =
@@ -89,7 +89,7 @@ type ParserRossel(stn : Settings.T) =
             "//span[contains(@class, 'c-inp-select-g-procedure-status-select') and span[contains(@class, 'c-inp-select-opener')]]"
         this.Clicker driver "//span[contains(@class, 'c-inp-option') and @data-index = '0']"*)
         this.Clicker driver "//button[contains( . , 'Найти')]"
-        pageReloader driver
+        pageReloader driver 1000
         this.ParserListTenders driver
 
     member private this.ParserSelenRt(driver : ChromeDriver) =
@@ -104,7 +104,7 @@ type ParserRossel(stn : Settings.T) =
         this.Clicker driver "//label[. = 'Торговые секции']/following-sibling::div//span[. = 'Select Here']/following-sibling::label"
         this.Clicker driver "//label[. = 'ПАО «Ростелеком» и подведомственных организаций']/parent::li"
         this.Clicker driver "//button[contains( . , 'Найти')]"
-        pageReloader driver
+        pageReloader driver 1000
         this.ParserListTenders driver
 
     member private this.ParserSelenVtb(driver : ChromeDriver) =
@@ -119,7 +119,7 @@ type ParserRossel(stn : Settings.T) =
         this.Clicker driver "//label[. = 'Торговые секции']/following-sibling::div//span[. = 'Select Here']/following-sibling::label"
         this.Clicker driver "//label[. = 'Группа ВТБ']/parent::li"
         this.Clicker driver "//button[contains( . , 'Найти')]"
-        pageReloader driver
+        pageReloader driver 1000
         this.ParserListTenders driver
 
     member private this.ParserSelenRosteh(driver : ChromeDriver) =
@@ -134,7 +134,7 @@ type ParserRossel(stn : Settings.T) =
         this.Clicker driver "//label[. = 'Торговые секции']/following-sibling::div//span[. = 'Select Here']/following-sibling::label"
         this.Clicker driver "//label[. = 'ГК «Ростех»']/parent::li"
         this.Clicker driver "//button[contains( . , 'Найти')]"
-        pageReloader driver
+        pageReloader driver 1000
         this.ParserListTenders driver
 
     member private this.ParserSelenRushidro(driver : ChromeDriver) =
@@ -149,7 +149,7 @@ type ParserRossel(stn : Settings.T) =
         this.Clicker driver "//label[. = 'Торговые секции']/following-sibling::div//span[. = 'Select Here']/following-sibling::label"
         this.Clicker driver "//label[. = 'Группа «РусГидро»']/parent::li"
         this.Clicker driver "//button[contains( . , 'Найти')]"
-        pageReloader driver
+        pageReloader driver 1000
         this.ParserListTenders driver
 
     member private this.ParserSelenRosseti(driver : ChromeDriver) =
@@ -164,7 +164,7 @@ type ParserRossel(stn : Settings.T) =
         this.Clicker driver "//label[. = 'Торговые секции']/following-sibling::div//span[. = 'Select Here']/following-sibling::label"
         this.Clicker driver "//label[. = 'ПАО «Россети»']/parent::li"
         this.Clicker driver "//button[contains( . , 'Найти')]"
-        pageReloader driver
+        pageReloader driver 1000
         this.ParserListTenders driver
 
     member private this.ParserSelenRosgeo(driver : ChromeDriver) =
@@ -179,7 +179,7 @@ type ParserRossel(stn : Settings.T) =
         this.Clicker driver "//label[. = 'Торговые секции']/following-sibling::div//span[. = 'Select Here']/following-sibling::label"
         this.Clicker driver "//label[. = 'Холдинг «Росгео»']/parent::li"
         this.Clicker driver "//button[contains( . , 'Найти')]"
-        pageReloader driver
+        pageReloader driver 1000
         this.ParserListTenders driver
 
     member private this.ParserListTenders(driver : ChromeDriver) =
