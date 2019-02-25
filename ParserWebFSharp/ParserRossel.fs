@@ -12,6 +12,7 @@ type ParserRossel(stn : Settings.T) =
     let set = stn
     let timeoutB = TimeSpan.FromSeconds(30.)
     let url = "https://www.roseltorg.ru/search/com"
+    let urlk = "https://www.roseltorg.ru/procedures/search"
     let listTenders = new List<TenderRossel>()
     let options = ChromeOptions()
     let pageReloader (driver : ChromeDriver) =
@@ -20,7 +21,7 @@ type ParserRossel(stn : Settings.T) =
                     jse.ExecuteScript("window.scrollBy(0,250)", "") |> ignore
                     Thread.Sleep(100)
     do
-        options.AddArguments("headless")
+        //options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
 
@@ -41,13 +42,13 @@ type ParserRossel(stn : Settings.T) =
         try
             try
                 this.ParserSelen driver
-                (*this.ParserSelenAtom driver
+                this.ParserSelenAtom driver
                 this.ParserSelenRt driver
                 this.ParserSelenVtb driver
                 this.ParserSelenRosteh driver
                 this.ParserSelenRushidro driver
                 this.ParserSelenRosgeo driver
-                this.ParserSelenRosseti driver*)
+                this.ParserSelenRosseti driver
                 driver.Manage().Cookies.DeleteAllCookies()
             with ex -> Logging.Log.logger ex
         finally
@@ -72,16 +73,17 @@ type ParserRossel(stn : Settings.T) =
 
     member private this.ParserSelenAtom(driver : ChromeDriver) =
         let wait = new WebDriverWait(driver, timeoutB)
-        driver.Navigate().GoToUrl(url)
+        driver.Navigate().GoToUrl(urlk)
         Thread.Sleep(5000)
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
         |> ignore
         this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
         this.Clicker driver "//span[span[contains(., 'Прием заявок')]]/following-sibling::span"
         this.Clicker driver "//li/span[. = 'Работа коммиссии']"
-        this.Clicker driver "//span[contains(., 'Коммерческие закупки и закупки по 223-ФЗ')]/following-sibling::label/i"
-        this.Clicker driver "//label[contains(., 'Коммерческие закупки и закупки по 223-ФЗ')]"
-        this.Clicker driver "//label[. = 'ГК «Росатом»']"
+        //this.Clicker driver "//span[contains(., 'Коммерческие закупки и закупки по 223-ФЗ')]/following-sibling::label/i"
+        //this.Clicker driver "//label[contains(., 'Коммерческие закупки и закупки по 223-ФЗ')]"
+        this.Clicker driver "//label[. = 'Торговые секции']/following-sibling::div//span[. = 'Select Here']/following-sibling::label"
+        this.Clicker driver "//label[. = 'ГК «Росатом»']/parent::li"
         (*this.Clicker driver "//a[contains(., 'Очистить критерии поиска')]"
         this.Clicker driver
             "//span[contains(@class, 'c-inp-select-g-procedure-status-select') and span[contains(@class, 'c-inp-select-opener')]]"
@@ -92,102 +94,90 @@ type ParserRossel(stn : Settings.T) =
 
     member private this.ParserSelenRt(driver : ChromeDriver) =
         let wait = new WebDriverWait(driver, timeoutB)
-        driver.Navigate().GoToUrl(url)
+        driver.Navigate().GoToUrl(urlk)
         Thread.Sleep(5000)
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
         |> ignore
         this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
-        this.Clicker driver "//a[contains(., 'Очистить критерии поиска')]"
-        this.Clicker driver
-            "//span[contains(@class, 'c-inp-select-g-procedure-status-select') and span[contains(@class, 'c-inp-select-opener')]]"
-        this.Clicker driver "//span[contains(@class, 'c-inp-option') and @data-index = '0']"
-        this.Clicker driver "//span[contains(@class, 'placeholder') and contains(., 'Торговые секции')]"
-        this.Clicker driver "//label[. = 'ПАО «Ростелеком» и подведомственных организаций']"
+        this.Clicker driver "//span[span[contains(., 'Прием заявок')]]/following-sibling::span"
+        this.Clicker driver "//li/span[. = 'Работа коммиссии']"
+        this.Clicker driver "//label[. = 'Торговые секции']/following-sibling::div//span[. = 'Select Here']/following-sibling::label"
+        this.Clicker driver "//label[. = 'ПАО «Ростелеком» и подведомственных организаций']/parent::li"
         this.Clicker driver "//button[contains( . , 'Найти')]"
         pageReloader driver
         this.ParserListTenders driver
 
     member private this.ParserSelenVtb(driver : ChromeDriver) =
         let wait = new WebDriverWait(driver, timeoutB)
-        driver.Navigate().GoToUrl(url)
+        driver.Navigate().GoToUrl(urlk)
         Thread.Sleep(5000)
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
         |> ignore
         this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
-        this.Clicker driver "//a[contains(., 'Очистить критерии поиска')]"
-        this.Clicker driver
-            "//span[contains(@class, 'c-inp-select-g-procedure-status-select') and span[contains(@class, 'c-inp-select-opener')]]"
-        this.Clicker driver "//span[contains(@class, 'c-inp-option') and @data-index = '0']"
-        this.Clicker driver "//span[contains(@class, 'placeholder') and contains(., 'Торговые секции')]"
-        this.Clicker driver "//label[. = 'Группа ВТБ']"
+        this.Clicker driver "//span[span[contains(., 'Прием заявок')]]/following-sibling::span"
+        this.Clicker driver "//li/span[. = 'Работа коммиссии']"
+        this.Clicker driver "//label[. = 'Торговые секции']/following-sibling::div//span[. = 'Select Here']/following-sibling::label"
+        this.Clicker driver "//label[. = 'Группа ВТБ']/parent::li"
         this.Clicker driver "//button[contains( . , 'Найти')]"
         pageReloader driver
         this.ParserListTenders driver
 
     member private this.ParserSelenRosteh(driver : ChromeDriver) =
         let wait = new WebDriverWait(driver, timeoutB)
-        driver.Navigate().GoToUrl(url)
+        driver.Navigate().GoToUrl(urlk)
         Thread.Sleep(5000)
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
         |> ignore
         this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
-        this.Clicker driver "//a[contains(., 'Очистить критерии поиска')]"
-        this.Clicker driver
-            "//span[contains(@class, 'c-inp-select-g-procedure-status-select') and span[contains(@class, 'c-inp-select-opener')]]"
-        this.Clicker driver "//span[contains(@class, 'c-inp-option') and @data-index = '0']"
-        this.Clicker driver "//span[contains(@class, 'placeholder') and contains(., 'Торговые секции')]"
-        this.Clicker driver "//label[. = 'ГК «Ростех»']"
+        this.Clicker driver "//span[span[contains(., 'Прием заявок')]]/following-sibling::span"
+        this.Clicker driver "//li/span[. = 'Работа коммиссии']"
+        this.Clicker driver "//label[. = 'Торговые секции']/following-sibling::div//span[. = 'Select Here']/following-sibling::label"
+        this.Clicker driver "//label[. = 'ГК «Ростех»']/parent::li"
         this.Clicker driver "//button[contains( . , 'Найти')]"
         pageReloader driver
         this.ParserListTenders driver
 
     member private this.ParserSelenRushidro(driver : ChromeDriver) =
         let wait = new WebDriverWait(driver, timeoutB)
-        driver.Navigate().GoToUrl(url)
+        driver.Navigate().GoToUrl(urlk)
         Thread.Sleep(5000)
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
         |> ignore
         this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
-        this.Clicker driver "//a[contains(., 'Очистить критерии поиска')]"
-        this.Clicker driver
-            "//span[contains(@class, 'c-inp-select-g-procedure-status-select') and span[contains(@class, 'c-inp-select-opener')]]"
-        this.Clicker driver "//span[contains(@class, 'c-inp-option') and @data-index = '0']"
-        this.Clicker driver "//span[contains(@class, 'placeholder') and contains(., 'Торговые секции')]"
-        this.Clicker driver "//label[. = 'Группа «РусГидро»']"
+        this.Clicker driver "//span[span[contains(., 'Прием заявок')]]/following-sibling::span"
+        this.Clicker driver "//li/span[. = 'Работа коммиссии']"
+        this.Clicker driver "//label[. = 'Торговые секции']/following-sibling::div//span[. = 'Select Here']/following-sibling::label"
+        this.Clicker driver "//label[. = 'Группа «РусГидро»']/parent::li"
         this.Clicker driver "//button[contains( . , 'Найти')]"
         pageReloader driver
         this.ParserListTenders driver
 
     member private this.ParserSelenRosseti(driver : ChromeDriver) =
         let wait = new WebDriverWait(driver, timeoutB)
-        driver.Navigate().GoToUrl(url)
+        driver.Navigate().GoToUrl(urlk)
         Thread.Sleep(5000)
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
         |> ignore
         this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
-        this.Clicker driver "//a[contains(., 'Очистить критерии поиска')]"
-        this.Clicker driver
-            "//span[contains(@class, 'c-inp-select-g-procedure-status-select') and span[contains(@class, 'c-inp-select-opener')]]"
-        this.Clicker driver "//span[contains(@class, 'c-inp-option') and @data-index = '0']"
-        this.Clicker driver "//span[contains(@class, 'placeholder') and contains(., 'Торговые секции')]"
-        this.Clicker driver "//label[. = 'ПАО «Россети»']"
+        this.Clicker driver "//span[span[contains(., 'Прием заявок')]]/following-sibling::span"
+        this.Clicker driver "//li/span[. = 'Работа коммиссии']"
+        this.Clicker driver "//label[. = 'Торговые секции']/following-sibling::div//span[. = 'Select Here']/following-sibling::label"
+        this.Clicker driver "//label[. = 'ПАО «Россети»']/parent::li"
         this.Clicker driver "//button[contains( . , 'Найти')]"
         pageReloader driver
         this.ParserListTenders driver
 
     member private this.ParserSelenRosgeo(driver : ChromeDriver) =
         let wait = new WebDriverWait(driver, timeoutB)
-        driver.Navigate().GoToUrl(url)
+        driver.Navigate().GoToUrl(urlk)
         Thread.Sleep(5000)
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
         |> ignore
         this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
-        this.Clicker driver "//a[contains(., 'Очистить критерии поиска')]"
-        this.Clicker driver
-            "//span[contains(@class, 'c-inp-select-g-procedure-status-select') and span[contains(@class, 'c-inp-select-opener')]]"
-        this.Clicker driver "//span[contains(@class, 'c-inp-option') and @data-index = '0']"
-        this.Clicker driver "//span[contains(@class, 'placeholder') and contains(., 'Торговые секции')]"
-        this.Clicker driver "//label[. = 'Холдинг «Росгео»']"
+        this.Clicker driver "//span[span[contains(., 'Прием заявок')]]/following-sibling::span"
+        this.Clicker driver "//li/span[. = 'Работа коммиссии']"
+        this.Clicker driver "//label[. = 'Торговые секции']/following-sibling::div//span[. = 'Select Here']/following-sibling::label"
+        this.Clicker driver "//label[. = 'Холдинг «Росгео»']/parent::li"
         this.Clicker driver "//button[contains( . , 'Найти')]"
         pageReloader driver
         this.ParserListTenders driver
