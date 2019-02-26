@@ -80,6 +80,8 @@ module Settings =
         let mutable LogPathTendersSamolet = ""
         let mutable TempPathTendersAriba = ""
         let mutable LogPathTendersAriba = ""
+        let mutable TempPathTendersBeeline = ""
+        let mutable LogPathTendersBeeline = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -253,6 +255,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_ariba" then
                     LogPathTendersAriba <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_beeline" then
+                    TempPathTendersBeeline <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_beeline" then
+                    LogPathTendersBeeline <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -293,6 +301,7 @@ module Settings =
                 | Tenderer -> TempPathTendersTenderer
                 | Samolet -> TempPathTendersSamolet
                 | Ariba -> TempPathTendersAriba
+                | Beeline -> TempPathTendersBeeline
 
             let LogPathTenders =
                 match arg with
@@ -323,6 +332,7 @@ module Settings =
                 | Tenderer -> LogPathTendersTenderer
                 | Samolet -> LogPathTendersSamolet
                 | Ariba -> LogPathTendersAriba
+                | Beeline -> LogPathTendersBeeline
 
             { Database = Database
               TempPathTenders = TempPathTenders

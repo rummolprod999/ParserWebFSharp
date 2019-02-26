@@ -68,6 +68,8 @@
     <Compile Include="ParserSamolet.fs" />
     <Compile Include="TenderAriba.fs" />
     <Compile Include="ParserAriba.fs" />
+    <Compile Include="TenderBeeline.fs" />
+    <Compile Include="ParserBeeline.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

@@ -33,6 +33,7 @@ type Arguments =
     | Tenderer
     | Samolet
     | Ariba
+    | Beeline
 
 type SlavNeft =
     | MEGION
@@ -279,3 +280,9 @@ type AribaRec =
       PwName : string
       Categories : string list
       DelivPlace : string }
+
+type BeelineRec =
+    { Href : string
+      PurNum : string
+      PurName : string
+      DatePub : DateTime }
