@@ -37,6 +37,7 @@
     <Compile Include="ParserGosYakut.fs" />
     <Compile Include="TenderRosTend.fs" />
     <Compile Include="ParserRostendParall.fs" />
+    <Compile Include="ParserRostendMultyThread.fs" />
     <Compile Include="ParserRosTendXml.fs" />
     <Compile Include="TenderChPt.fs" />
     <Compile Include="ParserChPt.fs" />

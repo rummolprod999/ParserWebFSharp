@@ -33,6 +33,7 @@
         <e p="ParserPik.fs" t="Include" />
         <e p="ParserRosTendXml.fs" t="Include" />
         <e p="ParserRossel.fs" t="Include" />
+        <e p="ParserRostendMultyThread.fs" t="Include" />
         <e p="ParserRostendParall.fs" t="Include" />
         <e p="ParserSamolet.fs" t="Include" />
         <e p="ParserSibServ.fs" t="Include" />
