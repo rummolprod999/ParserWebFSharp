@@ -11,7 +11,6 @@ type TenderRosTendParall(stn : Settings.T, tn : RosTendRec, typeFz : int, etpNam
     static member val tenderUpCount = ref 0
     override this.Parsing() =
         let dateUpd = DateTime.Now
-        con.Open()
         let href = tn.Href
         let selectTend =
             sprintf 

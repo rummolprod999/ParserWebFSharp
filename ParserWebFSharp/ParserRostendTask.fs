@@ -141,17 +141,19 @@ type ParserRostendTask(stn : Settings.T) =
         ()
 
     member private this.ConsumerTender(num : int) =
+        use con = new MySqlConnection(stn.ConStr)
+        con.Open()
         for i in 1..num do
             Monitor.Enter(this.locker)
             if this.listTenders.Count < 1 then Monitor.Wait(this.locker) |> ignore
             let t = this.listTenders.Dequeue()
             try
-                this.TenderChecker t
+                this.TenderChecker t con
             with ex -> Logging.Log.logger ex
             Monitor.PulseAll(this.locker)
             Monitor.Exit(this.locker)
 
-    member private this.TenderChecker(tn : RosTendRec) =
+    member private this.TenderChecker(tn : RosTendRec) (con: MySqlConnection) =
         match tn.PurNum with
         | "" -> raise <| System.NullReferenceException(sprintf "PurNum not found in %s" tn.Href)
         | _ -> ()
@@ -181,7 +183,7 @@ type ParserRostendTask(stn : Settings.T) =
             | None -> DateTime.MinValue
 
         try
-            let T = TenderRosTend(set, tn, 82, "ООО Тендеры и закупки", "http://rostender.info", dateEnd, "")
+            let T = TenderRosTendParall(set, tn, 82, "ООО Тендеры и закупки", "http://rostender.info", dateEnd, "", con)
             T.Parsing()
         with ex -> Logging.Log.logger (ex, tn.Href)
         ()
