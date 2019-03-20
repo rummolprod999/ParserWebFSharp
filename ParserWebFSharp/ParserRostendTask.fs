@@ -2,6 +2,7 @@ namespace ParserWeb
 
 open AngleSharp.Dom
 open AngleSharp.Parser.Html
+open MySql.Data.MySqlClient
 open System
 open System.Collections.Generic
 open System.Linq
@@ -9,7 +10,7 @@ open System.Threading
 open System.Threading.Tasks
 open TypeE
 
-type ParserRostendMultyThread(stn : Settings.T) =
+type ParserRostendTask(stn : Settings.T) =
     inherit Parser()
     let set = stn
     let count = 500
@@ -38,24 +39,26 @@ type ParserRostendMultyThread(stn : Settings.T) =
 
     member private this.ThreadWorker(tensN : IEnumerable<_>) =
         let listElem = new List<_>(tensN)
-        while listElem.Count > 5 do
-            let ls = listElem.Take(5)
+        while listElem.Count > 10 do
+            let ls = listElem.Take(10)
             listElem.RemoveAllFromList(ls)
             this.Worker(new List<_>(ls))
             ()
         this.Worker(new List<_>(listElem))
 
     member private this.Worker(l : List<_>) =
-        for t in l do
-            try
-                let task = new Task(fun () -> this.AddTenderToList t)
-                task.Start()
-            with ex -> Logging.Log.logger ex
+        Task.Factory.StartNew(fun () -> Parallel.ForEach(l, this.TaskerParall) |> ignore) |> ignore
         if l.Count > 0 then
+            //use con = new MySqlConnection(stn.ConStr)
             let cons = new Task(fun () -> this.ConsumerTender l.Count)
             cons.Start()
             cons.Wait()
         ()
+
+    member private this.TaskerParall(t : IElement) =
+            try
+                this.AddTenderToList t
+            with ex -> Logging.Log.logger ex
 
     member private this.AddTenderToList(t : IElement) =
         let PurName =
@@ -118,7 +121,7 @@ type ParserRostendMultyThread(stn : Settings.T) =
             | Some x -> x.Trim().RegexDeleteWhitespace()
             | None -> ""
 
-        let Page = Download.DownloadString1251 Href
+        let Page = Download.DownloadString1251Bot Href
 
         let tn =
             { Href = Href
