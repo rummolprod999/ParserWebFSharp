@@ -98,8 +98,8 @@ type TenderRosTendParall(stn : Settings.T, tn : RosTendRec, typeFz : int, etpNam
             cmd9.ExecuteNonQuery() |> ignore
             idTender := int cmd9.LastInsertedId
             match updated with
-            | true -> incr TenderRosTend.tenderUpCount
-            | false -> incr TenderRosTend.tenderCount
+            | true -> incr TenderRosTendParall.tenderUpCount
+            | false -> incr TenderRosTendParall.tenderCount
             let idCustomer = ref 0
             let idLot = ref 0
             let insertLot =

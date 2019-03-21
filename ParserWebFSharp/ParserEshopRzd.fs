@@ -49,7 +49,7 @@ type ParserEshopRzd(stn : Settings.T) =
             with ex -> Logging.Log.logger (ex)
     
     member private this.GetNextPage (driver : ChromeDriver) (wait : WebDriverWait) =
-        for i in 2..20 do
+        for i in 2..30 do
             try 
                 driver.SwitchTo().DefaultContent() |> ignore
                 this.Clicker driver <| sprintf "//ul[contains(@class, 'pagination-sm')]//li/a[. = '%d']" i
