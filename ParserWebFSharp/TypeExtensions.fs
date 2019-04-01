@@ -180,6 +180,14 @@ module TypeE =
                 | r -> Success(r.Text.Trim())
             with ex -> Error(exc)
 
+        member this.findWElementWithoutException (xpath : string, exc : string) =
+            try
+                let res = this.FindElement(By.XPath(xpath))
+                match res with
+                | null -> Error(exc)
+                | r -> Success(r)
+            with ex -> Error(exc)
+
         member this.findElementWithoutExceptionOptional (xpath : string, exc : string) =
             try
                 let res = this.FindElement(By.XPath(xpath))

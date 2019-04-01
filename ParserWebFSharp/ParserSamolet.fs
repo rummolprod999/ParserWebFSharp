@@ -41,7 +41,7 @@ type ParserSamolet(stn : Settings.T) =
         driver.SwitchTo().DefaultContent() |> ignore
         wait.Until
             (fun dr -> 
-            dr.FindElement(By.XPath("//div[contains(@class, 'tender-list__list')]/a[@class = 'tender-card']")).Displayed) 
+            dr.FindElement(By.XPath("//div[@id = 'trades']//um-trade-list-item")).Displayed) 
         |> ignore
         this.ParserListTenders driver
         for t in listTenders do
@@ -58,7 +58,7 @@ type ParserSamolet(stn : Settings.T) =
     
     member private this.ParserListTenders(driver : ChromeDriver) =
         let tenders =
-            driver.FindElementsByXPath("//div[contains(@class, 'tender-list__list')]/a[@class = 'tender-card']")
+            driver.FindElementsByXPath("//div[@id = 'trades']//um-trade-list-item")
         for t in tenders do
             this.ParserTenders driver t
         ()
@@ -68,7 +68,9 @@ type ParserSamolet(stn : Settings.T) =
         
         let result =
             builder { 
-                let! href = i.findAttributeWithoutException ("href", "hrefT not found")
+                let! hrefT = i.findWElementWithoutException 
+                                   (".//a", sprintf "hrefT not found %s" i.Text)
+                let! href = hrefT.findAttributeWithoutException ("href", "hrefT not found")
                 let! purName = i.findElementWithoutException 
                                    (".//div[@class = 'tender-card__name']", sprintf "purName not found %s" i.Text)
                 let delivPlace = i.findElementWithoutException (".//div[@class = 'tender-card__project-name']")
