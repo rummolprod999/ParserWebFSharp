@@ -12,7 +12,7 @@ type ParserSamolet(stn : Settings.T) =
     inherit Parser()
     let set = stn
     let timeoutB = TimeSpan.FromSeconds(30.)
-    let url = "https://samoletgroup.ru/tenders/"
+    let url = "https://tender.samoletgroup.ru/trades"
     let listTenders = new List<SamoletRec>()
     let options = ChromeOptions()
     
@@ -51,7 +51,7 @@ type ParserSamolet(stn : Settings.T) =
     
     member private this.ParserTendersList (driver : ChromeDriver) (t : SamoletRec) =
         try 
-            let T = TenderSamolet(set, t, 130, "АО «Группа компаний «Самолет»", "https://samoletgroup.ru/")
+            let T = TenderSamolet(set, t, 130, "АО «Группа компаний «Самолет»", "https://samoletgroup.ru/", driver)
             T.Parsing()
         with ex -> Logging.Log.logger (ex, t.Href)
         ()
@@ -72,16 +72,11 @@ type ParserSamolet(stn : Settings.T) =
                                    (".//a", sprintf "hrefT not found %s" i.Text)
                 let! href = hrefT.findAttributeWithoutException ("href", "hrefT not found")
                 let! purName = i.findElementWithoutException 
-                                   (".//div[@class = 'tender-card__name']", sprintf "purName not found %s" i.Text)
-                let delivPlace = i.findElementWithoutException (".//div[@class = 'tender-card__project-name']")
-                let! dateEndTT = i.findElementWithoutException 
-                                     (".//div[. = 'Прием заявок']/following-sibling::div", 
-                                      sprintf "dateEndTT not found %s" i.Text)
-                let! dateEndT = dateEndTT.Get1("(\d{2}\.\d{2}\.\d{4})", sprintf "datePubT not found %s" dateEndTT)
-                let! dateEnd = dateEndT.DateFromString("dd.MM.yyyy", sprintf "datePub not parse %s" dateEndT)
+                                   (".//a/span", sprintf "purName not found %s" i.Text)
+                let! purNum =  i.findElementWithoutException(".//div[@class = 'header-row']/span[contains(@class, 'registered-number')]", sprintf "purName not found %s" i.Text)
+                let delivPlace = ""
+                let dateEnd = DateTime.Now
                 let datePub = DateTime.Now
-                let purNum = Tools.createMD5 purName
-                
                 let ten =
                     { Href = href
                       PurNum = purNum
