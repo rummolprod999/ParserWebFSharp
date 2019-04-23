@@ -142,7 +142,7 @@ module Download =
                         continueLooping <- false
                     else raise <| new TimeoutException()
                 with _ ->
-                    if !count >= 100 then
+                    if !count >= 5 then
                         Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток" url !count)
                         continueLooping <- false
                     else incr count
