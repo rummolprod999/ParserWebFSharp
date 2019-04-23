@@ -158,7 +158,7 @@ type TenderTsm(stn : Settings.T, tn : SamoletRec, typeFz : int, etpName : string
                         if attach <> "" then
                               let addAttach = sprintf "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url, description = @description" stn.Prefix
                               let cmd5 = new MySqlCommand(addAttach, con)
-                              cmd5.Parameters.AddWithValue("@id_tender", idTender) |> ignore
+                              cmd5.Parameters.AddWithValue("@id_tender", !idTender) |> ignore
                               cmd5.Parameters.AddWithValue("@file_name", "Скачать все приложенные файлы") |> ignore
                               cmd5.Parameters.AddWithValue("@url", attach) |> ignore
                               cmd5.Parameters.AddWithValue("@description", "") |> ignore
