@@ -54,6 +54,7 @@ type Init(s : Settings.T, arg : Arguments) =
         | Samolet -> this.ParsingSamolet()
         | Ariba -> this.ParsingAriba()
         | Beeline -> this.ParsingBeeline()
+        | Tsm -> this.ParsingTsm()
 
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -329,4 +330,13 @@ type Init(s : Settings.T, arg : Arguments) =
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderBeeline.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderBeeline.tenderUpCount)
 
+    member private this.ParsingTsm() =
+        Logging.Log.logger "Начало парсинга"
+        try
+             this.GetParser(ParserTsm(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderTsm.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderTsm.tenderUpCount)
+        
     member private this.GetParser(p : Parser) = p.Parsing()

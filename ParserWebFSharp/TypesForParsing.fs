@@ -34,6 +34,7 @@ type Arguments =
     | Samolet
     | Ariba
     | Beeline
+    | Tsm
 
 type SlavNeft =
     | MEGION
