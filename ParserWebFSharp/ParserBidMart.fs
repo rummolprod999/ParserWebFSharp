@@ -23,7 +23,7 @@ type DefinedBuilder() =
 type ParserBidMart(stn : Settings.T) =
     inherit Parser()
     let set = stn
-    let timeoutB = TimeSpan.FromSeconds(120.)
+    let timeoutB = TimeSpan.FromSeconds(30.)
     let url = "https://www.bidmart.by/"
     let options = ChromeOptions()
     
@@ -54,9 +54,9 @@ type ParserBidMart(stn : Settings.T) =
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         wait.Until
-            (fun dr -> dr.FindElement(By.XPath("//table[@id = 'wlist' and @class = 'dynatable']/tbody")).Displayed) 
+            (fun dr -> dr.FindElement(By.XPath("//table[@id = 'wlist']/tbody")).Displayed) 
         |> ignore
-        let tenders = driver.FindElementsByXPath("//table[@id = 'wlist' and @class = 'dynatable']/tbody/tr")
+        let tenders = driver.FindElementsByXPath("//table[@id = 'wlist']/tbody/tr")
         for t in tenders do
             try 
                 this.ParserTenders driver t
