@@ -67,15 +67,15 @@ type ParserBidMart(stn : Settings.T) =
         
         let res =
             defined { 
-                let! purNum = checker "./td[2]" t "bad purNum"
+                let! purNum = checker "./td[1]" t "bad purNum"
                 let purName = purNum
                 let href = "https://www.bidmart.by/"
-                let! nmckT = checker "./td[4]" t "bad nmckT"
+                let! nmckT = checker "./td[3]" t "bad nmckT"
                 let nmck = nmckT.GetNmck()
-                let! quantT = checker "./td[3]" t "bad quantity"
+                let! quantT = checker "./td[2]" t "bad quantity"
                 let quant = quantT.GetNmck()
                 let datePub = DateTime.Now
-                let! dateEndT = checker "./td[6]" t "bad dateEndT"
+                let! dateEndT = checker "./td[4]" t "bad dateEndT"
                 let dateEnd =
                     match dateEndT.DateFromString("dd.MM.yyyy") with
                     | Some d -> d
@@ -95,6 +95,6 @@ type ParserBidMart(stn : Settings.T) =
                 return SuccessResult("ok")
             }
         match res with
-        | SuccessResult r -> ()
+        | SuccessResult _ -> ()
         | BadArgument b -> Logging.Log.logger b
         ()
