@@ -2,7 +2,6 @@ namespace ParserWeb
 
 open AngleSharp.Dom
 open AngleSharp.Parser.Html
-open MySql.Data.MySqlClient
 open System
 open System.Collections.Generic
 open System.Linq
@@ -13,10 +12,10 @@ open TypeE
 type ParserRostendTask(stn : Settings.T) =
     inherit Parser()
     let set = stn
-    let count = 500
+    let count = 1000
     let strtPg = "http://rostender.info/tender?pg="
     member val locker = new Object()
-    member val listTenders = new Queue<RosTendRec>()
+    member val listTenders = new Queue<RosTendRecNew>()
 
     override this.Parsing() =
         for i in 1..count do
@@ -31,9 +30,9 @@ type ParserRostendTask(stn : Settings.T) =
         | s ->
             let parser = new HtmlParser()
             let documents = parser.Parse(s)
-            let mutable tens = documents.QuerySelectorAll("table.b-new-tenders-table tbody tr")
+            let mutable tens = documents.QuerySelectorAll("div.table-constructor > div.tender-row")
             if tens.Length > 0 then
-                let tensN = tens.Skip(1)
+                let tensN = tens //.Skip(1)
                 this.ThreadWorker tensN
             ()
 
@@ -62,19 +61,19 @@ type ParserRostendTask(stn : Settings.T) =
 
     member private this.AddTenderToList(t : IElement) =
         let PurName =
-            match t.QuerySelector("h3 a") with
+            match t.QuerySelector("div.description a") with
             | null -> ""
             | ur -> ur.TextContent.Trim()
 
         let HrefT =
-            match t.QuerySelector("h3 a") with
+            match t.QuerySelector("div.description a") with
             | null -> ""
             | ur -> ur.GetAttribute("href").Trim()
 
         let Href = sprintf "http://rostender.info%s" HrefT
 
         let PurNumT =
-            match t.QuerySelector("div.b-new-tenders-table-firstcell-overal") with
+            match t.QuerySelector("div.tender-info div.row  div:nth-of-type(1)") with
             | null -> ""
             | ur -> ur.TextContent.Trim()
 
@@ -84,50 +83,78 @@ type ParserRostendTask(stn : Settings.T) =
             | None -> ""
 
         let mutable PubDateT =
-            match t.QuerySelector("div.b-new-tenders-table-firstcell-overal span") with
+            match t.QuerySelector("div.tender-info div.row  div:nth-of-type(2) div") with
             | null -> ""
             | ur -> ur.TextContent.Trim().RegexCutWhitespace()
 
-        PubDateT <- match PubDateT.Get1FromRegexp @"(\d{2}\.\d{2}\.\d{2})" with
+        PubDateT <- match PubDateT.Get1FromRegexp @"(\d{2}\.\d{2}\.\d{4})" with
                     | Some x -> x.Trim()
                     | None -> ""
         let datePub =
-            match PubDateT.DateFromString("dd.MM.yy") with
+            match PubDateT.DateFromString("dd.MM.yyyy") with
             | Some d -> d
             | None -> DateTime.MinValue
+            
+        let mutable EndDateT =
+            match t.QuerySelector("div.tender-date-info:contains('Дата окончания:')") with
+            | null -> ""
+            | ur -> ur.TextContent.Trim().RegexCutWhitespace()
 
+        EndDateT <- match EndDateT.Get1FromRegexp @"(\d{2}\.\d{2}\.\d{4})" with
+                    | Some x -> x.Trim()
+                    | None -> ""
+        let dateEnd =
+            match EndDateT.DateFromString("dd.MM.yyyy") with
+            | Some d -> d
+            | None -> DateTime.MinValue
+        
+        let mutable UpdDateT =
+            match t.QuerySelector("div.tender-date-info:contains('Дата изменения:')") with
+            | null -> ""
+            | ur -> ur.TextContent.Trim().RegexCutWhitespace()
+
+        UpdDateT <- match UpdDateT.Get1FromRegexp @"(\d{2}\.\d{2}\.\d{4})" with
+                    | Some x -> x.Trim()
+                    | None -> ""
+        let dateUpd =
+            match UpdDateT.DateFromString("dd.MM.yyyy") with
+            | Some d -> d
+            | None -> DateTime.Now
+            
         let region =
-            match t.QuerySelector("div.b-new-tenders-table-firstcell-reg a") with
+            match t.QuerySelector("div.region-links-in-cabinet div a") with
             | null -> ""
             | ur -> ur.TextContent.Trim().RegexCutWhitespace()
 
         let delivPlace =
-            match t.QuerySelector("td:nth-child(2) strong") with
+            match t.QuerySelector("div.tender-address") with
             | null -> ""
             | ur -> ur.TextContent.Trim().RegexCutWhitespace()
 
         let NmckT =
-            match t.QuerySelector("td:nth-child(3)") with
+            match t.QuerySelector("div.starting-price span") with
             | null -> ""
             | ur -> ur.TextContent.Trim()
 
         let Nmck =
-            match NmckT.Get1FromRegexp @"([\d\s,\.]+)\s+.+" with
+            match NmckT.Get1FromRegexp @"([\d\s,\.]+)" with
             | Some x -> x.Trim().RegexDeleteWhitespace()
             | None -> ""
 
         let Currency =
-            match NmckT.Get1FromRegexp @"([^\d\s]+)$" with
-            | Some x -> x.Trim().RegexDeleteWhitespace()
-            | None -> ""
+            match t.QuerySelector("div.starting-price text") with
+            | null -> ""
+            | ur -> ur.TextContent.Trim()
 
-        let Page = Download.DownloadString1251Bot Href
+        let Page = "" //Download.DownloadString1251Bot Href
 
         let tn =
             { Href = Href
               PurNum = PurNum
               PurName = PurName
               DatePub = datePub
+              DateEnd = dateEnd
+              DateUpd = dateUpd
               Region = region
               Nmck = Nmck
               DelivPlace = delivPlace
@@ -153,7 +180,7 @@ type ParserRostendTask(stn : Settings.T) =
             Monitor.PulseAll(this.locker)
             Monitor.Exit(this.locker)
 
-    member private this.TenderChecker(tn : RosTendRec) =
+    member private this.TenderChecker(tn : RosTendRecNew) =
         match tn.PurNum with
         | "" -> raise <| System.NullReferenceException(sprintf "PurNum not found in %s" tn.Href)
         | _ -> ()
@@ -161,10 +188,14 @@ type ParserRostendTask(stn : Settings.T) =
         | a when a = DateTime.MinValue ->
             raise <| System.NullReferenceException(sprintf "PubDate not found in %s" tn.Href)
         | _ -> ()
+        match tn.DateEnd with
+        | a when a = DateTime.MinValue ->
+            raise <| System.NullReferenceException(sprintf "DateEnd not found in %s" tn.Href)
+        | _ -> ()
         match tn.PurName with
         | "" -> raise <| System.NullReferenceException(sprintf "PurName not found in %s" tn.Href)
         | _ -> ()
-        match tn.Page with
+        (*match tn.Page with
         | "" -> raise <| System.NullReferenceException(sprintf "Page not found in %s" tn.Href)
         | _ -> ()
         let parser = new HtmlParser()
@@ -180,10 +211,10 @@ type ParserRostendTask(stn : Settings.T) =
         let dateEnd =
             match EndDateT.DateFromString("dd.MM.yyyy") with
             | Some d -> d
-            | None -> DateTime.MinValue
+            | None -> DateTime.MinValue*)
 
         try
-            let T = TenderRosTend(set, tn, 82, "ООО Тендеры и закупки", "http://rostender.info", dateEnd, "")
+            let T = TenderRosTendNew(set, tn, 82, "ООО Тендеры и закупки", "http://rostender.info", "")
             T.Parsing()
         with ex -> Logging.Log.logger (ex, tn.Href)
         ()

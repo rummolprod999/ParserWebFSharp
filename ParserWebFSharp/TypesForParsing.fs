@@ -123,6 +123,19 @@ type RosTendRec =
       Currency : string
       Page : string }
 
+type RosTendRecNew =
+    { Href : string
+      PurNum : string
+      PurName : string
+      DatePub : DateTime
+      DateEnd : DateTime
+      DateUpd : DateTime
+      Region : string
+      Nmck : string
+      DelivPlace : string
+      Currency : string
+      Page : string }
+    
 type ChPtRec =
     { Href : string
       PurNum : string

@@ -71,6 +71,7 @@
         <e p="TenderPik.fs" t="Include" />
         <e p="TenderRosTend.fs" t="Include" />
         <e p="TenderRossel.fs" t="Include" />
+        <e p="TenderRostendNew.fs" t="Include" />
         <e p="TenderRostendParall.fs" t="Include" />
         <e p="TenderSamolet.fs" t="Include" />
         <e p="TenderSibServ.fs" t="Include" />

@@ -183,8 +183,8 @@ type Init(s : Settings.T, arg : Arguments) =
             this.GetParser(ParserRostendTask(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
-        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderRosTend.tenderCount)
-        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderRosTend.tenderUpCount)
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderRosTendNew.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderRosTendNew.tenderUpCount)
 
     member private this.ParsingChPt() =
         Logging.Log.logger "Начало парсинга"
