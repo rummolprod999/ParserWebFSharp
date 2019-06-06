@@ -77,6 +77,8 @@
     <Compile Include="ParserBeeline.fs" />
     <Compile Include="TenderTsm.fs" />
     <Compile Include="ParserTsm.fs" />
+    <Compile Include="TenderSmart.fs" />
+    <Compile Include="ParserSmart.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

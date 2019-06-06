@@ -84,6 +84,8 @@ module Settings =
         let mutable LogPathTendersBeeline = ""
         let mutable TempPathTendersTsm = ""
         let mutable LogPathTendersTsm = ""
+        let mutable TempPathTendersSmart = ""
+        let mutable LogPathTendersSmart = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -269,6 +271,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_tsm" then
                     LogPathTendersTsm <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_smart" then
+                    TempPathTendersSmart <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_smart" then
+                    LogPathTendersSmart <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -311,6 +319,7 @@ module Settings =
                 | Ariba -> TempPathTendersAriba
                 | Beeline -> TempPathTendersBeeline
                 | Tsm -> TempPathTendersTsm
+                | Smart -> TempPathTendersSmart
 
             let LogPathTenders =
                 match arg with
@@ -343,6 +352,7 @@ module Settings =
                 | Ariba -> LogPathTendersAriba
                 | Beeline -> LogPathTendersBeeline
                 | Tsm -> LogPathTendersTsm
+                | Smart -> LogPathTendersSmart
 
             { Database = Database
               TempPathTenders = TempPathTenders

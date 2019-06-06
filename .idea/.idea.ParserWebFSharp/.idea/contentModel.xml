@@ -41,6 +41,7 @@
         <e p="ParserSamolet.fs" t="Include" />
         <e p="ParserSibServ.fs" t="Include" />
         <e p="ParserSlav.fs" t="Include" />
+        <e p="ParserSmart.fs" t="Include" />
         <e p="ParserStroyTorgi.fs" t="Include" />
         <e p="ParserTGuru.fs" t="Include" />
         <e p="ParserTPlusParall.fs" t="Include" />
@@ -76,6 +77,7 @@
         <e p="TenderSamolet.fs" t="Include" />
         <e p="TenderSibServ.fs" t="Include" />
         <e p="TenderSlav.fs" t="Include" />
+        <e p="TenderSmart.fs" t="Include" />
         <e p="TenderStroyTorgi.fs" t="Include" />
         <e p="TenderTGuru.fs" t="Include" />
         <e p="TenderTPlus.fs" t="Include" />

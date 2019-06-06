@@ -10,53 +10,53 @@ module TypeE =
 
     type System.String with
 
-        member this.DateFromString(pat : string) =
+        member this.DateFromString(pat: string) =
             try
                 Some(DateTime.ParseExact(this, pat, CultureInfo.InvariantCulture))
             with ex -> None
 
-        member this.DateFromString(pat : string, exc : string) =
+        member this.DateFromString(pat: string, exc: string) =
             match this.DateFromString(pat) with
             | None -> Error(exc)
             | Some d -> Success(d)
 
-        member this.Get1FromRegexp(regex : string) : string option =
+        member this.Get1FromRegexp(regex: string): string option =
             match this with
             | Tools.RegexMatch1 regex gr1 -> Some(gr1)
             | _ -> None
 
-        member this.Get1FromRegexpOrDefaul(regex : string) : string =
+        member this.Get1FromRegexpOrDefaul(regex: string): string =
             match this with
             | Tools.RegexMatch1 regex gr1 -> gr1
             | _ -> ""
 
-        member this.Get1Optional(regex : string) =
+        member this.Get1Optional(regex: string) =
             match this.Get1FromRegexp(regex) with
             | None -> Success("")
             | Some e -> Success(e.Trim())
 
-        member this.Get1(regex : string, exc : string) =
+        member this.Get1(regex: string, exc: string) =
             match this.Get1FromRegexp(regex) with
             | None -> Error(exc)
             | Some e -> Success(e.Trim())
 
-        member this.Get2FromRegexp(regex : string) : (string * string) option =
+        member this.Get2FromRegexp(regex: string): (string * string) option =
             match this with
             | Tools.RegexMatch2 regex (gr1, gr2) -> Some(gr1, gr2)
             | _ -> None
 
-        member this.Get2FromRegexpOptional(regex : string, exc : string) =
+        member this.Get2FromRegexpOptional(regex: string, exc: string) =
             match this with
             | Tools.RegexMatch2 regex (gr1, gr2) -> Success(gr1, gr2)
             | _ -> Error(exc)
 
-        member this.GetPriceFromString(?template) : string =
+        member this.GetPriceFromString(?template): string =
             let templ = defaultArg template @"([\d, ]+)"
             match this.Get1FromRegexp templ with
             | Some x -> Regex.Replace(x.Replace(",", ".").Trim(), @"\s+", "")
             | None -> ""
 
-        member this.DateFromStringRus(pat : string) =
+        member this.DateFromStringRus(pat: string) =
             try
                 Some(DateTime.ParseExact(this, pat, CultureInfo.CreateSpecificCulture("ru-RU")))
             with ex ->
@@ -119,12 +119,22 @@ module TypeE =
 
     type HtmlAgilityPack.HtmlNode with
 
-        member this.Gsn(s : string) =
+        member this.Gsn(s: string) =
             match this.SelectSingleNode(s) with
             | null -> ""
             | e -> e.InnerText.Trim()
 
-        member this.GsnAtr (s : string) (atr : string) =
+        member this.GsnDoc(xpath: string) =
+            match this.SelectSingleNode(xpath) with
+            | null -> Succ("")
+            | e -> Succ(e.InnerText.Trim())
+
+        member this.GsnDocWithError (xpath: string) (err: string) =
+            match this.SelectSingleNode(xpath) with
+            | null -> Err(err)
+            | e -> Succ(e.InnerText.Trim())
+
+        member this.GsnAtr (s: string) (atr: string) =
             match this.SelectSingleNode(s) with
             | null -> ""
             | e ->
@@ -132,19 +142,35 @@ module TypeE =
                 | null -> ""
                 | at -> at.Value.Trim()
 
-        member this.getAttrWithoutException (atr : string) =
+        member this.GsnAtrDoc (xpath: string) (atr: string) =
+            match this.SelectSingleNode(xpath) with
+            | null -> Succ("")
+            | e ->
+                match e.Attributes.[atr] with
+                | null -> Succ("")
+                | at -> Succ(at.Value.Trim())
+
+        member this.GsnAtrDocWithError (xpath: string) (atr: string) (err: string) =
+            match this.SelectSingleNode(xpath) with
+            | null -> Err(err)
+            | e ->
+                match e.Attributes.[atr] with
+                | null -> Err(err)
+                | at -> Succ(at.Value.Trim())
+
+        member this.getAttrWithoutException (atr: string) =
             match this.Attributes.[atr] with
             | null -> ""
             | at -> at.Value.Trim()
 
     type HtmlAgilityPack.HtmlNodeNavigator with
 
-        member this.Gsn(s : string) =
+        member this.Gsn(s: string) =
             match this.SelectSingleNode(s) with
             | null -> ""
             | e -> e.Value.Trim()
 
-        member this.GsnAtr (s : string) (atr : string) =
+        member this.GsnAtr (s: string) (atr: string) =
             match this.SelectSingleNode(s) with
             | null -> ""
             | e ->
@@ -154,7 +180,7 @@ module TypeE =
 
     type ISearchContext with
 
-        member this.findElementWithoutException (xpath : string) =
+        member this.findElementWithoutException (xpath: string) =
             try
                 let res = this.FindElement(By.XPath(xpath))
                 match res with
@@ -162,7 +188,7 @@ module TypeE =
                 | r -> r.Text.Trim()
             with ex -> ""
 
-        member this.findElementsWithoutException (xpath : string) =
+        member this.findElementsWithoutException (xpath: string) =
             try
                 let res = this.FindElements(By.XPath(xpath))
                 match res with
@@ -172,7 +198,7 @@ module TypeE =
             with ex ->
                 new Collections.ObjectModel.ReadOnlyCollection<IWebElement>((new List<IWebElement>()) :> IList<IWebElement>)
 
-        member this.findElementWithoutException (xpath : string, exc : string) =
+        member this.findElementWithoutException (xpath: string, exc: string) =
             try
                 let res = this.FindElement(By.XPath(xpath))
                 match res with
@@ -180,7 +206,7 @@ module TypeE =
                 | r -> Success(r.Text.Trim())
             with ex -> Error(exc)
 
-        member this.findWElementWithoutException (xpath : string, exc : string) =
+        member this.findWElementWithoutException (xpath: string, exc: string) =
             try
                 let res = this.FindElement(By.XPath(xpath))
                 match res with
@@ -188,7 +214,7 @@ module TypeE =
                 | r -> Success(r)
             with ex -> Error(exc)
 
-        member this.findElementWithoutExceptionOptional (xpath : string, exc : string) =
+        member this.findElementWithoutExceptionOptional (xpath: string, exc: string) =
             try
                 let res = this.FindElement(By.XPath(xpath))
                 match res with
@@ -197,13 +223,13 @@ module TypeE =
             with ex -> Success("")
 
     type IWebElement with
-        member this.findAttributeWithoutException (attr : string, exc : string) =
+        member this.findAttributeWithoutException (attr: string, exc: string) =
             try
                 let attr = this.GetAttribute(attr)
                 Success(attr)
             with ex -> Error(exc)
 
     type List<'T> with
-        member x.RemoveAllFromList(ls : IEnumerable<_>) =
+        member x.RemoveAllFromList(ls: IEnumerable<_>) =
             for el in ls do
                 x.Remove(el) |> ignore
