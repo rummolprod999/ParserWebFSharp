@@ -10,7 +10,7 @@ open System.Web
 type ParserSmart(stn: Settings.T) =
     inherit Parser()
     let set = stn
-    let pageC = 10
+    let pageC = 20
     let spage = "https://smarttender.biz/komertsiyni-torgy/?p="
 
     override __.Parsing() =

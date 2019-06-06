@@ -19,12 +19,12 @@ module TypeE =
             match this.DateFromString(pat) with
             | None -> Error(exc)
             | Some d -> Success(d)
-        
+
         member this.DateFromStringDoc(pat: string, exc: string) =
             match this.DateFromString(pat) with
             | None -> Err(exc)
             | Some d -> Succ(d)
-            
+
         member this.Get1FromRegexp(regex: string): string option =
             match this with
             | Tools.RegexMatch1 regex gr1 -> Some(gr1)
@@ -39,12 +39,12 @@ module TypeE =
             match this.Get1FromRegexp(regex) with
             | None -> Success("")
             | Some e -> Success(e.Trim())
-        
+
         member this.Get1OptionalDoc(regex: string) =
             match this.Get1FromRegexp(regex) with
             | None -> Succ("")
             | Some e -> Succ(e.Trim())
-            
+
         member this.Get1(regex: string, exc: string) =
             match this.Get1FromRegexp(regex) with
             | None -> Error(exc)
@@ -126,9 +126,9 @@ module TypeE =
             elif this.Contains("Ноября") then this.Replace("Ноября", "11")
             elif this.Contains("Декабря") then this.Replace("Декабря", "12")
             else this
-    
+
     type AngleSharp.Dom.IParentNode with
-    
+
         member this.GsnDoc(selector: string) =
             match this.QuerySelector(selector) with
             | null -> Succ("")
@@ -138,7 +138,7 @@ module TypeE =
             match this.QuerySelector(selector) with
             | null -> Err(err)
             | e -> Succ(e.TextContent.Trim())
-            
+
         member this.GsnAtrDoc (selector: string) (atr: string) =
             match this.QuerySelector(selector) with
             | null -> Succ("")
@@ -154,7 +154,7 @@ module TypeE =
                 match e.GetAttribute(atr) with
                 | null -> Err(err)
                 | at -> Succ(at.Trim())
-        
+
     type HtmlAgilityPack.HtmlNode with
 
         member this.Gsn(s: string) =
@@ -215,6 +215,32 @@ module TypeE =
                 match e.GetAttribute(atr, "") with
                 | null -> ""
                 | at -> at.Trim()
+
+        member this.GsnDoc(xpath: string) =
+            match this.SelectSingleNode(xpath) with
+            | null -> Succ("")
+            | e -> Succ(e.Value.Trim())
+
+        member this.GsnDocWithError (xpath: string) (err: string) =
+            match this.SelectSingleNode(xpath) with
+            | null -> Err(err)
+            | e -> Succ(e.Value.Trim())
+
+        member this.GsnAtrDoc (xpath: string) (atr: string) =
+            match this.SelectSingleNode(xpath) with
+            | null -> Succ("")
+            | e ->
+                match e.GetAttribute(atr, "") with
+                | null -> Succ("")
+                | at -> Succ(at.Trim())
+
+        member this.GsnAtrDocWithError (xpath: string) (atr: string) (err: string) =
+            match this.SelectSingleNode(xpath) with
+            | null -> Err(err)
+            | e ->
+                match e.GetAttribute(atr, "") with
+                | null -> Err(err)
+                | at -> Succ(at.Trim())
 
     type ISearchContext with
 
