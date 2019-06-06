@@ -1,7 +1,6 @@
 namespace ParserWeb
 
 open System
-open System.Linq
 open TypeE
 open AngleSharp.Dom
 open AngleSharp.Parser.Html
