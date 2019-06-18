@@ -120,7 +120,34 @@ type ParserRtsGen(stn: Settings.T) =
                 let! href = hrefT.findAttributeWithoutException ("href", "href not found")
                 let! purName = i.findElementWithoutException 
                                    (".//td[10]", sprintf "purName not found %s" i.Text)
-                printfn "%s" href
+                let! orgName = i.findElementWithoutException 
+                                   (".//td[7]", sprintf "orgName not found %s" i.Text)
+                let! regionName = i.findElementWithoutException 
+                                   (".//td[8]", sprintf "regionName not found %s" i.Text)
+                let! nmckT = i.findElementWithoutException 
+                                   (".//td[11]", sprintf "nmckT not found %s" i.Text)
+                let nmck = nmckT.GetPriceFromString()
+                let! pwName = i.findElementWithoutException 
+                                   (".//td[15]", sprintf "pwName not found %s" i.Text)
+                let! status = i.findElementWithoutException 
+                                   (".//td[16]", sprintf "status not found %s" i.Text)
+                let! pubDateT = i.findElementWithoutException 
+                                   (".//td[4]", sprintf "pubDateT not found %s" i.Text)
+                let pubDateS = match pubDateT.Get1FromRegexp """(\d{2}\.\d{2}\.\d{4}.+\d{2}:\d{2})""" with
+                               | Some p -> p
+                               | None -> ""
+                let! datePub = pubDateS.DateFromString("d.MM.yyyy HH:mm", sprintf "datePub not parse %s" pubDateS)
+                let! endDateT = i.findElementWithoutException 
+                                   (".//td[13]", sprintf "endDateT not found %s" i.Text)
+                let endDateS = match endDateT.Get1FromRegexp """(\d{2}\.\d{2}\.\d{4}.+\d{2}:\d{2})""" with
+                               | Some p -> p
+                               | None -> ""
+                let endDate = match endDateS.DateFromString("d.MM.yyyy HH:mm") with
+                              | None -> datePub
+                              | Some d -> d
+                printfn "date pub - %O" datePub
+                printfn "date end - %O" endDate
+                printfn "\n\n%s" ""
                 return "ok"
             }
 
