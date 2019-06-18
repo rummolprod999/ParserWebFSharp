@@ -138,8 +138,92 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
                 with ex -> Logging.Log.logger (ex)
         ()
 
-    member private this.Lot(con: MySqlConnection, idTender: int, doc: HtmlNode) =
-
+    member private this.Lot(con: MySqlConnection, idTender: int, l: HtmlNode) =
+        let currency = l.Gsn ".//label[contains(., 'Валюта')]/following-sibling::span"
+        let nmckT = l.Gsn ".//label[contains(., 'Начальная (максимальная) цена')]/following-sibling::span"
+        let nmck = nmckT.GetPriceFromString()
+        let nmck = if nmck <> "" then nmck else tn.Nmck
+        let idLot = ref 0
+        let insertLot = sprintf "INSERT INTO %slot SET id_tender = @id_tender, lot_number = @lot_number, max_price = @max_price, currency = @currency" stn.Prefix
+        let cmd12 = new MySqlCommand(insertLot, con)
+        cmd12.Parameters.AddWithValue("@id_tender", idTender) |> ignore
+        cmd12.Parameters.AddWithValue("@lot_number", 1) |> ignore
+        cmd12.Parameters.AddWithValue("@max_price", nmck) |> ignore
+        cmd12.Parameters.AddWithValue("@currency", currency) |> ignore
+        cmd12.ExecuteNonQuery() |> ignore
+        idLot := int cmd12.LastInsertedId
+        let lotName = l.Gsn ".//label[contains(., 'Наименование')]/following-sibling::span"
+        let cusName = l.Gsn ".//label[contains(., 'Заказчик')]/following-sibling::span"
+        let cusName = if cusName <> "" then cusName else tn.OrgName
+        let idCustomer = ref 0
+        if cusName <> "" then
+            let selectCustomer =
+                sprintf "SELECT id_customer FROM %scustomer WHERE full_name = @full_name" stn.Prefix
+            let cmd3 = new MySqlCommand(selectCustomer, con)
+            cmd3.Prepare()
+            cmd3.Parameters.AddWithValue("@full_name", cusName) |> ignore
+            let reader = cmd3.ExecuteReader()
+            match reader.HasRows with
+            | true ->
+                reader.Read() |> ignore
+                idCustomer := reader.GetInt32("id_customer")
+                reader.Close()
+            | false ->
+                reader.Close()
+                let insertCustomer =
+                    sprintf "INSERT INTO %scustomer SET reg_num = @reg_num, full_name = @full_name, inn = @inn"
+                        stn.Prefix
+                let RegNum = Guid.NewGuid().ToString()
+                let inn = ""
+                let cmd14 = new MySqlCommand(insertCustomer, con)
+                cmd14.Prepare()
+                cmd14.Parameters.AddWithValue("@reg_num", RegNum) |> ignore
+                cmd14.Parameters.AddWithValue("@full_name", cusName) |> ignore
+                cmd14.Parameters.AddWithValue("@inn", inn) |> ignore
+                cmd14.ExecuteNonQuery() |> ignore
+                idCustomer := int cmd14.LastInsertedId
+        let delivPlace = l.Gsn ".//label[contains(., 'Место поставки товара, выполнения работ, оказания услуг')]/following-sibling::span"
+        let applAmount = l.Gsn ".//label[contains(., 'Обеспечение заявки')]/following-sibling::span"
+        let applAmount = applAmount.GetPriceFromString()
+        let contrAmount = l.Gsn ".//label[contains(., 'Обеспечение договора')]/following-sibling::span"
+        let contrAmount = contrAmount.GetPriceFromString()
+        if delivPlace <> "" then
+            let insertCustomerRequirement =
+                sprintf
+                    "INSERT INTO %scustomer_requirement SET id_lot = @id_lot, id_customer = @id_customer, delivery_place = @delivery_place, application_guarantee_amount = @application_guarantee_amount, contract_guarantee_amount = @contract_guarantee_amount"
+                    stn.Prefix
+            let cmd16 = new MySqlCommand(insertCustomerRequirement, con)
+            cmd16.Prepare()
+            cmd16.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+            cmd16.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
+            cmd16.Parameters.AddWithValue("@delivery_place", delivPlace) |> ignore
+            cmd16.Parameters.AddWithValue("@application_guarantee_amount", applAmount) |> ignore
+            cmd16.Parameters.AddWithValue("@contract_guarantee_amount", contrAmount) |> ignore
+            cmd16.ExecuteNonQuery() |> ignore
+        let purObjects = l.SelectNodes ("//table[@class = 'static-table']/tbody[contains(., 'Наименование')]/tr[not(contains(., 'Наименование'))]")
+        if purObjects <> null then
+            for po in purObjects do
+                let namePo = po.Gsn("./td[1]")
+                let namePo = if namePo <> "" then namePo else lotName
+                let addInfo = po.Gsn("./td[6]")
+                let namePo = (sprintf "%s %s" namePo addInfo).Trim()
+                let okpdName = po.Gsn("./td[2]")
+                let okei = po.Gsn("./td[4]")
+                let quantity = po.Gsn("./td[5]").GetPriceFromString()
+                let insertLotitem = sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum, price = @price, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, okpd_name = @okpd_name" stn.Prefix
+                let cmd19 = new MySqlCommand(insertLotitem, con)
+                cmd19.Prepare()
+                cmd19.Parameters.AddWithValue("@id_lot", idLot) |> ignore
+                cmd19.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+                cmd19.Parameters.AddWithValue("@name", namePo) |> ignore
+                cmd19.Parameters.AddWithValue("@sum", "") |> ignore
+                cmd19.Parameters.AddWithValue("@price", "") |> ignore
+                cmd19.Parameters.AddWithValue("@quantity_value", quantity) |> ignore
+                cmd19.Parameters.AddWithValue("@customer_quantity_value", quantity) |> ignore
+                cmd19.Parameters.AddWithValue("@okei", okei) |> ignore
+                cmd19.Parameters.AddWithValue("@okpd_name", okpdName) |> ignore
+                cmd19.ExecuteNonQuery() |> ignore
+                ()
         ()
     member private this.SetCancelStatus(con: MySqlConnection, dateUpd: DateTime) =
         let mutable cancelStatus = 0
