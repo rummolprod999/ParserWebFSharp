@@ -213,8 +213,8 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
                 let insertLotitem = sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum, price = @price, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, okpd_name = @okpd_name" stn.Prefix
                 let cmd19 = new MySqlCommand(insertLotitem, con)
                 cmd19.Prepare()
-                cmd19.Parameters.AddWithValue("@id_lot", idLot) |> ignore
-                cmd19.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+                cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+                cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
                 cmd19.Parameters.AddWithValue("@name", namePo) |> ignore
                 cmd19.Parameters.AddWithValue("@sum", "") |> ignore
                 cmd19.Parameters.AddWithValue("@price", "") |> ignore
