@@ -36,6 +36,7 @@ type Arguments =
     | Beeline
     | Tsm
     | Smart
+    | RtsGen
 
 type SlavNeft =
     | MEGION
@@ -309,5 +310,17 @@ type SmartRec =
       OrgName: string
       DatePub: DateTime
       DateEnd: DateTime
+      status: string
+      PwayName: string }
+    
+type RtsGenRec =
+    { Href: string
+      PurNum: string
+      PurName: string
+      OrgName: string
+      DatePub: DateTime
+      DateEnd: DateTime
+      Nmck: string
+      RegionName: string
       status: string
       PwayName: string }

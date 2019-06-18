@@ -6,7 +6,7 @@ open System.Data
 open TypeE
 open Tools
 
-type TenderRtsGen(stn: Settings.T, tn: SmartRec, typeFz: int, etpName: string, etpUrl: string) =
+type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, etpUrl: string) =
     inherit Tender(etpName, etpUrl)
     let settings = stn
     static member val tenderCount = ref 0
