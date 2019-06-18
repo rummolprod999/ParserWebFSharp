@@ -93,22 +93,35 @@ type ParserRtsGen(stn: Settings.T) =
         __.Wait.Until (fun dr -> dr.FindElement(By.XPath("//table[@class = 'ui-jqgrid-btable']/tbody/tr[@role = 'row'][100]")).Displayed) |> ignore
         driver.SwitchTo().DefaultContent() |> ignore
         for i in 1..100 do
+               __.GetContentTender driver i
+        ()
+
+    member private __.GetContentTender (driver: ChromeDriver) (i: int) =
+        let mutable wh = true
+        let count = ref 0
+        while wh do
                try
                    driver.SwitchTo().DefaultContent() |> ignore
                    let t = driver.FindElement (By.XPath(sprintf "//table[@class = 'ui-jqgrid-btable']/tbody/tr[@role = 'row'][%d]" i))
-                   __.ParserTenders driver t
-               with ex -> Logging.Log.logger (ex)
+                   __.ParserTenders  driver t
+                   wh <- false
+               with ex -> incr count
+                          if !count > 10 then
+                              wh <- false
+                              Logging.Log.logger (ex)
         ()
-
     member private this.ParserTenders (driver: ChromeDriver) (i: IWebElement) =
         let builder = new TenderBuilder()
         let result =
             builder {
-                let! purNum = i.findElementWithoutException (".//td[5]/a", sprintf "purName not found %s" i.Text)
-                printfn "%s" purNum
+                let! purNum = i.findElementWithoutException (".//td[9]", sprintf "purNum not found, inner text - %s" i.Text)
+                let! hrefT = i.findWElementWithoutException 
+                                   (".//td[9]/a", sprintf "hrefT not found %s" i.Text)
+                let! href = hrefT.findAttributeWithoutException ("href", "href not found")
+                printfn "%s" href
                 return "ok"
             }
 
         match result with
         | Success _ -> ()
-        | Error e -> Logging.Log.logger e
+        | Error e -> failwith e
