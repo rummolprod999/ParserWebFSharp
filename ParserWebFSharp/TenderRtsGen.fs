@@ -200,7 +200,7 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
             cmd16.Parameters.AddWithValue("@application_guarantee_amount", applAmount) |> ignore
             cmd16.Parameters.AddWithValue("@contract_guarantee_amount", contrAmount) |> ignore
             cmd16.ExecuteNonQuery() |> ignore
-        let purObjects = l.SelectNodes ("//table[@class = 'static-table']/tbody[contains(., 'Наименование')]/tr[not(contains(., 'Наименование'))]")
+        let purObjects = l.SelectNodes (".//table[@class = 'static-table' and contains(., 'ОКПД2')]//tr[not(contains(., 'ОКПД2'))]")
         if purObjects <> null then
             for po in purObjects do
                 let namePo = po.Gsn("./td[1]")

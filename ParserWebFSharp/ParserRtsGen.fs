@@ -11,7 +11,7 @@ open OpenQA.Selenium.Support.UI
 type ParserRtsGen(stn: Settings.T) =
     inherit Parser()
     let set = stn
-    let pageC = 2 //TODO change it
+    let pageC = 1 //TODO change it
     let spage = "https://223.rts-tender.ru/supplier/auction/Trade/Search.aspx"
     let listTenders = new List<RtsGenRec>()
     let options = ChromeOptions()
@@ -51,7 +51,8 @@ type ParserRtsGen(stn: Settings.T) =
         __.ParserListTenders driver
         for t in 1..pageC do
             try
-                __.GetNextpage driver
+                //__.GetNextpage driver
+                ()
             with ex -> Logging.Log.logger (ex)
         for t in listTenders do
             try
@@ -114,7 +115,7 @@ type ParserRtsGen(stn: Settings.T) =
         let builder = new TenderBuilder()
         let result =
             builder {
-                let! purNum = i.findElementWithoutException (".//td[9]", sprintf "purNum not found, inner text - %s" i.Text)
+                let! purNum = i.findElementWithoutException (".//td[5]", sprintf "purNum not found, inner text - %s" i.Text)
                 let! hrefT = i.findWElementWithoutException
                                    (".//td[9]/a", sprintf "hrefT not found %s" i.Text)
                 let! href = hrefT.findAttributeWithoutException ("href", "href not found")
