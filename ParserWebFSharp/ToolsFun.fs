@@ -35,7 +35,15 @@ module Tools =
             | null -> ""
             | r -> r.Text.Trim()
         with ex -> ""
-
+        
+    let inline InlineHtmlNavigator (x : ^a) (s : string) =
+        try
+            let res = (^a : (member SelectSingleNode : string -> Xml.XPath.XPathNavigator) (x, s))
+            match res with
+            | null -> ""
+            | r -> r.Value.Trim()
+        with ex -> ""
+        
     let createMD5 (s : string) : string =
         use md5Hash = MD5.Create()
         let data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(s))

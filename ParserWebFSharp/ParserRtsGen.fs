@@ -145,9 +145,6 @@ type ParserRtsGen(stn: Settings.T) =
                 let endDate = match endDateS.DateFromString("d.MM.yyyy HH:mm") with
                               | None -> datePub
                               | Some d -> d
-                printfn "date pub - %O" datePub
-                printfn "date end - %O" endDate
-                printfn "\n\n%s" ""
                 let ten =
                     { Href = href
                       PurNum = purNum
