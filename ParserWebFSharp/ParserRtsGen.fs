@@ -11,7 +11,7 @@ open OpenQA.Selenium.Support.UI
 type ParserRtsGen(stn: Settings.T) =
     inherit Parser()
     let set = stn
-    let pageC = 1 //TODO change it
+    let pageC = 40
     let spage = "https://223.rts-tender.ru/supplier/auction/Trade/Search.aspx"
     let listTenders = new List<RtsGenRec>()
     let options = ChromeOptions()
@@ -51,7 +51,7 @@ type ParserRtsGen(stn: Settings.T) =
         __.ParserListTenders driver
         for t in 1..pageC do
             try
-                //__.GetNextpage driver
+                __.GetNextpage driver
                 ()
             with ex -> Logging.Log.logger (ex)
         for t in listTenders do
