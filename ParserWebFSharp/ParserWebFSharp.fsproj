@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ParserRtsGen.fs" />
+    <Compile Include="TenderRtsGen.fs" />
     <Compile Include="ToolsFun.fs" />
     <Compile Include="DocumentBuilder.fs" />
     <Compile Include="TenderBuilder.fs" />
