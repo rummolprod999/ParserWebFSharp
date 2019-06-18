@@ -19,7 +19,7 @@ type ParserRtsGen(stn: Settings.T) =
     let mutable wait = None
 
     do
-        //options.AddArguments("headless")
+        options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
         options.AddArguments("disable-dev-shm-usage")
@@ -103,14 +103,14 @@ type ParserRtsGen(stn: Settings.T) =
                try
                    driver.SwitchTo().DefaultContent() |> ignore
                    let t = driver.FindElement (By.XPath(sprintf "//table[@class = 'ui-jqgrid-btable']/tbody/tr[@role = 'row'][%d]" i))
-                   __.ParserTenders  driver t
+                   __.ParserTenders t
                    wh <- false
                with ex -> incr count
                           if !count > 10 then
                               wh <- false
                               Logging.Log.logger (ex)
         ()
-    member private this.ParserTenders (driver: ChromeDriver) (i: IWebElement) =
+    member private this.ParserTenders(i: IWebElement) =
         let builder = new TenderBuilder()
         let result =
             builder {
@@ -118,6 +118,8 @@ type ParserRtsGen(stn: Settings.T) =
                 let! hrefT = i.findWElementWithoutException 
                                    (".//td[9]/a", sprintf "hrefT not found %s" i.Text)
                 let! href = hrefT.findAttributeWithoutException ("href", "href not found")
+                let! purName = i.findElementWithoutException 
+                                   (".//td[10]", sprintf "purName not found %s" i.Text)
                 printfn "%s" href
                 return "ok"
             }
