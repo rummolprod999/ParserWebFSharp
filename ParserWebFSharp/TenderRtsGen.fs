@@ -76,6 +76,12 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
                                 
                         let idEtp = this.GetEtp con settings
                         let numVersion = 1
+                        let idPlacingWay = ref 0
+                        match tn.PwayName with
+                        | "" -> ()
+                        | _ -> idPlacingWay := this.GetPlacingWay con tn.PwayName settings
+                        let idRegion = this.GetReginId con tn.RegionName settings
+                        
                         return ""
                         }
         match res with
