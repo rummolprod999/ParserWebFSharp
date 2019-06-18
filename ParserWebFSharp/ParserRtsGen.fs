@@ -115,29 +115,29 @@ type ParserRtsGen(stn: Settings.T) =
         let result =
             builder {
                 let! purNum = i.findElementWithoutException (".//td[9]", sprintf "purNum not found, inner text - %s" i.Text)
-                let! hrefT = i.findWElementWithoutException 
+                let! hrefT = i.findWElementWithoutException
                                    (".//td[9]/a", sprintf "hrefT not found %s" i.Text)
                 let! href = hrefT.findAttributeWithoutException ("href", "href not found")
-                let! purName = i.findElementWithoutException 
+                let! purName = i.findElementWithoutException
                                    (".//td[10]", sprintf "purName not found %s" i.Text)
-                let! orgName = i.findElementWithoutException 
+                let! orgName = i.findElementWithoutException
                                    (".//td[7]", sprintf "orgName not found %s" i.Text)
-                let! regionName = i.findElementWithoutException 
+                let! regionName = i.findElementWithoutException
                                    (".//td[8]", sprintf "regionName not found %s" i.Text)
-                let! nmckT = i.findElementWithoutException 
+                let! nmckT = i.findElementWithoutException
                                    (".//td[11]", sprintf "nmckT not found %s" i.Text)
                 let nmck = nmckT.GetPriceFromString()
-                let! pwName = i.findElementWithoutException 
+                let! pwName = i.findElementWithoutException
                                    (".//td[15]", sprintf "pwName not found %s" i.Text)
-                let! status = i.findElementWithoutException 
+                let! status = i.findElementWithoutException
                                    (".//td[16]", sprintf "status not found %s" i.Text)
-                let! pubDateT = i.findElementWithoutException 
+                let! pubDateT = i.findElementWithoutException
                                    (".//td[4]", sprintf "pubDateT not found %s" i.Text)
                 let pubDateS = match pubDateT.Get1FromRegexp """(\d{2}\.\d{2}\.\d{4}.+\d{2}:\d{2})""" with
                                | Some p -> p
                                | None -> ""
                 let! datePub = pubDateS.DateFromString("d.MM.yyyy HH:mm", sprintf "datePub not parse %s" pubDateS)
-                let! endDateT = i.findElementWithoutException 
+                let! endDateT = i.findElementWithoutException
                                    (".//td[13]", sprintf "endDateT not found %s" i.Text)
                 let endDateS = match endDateT.Get1FromRegexp """(\d{2}\.\d{2}\.\d{4}.+\d{2}:\d{2})""" with
                                | Some p -> p
@@ -148,6 +148,18 @@ type ParserRtsGen(stn: Settings.T) =
                 printfn "date pub - %O" datePub
                 printfn "date end - %O" endDate
                 printfn "\n\n%s" ""
+                let ten =
+                    { Href = href
+                      PurNum = purNum
+                      PurName = purName
+                      OrgName = orgName
+                      DatePub = datePub
+                      DateEnd = endDate
+                      Nmck = nmck
+                      RegionName = regionName
+                      status = status
+                      PwayName = pwName }
+                listTenders.Add(ten)
                 return "ok"
             }
 
