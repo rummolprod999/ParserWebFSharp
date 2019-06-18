@@ -27,6 +27,7 @@ type ParserRtsGen(stn: Settings.T) =
     override __.Parsing() =
         let driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
+        __.Wait <- new WebDriverWait(driver, timeoutB)
         try
             try
                 __.ParserSelen driver
@@ -45,10 +46,33 @@ type ParserRtsGen(stn: Settings.T) =
         | Some w -> w
 
     member private __.ParserSelen(driver: ChromeDriver) =
+        __.PreparePage driver
+        __.ParserListTenders driver
+        for t in 1..pageC do
+            try
+                __.GetNextpage driver
+            with ex -> Logging.Log.logger (ex)
         for t in listTenders do
             try
                 __.ParserTendersList t
             with ex -> Logging.Log.logger (ex)
+        ()
+
+    member __.GetNextpage(driver: ChromeDriver) =
+        driver.SwitchTo().DefaultContent() |> ignore
+        __.Clicker driver "//td[@id = 'next_t_BaseMainContent_MainContent_jqgTrade_toppager']"
+        __.ParserListTenders driver
+
+    member private __.PreparePage(driver: ChromeDriver) =
+        driver.Navigate().GoToUrl(spage)
+        Thread.Sleep(5000)
+        driver.SwitchTo().DefaultContent() |> ignore
+        __.Wait.Until (fun dr -> dr.FindElement(By.XPath("//table[@class = 'ui-jqgrid-btable']/tbody/tr[@role = 'row'][10]")).Displayed) |> ignore
+        driver.SwitchTo().DefaultContent() |> ignore
+        __.Clicker driver "//select[@class = 'ui-pg-selbox' and @role = 'listbox']"
+        __.Wait.Until (fun dr -> dr.FindElement(By.XPath("//select[@class = 'ui-pg-selbox' and @role = 'listbox']/option[@value = '100']")).Displayed) |> ignore
+        driver.SwitchTo().DefaultContent() |> ignore
+        __.Clicker driver "//select[@class = 'ui-pg-selbox' and @role = 'listbox']/option[@value = '100']"
         ()
 
     member private __.ParserTendersList(t: RtsGenRec) =
@@ -57,3 +81,15 @@ type ParserRtsGen(stn: Settings.T) =
             T.Parsing()
         with ex -> Logging.Log.logger (ex, t.Href)
         ()
+
+    member private __.ParserListTenders(driver: ChromeDriver) =
+        __.Wait.Until (fun dr -> dr.FindElement(By.XPath("//table[@class = 'ui-jqgrid-btable']/tbody/tr[@role = 'row'][100]")).Displayed) |> ignore
+        driver.SwitchTo().DefaultContent() |> ignore
+        let tenders =
+            driver.FindElementsByXPath("//table[@class = 'ui-jqgrid-btable']/tbody/tr[@role = 'row']")
+        for t in tenders do
+            __.ParserTenders driver t
+        ()
+
+    member private this.ParserTenders (driver: ChromeDriver) (i: IWebElement) =
+        printfn "%s" i.Text
