@@ -27,6 +27,7 @@ type ParserRtsGen(stn: Settings.T) =
     override __.Parsing() =
         let driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
+        driver.Manage().Window.Maximize()
         __.Wait <- new WebDriverWait(driver, timeoutB)
         try
             try
@@ -59,13 +60,19 @@ type ParserRtsGen(stn: Settings.T) =
         ()
 
     member __.GetNextpage(driver: ChromeDriver) =
+        Thread.Sleep(3000)
         driver.SwitchTo().DefaultContent() |> ignore
-        __.Clicker driver "//td[@id = 'next_t_BaseMainContent_MainContent_jqgTrade_toppager']"
+        //__.Clicker driver "//td[@id = 'next_t_BaseMainContent_MainContent_jqgTrade_toppager']/span"
+        let jse = driver :> IJavaScriptExecutor
+        try
+            jse.ExecuteScript
+                ("document.querySelector('#next_t_BaseMainContent_MainContent_jqgTrade_toppager').click()", "") |> ignore
+        with ex -> Logging.Log.logger ex
         __.ParserListTenders driver
 
     member private __.PreparePage(driver: ChromeDriver) =
         driver.Navigate().GoToUrl(spage)
-        Thread.Sleep(5000)
+        Thread.Sleep(3000)
         driver.SwitchTo().DefaultContent() |> ignore
         __.Wait.Until (fun dr -> dr.FindElement(By.XPath("//table[@class = 'ui-jqgrid-btable']/tbody/tr[@role = 'row'][10]")).Displayed) |> ignore
         driver.SwitchTo().DefaultContent() |> ignore
@@ -85,11 +92,23 @@ type ParserRtsGen(stn: Settings.T) =
     member private __.ParserListTenders(driver: ChromeDriver) =
         __.Wait.Until (fun dr -> dr.FindElement(By.XPath("//table[@class = 'ui-jqgrid-btable']/tbody/tr[@role = 'row'][100]")).Displayed) |> ignore
         driver.SwitchTo().DefaultContent() |> ignore
-        let tenders =
-            driver.FindElementsByXPath("//table[@class = 'ui-jqgrid-btable']/tbody/tr[@role = 'row']")
-        for t in tenders do
-            __.ParserTenders driver t
+        for i in 1..100 do
+               try
+                   driver.SwitchTo().DefaultContent() |> ignore
+                   let t = driver.FindElement (By.XPath(sprintf "//table[@class = 'ui-jqgrid-btable']/tbody/tr[@role = 'row'][%d]" i))
+                   __.ParserTenders driver t
+               with ex -> Logging.Log.logger (ex)
         ()
 
     member private this.ParserTenders (driver: ChromeDriver) (i: IWebElement) =
-        printfn "%s" i.Text
+        let builder = new TenderBuilder()
+        let result =
+            builder {
+                let! purNum = i.findElementWithoutException (".//td[5]/a", sprintf "purName not found %s" i.Text)
+                printfn "%s" purNum
+                return "ok"
+            }
+
+        match result with
+        | Success _ -> ()
+        | Error e -> Logging.Log.logger e
