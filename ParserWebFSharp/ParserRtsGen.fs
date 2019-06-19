@@ -11,7 +11,7 @@ open OpenQA.Selenium.Support.UI
 type ParserRtsGen(stn: Settings.T) =
     inherit Parser()
     let set = stn
-    let pageC = 40
+    let pageC = 50
     let spage = "https://223.rts-tender.ru/supplier/auction/Trade/Search.aspx"
     let listTenders = new List<RtsGenRec>()
     let options = ChromeOptions()
@@ -61,7 +61,6 @@ type ParserRtsGen(stn: Settings.T) =
         ()
 
     member __.GetNextpage(driver: ChromeDriver) =
-        Thread.Sleep(3000)
         driver.SwitchTo().DefaultContent() |> ignore
         //__.Clicker driver "//td[@id = 'next_t_BaseMainContent_MainContent_jqgTrade_toppager']/span"
         let jse = driver :> IJavaScriptExecutor
@@ -69,6 +68,7 @@ type ParserRtsGen(stn: Settings.T) =
             jse.ExecuteScript
                 ("document.querySelector('#next_t_BaseMainContent_MainContent_jqgTrade_toppager').click()", "") |> ignore
         with ex -> Logging.Log.logger ex
+        Thread.Sleep(3000)
         __.ParserListTenders driver
 
     member private __.PreparePage(driver: ChromeDriver) =
@@ -107,7 +107,7 @@ type ParserRtsGen(stn: Settings.T) =
                    __.ParserTenders t
                    wh <- false
                with ex -> incr count
-                          if !count > 10 then
+                          if !count > 5 then
                               wh <- false
                               Logging.Log.logger (ex)
         ()
@@ -117,7 +117,7 @@ type ParserRtsGen(stn: Settings.T) =
             builder {
                 let! purNum = i.findElementWithoutException (".//td[5]", sprintf "purNum not found, inner text - %s" i.Text)
                 let! hrefT = i.findWElementWithoutException
-                                   (".//td[9]/a", sprintf "hrefT not found %s" i.Text)
+                                   (".//td[9]/a", sprintf "hrefT not found, text the element - %s" i.Text)
                 let! href = hrefT.findAttributeWithoutException ("href", "href not found")
                 let! purName = i.findElementWithoutException
                                    (".//td[10]", sprintf "purName not found %s" i.Text)
