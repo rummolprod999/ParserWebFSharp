@@ -36,6 +36,10 @@ type ParserRtsGen(stn: Settings.T) =
             with ex -> Logging.Log.logger ex
         finally
             driver.Quit()
+        for t in listTenders do
+            try
+                __.ParserTendersList t
+            with ex -> Logging.Log.logger (ex)
         ()
 
     member __.Wait with set (value) = wait <- Some(value)
@@ -53,10 +57,6 @@ type ParserRtsGen(stn: Settings.T) =
             try
                 __.GetNextpage driver
                 ()
-            with ex -> Logging.Log.logger (ex)
-        for t in listTenders do
-            try
-                __.ParserTendersList t
             with ex -> Logging.Log.logger (ex)
         ()
 
