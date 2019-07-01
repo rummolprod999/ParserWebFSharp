@@ -19,11 +19,16 @@ type ParserAkd(stn : Settings.T) =
     member private this.ParserPage(page : string) = 
         let Page = Download.DownloadString page
         match Page with
-        | null | "" -> Logging.Log.logger ("Dont get page", page)
+        | null | "" -> Logging.Log.logger ("Don't get page", page)
         | s -> 
             let parser = new HtmlParser()
             let documents = parser.Parse(s)
             let tens = documents.QuerySelectorAll("div.list-items div.tender-item")
+            for t in tens do
+                try 
+                    this.ParsingTender t
+                with ex -> Logging.Log.logger ex
+            let tens = documents.QuerySelectorAll("div.children-tender-rows div.children-fields")
             for t in tens do
                 try 
                     this.ParsingTender t
