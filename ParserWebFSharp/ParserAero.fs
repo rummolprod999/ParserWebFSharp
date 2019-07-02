@@ -21,7 +21,7 @@ type ParserAero(stn : Settings.T) =
             with ex -> Logging.Log.logger ex
     
     member private this.ParsingPage(url : string) =
-        let Page = Download.DownloadString url
+        let Page = Download.DownloadStringBot url
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", url)
         | s -> 

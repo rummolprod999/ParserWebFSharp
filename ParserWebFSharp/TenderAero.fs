@@ -52,7 +52,7 @@ type TenderAero(stn : Settings.T, tn : AeroRec, typeFz : int, etpName : string, 
         if reader.HasRows then reader.Close()
         else 
             reader.Close()
-            let Page = Download.DownloadString tn.Href
+            let Page = Download.DownloadStringBot tn.Href
             match Page with
             | null | "" -> raise <| System.Exception(sprintf "can not download page %s" tn.Href)
             | s -> ()

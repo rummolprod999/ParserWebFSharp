@@ -65,7 +65,7 @@ module Download =
             try
                 //let t ():string = (new TimedWebClient()).DownloadString(url: Uri)
                 let task = Task.Run(fun () -> (new TimedWebClient()).DownloadString(url : string))
-                if task.Wait(TimeSpan.FromSeconds(650.)) then
+                if task.Wait(TimeSpan.FromSeconds(100.)) then
                     s <- task.Result
                     continueLooping <- false
                 else raise <| new TimeoutException()
@@ -77,6 +77,26 @@ module Download =
                 Thread.Sleep(5000)
         s
 
+    let DownloadStringBot url =
+        let mutable s = null
+        let count = ref 0
+        let mutable continueLooping = true
+        while continueLooping do
+            try
+                //let t ():string = (new TimedWebClient()).DownloadString(url: Uri)
+                let task = Task.Run(fun () -> (new TimedWebClientBot()).DownloadString(url : string))
+                if task.Wait(TimeSpan.FromSeconds(100.)) then
+                    s <- task.Result
+                    continueLooping <- false
+                else raise <| new TimeoutException()
+            with _ ->
+                if !count >= 3 then
+                    Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток" url !count)
+                    continueLooping <- false
+                else incr count
+                Thread.Sleep(5000)
+        s
+        
     let DownloadStringIrkutsk url =
         let mutable s = null
         let count = ref 0
