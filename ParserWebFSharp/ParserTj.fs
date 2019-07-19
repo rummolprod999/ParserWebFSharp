@@ -20,7 +20,7 @@ type ParserTj(stn: Settings.T) =
     let mutable two = true
 
     do
-        //options.AddArguments("headless")
+        options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
         options.AddArguments("disable-dev-shm-usage")
@@ -82,4 +82,59 @@ type ParserTj(stn: Settings.T) =
         with ex -> Logging.Log.logger (ex, t.Href)
         ()
     
-    member private __.ParserListTenders(driver: ChromeDriver) = ()
+    member private __.ParserListTenders(driver: ChromeDriver) =
+        __.Wait.Until (fun dr -> dr.FindElement(By.XPath("//table[@class = 'aqua_table']/tbody/tr[not(@valign)][10]")).Displayed) |> ignore
+        driver.SwitchTo().DefaultContent() |> ignore
+        for i in 1..10 do
+               __.GetContentTender driver i
+        ()
+    
+    member private __.GetContentTender (driver: ChromeDriver) (i: int) =
+        let mutable wh = true
+        let count = ref 0
+        while wh do
+               try
+                   driver.SwitchTo().DefaultContent() |> ignore
+                   let t = driver.FindElement (By.XPath(sprintf "//table[@class = 'aqua_table']/tbody/tr[not(@valign)][%d]" i))
+                   __.ParserTenders t
+                   wh <- false
+               with ex -> incr count
+                          if !count > 5 then
+                              wh <- false
+                              Logging.Log.logger (ex)
+        ()
+    member private this.ParserTenders(i: IWebElement) =
+        let builder = new TenderBuilder()
+        let result =
+            builder {
+                let! purNumT = i.findElementWithoutException (".//td[2]/strong", sprintf "purNumT not found, inner text - %s" i.Text)
+                let! purNum = purNumT.Get1("(?<=№:)(\d+)", sprintf "purNum not found, inner text - %s" purNumT)
+                let! hrefT = i.findWElementWithoutException
+                                   (".//td[2]/a[1]", sprintf "hrefT not found, text the element - %s" i.Text)
+                let! href = hrefT.findAttributeWithoutException ("href", "href not found")
+                let! purName = i.findElementWithoutException
+                                   (".//td[2]/a[1]", sprintf "purName not found %s" i.Text)
+                let! orgName = i.findElementWithoutException
+                                   (".//td[2]/strong[2]", sprintf "orgName not found %s" i.Text)
+                let! status = i.findElementWithoutException
+                                   (".//td[1]", sprintf "status not found %s" i.Text)
+                let! pubDateT = i.findElementWithoutException
+                                   (".//td[4]", sprintf "pubDateT not found %s" i.Text)
+                let! datePub = pubDateT.DateFromString("yyyy-MM-dd HH:mm:ss", sprintf "datePub not parse %s" pubDateT)
+                let! endDateT = i.findElementWithoutException
+                                   (".//td[5]", sprintf "endDateT not found %s" i.Text)
+                let! dateEnd = endDateT.DateFromString("yyyy-MM-dd HH:mm:ss", sprintf "endDateT not parse %s" endDateT)
+                let ten =
+                    { status = status
+                      Href = href
+                      PurNum = purNum
+                      PurName = purName
+                      OrgName = orgName
+                      DatePub = datePub
+                      DateEnd = dateEnd }
+                listTenders.Add(ten)
+                return "ok"
+                }
+        match result with
+        | Success _ -> ()
+        | Error e -> failwith e
