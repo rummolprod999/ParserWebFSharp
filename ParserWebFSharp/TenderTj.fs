@@ -14,4 +14,6 @@ type TenderTj(stn: Settings.T, tn: TjRec, typeFz: int, etpName: string, etpUrl: 
     static member val tenderUpCount = ref 0
 
 
-    override this.Parsing() = ()
+    override this.Parsing() =
+        printfn "%A" tn
+        ()

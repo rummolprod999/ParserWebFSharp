@@ -42,7 +42,7 @@ type ParserTj(stn: Settings.T) =
                 __.ParserTendersList t
             with ex -> Logging.Log.logger (ex)
         ()
-        
+
     member __.Wait with set (value) = wait <- Some(value)
 
 
@@ -50,7 +50,7 @@ type ParserTj(stn: Settings.T) =
         match wait with
         | None -> failwith "Wait is None"
         | Some w -> w
-    
+
     member private __.ParserSelen(driver: ChromeDriver) =
         driver.Navigate().GoToUrl(spage)
         Thread.Sleep(5000)
@@ -61,7 +61,7 @@ type ParserTj(stn: Settings.T) =
                 ()
             with ex -> Logging.Log.logger (ex)
         ()
-    
+
     member __.GetNextpage(driver: ChromeDriver) =
         driver.SwitchTo().DefaultContent() |> ignore
         let jse = driver :> IJavaScriptExecutor
@@ -70,32 +70,32 @@ type ParserTj(stn: Settings.T) =
                 jse.ExecuteScript("document.querySelector('div.links button:nth-of-type(2)').click()", "") |> ignore
                 two <- false
             else jse.ExecuteScript("document.querySelector('div.links button:nth-of-type(4)').click()", "") |> ignore
-                
+
         with ex -> Logging.Log.logger ex
         Thread.Sleep(3000)
         __.ParserListTenders driver
-    
+
     member private __.ParserTendersList(t: TjRec) =
         try
             let T = TenderTj (set, t, 203, "Агентство по государственным закупкам товаров, работ и услуг при Правительстве Республики Таджикистан", "http://test.zakupki.gov.tj/")
             T.Parsing()
         with ex -> Logging.Log.logger (ex, t.Href)
         ()
-    
+
     member private __.ParserListTenders(driver: ChromeDriver) =
         __.Wait.Until (fun dr -> dr.FindElement(By.XPath("//table[@class = 'aqua_table']/tbody/tr[not(@valign)][10]")).Displayed) |> ignore
         driver.SwitchTo().DefaultContent() |> ignore
         for i in 1..10 do
                __.GetContentTender driver i
         ()
-    
+
     member private __.GetContentTender (driver: ChromeDriver) (i: int) =
         let mutable wh = true
         let count = ref 0
         while wh do
                try
                    driver.SwitchTo().DefaultContent() |> ignore
-                   let t = driver.FindElement (By.XPath(sprintf "//table[@class = 'aqua_table']/tbody/tr[not(@valign)][%d]" i))
+                   let t = driver.FindElement(By.XPath(sprintf "//table[@class = 'aqua_table']/tbody/tr[not(@valign)][%d]" i))
                    __.ParserTenders t
                    wh <- false
                with ex -> incr count
