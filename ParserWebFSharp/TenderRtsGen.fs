@@ -131,14 +131,16 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
 
     member private this.GetLots(con: MySqlConnection, idTender: int, doc: HtmlDocument) =
         let lots = doc.DocumentNode.SelectNodes("//div[@id = 'tradeLotsList']/div[@class = 'tradeLotInfo labelminwidth']")
+        let lotNum = ref 1
         if lots <> null then
             for l in lots do
                 try
-                    this.Lot(con, idTender, l)
-                with ex -> Logging.Log.logger (ex)
+                    this.Lot(con, idTender, l, !lotNum)
+                    incr lotNum
+                with ex -> Logging.Log.logger (ex)             
         ()
 
-    member private this.Lot(con: MySqlConnection, idTender: int, l: HtmlNode) =
+    member private this.Lot(con: MySqlConnection, idTender: int, l: HtmlNode, lotNum: int) =
         let currency = l.Gsn ".//label[contains(., 'Валюта')]/following-sibling::span"
         let nmckT = l.Gsn ".//label[contains(., 'Начальная (максимальная) цена')]/following-sibling::span"
         let nmck = nmckT.GetPriceFromString()
@@ -147,7 +149,7 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
         let insertLot = sprintf "INSERT INTO %slot SET id_tender = @id_tender, lot_number = @lot_number, max_price = @max_price, currency = @currency" stn.Prefix
         let cmd12 = new MySqlCommand(insertLot, con)
         cmd12.Parameters.AddWithValue("@id_tender", idTender) |> ignore
-        cmd12.Parameters.AddWithValue("@lot_number", 1) |> ignore
+        cmd12.Parameters.AddWithValue("@lot_number", lotNum) |> ignore
         cmd12.Parameters.AddWithValue("@max_price", nmck) |> ignore
         cmd12.Parameters.AddWithValue("@currency", currency) |> ignore
         cmd12.ExecuteNonQuery() |> ignore
