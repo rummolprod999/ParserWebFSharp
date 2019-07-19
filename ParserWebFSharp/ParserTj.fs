@@ -11,7 +11,7 @@ open OpenQA.Selenium.Support.UI
 type ParserTj(stn: Settings.T) =
     inherit Parser()
     let set = stn
-    let pageC = 5 //TODO change
+    let pageC = 10
     let spage = "http://test.zakupki.gov.tj/reestr-zakazov-v-elektronnoy-forme/"
     let listTenders = new List<TjRec>()
     let options = ChromeOptions()

@@ -158,7 +158,7 @@ type TenderTj(stn: Settings.T, tn: TjRec, typeFz: int, etpName: string, etpUrl: 
                 idCustomer := int cmd14.LastInsertedId
         let delivPlace = nav.Gsn "//th[contains(., 'Место поставки:')]/following-sibling::td"
         let delivTerm = nav.Gsn "//th[contains(., 'Срок поставки:')]/following-sibling::td"
-        let applAmount = nav.Gsn "//th[contains(., 'Гарантийное обеспечение заявки:')]/following-sibling::td"
+        let applAmount = "" //"nav.Gsn "//th[contains(., 'Гарантийное обеспечение заявки:')]/following-sibling::td"
         let applAmount = applAmount.GetPriceFromString()
         let contrAmount = nav.Gsn "//th[contains(., 'Гарантийное обеспечение исполнения контракта:')]/following-sibling::td"
         let contrAmount = contrAmount.GetPriceFromString()
