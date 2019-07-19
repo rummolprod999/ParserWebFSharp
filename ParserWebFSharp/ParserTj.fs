@@ -8,10 +8,10 @@ open OpenQA.Selenium
 open OpenQA.Selenium.Chrome
 open OpenQA.Selenium.Support.UI
 
-type ParserRtsGen(stn: Settings.T) =
+type ParserTj(stn: Settings.T) =
     inherit Parser()
     let set = stn
-    let pageC = 3 //TODO change
+    let pageC = 5 //TODO change
     let spage = "http://test.zakupki.gov.tj/reestr-zakazov-v-elektronnoy-forme/"
     let listTenders = new List<TjRec>()
     let options = ChromeOptions()
@@ -19,7 +19,7 @@ type ParserRtsGen(stn: Settings.T) =
     let mutable wait = None
 
     do
-        options.AddArguments("headless")
+        //options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
         options.AddArguments("disable-dev-shm-usage")
@@ -61,11 +61,14 @@ type ParserRtsGen(stn: Settings.T) =
     
     member __.GetNextpage(driver: ChromeDriver) =
         driver.SwitchTo().DefaultContent() |> ignore
-        //__.Clicker driver "//td[@id = 'next_t_BaseMainContent_MainContent_jqgTrade_toppager']/span"
+        let mutable two = true
         let jse = driver :> IJavaScriptExecutor
         try
-            jse.ExecuteScript
-                ("document.querySelector('#next_t_BaseMainContent_MainContent_jqgTrade_toppager').click()", "") |> ignore
+            if two then
+                jse.ExecuteScript("document.querySelector('div.links button:nth-of-type(2)').click()", "") |> ignore
+                two <- false
+            else jse.ExecuteScript("document.querySelector('div.links button:nth-of-type(4)').click()", "") |> ignore
+                
         with ex -> Logging.Log.logger ex
         Thread.Sleep(3000)
         __.ParserListTenders driver

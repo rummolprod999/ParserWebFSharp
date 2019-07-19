@@ -363,7 +363,7 @@ type Init(s: Settings.T, arg: Arguments) =
     member private this.ParsingTj() =
         Logging.Log.logger "Начало парсинга"
         try
-             this.GetParser(ParserRtsGen(s))
+             this.GetParser(ParserTj(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderTj.tenderCount)
