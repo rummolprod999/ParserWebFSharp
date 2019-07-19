@@ -3,7 +3,7 @@ namespace ParserWeb
 open System
 open System.IO
 
-type Init(s : Settings.T, arg : Arguments) =
+type Init(s: Settings.T, arg: Arguments) =
 
     do
         if String.IsNullOrEmpty(s.TempPathTenders) || String.IsNullOrEmpty(s.LogPathTenders) then
@@ -57,6 +57,7 @@ type Init(s : Settings.T, arg : Arguments) =
         | Tsm -> this.ParsingTsm()
         | Smart -> this.ParsingSmart()
         | RtsGen -> this.ParsingRtsGen()
+        | Tj -> this.ParsingTj()
 
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -340,7 +341,7 @@ type Init(s : Settings.T, arg : Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderTsm.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderTsm.tenderUpCount)
-    
+
     member private this.ParsingSmart() =
         Logging.Log.logger "Начало парсинга"
         try
@@ -349,7 +350,7 @@ type Init(s : Settings.T, arg : Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderSmart.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderSmart.tenderUpCount)
-    
+
     member private this.ParsingRtsGen() =
         Logging.Log.logger "Начало парсинга"
         try
@@ -358,5 +359,14 @@ type Init(s : Settings.T, arg : Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderRtsGen.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderRtsGen.tenderUpCount)
-        
-    member private this.GetParser(p : Parser) = p.Parsing()
+
+    member private this.ParsingTj() =
+        Logging.Log.logger "Начало парсинга"
+        try
+             this.GetParser(ParserRtsGen(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderTj.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderTj.tenderUpCount)
+
+    member private this.GetParser(p: Parser) = p.Parsing()

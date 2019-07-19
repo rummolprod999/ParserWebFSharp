@@ -37,6 +37,7 @@ type Arguments =
     | Tsm
     | Smart
     | RtsGen
+    | Tj
 
 type SlavNeft =
     | MEGION
