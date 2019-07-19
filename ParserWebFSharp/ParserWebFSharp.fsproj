@@ -81,6 +81,8 @@
     <Compile Include="ParserSmart.fs" />
     <Compile Include="TenderRtsGen.fs" />
     <Compile Include="ParserRtsGen.fs" />
+    <Compile Include="TenderTj.fs" />
+    <Compile Include="ParserTj.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

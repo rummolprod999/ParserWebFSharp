@@ -324,3 +324,12 @@ type RtsGenRec =
       RegionName: string
       status: string
       PwayName: string }
+
+type TjRec =
+    { Href: string
+      PurNum: string
+      PurName: string
+      OrgName: string
+      DatePub: DateTime
+      DateEnd: DateTime
+      status: string }
