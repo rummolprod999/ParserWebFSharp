@@ -17,6 +17,7 @@ type ParserTj(stn: Settings.T) =
     let options = ChromeOptions()
     let timeoutB = TimeSpan.FromSeconds(60.)
     let mutable wait = None
+    let mutable two = true
 
     do
         //options.AddArguments("headless")
@@ -51,6 +52,8 @@ type ParserTj(stn: Settings.T) =
         | Some w -> w
     
     member private __.ParserSelen(driver: ChromeDriver) =
+        driver.Navigate().GoToUrl(spage)
+        Thread.Sleep(5000)
         __.ParserListTenders driver
         for t in 1..pageC do
             try
@@ -61,7 +64,6 @@ type ParserTj(stn: Settings.T) =
     
     member __.GetNextpage(driver: ChromeDriver) =
         driver.SwitchTo().DefaultContent() |> ignore
-        let mutable two = true
         let jse = driver :> IJavaScriptExecutor
         try
             if two then
