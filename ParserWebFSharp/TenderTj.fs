@@ -162,7 +162,7 @@ type TenderTj(stn: Settings.T, tn: TjRec, typeFz: int, etpName: string, etpUrl: 
         let applAmount = applAmount.GetPriceFromString()
         let contrAmount = nav.Gsn "//th[contains(., 'Гарантийное обеспечение исполнения контракта:')]/following-sibling::td"
         let contrAmount = contrAmount.GetPriceFromString()
-        if delivPlace <> "" ||  delivTerm <> "" then
+        if delivPlace <> "" || delivTerm <> "" then
             let insertCustomerRequirement =
                 sprintf
                     "INSERT INTO %scustomer_requirement SET id_lot = @id_lot, id_customer = @id_customer, delivery_place = @delivery_place, application_guarantee_amount = @application_guarantee_amount, contract_guarantee_amount = @contract_guarantee_amount, delivery_term = @delivery_term"
@@ -176,7 +176,28 @@ type TenderTj(stn: Settings.T, tn: TjRec, typeFz: int, etpName: string, etpUrl: 
             cmd16.Parameters.AddWithValue("@contract_guarantee_amount", contrAmount) |> ignore
             cmd16.Parameters.AddWithValue("@delivery_term", delivTerm) |> ignore
             cmd16.ExecuteNonQuery() |> ignore
+        let insertLotitem = sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum, price = @price, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, okpd_name = @okpd_name" stn.Prefix
+        let cmd19 = new MySqlCommand(insertLotitem, con)
+        cmd19.Prepare()
+        cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+        cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
+        cmd19.Parameters.AddWithValue("@name", lotName) |> ignore
+        cmd19.Parameters.AddWithValue("@sum", "") |> ignore
+        cmd19.Parameters.AddWithValue("@price", "") |> ignore
+        cmd19.Parameters.AddWithValue("@quantity_value", "") |> ignore
+        cmd19.Parameters.AddWithValue("@customer_quantity_value", "") |> ignore
+        cmd19.Parameters.AddWithValue("@okei", "") |> ignore
+        cmd19.Parameters.AddWithValue("@okpd_name", "") |> ignore
+        cmd19.ExecuteNonQuery() |> ignore
+        let requirement = nav.Gsn "//th[contains(., 'Обеспечение сопутствующих условий:')]/following-sibling::td"
+        let insertRequirement = sprintf "INSERT INTO %srequirement SET id_lot = @id_lot, content = @content" stn.Prefix
+        let cmd44 = new MySqlCommand(insertRequirement, con)
+        cmd44.Prepare()
+        cmd44.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+        cmd44.Parameters.AddWithValue("@content", requirement) |> ignore
+        cmd44.ExecuteNonQuery() |> ignore
         ()
+        
     member private this.SetCancelStatus(con: MySqlConnection, dateUpd: DateTime) =
         let mutable cancelStatus = 0
         let mutable updated = false
