@@ -96,6 +96,7 @@
         <e p="TypesForParsing.fs" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="obj" t="ExcludeRecursive" />
+        <e p="test.html" t="Include" />
       </e>
       <e p="ParserWebFSharp.sln" t="IncludeFlat" />
       <e p="packages" t="ExcludeRecursive" />
