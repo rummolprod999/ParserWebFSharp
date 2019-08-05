@@ -58,6 +58,7 @@ type Init(s: Settings.T, arg: Arguments) =
         | Smart -> this.ParsingSmart()
         | RtsGen -> this.ParsingRtsGen()
         | Tj -> this.ParsingTj()
+        | Turk -> this.ParsingTurk()
 
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"

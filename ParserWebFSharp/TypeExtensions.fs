@@ -24,7 +24,17 @@ module TypeE =
             match this.DateFromString(pat) with
             | None -> Err(exc)
             | Some d -> Succ(d)
-
+        
+        member this.DateFromStringDocMin(pat: string) =
+            match this.DateFromString(pat) with
+            | None -> Succ(DateTime.MinValue)
+            | Some d -> Succ(d)
+        
+        member this.DateFromStringDocNow(pat: string) =
+            match this.DateFromString(pat) with
+            | None -> Succ(DateTime.Now)
+            | Some d -> Succ(d)
+            
         member this.Get1FromRegexp(regex: string): string option =
             match this with
             | Tools.RegexMatch1 regex gr1 -> Some(gr1)
@@ -44,7 +54,12 @@ module TypeE =
             match this.Get1FromRegexp(regex) with
             | None -> Succ("")
             | Some e -> Succ(e.Trim())
-
+            
+        member this.Get1Doc(regex: string) (exc: string) =
+            match this.Get1FromRegexp(regex) with
+            | None -> Err(exc)
+            | Some e -> Succ(e.Trim())
+            
         member this.Get1(regex: string, exc: string) =
             match this.Get1FromRegexp(regex) with
             | None -> Error(exc)
