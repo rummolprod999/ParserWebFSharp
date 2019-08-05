@@ -368,5 +368,14 @@ type Init(s: Settings.T, arg: Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderTj.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderTj.tenderUpCount)
-
+    
+    member private this.ParsingTurk() =
+        Logging.Log.logger "Начало парсинга"
+        try
+             this.GetParser(ParserTurk(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderTurk.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderTurk.tenderUpCount)
+        
     member private this.GetParser(p: Parser) = p.Parsing()
