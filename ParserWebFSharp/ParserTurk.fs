@@ -44,7 +44,7 @@ type ParserTurk(stn: Settings.T) =
             let! endDate = stopDate.DateFromStringDocMin("dd.MM.yyyy")
             let! address = t.GsnDoc "div.client-details-item:nth-child(3)"
             let! contacts = t.GsnDoc "div.client-details-item:nth-child(4)"
-            let T = TenderTurk(set, 206, "turkmenportal.com", "https://turkmenportal.com/", purNum, purName, pubDate, endDate, href, address, contacts, orgName)
+            let T = TenderTurk (set, 206, "turkmenportal.com", "https://turkmenportal.com/", purNum, purName, pubDate, endDate, href, address, contacts, orgName)
             T.Parsing()
             return ""
         }
