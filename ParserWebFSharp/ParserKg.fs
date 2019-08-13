@@ -15,7 +15,7 @@ type ParserKg(stn : Settings.T) =
     let url = "http://zakupki.gov.kg/popp/view/order/list.xhtml"
     let listTenders = new List<KgRec>()
     let options = ChromeOptions()
-    let pageC = 10
+    let pageC = 100
     
     do 
         options.AddArguments("headless")
