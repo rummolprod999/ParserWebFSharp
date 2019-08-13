@@ -4,9 +4,9 @@
     <e p="$APPLICATION_CONFIG_DIR$/consoles/db" t="IncludeRecursive" />
     <e p="$APPLICATION_CONFIG_DIR$/extensions" t="IncludeRecursive" />
     <e p="$APPLICATION_CONFIG_DIR$/scratches" t="IncludeRecursive" />
-    <e p="$USER_HOME$/.Rider2019.1/system/extResources" t="IncludeRecursive" />
-    <e p="$USER_HOME$/.Rider2019.1/system/resharper-host/local/Transient/ReSharperHost/v191/SolutionCaches/_ParserWebFSharp.1417816402.00" t="ExcludeRecursive" />
-    <e p="$USER_HOME$/.Rider2019.1/system/rust_expanded_macros/PhTdRrKo/expansions" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2019.2/system/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2019.2/system/resharper-host/local/Transient/ReSharperHost/v192/SolutionCaches/_ParserWebFSharp.1417816402.00" t="ExcludeRecursive" />
+    <e p="$USER_HOME$/.Rider2019.2/system/rust_expanded_macros/PhTdRrKo/expansions" t="IncludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p=".git/info/exclude" t="IncludeRecursive" />
       <e p="ParserWebFSharp" t="IncludeRecursive">
@@ -29,6 +29,7 @@
         <e p="ParserEshopRzd.fs" t="Include" />
         <e p="ParserGosYakut.fs" t="Include" />
         <e p="ParserIrkutskOil.fs" t="Include" />
+        <e p="ParserKg.fs" t="Include" />
         <e p="ParserLsr.fs" t="Include" />
         <e p="ParserNeft.fs" t="Include" />
         <e p="ParserNorNic.fs" t="Include" />
@@ -69,6 +70,7 @@
         <e p="TenderEshopRzd.fs" t="Include" />
         <e p="TenderGosYakut.fs" t="Include" />
         <e p="TenderIrkutskOil.fs" t="Include" />
+        <e p="TenderKg.fs" t="Include" />
         <e p="TenderLsr.fs" t="Include" />
         <e p="TenderNeft.fs" t="Include" />
         <e p="TenderNorNic.fs" t="Include" />

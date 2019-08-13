@@ -39,6 +39,7 @@ type Arguments =
     | RtsGen
     | Tj
     | Turk
+    | Kg
 
 type SlavNeft =
     | MEGION
@@ -333,5 +334,15 @@ type TjRec =
       PurNum: string
       PurName: string
       OrgName: string
+      DatePub: DateTime
+      DateEnd: DateTime }
+
+type KgRec =
+    { PwName: string
+      Href: string
+      PurNum: string
+      PurName: string
+      OrgName: string
+      Nmck: string
       DatePub: DateTime
       DateEnd: DateTime }
