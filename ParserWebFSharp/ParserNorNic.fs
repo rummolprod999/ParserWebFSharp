@@ -49,7 +49,7 @@ type ParserNorNic(stn : Settings.T) =
         let hundr = driver.FindElement(By.XPath("//span[@class = 'select2-selection__rendered']")).Click()
         Thread.Sleep(3000)
         driver.SwitchTo().DefaultContent() |> ignore
-        let hundr = driver.FindElement(By.XPath("//li[. = '100']")).Click()
+        //let hundr = driver.FindElement(By.XPath("//li[. = '100']")).Click()
         Thread.Sleep(3000)
         driver.SwitchTo().DefaultContent() |> ignore
         wait.Until(fun dr -> dr.FindElement(By.XPath("//div[@class = 'data-table-scroll']/table/tbody/tr")).Displayed) 
