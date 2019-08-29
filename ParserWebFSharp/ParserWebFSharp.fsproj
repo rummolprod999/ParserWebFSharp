@@ -87,6 +87,8 @@
     <Compile Include="ParserTurk.fs" />
     <Compile Include="TenderKg.fs" />
     <Compile Include="ParserKg.fs" />
+    <Compile Include="TenderEten.fs" />
+    <Compile Include="ParserEten.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

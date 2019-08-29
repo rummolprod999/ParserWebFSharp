@@ -60,6 +60,7 @@ type Init(s: Settings.T, arg: Arguments) =
         | Tj -> this.ParsingTj()
         | Turk -> this.ParsingTurk()
         | Kg -> this.ParsingKg()
+        | Eten -> this.ParsingEten()
 
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -387,5 +388,15 @@ type Init(s: Settings.T, arg: Arguments) =
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderKg.tenderCount)
-        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderKg.tenderUpCount) 
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderKg.tenderUpCount)
+    
+    member private this.ParsingEten() =
+        Logging.Log.logger "Начало парсинга"
+        try
+             this.GetParser(ParserEten(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderEten.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderEten.tenderUpCount)
+        
     member private this.GetParser(p: Parser) = p.Parsing()

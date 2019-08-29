@@ -40,6 +40,7 @@ type Arguments =
     | Tj
     | Turk
     | Kg
+    | Eten
 
 type SlavNeft =
     | MEGION
@@ -315,7 +316,7 @@ type SmartRec =
       DateEnd: DateTime
       status: string
       PwayName: string }
-    
+
 type RtsGenRec =
     { Href: string
       PurNum: string
@@ -346,3 +347,13 @@ type KgRec =
       Nmck: string
       DatePub: DateTime
       DateEnd: DateTime }
+
+type EtenRec =
+    { PwName: string
+      Href: string
+      PurNum: string
+      PurName: string
+      OrgName: string
+      Status: string
+      DatePub: DateTime
+      Descript: string }

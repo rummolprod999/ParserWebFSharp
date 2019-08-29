@@ -94,6 +94,8 @@ module Settings =
         let mutable LogPathTendersTurk = ""
         let mutable TempPathTendersKg = ""
         let mutable LogPathTendersKg = ""
+        let mutable TempPathTendersEten = ""
+        let mutable LogPathTendersEten = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -309,6 +311,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_kg" then
                                     LogPathTendersKg <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_eten" then
+                                    TempPathTendersEten <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_eten" then
+                                    LogPathTendersEten <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -356,6 +364,7 @@ module Settings =
                 | Tj -> TempPathTendersTj
                 | Turk -> TempPathTendersTurk
                 | Kg -> TempPathTendersKg
+                | Eten -> TempPathTendersEten
 
             let LogPathTenders =
                 match arg with
@@ -393,6 +402,7 @@ module Settings =
                 | Tj -> LogPathTendersTj
                 | Turk -> LogPathTendersTurk
                 | Kg -> LogPathTendersKg
+                | Eten -> LogPathTendersEten
 
             { Database = Database
               TempPathTenders = TempPathTenders
