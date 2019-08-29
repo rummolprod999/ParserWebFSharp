@@ -300,7 +300,18 @@ module TypeE =
                 | null -> Success("")
                 | r -> Success(r.Text.Trim())
             with ex -> Success("")
-
+    
+        member this.findWElementAttrWithoutException (xpath: string,attr: string, exc: string) =
+                try
+                    let res = this.FindElement(By.XPath(xpath))
+                    match res with
+                    | null -> Error(exc)
+                    | r -> try
+                                let attr = r.GetAttribute(attr)
+                                Success(attr)
+                                with ex -> Error(exc)
+                with ex -> Error(exc)
+            
     type IWebElement with
         member this.findAttributeWithoutException (attr: string, exc: string) =
             try

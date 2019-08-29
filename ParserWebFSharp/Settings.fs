@@ -314,7 +314,7 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_eten" then
                                     TempPathTendersEten <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                   (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "tempdir_tenders_eten" then
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_eten" then
                                     LogPathTendersEten <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText

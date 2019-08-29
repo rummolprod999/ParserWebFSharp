@@ -355,5 +355,4 @@ type EtenRec =
       PurName: string
       OrgName: string
       Status: string
-      DatePub: DateTime
-      Descript: string }
+      DatePub: DateTime}
