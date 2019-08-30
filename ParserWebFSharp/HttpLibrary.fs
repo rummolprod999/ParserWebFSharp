@@ -23,7 +23,14 @@ module Download =
                 wr.Timeout <- 600000
                 wr.UserAgent <- "Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots) Gecko/20100101 Firefox/55.0"
                 wr :> WebRequest
-
+    
+    type TimedWebClientRtsGen() =
+            inherit WebClient()
+            override this.GetWebRequest(address : Uri) =
+                let wr = base.GetWebRequest(address) :?> HttpWebRequest
+                wr.Timeout <- 600000
+                wr.UserAgent <- "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.110 Safari/537.36 Vivaldi/2.7.1628.30"
+                wr :> WebRequest
     type TimedWebClientCookies() =
         inherit WebClient()
         override this.GetWebRequest(address : Uri) =
@@ -76,7 +83,26 @@ module Download =
                 else incr count
                 Thread.Sleep(5000)
         s
-
+    
+    let DownloadStringRts url =
+        let mutable s = null
+        let count = ref 0
+        let mutable continueLooping = true
+        while continueLooping do
+            try
+                //let t ():string = (new TimedWebClient()).DownloadString(url: Uri)
+                let task = Task.Run(fun () -> (new TimedWebClientRtsGen()).DownloadString(url : string))
+                if task.Wait(TimeSpan.FromSeconds(100.)) then
+                    s <- task.Result
+                    continueLooping <- false
+                else raise <| new TimeoutException()
+            with _ ->
+                if !count >= 3 then
+                    Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток" url !count)
+                    continueLooping <- false
+                else incr count
+                Thread.Sleep(5000)
+        s
     let DownloadStringBot url =
         let mutable s = null
         let count = ref 0
