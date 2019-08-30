@@ -31,7 +31,7 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
                         if reader.HasRows then reader.Close()
                                                return! Err ""
                         reader.Close()
-                        let Page = Download.DownloadString tn.Href
+                        let Page = Download.DownloadStringBot tn.Href
                         if Page = "" || Page = null then return! Err(sprintf "%s" tn.Href)
                         let htmlDoc = new HtmlDocument()
                         htmlDoc.LoadHtml(Page)
