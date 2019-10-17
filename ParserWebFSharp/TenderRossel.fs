@@ -46,7 +46,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
     
     member private this.GetApplGuarAmount(input : string) : string option =
         match input with
-        | Tools.RegexMatch1 @"(\d[\d, ]+)\s" gr1 -> Some(gr1)
+        | Tools.RegexMatch1 @"(\d[\d, ]+)" gr1 -> Some(gr1)
         | _ -> None
     
     member private this.ParsingDocs (con : MySqlConnection) (idTender : int) (elem : IElement) =
