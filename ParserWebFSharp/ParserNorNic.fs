@@ -21,6 +21,8 @@ type ParserNorNic(stn : Settings.T) =
         options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
+        options.AddArguments("ignore-certificate-errors")
+        options.AcceptInsecureCertificates <- new Nullable<_>(true)
     
     override this.Parsing() =
         let driver = new ChromeDriver("/usr/local/bin", options)
