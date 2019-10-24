@@ -78,7 +78,7 @@ type ParserTPlusParall(stn : Settings.T) =
         
         let dateEndT =
             match dateT with
-            | Tools.RegexMatch2 @"Завершение:\s(\d{2}\.\d{2}\.\d{2})\s(\d{1,2}:\d{2})" (gr1, gr2) -> 
+            | Tools.RegexMatch2 @"Завершение:\s+(\d{2}\.\d{2}\.\d{4})\s+(\d{1,2}:\d{2})" (gr1, gr2) -> 
                 Some(sprintf "%s %s" gr1 gr2)
             | _ -> None
         
@@ -86,13 +86,13 @@ type ParserTPlusParall(stn : Settings.T) =
             match dateEndT with
             | None -> DateTime.MinValue
             | Some e -> 
-                match e.DateFromString("dd.MM.yy H:mm") with
+                match e.DateFromString("dd.MM.yyyy H:mm") with
                 | Some d -> d
                 | None -> DateTime.MinValue
         
         let datePubT =
             match dateT with
-            | Tools.RegexMatch2 @"Опубликован:\s(\d{2}\.\d{2}\.\d{2})\s(\d{1,2}:\d{2})" (gr1, gr2) -> 
+            | Tools.RegexMatch2 @"Опубликован:\s+(\d{2}\.\d{2}\.\d{4})\s+(\d{1,2}:\d{2})" (gr1, gr2) -> 
                 Some(sprintf "%s %s" gr1 gr2)
             | _ -> None
         
@@ -100,7 +100,7 @@ type ParserTPlusParall(stn : Settings.T) =
             match datePubT with
             | None -> DateTime.MinValue
             | Some e -> 
-                match e.DateFromString("dd.MM.yy H:mm") with
+                match e.DateFromString("dd.MM.yyyy H:mm") with
                 | Some d -> d
                 | None -> DateTime.MinValue
         
