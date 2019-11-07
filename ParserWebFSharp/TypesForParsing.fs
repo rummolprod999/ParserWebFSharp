@@ -41,6 +41,7 @@ type Arguments =
     | Turk
     | Kg
     | Eten
+    | CisLink
 
 type SlavNeft =
     | MEGION
@@ -356,3 +357,11 @@ type EtenRec =
       OrgName: string
       Status: string
       DatePub: DateTime}
+
+type CisLinkRec =
+    { Href: string
+      DatePub: DateTime
+      DateEnd: DateTime
+      PurNum: string
+      PurName: string
+      OrgName: string}

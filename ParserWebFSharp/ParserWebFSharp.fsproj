@@ -89,6 +89,8 @@
     <Compile Include="ParserKg.fs" />
     <Compile Include="TenderEten.fs" />
     <Compile Include="ParserEten.fs" />
+    <Compile Include="TenderCisLink.fs" />
+    <Compile Include="ParserCisLink.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

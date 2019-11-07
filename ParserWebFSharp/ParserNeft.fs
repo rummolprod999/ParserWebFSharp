@@ -88,7 +88,7 @@ type ParserNeft(stn : Settings.T) =
             | None -> raise <| System.Exception(sprintf "can not parse dateEnd %s" endDateS)
         
         let ten =
-            { Href = url
+            { NeftRec.Href = url
               PurNum = purNum
               PurName = purName
               OrgName = orgName

@@ -7,7 +7,7 @@ module Start =
     [<EntryPoint>]
     let main argv =
         let arguments =
-            "irkutskoil, akd, lsr, butb, rossel, neft, slav, aero, stroytorgi, asgor, gosyakut, rostend, chpt, tplus, sibserv, tguru, bidmart, comita, eshoprzd, yarregion, btg, vend, pik, nornic, tenderer, samolet, ariba, beeline, tsm, smart, rtsgen, tj, turk, kg, eten"
+            "irkutskoil, akd, lsr, butb, rossel, neft, slav, aero, stroytorgi, asgor, gosyakut, rostend, chpt, tplus, sibserv, tguru, bidmart, comita, eshoprzd, yarregion, btg, vend, pik, nornic, tenderer, samolet, ariba, beeline, tsm, smart, rtsgen, tj, turk, kg, eten, cislink"
         if argv.Length = 0 then
             printf "Bad arguments, use %s" arguments
             Environment.Exit(1)
@@ -151,6 +151,10 @@ module Start =
         | "eten" ->
             let settings = Settings.getSettings (Eten)
             let p = Init(settings, Eten)
+            p.Parsing()
+        | "cislink" ->
+            let settings = Settings.getSettings (CisLink)
+            let p = Init(settings, CisLink)
             p.Parsing()
         | _ ->
             printf "Bad arguments, use %s" arguments

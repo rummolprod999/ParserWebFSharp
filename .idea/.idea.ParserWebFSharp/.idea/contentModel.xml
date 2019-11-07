@@ -25,6 +25,7 @@
         <e p="ParserBtg.fs" t="Include" />
         <e p="ParserButb.fs" t="Include" />
         <e p="ParserChPt.fs" t="Include" />
+        <e p="ParserCisLink.fs" t="Include" />
         <e p="ParserComita.fs" t="Include" />
         <e p="ParserEshopRzd.fs" t="Include" />
         <e p="ParserEten.fs" t="Include" />
@@ -67,6 +68,7 @@
         <e p="TenderBuilder.fs" t="Include" />
         <e p="TenderButb.fs" t="Include" />
         <e p="TenderChPt.fs" t="Include" />
+        <e p="TenderCisLink.fs" t="Include" />
         <e p="TenderComita.fs" t="Include" />
         <e p="TenderEshopRzd.fs" t="Include" />
         <e p="TenderEten.fs" t="Include" />

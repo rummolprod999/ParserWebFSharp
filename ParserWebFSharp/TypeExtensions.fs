@@ -309,8 +309,19 @@ module TypeE =
                     | r -> try
                                 let attr = r.GetAttribute(attr)
                                 Success(attr)
-                                with ex -> Error(exc)
+                           with ex -> Error(exc)
                 with ex -> Error(exc)
+        
+        member this.findWElementAttrOrEmpty (xpath: string,attr: string) =
+                try
+                    let res = this.FindElement(By.XPath(xpath))
+                    match res with
+                    | null -> ""
+                    | r -> try
+                                let attr = r.GetAttribute(attr)
+                                attr
+                           with ex -> ""
+                with ex -> ""
             
     type IWebElement with
         member this.findAttributeWithoutException (attr: string, exc: string) =
