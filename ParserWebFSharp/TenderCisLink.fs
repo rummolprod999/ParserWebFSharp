@@ -92,8 +92,8 @@ type TenderCisLink(stn: Settings.T, tn: CisLinkRec, typeFz: int, etpName: string
                         cmd9.ExecuteNonQuery() |> ignore
                         idTender := int cmd9.LastInsertedId
                         match updated with
-                        | true -> incr TenderEten.tenderUpCount
-                        | false -> incr TenderEten.tenderCount
+                        | true -> incr TenderCisLink.tenderUpCount
+                        | false -> incr TenderCisLink.tenderCount
                         let idCustomer = ref 0
                         if tn.OrgName <> "" then
                             let selectCustomer =
