@@ -3,13 +3,7 @@ namespace ParserWeb
 open MySql.Data.MySqlClient
 open System
 open System.Data
-open OpenQA.Selenium
 open OpenQA.Selenium.Chrome
-open OpenQA.Selenium.Remote
-open OpenQA.Selenium.Support.UI
-open System.Threading
-open TypeE
-open Tools
 
 type TenderEten(stn: Settings.T, tn: EtenRec, typeFz: int, etpName: string, etpUrl: string, driver: ChromeDriver) =
     inherit Tender(etpName, etpUrl)

@@ -2,7 +2,6 @@ namespace ParserWeb
 
 open System
 open System.Collections.Generic
-open System.Linq.Expressions
 open System.Threading
 open TypeE
 open OpenQA.Selenium
@@ -102,6 +101,6 @@ type ParserEten(stn: Settings.T) =
                 return "ok"
             }
         match result with
-        | Success r -> ()
+        | Success _ -> ()
         | Error e -> Logging.Log.logger e
         ()

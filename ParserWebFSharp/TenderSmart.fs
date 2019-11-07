@@ -3,8 +3,6 @@ namespace ParserWeb
 open MySql.Data.MySqlClient
 open System
 open System.Data
-open TypeE
-open Tools
 
 type TenderSmart(stn: Settings.T, tn: SmartRec, typeFz: int, etpName: string, etpUrl: string) =
     inherit Tender(etpName, etpUrl)

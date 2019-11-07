@@ -2,7 +2,6 @@ namespace ParserWeb
 
 open System
 open System.Collections.Generic
-open System.Linq.Expressions
 open System.Threading
 open TypeE
 open OpenQA.Selenium
@@ -49,12 +48,23 @@ type ParserCisLink(stn: Settings.T) =
         Thread.Sleep(3000)
         driver.SwitchTo().DefaultContent() |> ignore
         this.ParserListTenders driver
-    
+        for t in listTenders do
+            try
+                this.ParserTendersList driver t
+            with ex -> Logging.Log.logger (ex)
+
     member private this.Auth(driver: ChromeDriver) =
         driver.FindElement(By.XPath("//input[@class = 'input-block-level auth_login']")).SendKeys(Settings.UserCisLink)
         driver.FindElement(By.XPath("//input[@class = 'input-block-level auth_pass']")).SendKeys(Settings.PassCisLink)
         driver.FindElement(By.XPath("//input[@id = 'login-button']")).Click()
         Thread.Sleep(3000)
+        ()
+
+    member private this.ParserTendersList (driver: ChromeDriver) (t: CisLinkRec) =
+        try
+            let T = TenderCisLink(set, t, 217, "CISLINK", "http://auction.cislink.com/", driver)
+            T.Parsing()
+        with ex -> Logging.Log.logger (ex, t.Href)
         ()
     member private this.ParserListTenders(driver: ChromeDriver) =
         driver.SwitchTo().DefaultContent() |> ignore
@@ -63,7 +73,7 @@ type ParserCisLink(stn: Settings.T) =
         for t in tenders do
             this.ParserTenders t
         ()
-    
+
     member private this.ParserTenders(i: IWebElement) =
         let builder = new TenderBuilder()
         let result =
@@ -73,7 +83,7 @@ type ParserCisLink(stn: Settings.T) =
                 let! purName = i.findElementWithoutException
                                    (".//td[2]", sprintf "purName not found %s" i.Text)
                 let purNum = Tools.createMD5 purName
-                let mutable href = i.findWElementAttrOrEmpty(".//td[2]/a", "href")
+                let mutable href = i.findWElementAttrOrEmpty (".//td[2]/a", "href")
                 if href = "" then href <- "http://auction.cislink.com/auction/schedule"
                 let! pubDateT = i.findElementWithoutException
                                    (".//td[3]", sprintf "pubDateT not found %s" i.Text)
@@ -81,14 +91,14 @@ type ParserCisLink(stn: Settings.T) =
                 let ten =
                     { CisLinkRec.Href = href
                       CisLinkRec.DatePub = datePub
-                      CisLinkRec.DateEnd = datePub 
+                      CisLinkRec.DateEnd = datePub
                       CisLinkRec.PurNum = purNum
                       CisLinkRec.PurName = purName
-                      CisLinkRec.OrgName = orgName}
+                      CisLinkRec.OrgName = orgName }
                 listTenders.Add(ten)
                 return "ok"
             }
         match result with
-        | Success r -> ()
+        | Success _ -> ()
         | Error e -> Logging.Log.logger e
         ()
