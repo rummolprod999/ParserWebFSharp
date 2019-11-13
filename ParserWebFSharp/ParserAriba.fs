@@ -42,10 +42,10 @@ type ParserAriba(stn : Settings.T) =
         driver.SwitchTo().DefaultContent() |> ignore
         wait.Until
             (fun dr ->
-            dr.FindElement(By.XPath("//a[span[contains(., 'Я ПРОДАЮ')]]")).Displayed)
+            dr.FindElement(By.XPath("//span[a[contains(., 'Я продаю')]]")).Displayed)
         |> ignore
         driver.SwitchTo().DefaultContent() |> ignore
-        this.Clicker driver """//a[span[contains(., 'Я ПРОДАЮ')]]"""
+        this.Clicker driver """//span[a[contains(., 'Я продаю')]]"""
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
         wait.Until
