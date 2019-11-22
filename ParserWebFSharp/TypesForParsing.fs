@@ -42,6 +42,7 @@ type Arguments =
     | Kg
     | Eten
     | CisLink
+    | Petr
 
 type SlavNeft =
     | MEGION

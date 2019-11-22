@@ -99,6 +99,8 @@ module Settings =
         let mutable LogPathTendersEten = ""
         let mutable TempPathTendersCisLink = ""
         let mutable LogPathTendersCisLink = ""
+        let mutable TempPathTendersPetr = ""
+        let mutable LogPathTendersPetr = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -326,6 +328,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_cislink" then
                                     LogPathTendersCisLink <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_petr" then
+                                    TempPathTendersPetr <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_petr" then
+                                    LogPathTendersPetr <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -377,6 +385,7 @@ module Settings =
                 | Kg -> TempPathTendersKg
                 | Eten -> TempPathTendersEten
                 | CisLink -> TempPathTendersCisLink
+                | Petr -> TempPathTendersPetr
 
             let LogPathTenders =
                 match arg with
@@ -416,6 +425,7 @@ module Settings =
                 | Kg -> LogPathTendersKg
                 | Eten -> LogPathTendersEten
                 | CisLink -> LogPathTendersCisLink
+                | Petr -> LogPathTendersPetr
 
             { Database = Database
               TempPathTenders = TempPathTenders
