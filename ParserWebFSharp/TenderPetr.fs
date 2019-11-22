@@ -149,8 +149,8 @@ type TenderPetr(stn: Settings.T, tn: EshopRzdRec, typeFz: int, etpName: string, 
             cmd9.ExecuteNonQuery() |> ignore
             idTender := int cmd9.LastInsertedId
             match updated with
-            | true -> incr TenderEshopRzd.tenderUpCount
-            | false -> incr TenderEshopRzd.tenderCount
+            | true -> incr TenderPetr.tenderUpCount
+            | false -> incr TenderPetr.tenderCount
             let idCustomer = ref 0
             if tn.CusName <> "" then
                 let selectCustomer =
