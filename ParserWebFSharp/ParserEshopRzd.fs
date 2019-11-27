@@ -82,12 +82,12 @@ type ParserEshopRzd(stn : Settings.T) =
         let result =
             builder { 
                 let! purName = t.findElementWithoutException 
-                                   (".//a[contains(@class,'name') and contains(@class,'ng-binding')]", 
+                                   (".//a[contains(@class,'name') and contains(@ui-sref,'purchases.view({id:reg.id})')]", 
                                     "purName not found")
-                let hrefT = t.FindElement(By.XPath(".//a[contains(@class,'name') and contains(@class,'ng-binding')]"))
+                let hrefT = t.FindElement(By.XPath(".//a[contains(@class,'name') and contains(@ui-sref,'purchases.view({id:reg.id})')]"))
                 let href = hrefT.GetAttribute("href")
                 let! purNumT = t.findElementWithoutException 
-                                   (".//a[contains(@class,'name') and contains(@class,'ng-binding')]/span", 
+                                   (".//a[contains(@class,'name') and contains(@ui-sref,'purchases.view({id:reg.id})')]/span[2]", 
                                     "purNumT not found")
                 let purNum = purNumT.Replace("/", "").Replace("№", "").RegexDeleteWhitespace()
                 let! status = t.findElementWithoutExceptionOptional (".//div[contains(@class,'status')]", "")
