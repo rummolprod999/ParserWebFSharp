@@ -90,7 +90,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
             | Some d -> d
             | None -> raise <| System.Exception(sprintf "can not parse datePub %s" pubDateS)
         
-        let endDateT = doc.QuerySelector("td:contains('Прием заявок') + td > p")
+        let endDateT = doc.QuerySelector("td:contains('Приём заявок') + td > p")
         match endDateT with
         | null -> raise <| System.NullReferenceException(sprintf "endDate not found in %s" tn.Href)
         | _ -> ()
