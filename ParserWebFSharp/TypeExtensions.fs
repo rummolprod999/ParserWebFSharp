@@ -80,7 +80,13 @@ module TypeE =
             match this.Get1FromRegexp templ with
             | Some x -> Regex.Replace(x.Replace(",", ".").Trim(), @"\s+", "")
             | None -> ""
-
+        
+        member this.GetPriceFromStringKz(?template): string =
+            let templ = defaultArg template @"([\d, ]+)"
+            let th = this.Replace("&nbsp;", "").Replace("тг", "")
+            match Some(th) with
+            | Some x -> Regex.Replace(x.Replace(",", ".").Trim(), @"\s+", "")
+            | None -> ""
         member this.DateFromStringRus(pat: string) =
             try
                 Some(DateTime.ParseExact(this, pat, CultureInfo.CreateSpecificCulture("ru-RU")))
