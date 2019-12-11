@@ -43,6 +43,7 @@ type Arguments =
     | Eten
     | CisLink
     | Petr
+    | Mpkz
 
 type SlavNeft =
     | MEGION
@@ -366,3 +367,11 @@ type CisLinkRec =
       PurNum: string
       PurName: string
       OrgName: string}
+
+type MpKzRec =
+    { Href: string
+      DateEnd: DateTime
+      PurNum: string
+      PurName: string
+      OrgName: string
+      Nmck: string}

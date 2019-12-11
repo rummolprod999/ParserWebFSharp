@@ -63,6 +63,7 @@ type Init(s: Settings.T, arg: Arguments) =
         | Eten -> this.ParsingEten()
         | CisLink -> this.ParsingCisLink()
         | Petr -> this.ParsingPetr()
+        | Mpkz -> this.ParsingMpKz()
 
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -373,7 +374,7 @@ type Init(s: Settings.T, arg: Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderTj.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderTj.tenderUpCount)
-    
+
     member private this.ParsingTurk() =
         Logging.Log.logger "Начало парсинга"
         try
@@ -382,7 +383,7 @@ type Init(s: Settings.T, arg: Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderTurk.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderTurk.tenderUpCount)
-    
+
     member private this.ParsingKg() =
         Logging.Log.logger "Начало парсинга"
         try
@@ -391,7 +392,7 @@ type Init(s: Settings.T, arg: Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderKg.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderKg.tenderUpCount)
-    
+
     member private this.ParsingEten() =
         Logging.Log.logger "Начало парсинга"
         try
@@ -400,7 +401,7 @@ type Init(s: Settings.T, arg: Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderEten.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderEten.tenderUpCount)
-    
+
     member private this.ParsingCisLink() =
         Logging.Log.logger "Начало парсинга"
         try
@@ -409,7 +410,7 @@ type Init(s: Settings.T, arg: Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderCisLink.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderCisLink.tenderUpCount)
-    
+
     member private this.ParsingPetr() =
         Logging.Log.logger "Начало парсинга"
         try
@@ -418,4 +419,14 @@ type Init(s: Settings.T, arg: Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderPetr.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderPetr.tenderUpCount)
+
+    member private this.ParsingMpKz() =
+        Logging.Log.logger "Начало парсинга"
+        try
+             this.GetParser(ParserMpkz(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderMpkz.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderMpkz.tenderUpCount)
     member private this.GetParser(p: Parser) = p.Parsing()
+

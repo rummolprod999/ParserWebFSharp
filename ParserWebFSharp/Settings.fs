@@ -6,7 +6,7 @@ open System.Reflection
 open System.Xml
 
 module Settings =
-    let PathProgram : string =
+    let PathProgram: string =
         let path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase)
         if path <> null then path.Substring(5)
         else ""
@@ -15,17 +15,17 @@ module Settings =
     let mutable internal UserCisLink = ""
     let mutable internal PassCisLink = ""
     type T =
-        { Database : string
-          TempPathTenders : string
-          LogPathTenders : string
-          Prefix : string
-          UserDb : string
-          PassDb : string
-          Server : string
-          Port : int
-          ConStr : string }
+        { Database: string
+          TempPathTenders: string
+          LogPathTenders: string
+          Prefix: string
+          UserDb: string
+          PassDb: string
+          Server: string
+          Port: int
+          ConStr: string }
 
-    let getSettings (arg : Arguments) : T =
+    let getSettings (arg: Arguments): T =
         let mutable Database = ""
         let mutable TempPathTendersIrkutskOil = ""
         let mutable LogPathTendersIrkutskOil = ""
@@ -101,6 +101,8 @@ module Settings =
         let mutable LogPathTendersCisLink = ""
         let mutable TempPathTendersPetr = ""
         let mutable LogPathTendersPetr = ""
+        let mutable TempPathTendersMpkz = ""
+        let mutable LogPathTendersMpkz = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -334,6 +336,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_petr" then
                                     LogPathTendersPetr <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_mpkz" then
+                                    TempPathTendersMpkz <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_mpkz" then
+                                    LogPathTendersMpkz <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -386,6 +394,7 @@ module Settings =
                 | Eten -> TempPathTendersEten
                 | CisLink -> TempPathTendersCisLink
                 | Petr -> TempPathTendersPetr
+                | Mpkz -> TempPathTendersMpkz
 
             let LogPathTenders =
                 match arg with
@@ -426,6 +435,7 @@ module Settings =
                 | Eten -> LogPathTendersEten
                 | CisLink -> LogPathTendersCisLink
                 | Petr -> LogPathTendersPetr
+                | Mpkz -> LogPathTendersMpkz
 
             { Database = Database
               TempPathTenders = TempPathTenders

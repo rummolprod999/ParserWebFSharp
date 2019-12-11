@@ -93,6 +93,8 @@
     <Compile Include="ParserCisLink.fs" />
     <Compile Include="TenderPetr.fs" />
     <Compile Include="ParserPetr.fs" />
+    <Compile Include="TenderMpKz.fs" />
+    <Compile Include="ParserMpKz.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
