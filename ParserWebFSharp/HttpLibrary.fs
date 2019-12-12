@@ -12,7 +12,7 @@ module Download =
         inherit WebClient()
         override this.GetWebRequest(address : Uri) =
             let wr = base.GetWebRequest(address) :?> HttpWebRequest
-            wr.Timeout <- 600000
+            wr.Timeout <- 60000
             wr.UserAgent <- "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:55.0) Gecko/20100101 Firefox/55.0"
             wr :> WebRequest
 
@@ -20,7 +20,7 @@ module Download =
             inherit WebClient()
             override this.GetWebRequest(address : Uri) =
                 let wr = base.GetWebRequest(address) :?> HttpWebRequest
-                wr.Timeout <- 600000
+                wr.Timeout <- 60000
                 wr.UserAgent <- "Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots) Gecko/20100101 Firefox/55.0"
                 wr :> WebRequest
     
@@ -28,14 +28,14 @@ module Download =
             inherit WebClient()
             override this.GetWebRequest(address : Uri) =
                 let wr = base.GetWebRequest(address) :?> HttpWebRequest
-                wr.Timeout <- 600000
+                wr.Timeout <- 60000
                 wr.UserAgent <- "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.110 Safari/537.36 Vivaldi/2.7.1628.30"
                 wr :> WebRequest
     type TimedWebClientCookies() =
         inherit WebClient()
         override this.GetWebRequest(address : Uri) =
             let wr = base.GetWebRequest(address) :?> HttpWebRequest
-            wr.Timeout <- 600000
+            wr.Timeout <- 60000
             wr.UserAgent <- "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:55.0) Gecko/20100101 Firefox/55.0"
             wr.Headers.Add("Cookie", "auth_sess=alex19840606%40mail.ru+1234567; session_id=411084706")
             wr :> WebRequest
@@ -53,7 +53,7 @@ module Download =
         inherit WebClient()
         override this.GetWebRequest(address : Uri) =
             let wr = base.GetWebRequest(address) :?> HttpWebRequest
-            wr.Timeout <- 600000
+            wr.Timeout <- 60000
             wr.KeepAlive <- true
             wr.UserAgent <- "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0"
             wr.Headers.Add("Referer", "https://tenders.irkutskoil.ru/")
@@ -72,7 +72,7 @@ module Download =
             try
                 //let t ():string = (new TimedWebClient()).DownloadString(url: Uri)
                 let task = Task.Run(fun () -> (new TimedWebClient()).DownloadString(url : string))
-                if task.Wait(TimeSpan.FromSeconds(100.)) then
+                if task.Wait(TimeSpan.FromSeconds(60.)) then
                     s <- task.Result
                     continueLooping <- false
                 else raise <| new TimeoutException()
@@ -92,7 +92,7 @@ module Download =
             try
                 //let t ():string = (new TimedWebClient()).DownloadString(url: Uri)
                 let task = Task.Run(fun () -> (new TimedWebClientRtsGen()).DownloadString(url : string))
-                if task.Wait(TimeSpan.FromSeconds(100.)) then
+                if task.Wait(TimeSpan.FromSeconds(60.)) then
                     s <- task.Result
                     continueLooping <- false
                 else raise <| new TimeoutException()
@@ -111,7 +111,7 @@ module Download =
             try
                 //let t ():string = (new TimedWebClient()).DownloadString(url: Uri)
                 let task = Task.Run(fun () -> (new TimedWebClientBot()).DownloadString(url : string))
-                if task.Wait(TimeSpan.FromSeconds(100.)) then
+                if task.Wait(TimeSpan.FromSeconds(60.)) then
                     s <- task.Result
                     continueLooping <- false
                 else raise <| new TimeoutException()
@@ -131,7 +131,7 @@ module Download =
             try
                 //let t ():string = (new TimedWebClient()).DownloadString(url: Uri)
                 let task = Task.Run(fun () -> (new TimedWebClientIrkutsk()).DownloadString(url : string))
-                if task.Wait(TimeSpan.FromSeconds(650.)) then
+                if task.Wait(TimeSpan.FromSeconds(30.)) then
                     s <- task.Result
                     continueLooping <- false
                 else raise <| new TimeoutException()
@@ -157,7 +157,7 @@ module Download =
             try
                 //let t ():string = (new TimedWebClient()).DownloadString(url: Uri)
                 let task = Task.Run(fun () -> (getWebClient()).DownloadString(url : string))
-                if task.Wait(TimeSpan.FromSeconds(650.)) then
+                if task.Wait(TimeSpan.FromSeconds(30.)) then
                     s <- task.Result
                     continueLooping <- false
                 else raise <| new TimeoutException()
@@ -183,7 +183,7 @@ module Download =
                 try
                     //let t ():string = (new TimedWebClient()).DownloadString(url: Uri)
                     let task = Task.Run(fun () -> (getWebClient()).DownloadString(url : string))
-                    if task.Wait(TimeSpan.FromSeconds(650.)) then
+                    if task.Wait(TimeSpan.FromSeconds(30.)) then
                         s <- task.Result
                         continueLooping <- false
                     else raise <| new TimeoutException()
@@ -229,7 +229,7 @@ module Download =
             try
                 //let t ():string = (new TimedWebClient()).DownloadString(url: Uri)
                 let task = Task.Run(fun () -> (getWebClient()).DownloadString(url : string))
-                if task.Wait(TimeSpan.FromSeconds(650.)) then
+                if task.Wait(TimeSpan.FromSeconds(30.)) then
                     s <- task.Result
                     continueLooping <- false
                 else raise <| new TimeoutException()
