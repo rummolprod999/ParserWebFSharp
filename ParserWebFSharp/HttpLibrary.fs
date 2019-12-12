@@ -37,7 +37,7 @@ module Download =
             let wr = base.GetWebRequest(address) :?> HttpWebRequest
             wr.Timeout <- 60000
             wr.UserAgent <- "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:55.0) Gecko/20100101 Firefox/55.0"
-            wr.Headers.Add("Cookie", "auth_sess=alex19840606%40mail.ru+1234567; session_id=411084706")
+            wr.Headers.Add("Cookie", "auth_sess=ent.it%40yandex.ru+landa541531; session_id=512185358")
             wr :> WebRequest
 
     type TimedWebClientCookiesTenderer() =
