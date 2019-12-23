@@ -95,6 +95,8 @@
     <Compile Include="ParserPetr.fs" />
     <Compile Include="TenderMpKz.fs" />
     <Compile Include="ParserMpKz.fs" />
+    <Compile Include="TenderEstoreSpb.fs" />
+    <Compile Include="ParserEstoreSpb.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

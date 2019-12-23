@@ -103,6 +103,8 @@ module Settings =
         let mutable LogPathTendersPetr = ""
         let mutable TempPathTendersMpkz = ""
         let mutable LogPathTendersMpkz = ""
+        let mutable TempPathTendersEstoreSpb = ""
+        let mutable LogPathTendersEstoreSpb = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -342,6 +344,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_mpkz" then
                                     LogPathTendersMpkz <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_estorespb" then
+                                    TempPathTendersEstoreSpb <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_estorespb" then
+                                    LogPathTendersEstoreSpb <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -395,6 +403,7 @@ module Settings =
                 | CisLink -> TempPathTendersCisLink
                 | Petr -> TempPathTendersPetr
                 | Mpkz -> TempPathTendersMpkz
+                | EstoreSpb -> TempPathTendersEstoreSpb
 
             let LogPathTenders =
                 match arg with
@@ -436,6 +445,7 @@ module Settings =
                 | CisLink -> LogPathTendersCisLink
                 | Petr -> LogPathTendersPetr
                 | Mpkz -> LogPathTendersMpkz
+                | EstoreSpb -> LogPathTendersEstoreSpb
 
             { Database = Database
               TempPathTenders = TempPathTenders
