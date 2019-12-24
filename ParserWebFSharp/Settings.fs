@@ -105,6 +105,8 @@ module Settings =
         let mutable LogPathTendersMpkz = ""
         let mutable TempPathTendersEstoreSpb = ""
         let mutable LogPathTendersEstoreSpb = ""
+        let mutable TempPathTendersRosAgro = ""
+        let mutable LogPathTendersRosAgro = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -350,6 +352,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_estorespb" then
                                     LogPathTendersEstoreSpb <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_rosagro" then
+                                    TempPathTendersRosAgro <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_rosagro" then
+                                    LogPathTendersRosAgro <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -404,6 +412,7 @@ module Settings =
                 | Petr -> TempPathTendersPetr
                 | Mpkz -> TempPathTendersMpkz
                 | EstoreSpb -> TempPathTendersEstoreSpb
+                | RosAgro -> TempPathTendersRosAgro
 
             let LogPathTenders =
                 match arg with
@@ -446,6 +455,7 @@ module Settings =
                 | Petr -> LogPathTendersPetr
                 | Mpkz -> LogPathTendersMpkz
                 | EstoreSpb -> LogPathTendersEstoreSpb
+                | RosAgro -> LogPathTendersRosAgro
 
             { Database = Database
               TempPathTenders = TempPathTenders

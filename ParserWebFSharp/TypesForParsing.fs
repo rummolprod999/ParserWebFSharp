@@ -45,6 +45,7 @@ type Arguments =
     | Petr
     | Mpkz
     | EstoreSpb
+    | RosAgro
 
 type SlavNeft =
     | MEGION
@@ -386,3 +387,12 @@ type EstoreSpbRec =
       OrgName: string
       Status: string
       Nmck: string}
+    
+type RosAgroRec =
+    { Href: string
+      DateEnd: DateTime
+      DatePub: DateTime
+      PurNum: string
+      PurName: string
+      Nmck: string
+      PwName: string}
