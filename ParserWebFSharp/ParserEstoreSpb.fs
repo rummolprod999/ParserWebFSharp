@@ -7,7 +7,7 @@ open AngleSharp.Dom
 open AngleSharp.Parser.Html
 open System.Web
 
-type ParserWstoreSpb(stn: Settings.T) =
+type ParserEstoreSpb(stn: Settings.T) =
     inherit Parser()
     let set = stn
     let pageC = 50
