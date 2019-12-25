@@ -36,6 +36,7 @@
         <e p="ParserLsr.fs" t="Include" />
         <e p="ParserMpKz.fs" t="Include" />
         <e p="ParserNeft.fs" t="Include" />
+        <e p="ParserNeftReg.fs" t="Include" />
         <e p="ParserNorNic.fs" t="Include" />
         <e p="ParserPetr.fs" t="Include" />
         <e p="ParserPik.fs" t="Include" />
@@ -83,6 +84,7 @@
         <e p="TenderLsr.fs" t="Include" />
         <e p="TenderMpKz.fs" t="Include" />
         <e p="TenderNeft.fs" t="Include" />
+        <e p="TenderNeftReg.fs" t="Include" />
         <e p="TenderNorNic.fs" t="Include" />
         <e p="TenderPetr.fs" t="Include" />
         <e p="TenderPik.fs" t="Include" />

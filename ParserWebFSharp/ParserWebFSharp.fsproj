@@ -99,6 +99,8 @@
     <Compile Include="ParserEstoreSpb.fs" />
     <Compile Include="TenderRosAgro.fs" />
     <Compile Include="ParserRosAgro.fs" />
+    <Compile Include="TenderNeftReg.fs" />
+    <Compile Include="ParserNeftReg.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

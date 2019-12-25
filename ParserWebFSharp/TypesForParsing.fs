@@ -46,6 +46,7 @@ type Arguments =
     | Mpkz
     | EstoreSpb
     | RosAgro
+    | NeftReg
 
 type SlavNeft =
     | MEGION
@@ -396,3 +397,11 @@ type RosAgroRec =
       PurName: string
       Nmck: string
       PwName: string}
+
+type NeftRegRec =
+    { Href: string
+      PurNum: string
+      PurName: string
+      Nmck: string
+      PwName: string
+      Status: string}
