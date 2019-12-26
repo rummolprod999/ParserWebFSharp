@@ -175,6 +175,12 @@ module TypeE =
                 match e.GetAttribute(atr) with
                 | null -> Err(err)
                 | at -> Succ(at.Trim())
+         
+        member this.GsnAtrSelfDocWithError (atr: string) (err: string) =
+                let el = this :?> AngleSharp.Dom.IElement
+                match el.GetAttribute(atr) with
+                | null -> Err(err)
+                | at -> Succ(at.Trim()) 
 
     type HtmlAgilityPack.HtmlNode with
 
