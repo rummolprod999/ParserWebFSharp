@@ -109,6 +109,8 @@ module Settings =
         let mutable LogPathTendersRosAgro = ""
         let mutable TempPathTendersNeftReg = ""
         let mutable LogPathTendersNeftReg = ""
+        let mutable TempPathTendersForScience = ""
+        let mutable LogPathTendersForScience = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -366,6 +368,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_neftreg" then
                                     LogPathTendersNeftReg <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_forscience" then
+                                    TempPathTendersForScience <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_forscience" then
+                                    LogPathTendersForScience <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -422,6 +430,7 @@ module Settings =
                 | EstoreSpb -> TempPathTendersEstoreSpb
                 | RosAgro -> TempPathTendersRosAgro
                 | NeftReg -> TempPathTendersNeftReg
+                | ForScience -> TempPathTendersForScience
 
             let LogPathTenders =
                 match arg with
@@ -466,6 +475,7 @@ module Settings =
                 | EstoreSpb -> LogPathTendersEstoreSpb
                 | RosAgro -> LogPathTendersRosAgro
                 | NeftReg -> LogPathTendersNeftReg
+                | ForScience -> LogPathTendersForScience
 
             { Database = Database
               TempPathTenders = TempPathTenders

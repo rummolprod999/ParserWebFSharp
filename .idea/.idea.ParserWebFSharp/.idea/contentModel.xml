@@ -30,6 +30,7 @@
         <e p="ParserEshopRzd.fs" t="Include" />
         <e p="ParserEstoreSpb.fs" t="Include" />
         <e p="ParserEten.fs" t="Include" />
+        <e p="ParserForScience.fs" t="Include" />
         <e p="ParserGosYakut.fs" t="Include" />
         <e p="ParserIrkutskOil.fs" t="Include" />
         <e p="ParserKg.fs" t="Include" />
@@ -78,6 +79,7 @@
         <e p="TenderEshopRzd.fs" t="Include" />
         <e p="TenderEstoreSpb.fs" t="Include" />
         <e p="TenderEten.fs" t="Include" />
+        <e p="TenderForScience.fs" t="Include" />
         <e p="TenderGosYakut.fs" t="Include" />
         <e p="TenderIrkutskOil.fs" t="Include" />
         <e p="TenderKg.fs" t="Include" />

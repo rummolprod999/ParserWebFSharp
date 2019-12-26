@@ -47,6 +47,7 @@ type Arguments =
     | EstoreSpb
     | RosAgro
     | NeftReg
+    | ForScience
 
 type SlavNeft =
     | MEGION
@@ -405,3 +406,13 @@ type NeftRegRec =
       Nmck: string
       PwName: string
       Status: string}
+
+type ForScienceRec =
+    { Href: string
+      DateEnd: DateTime
+      DatePub: DateTime
+      PurNum: string
+      PurName: string
+      OrgName: string
+      Nmck: string
+      PwName: string}
