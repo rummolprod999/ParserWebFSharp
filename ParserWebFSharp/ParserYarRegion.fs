@@ -112,7 +112,7 @@ type ParserYarRegion(stn : Settings.T) =
                 let price = priceT.Replace("&nbsp;", "").Replace(",", ".").RegexDeleteWhitespace()
                 
                 let ten =
-                    { Href = href
+                    { YarRegionRec.Href = href
                       PurNum = purNum
                       PurName = purName
                       CusName = nameCus

@@ -103,6 +103,8 @@
     <Compile Include="ParserNeftReg.fs" />
     <Compile Include="TenderForScience.fs" />
     <Compile Include="ParserForScience.fs" />
+    <Compile Include="TenderVolgZmo.fs" />
+    <Compile Include="ParserVolgZmo.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

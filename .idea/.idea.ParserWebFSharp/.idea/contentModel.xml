@@ -60,6 +60,7 @@
         <e p="ParserTsm.fs" t="Include" />
         <e p="ParserTurk.fs" t="Include" />
         <e p="ParserVend.fs" t="Include" />
+        <e p="ParserVolgZmo.fs" t="Include" />
         <e p="ParserWebFSharp.fsproj" t="IncludeRecursive" />
         <e p="ParserYarRegion.fs" t="Include" />
         <e p="Program.fs" t="Include" />
@@ -108,6 +109,7 @@
         <e p="TenderTsm.fs" t="Include" />
         <e p="TenderTurk.fs" t="Include" />
         <e p="TenderVend.fs" t="Include" />
+        <e p="TenderVolgZmo.fs" t="Include" />
         <e p="TenderYarRegion.fs" t="Include" />
         <e p="ToolsFun.fs" t="Include" />
         <e p="TypeExtensions.fs" t="Include" />
