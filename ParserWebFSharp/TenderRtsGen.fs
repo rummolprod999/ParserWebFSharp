@@ -134,19 +134,21 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
 
 
     member private this.GetAttachments(con: MySqlConnection, idTender: int, purNum: string) =
-        let page = Download.DownloadStringRts <| sprintf "https://zmo-new-webapi.rts-tender.ru/api/Trade/%s/GetTradeDocuments" purNum
-        if page <> "" then
-            let json = JArray.Parse(page)
-            for att in json do
-                if att.SelectToken("FileName") <> null && att.SelectToken("Url") <> null then
-                    let addAttach =
-                        sprintf "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url" 
-                            stn.Prefix
-                    let cmd5 = new MySqlCommand(addAttach, con)
-                    cmd5.Parameters.AddWithValue("@id_tender", idTender) |> ignore
-                    cmd5.Parameters.AddWithValue("@file_name", ((string)(att.SelectToken("FileName")))) |> ignore
-                    cmd5.Parameters.AddWithValue("@url", (string)(att.SelectToken("Url"))) |> ignore
-                    cmd5.ExecuteNonQuery() |> ignore
+        try
+            let page = Download.DownloadStringRts <| sprintf "https://zmo-new-webapi.rts-tender.ru/api/Trade/%s/GetTradeDocuments" purNum
+            if page <> "" then
+                let json = JArray.Parse(page)
+                for att in json do
+                    if att.SelectToken("FileName") <> null && att.SelectToken("Url") <> null then
+                        let addAttach =
+                            sprintf "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url" 
+                                stn.Prefix
+                        let cmd5 = new MySqlCommand(addAttach, con)
+                        cmd5.Parameters.AddWithValue("@id_tender", idTender) |> ignore
+                        cmd5.Parameters.AddWithValue("@file_name", ((string)(att.SelectToken("FileName")))) |> ignore
+                        cmd5.Parameters.AddWithValue("@url", (string)(att.SelectToken("Url"))) |> ignore
+                        cmd5.ExecuteNonQuery() |> ignore
+        with ex -> Logging.Log.logger (ex) 
 
         ()
     member private this.GetLots(con: MySqlConnection, idTender: int, doc: HtmlDocument) =
