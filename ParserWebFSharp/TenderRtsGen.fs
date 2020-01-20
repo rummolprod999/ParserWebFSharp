@@ -1,11 +1,14 @@
 namespace ParserWeb
 
 open MySql.Data.MySqlClient
+open Newtonsoft.Json
+open Newtonsoft.Json.Linq
 open System
 open System.Data
 open TypeE
 open HtmlAgilityPack
 open Tools
+open System.Web
 
 type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, etpUrl: string) =
     inherit Tender(etpName, etpUrl)
@@ -40,7 +43,8 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
                         let (cancelStatus, updated) = this.SetCancelStatus(con, dateUpd)
                         let Printform = tn.Href
                         let IdOrg = ref 0
-                        let orgName = nav.Gsn "//label[contains(., 'Наименование организации')]/following-sibling::span/a"
+                        let orgName = nav.Gsn "//td[contains(., 'Полное наименование')]/following-sibling::td/a"
+                        let orgName = HttpUtility.HtmlDecode(orgName)
                         let orgName = if orgName <> "" then orgName else tn.OrgName
                         if orgName <> "" then
                             let selectOrg = sprintf "SELECT id_organizer FROM %sorganizer WHERE full_name = @full_name" stn.Prefix
@@ -56,12 +60,12 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
                             | false ->
                                 reader.Close()
                                 let addOrganizer = sprintf "INSERT INTO %sorganizer SET full_name = @full_name, contact_person = @contact_person, post_address = @post_address, fact_address = @fact_address, contact_phone = @contact_phone, inn = @inn, contact_email = @contact_email" stn.Prefix
-                                let contactPerson = InlineHtmlNavigator nav "//label[contains(., 'Ответственное должностное лицо')]/following-sibling::span"
-                                let postAddress = InlineHtmlNavigator nav "//label[contains(., 'Почтовый адрес')]/following-sibling::span"
-                                let factAddress = InlineHtmlNavigator nav "//label[contains(., 'Место нахождения')]/following-sibling::span"
-                                let phone = InlineHtmlNavigator nav "//label[contains(., 'Телефон')]/following-sibling::span"
-                                let inn = InlineHtmlNavigator nav "//label[contains(., 'ИНН организации')]/following-sibling::span"
-                                let email = InlineHtmlNavigator nav "//label[contains(., 'E-mail адрес')]/following-sibling::span"
+                                let contactPerson = InlineHtmlNavigator nav "//td[contains(., 'ФИО контактного лица')]/following-sibling::td"
+                                let postAddress = InlineHtmlNavigator nav "//td[contains(., 'Адрес места нахождения')]/following-sibling::td"
+                                let factAddress = InlineHtmlNavigator nav "//td[contains(., 'Адрес места нахождения')]/following-sibling::td"
+                                let phone = InlineHtmlNavigator nav "//td[contains(., 'Контактный телефон')]/following-sibling::td"
+                                let inn = InlineHtmlNavigator nav "//td[contains(., 'ИНН')]/following-sibling::td"
+                                let email = ""
                                 let cmd5 = new MySqlCommand(addOrganizer, con)
                                 cmd5.Parameters.AddWithValue("@full_name", orgName) |> ignore
                                 cmd5.Parameters.AddWithValue("@contact_person", contactPerson) |> ignore
@@ -116,6 +120,7 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
                         match updated with
                         | true -> incr TenderRtsGen.tenderUpCount
                         | false -> incr TenderRtsGen.tenderCount
+                        this.GetAttachments(con, !idTender, tn.PurNum)
                         this.GetLots(con, !idTender, htmlDoc)
                         this.AddVerNumber con tn.PurNum stn typeFz
                         this.TenderKwords con (!idTender) stn
@@ -128,21 +133,34 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
         ()
 
 
+    member private this.GetAttachments(con: MySqlConnection, idTender: int, purNum: string) =
+        let page = Download.DownloadStringRts <| sprintf "https://zmo-new-webapi.rts-tender.ru/api/Trade/%s/GetTradeDocuments" purNum
+        if page <> "" then
+            let json = JArray.Parse(page)
+            for att in json do
+                if att.SelectToken("FileName") <> null && att.SelectToken("Url") <> null then
+                    let addAttach =
+                        sprintf "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url" 
+                            stn.Prefix
+                    let cmd5 = new MySqlCommand(addAttach, con)
+                    cmd5.Parameters.AddWithValue("@id_tender", idTender) |> ignore
+                    cmd5.Parameters.AddWithValue("@file_name", ((string)(att.SelectToken("FileName")))) |> ignore
+                    cmd5.Parameters.AddWithValue("@url", (string)(att.SelectToken("Url"))) |> ignore
+                    cmd5.ExecuteNonQuery() |> ignore
 
+        ()
     member private this.GetLots(con: MySqlConnection, idTender: int, doc: HtmlDocument) =
-        let lots = doc.DocumentNode.SelectNodes("//div[@id = 'tradeLotsList']/div[@class = 'tradeLotInfo labelminwidth']")
+        
         let lotNum = ref 1
-        if lots <> null then
-            for l in lots do
-                try
-                    this.Lot(con, idTender, l, !lotNum)
-                    incr lotNum
-                with ex -> Logging.Log.logger (ex)             
+        try
+            this.Lot(con, idTender, doc.DocumentNode, !lotNum)
+            incr lotNum
+        with ex -> Logging.Log.logger (ex)             
         ()
 
     member private this.Lot(con: MySqlConnection, idTender: int, l: HtmlNode, lotNum: int) =
-        let currency = l.Gsn ".//label[contains(., 'Валюта')]/following-sibling::span"
-        let nmckT = l.Gsn ".//label[contains(., 'Начальная (максимальная) цена')]/following-sibling::span"
+        let currency = "руб."
+        let nmckT = l.Gsn "//td[contains(., 'НМЦК, руб.')]/following-sibling::td"
         let nmck = nmckT.GetPriceFromString()
         let nmck = if nmck <> "" then nmck else tn.Nmck
         let idLot = ref 0
@@ -154,8 +172,9 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
         cmd12.Parameters.AddWithValue("@currency", currency) |> ignore
         cmd12.ExecuteNonQuery() |> ignore
         idLot := int cmd12.LastInsertedId
-        let lotName = l.Gsn ".//label[contains(., 'Наименование')]/following-sibling::span"
-        let cusName = l.Gsn ".//label[contains(., 'Заказчик')]/following-sibling::span"
+        let lotName = l.Gsn "//td[contains(., 'Наименование')]/following-sibling::td"
+        let cusName = l.Gsn "//td[contains(., 'Полное наименование')]/following-sibling::td/a"
+        let cusName = HttpUtility.HtmlDecode(cusName)
         let cusName = if cusName <> "" then cusName else tn.OrgName
         let idCustomer = ref 0
         if cusName <> "" then
@@ -176,7 +195,7 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
                     sprintf "INSERT INTO %scustomer SET reg_num = @reg_num, full_name = @full_name, inn = @inn"
                         stn.Prefix
                 let RegNum = Guid.NewGuid().ToString()
-                let inn = ""
+                let inn = l.Gsn "//td[contains(., 'ИНН')]/following-sibling::td"
                 let cmd14 = new MySqlCommand(insertCustomer, con)
                 cmd14.Prepare()
                 cmd14.Parameters.AddWithValue("@reg_num", RegNum) |> ignore
@@ -184,15 +203,16 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
                 cmd14.Parameters.AddWithValue("@inn", inn) |> ignore
                 cmd14.ExecuteNonQuery() |> ignore
                 idCustomer := int cmd14.LastInsertedId
-        let delivPlace = l.Gsn ".//label[contains(., 'Место поставки товара, выполнения работ, оказания услуг')]/following-sibling::span"
-        let applAmount = l.Gsn ".//label[contains(., 'Обеспечение заявки')]/following-sibling::span"
+        let delivPlace = l.Gsn "//td[contains(., 'Место поставки')]/following-sibling::td"
+        let delivTerm = l.Gsn "//td[contains(., 'Сроки поставки')]/following-sibling::td"
+        let applAmount = ""
         let applAmount = applAmount.GetPriceFromString()
-        let contrAmount = l.Gsn ".//label[contains(., 'Обеспечение договора')]/following-sibling::span"
+        let contrAmount = ""
         let contrAmount = contrAmount.GetPriceFromString()
-        if delivPlace <> "" then
+        if delivPlace <> "" || delivTerm <> "" then
             let insertCustomerRequirement =
                 sprintf
-                    "INSERT INTO %scustomer_requirement SET id_lot = @id_lot, id_customer = @id_customer, delivery_place = @delivery_place, application_guarantee_amount = @application_guarantee_amount, contract_guarantee_amount = @contract_guarantee_amount"
+                    "INSERT INTO %scustomer_requirement SET id_lot = @id_lot, id_customer = @id_customer, delivery_place = @delivery_place, application_guarantee_amount = @application_guarantee_amount, contract_guarantee_amount = @contract_guarantee_amount, delivery_term = @delivery_term"
                     stn.Prefix
             let cmd16 = new MySqlCommand(insertCustomerRequirement, con)
             cmd16.Prepare()
@@ -201,25 +221,27 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
             cmd16.Parameters.AddWithValue("@delivery_place", delivPlace) |> ignore
             cmd16.Parameters.AddWithValue("@application_guarantee_amount", applAmount) |> ignore
             cmd16.Parameters.AddWithValue("@contract_guarantee_amount", contrAmount) |> ignore
+            cmd16.Parameters.AddWithValue("@delivery_term", delivTerm) |> ignore
             cmd16.ExecuteNonQuery() |> ignore
-        let purObjects = l.SelectNodes (".//table[@class = 'static-table' and contains(., 'ОКПД2')]//tr[not(contains(., 'ОКПД2'))]")
+        let purObjects = l.SelectNodes (".//table[contains(., 'Код классификатора')]/following-sibling::div//table/tbody/tr")
         if purObjects <> null then
             for po in purObjects do
-                let namePo = po.Gsn("./td[1]")
+                let namePo = po.Gsn("./td[2]")
                 let namePo = if namePo <> "" then namePo else lotName
-                let addInfo = po.Gsn("./td[6]")
-                let namePo = (sprintf "%s %s" namePo addInfo).Trim()
-                let okpdName = po.Gsn("./td[2]")
+                let namePo = (sprintf "%s" namePo).Trim()
+                let okpdName = po.Gsn("./td[3]")
                 let okei = po.Gsn("./td[4]")
                 let quantity = po.Gsn("./td[5]").GetPriceFromString()
+                let price = po.Gsn("./td[6]").GetPriceFromString()
+                let sum = po.Gsn("./td[7]").GetPriceFromString()
                 let insertLotitem = sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum, price = @price, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, okpd_name = @okpd_name" stn.Prefix
                 let cmd19 = new MySqlCommand(insertLotitem, con)
                 cmd19.Prepare()
                 cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
                 cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
                 cmd19.Parameters.AddWithValue("@name", namePo) |> ignore
-                cmd19.Parameters.AddWithValue("@sum", "") |> ignore
-                cmd19.Parameters.AddWithValue("@price", "") |> ignore
+                cmd19.Parameters.AddWithValue("@sum", sum) |> ignore
+                cmd19.Parameters.AddWithValue("@price", price) |> ignore
                 cmd19.Parameters.AddWithValue("@quantity_value", quantity) |> ignore
                 cmd19.Parameters.AddWithValue("@customer_quantity_value", quantity) |> ignore
                 cmd19.Parameters.AddWithValue("@okei", okei) |> ignore
