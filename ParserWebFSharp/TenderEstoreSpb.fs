@@ -7,6 +7,7 @@ open System.Data
 open Tools
 open TypeE
 open System.Collections.Generic
+open System.Web
 
 type TenderEstoreSpb(stn: Settings.T, tn: EstoreSpbRec, typeFz: int, etpName: string, etpUrl: string) =
     inherit Tender(etpName, etpUrl)
@@ -209,6 +210,22 @@ type TenderEstoreSpb(stn: Settings.T, tn: EstoreSpbRec, typeFz: int, etpName: st
                     try 
                         let docName = doc.InnerText
                         let docUrl = doc.getAttrWithoutException ("href")
+                        if docName <> "" && docUrl <> "" then 
+                            let d =
+                                { name = docName.RegexCutWhitespace()
+                                  url = sprintf "https://estore.gz-spb.ru%s" docUrl }
+                            docList.Add(d)
+                    with ex -> Logging.Log.logger ex
+            let docs = doc.DocumentNode.SelectNodes("//button[@name = 'submit_viewStandartContract']")
+            match docs with
+            | null -> ()
+            | _ -> 
+                for doc in docs do
+                    try 
+                        let docName = doc.InnerText
+                        let docUrl = doc.getAttrWithoutException ("onclick")
+                        let docUrl = HttpUtility.HtmlDecode(docUrl)
+                        let docUrl = docUrl.Replace(@"window.location.href = ""\", "").Replace("\"", "")
                         if docName <> "" && docUrl <> "" then 
                             let d =
                                 { name = docName.RegexCutWhitespace()
