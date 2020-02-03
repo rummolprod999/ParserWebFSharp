@@ -49,6 +49,7 @@ type Arguments =
     | NeftReg
     | ForScience
     | VolgZmo
+    | Rusal
 
 type SlavNeft =
     | MEGION
@@ -427,3 +428,10 @@ type VolgZmoRec =
       CusName: string
       Nmck: string
       Status: string}
+
+type RusalRec =
+    { Href: string
+      DateEnd: DateTime
+      DatePub: DateTime
+      PurNum: string
+      PurName: string}

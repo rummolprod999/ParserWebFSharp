@@ -113,6 +113,8 @@ module Settings =
         let mutable LogPathTendersForScience = ""
         let mutable TempPathTendersVolgZmo = ""
         let mutable LogPathTendersVolgZmo = ""
+        let mutable TempPathTendersRusal = ""
+        let mutable LogPathTendersRusal = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -382,6 +384,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_volgzmo" then
                                     LogPathTendersVolgZmo <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_rusal" then
+                                    TempPathTendersRusal <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_rusal" then
+                                    LogPathTendersRusal <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -440,6 +448,7 @@ module Settings =
                 | NeftReg -> TempPathTendersNeftReg
                 | ForScience -> TempPathTendersForScience
                 | VolgZmo -> TempPathTendersVolgZmo
+                | Rusal -> TempPathTendersRusal
 
             let LogPathTenders =
                 match arg with
@@ -486,6 +495,7 @@ module Settings =
                 | NeftReg -> LogPathTendersNeftReg
                 | ForScience -> LogPathTendersForScience
                 | VolgZmo -> LogPathTendersVolgZmo
+                | Rusal -> LogPathTendersRusal
 
             { Database = Database
               TempPathTenders = TempPathTenders
