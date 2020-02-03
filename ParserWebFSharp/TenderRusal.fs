@@ -1,13 +1,8 @@
 namespace ParserWeb
 
-open HtmlAgilityPack
 open MySql.Data.MySqlClient
 open System
 open System.Data
-open Tools
-open TypeE
-open System.Collections.Generic
-open System.Web
 
 type TenderRusal(stn: Settings.T, tn: RusalRec, typeFz: int, etpName: string, etpUrl: string) =
     inherit Tender(etpName, etpUrl)
