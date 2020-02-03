@@ -22,6 +22,7 @@ module Download =
                 let wr = base.GetWebRequest(address) :?> HttpWebRequest
                 wr.Timeout <- 60000
                 wr.UserAgent <- "Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots) Gecko/20100101 Firefox/55.0"
+                wr.AutomaticDecompression <- DecompressionMethods.GZip ||| DecompressionMethods.Deflate ||| DecompressionMethods.None
                 wr :> WebRequest
     
     type TimedWebClientRtsGen() =
@@ -30,6 +31,7 @@ module Download =
                 let wr = base.GetWebRequest(address) :?> HttpWebRequest
                 wr.Timeout <- 60000
                 wr.UserAgent <- "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.110 Safari/537.36 Vivaldi/2.7.1628.30"
+                wr.AutomaticDecompression <- DecompressionMethods.GZip ||| DecompressionMethods.Deflate ||| DecompressionMethods.None
                 wr :> WebRequest
     type TimedWebClientCookies() =
         inherit WebClient()
