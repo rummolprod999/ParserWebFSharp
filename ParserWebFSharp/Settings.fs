@@ -115,6 +115,8 @@ module Settings =
         let mutable LogPathTendersVolgZmo = ""
         let mutable TempPathTendersRusal = ""
         let mutable LogPathTendersRusal = ""
+        let mutable TempPathTendersMoek = ""
+        let mutable LogPathTendersMoek = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -390,6 +392,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_rusal" then
                                     LogPathTendersRusal <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_moek" then
+                                    TempPathTendersMoek <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_moek" then
+                                    LogPathTendersMoek <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -449,6 +457,7 @@ module Settings =
                 | ForScience -> TempPathTendersForScience
                 | VolgZmo -> TempPathTendersVolgZmo
                 | Rusal -> TempPathTendersRusal
+                | Moek -> TempPathTendersMoek
 
             let LogPathTenders =
                 match arg with
@@ -496,6 +505,7 @@ module Settings =
                 | ForScience -> LogPathTendersForScience
                 | VolgZmo -> LogPathTendersVolgZmo
                 | Rusal -> LogPathTendersRusal
+                | Moek -> LogPathTendersMoek
 
             { Database = Database
               TempPathTenders = TempPathTenders

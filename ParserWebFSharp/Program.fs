@@ -7,7 +7,7 @@ module Start =
     [<EntryPoint>]
     let main argv =
         let arguments =
-            "irkutskoil, akd, lsr, butb, rossel, neft, slav, aero, stroytorgi, asgor, gosyakut, rostend, chpt, tplus, sibserv, tguru, bidmart, comita, eshoprzd, yarregion, btg, vend, pik, nornic, tenderer, samolet, ariba, beeline, tsm, smart, rtsgen, tj, turk, kg, eten, cislink, petr, mpkz, estorespb, rosagro, neftreg, forscience, volgzmo, rusal"
+            "irkutskoil, akd, lsr, butb, rossel, neft, slav, aero, stroytorgi, asgor, gosyakut, rostend, chpt, tplus, sibserv, tguru, bidmart, comita, eshoprzd, yarregion, btg, vend, pik, nornic, tenderer, samolet, ariba, beeline, tsm, smart, rtsgen, tj, turk, kg, eten, cislink, petr, mpkz, estorespb, rosagro, neftreg, forscience, volgzmo, rusal, moek"
         if argv.Length = 0 then
             printf "Bad arguments, use %s" arguments
             Environment.Exit(1)
@@ -187,6 +187,10 @@ module Start =
         | "rusal" ->
             let settings = Settings.getSettings (Rusal)
             let p = Init(settings, Rusal)
+            p.Parsing()
+        | "moek" ->
+            let settings = Settings.getSettings (Moek)
+            let p = Init(settings, Moek)
             p.Parsing()
         | _ ->
             printf "Bad arguments, use %s" arguments

@@ -50,6 +50,7 @@ type Arguments =
     | ForScience
     | VolgZmo
     | Rusal
+    | Moek
 
 type SlavNeft =
     | MEGION
@@ -435,3 +436,12 @@ type RusalRec =
       DatePub: DateTime
       PurNum: string
       PurName: string}
+
+type MoekRec =
+    { Href: string
+      DateEnd: DateTime
+      DatePub: DateTime
+      PurNum: string
+      PurName: string
+      OrgName: string
+      CusName: string}
