@@ -71,6 +71,7 @@ type Init(s: Settings.T, arg: Arguments) =
         | VolgZmo -> this.ParsingVolgZmo()
         | Rusal -> this.ParsingRusal()
         | Moek -> this.ParsingMoek()
+        | Kamaz -> this.ParsingKamaz()
 
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -499,6 +500,15 @@ type Init(s: Settings.T, arg: Arguments) =
             Logging.Log.logger "Конец парсинга"
             Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderMoek.tenderCount)
             Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderMoek.tenderUpCount)
+    
+    member private this.ParsingKamaz() =
+            Logging.Log.logger "Начало парсинга"
+            try
+                 this.GetParser(ParserKamaz(s))
+            with ex -> Logging.Log.logger ex
+            Logging.Log.logger "Конец парсинга"
+            Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderKamaz.tenderCount)
+            Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderKamaz.tenderUpCount)
         
     member private this.GetParser(p: Parser) = p.Parsing()
 

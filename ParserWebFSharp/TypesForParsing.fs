@@ -51,6 +51,7 @@ type Arguments =
     | VolgZmo
     | Rusal
     | Moek
+    | Kamaz
 
 type SlavNeft =
     | MEGION
@@ -445,3 +446,16 @@ type MoekRec =
       PurName: string
       OrgName: string
       CusName: string}
+
+type KamazRec =
+    { Href: string
+      DateEnd: DateTime
+      DatePub: DateTime
+      DateScoring: DateTime
+      PurNum: string
+      PurName: string
+      OrgName: string
+      OrgPhone: string
+      OrgEmail: string
+      OrgPerson: string
+      Period: string}
