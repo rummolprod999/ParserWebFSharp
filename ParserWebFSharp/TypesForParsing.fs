@@ -52,6 +52,7 @@ type Arguments =
     | Rusal
     | Moek
     | Kamaz
+    | Uni
 
 type SlavNeft =
     | MEGION
@@ -459,3 +460,10 @@ type KamazRec =
       OrgEmail: string
       OrgPerson: string
       Period: string}
+
+type UniRec =
+    { Href: string
+      DateEnd: DateTime
+      DatePub: DateTime
+      PurNum: string
+      PurName: string}

@@ -3,7 +3,6 @@
   <component name="ContentModelStore">
     <e p="$APPLICATION_CONFIG_DIR$/consoles/db" t="IncludeRecursive" />
     <e p="$APPLICATION_CONFIG_DIR$/extensions" t="IncludeRecursive" />
-    <e p="$APPLICATION_CONFIG_DIR$/scratches" t="IncludeRecursive" />
     <e p="$USER_HOME$/.Rider2019.3/system/extResources" t="IncludeRecursive" />
     <e p="$USER_HOME$/.Rider2019.3/system/resharper-host/local/Transient/ReSharperHost/v193/SolutionCaches/_ParserWebFSharp.1417816402.00" t="ExcludeRecursive" />
     <e p="$USER_HOME$/.Rider2019.3/system/rust_expanded_macros/PhTdRrKo/expansions" t="IncludeRecursive" />
@@ -62,6 +61,7 @@
         <e p="ParserTj.fs" t="Include" />
         <e p="ParserTsm.fs" t="Include" />
         <e p="ParserTurk.fs" t="Include" />
+        <e p="ParserUni.fs" t="Include" />
         <e p="ParserVend.fs" t="Include" />
         <e p="ParserVolgZmo.fs" t="Include" />
         <e p="ParserWebFSharp.fsproj" t="IncludeRecursive" />
@@ -114,6 +114,7 @@
         <e p="TenderTj.fs" t="Include" />
         <e p="TenderTsm.fs" t="Include" />
         <e p="TenderTurk.fs" t="Include" />
+        <e p="TenderUni.fs" t="Include" />
         <e p="TenderVend.fs" t="Include" />
         <e p="TenderVolgZmo.fs" t="Include" />
         <e p="TenderYarRegion.fs" t="Include" />

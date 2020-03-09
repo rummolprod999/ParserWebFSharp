@@ -10,11 +10,11 @@ open System.Linq.Expressions
 open System.Web
 open Tools
 
-type ParserRusal(stn: Settings.T) =
+type ParserUni(stn: Settings.T) =
     inherit Parser()
     let set = stn
 
-    let urls = [|"https://rusal.ru/suppliers/selection/build/build_list/?mode=curr"; "https://rusal.ru/suppliers/selection/freight/freight_list/?mode=curr"; "https://rusal.ru/suppliers/selection/transport/transport_list/?mode=curr"; "https://rusal.ru/suppliers/selection/ports/ports_list/?mode=curr"; "https://rusal.ru/suppliers/selection/other/other_list/?mode=curr"; "https://rusal.ru/suppliers/selection/mtr/mtr_list/?mode=curr"|]
+    let urls = [|"https://unistream.ru/bank/about/tenders/"|]
 
     override __.Parsing() =
         for url in urls do
@@ -31,7 +31,7 @@ type ParserRusal(stn: Settings.T) =
         | s ->
             let parser = new HtmlParser()
             let documents = parser.Parse(s)
-            let tens = documents.QuerySelectorAll("table.rgMasterTable tr[id ^= 'bx_']").ToList()
+            let tens = documents.QuerySelectorAll("div.item.document-list__item").ToList()
             for t in tens do
                     try
                         __.ParsingTender t url
@@ -42,20 +42,20 @@ type ParserRusal(stn: Settings.T) =
     member private __.ParsingTender (t: IElement) (url: string) =
         let builder = DocumentBuilder()
         let res = builder {
-            let! href = t.GsnAtrDocWithError "td a" "href" <| sprintf "href not found %s %s " url (t.TextContent)
-            let href = sprintf "https://rusal.ru%s" href
-            let! purName = t.GsnDocWithError "td a" <| sprintf "purName not found %s %s " url (t.TextContent)
-            let! purNum = t.GsnDocWithError "td:nth-of-type(2)" <| sprintf "purNum not found %s %s " url (t.TextContent)
-            let! datePubT = t.GsnDocWithError "td:nth-of-type(1)" <| sprintf "datePubT not found %s %s " url (t.TextContent)
-            let! datePub = datePubT.DateFromStringDoc ("dd.MM.yyyy", sprintf "datePub not found %s %s " href datePubT)
-            let! endDateT = t.GsnDocWithError "td:nth-of-type(6)" <| sprintf "endDateT not found %s %s " url (t.TextContent)
+            let! href = t.GsnAtrDocWithError "div a" "href" <| sprintf "href not found %s %s " url (t.TextContent)
+            let href = sprintf "https://unistream.ru%s" href
+            let! purName = t.GsnDocWithError "div a" <| sprintf "purName not found %s %s " url (t.TextContent)
+            let purNum = Tools.createMD5 href
+            let datePub = DateTime.Now
+            let! dateEndT = t.GsnDocWithError "div.description.document-list__description" <| sprintf "dateEndT not found %s %s " url (t.TextContent)
+            let! endDateT = dateEndT.Get1OptionalDoc "(?<=\s)(\d{2}.\d{2}.\d{4})"
             let! dateEnd = endDateT.DateFromStringDoc ("dd.MM.yyyy", sprintf "dateEnd not found %s %s " href endDateT)
-            let tend = {  RusalRec.Href = href
+            let tend = {  UniRec.Href = href
                           DateEnd = dateEnd
                           DatePub = datePub
                           PurNum = purNum
                           PurName = purName}
-            let T = TenderRusal(set, tend, 236, "ОК РУСАЛ", "https://rusal.ru/")
+            let T = TenderUni(set, tend, 243, "АО КБ «Юнистрим»", "https://unistream.ru/")
             T.Parsing()
             return ""
         }
@@ -65,3 +65,4 @@ type ParserRusal(stn: Settings.T) =
                 | Err r -> Logging.Log.logger r
         
         ()
+
