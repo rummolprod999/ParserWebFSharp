@@ -34,6 +34,7 @@
         <e p="ParserIrkutskOil.fs" t="Include" />
         <e p="ParserKamaz.fs" t="Include" />
         <e p="ParserKg.fs" t="Include" />
+        <e p="ParserKsk.fs" t="Include" />
         <e p="ParserLsr.fs" t="Include" />
         <e p="ParserMoek.fs" t="Include" />
         <e p="ParserMpKz.fs" t="Include" />
@@ -88,6 +89,7 @@
         <e p="TenderIrkutskOil.fs" t="Include" />
         <e p="TenderKamaz.fs" t="Include" />
         <e p="TenderKg.fs" t="Include" />
+        <e p="TenderKsk.fs" t="Include" />
         <e p="TenderLsr.fs" t="Include" />
         <e p="TenderMoek.fs" t="Include" />
         <e p="TenderMpKz.fs" t="Include" />

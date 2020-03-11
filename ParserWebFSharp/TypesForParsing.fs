@@ -2,6 +2,7 @@ namespace ParserWeb
 
 open System
 open System.Collections.Generic
+open AngleSharp.Dom
 
 type TZ = | PST | PDT
 
@@ -53,6 +54,7 @@ type Arguments =
     | Moek
     | Kamaz
     | Uni
+    | Ksk
 
 type SlavNeft =
     | MEGION
@@ -467,3 +469,14 @@ type UniRec =
       DatePub: DateTime
       PurNum: string
       PurName: string}
+
+type KskRec =
+    { Href: string
+      DateEnd: DateTime
+      DatePub: DateTime
+      PurNum: string
+      PurName: string
+      Status: string
+      PwName: string
+      Nmck: string
+      DocList: List<IElement>}

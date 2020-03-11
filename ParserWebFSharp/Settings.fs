@@ -121,6 +121,8 @@ module Settings =
         let mutable LogPathTendersKamaz = ""
         let mutable TempPathTendersUni = ""
         let mutable LogPathTendersUni = ""
+        let mutable TempPathTendersKsk = ""
+        let mutable LogPathTendersKsk = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -414,6 +416,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_unistream" then
                                     LogPathTendersUni <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_ksk" then
+                                    TempPathTendersKsk <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_ksk" then
+                                    LogPathTendersKsk <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -476,6 +484,7 @@ module Settings =
                 | Moek -> TempPathTendersMoek
                 | Kamaz -> TempPathTendersKamaz
                 | Uni -> TempPathTendersUni
+                | Ksk -> TempPathTendersKsk
 
             let LogPathTenders =
                 match arg with
@@ -526,6 +535,7 @@ module Settings =
                 | Moek -> LogPathTendersMoek
                 | Kamaz -> LogPathTendersKamaz
                 | Uni -> LogPathTendersUni
+                | Ksk -> LogPathTendersKsk
 
             { Database = Database
               TempPathTenders = TempPathTenders
