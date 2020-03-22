@@ -125,6 +125,8 @@ module Settings =
         let mutable LogPathTendersKsk = ""
         let mutable TempPathTendersGmt = ""
         let mutable LogPathTendersGmt = ""
+        let mutable TempPathTendersYmz = ""
+        let mutable LogPathTendersYmz = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -430,6 +432,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_gmt" then
                                     LogPathTendersGmt <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_ymz" then
+                                    TempPathTendersYmz <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_ymz" then
+                                    LogPathTendersYmz <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -494,6 +502,7 @@ module Settings =
                 | Uni -> TempPathTendersUni
                 | Ksk -> TempPathTendersKsk
                 | Gmt -> TempPathTendersGmt
+                | Ymz -> TempPathTendersYmz
 
             let LogPathTenders =
                 match arg with
@@ -546,6 +555,7 @@ module Settings =
                 | Uni -> LogPathTendersUni
                 | Ksk -> LogPathTendersKsk
                 | Gmt -> LogPathTendersGmt
+                | Ymz -> LogPathTendersYmz
 
             { Database = Database
               TempPathTenders = TempPathTenders

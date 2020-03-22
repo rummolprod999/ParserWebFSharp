@@ -117,6 +117,8 @@
     <Compile Include="ParserKsk.fs" />
     <Compile Include="TenderGmt.fs" />
     <Compile Include="ParserGmt.fs" />
+    <Compile Include="TenderYmz.fs" />
+    <Compile Include="ParserYmz.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

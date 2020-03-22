@@ -56,6 +56,7 @@ type Arguments =
     | Uni
     | Ksk
     | Gmt
+    | Ymz
 
 type SlavNeft =
     | MEGION
@@ -489,3 +490,10 @@ type GmtRec =
       PurNum: string
       PurName: string
       PwName: string}
+
+type YmzRec =
+    { Href: string
+      DateEnd: DateTime
+      DatePub: DateTime
+      PurNum: string
+      PurName: string}
