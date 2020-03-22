@@ -123,6 +123,8 @@ module Settings =
         let mutable LogPathTendersUni = ""
         let mutable TempPathTendersKsk = ""
         let mutable LogPathTendersKsk = ""
+        let mutable TempPathTendersGmt = ""
+        let mutable LogPathTendersGmt = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -422,6 +424,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_ksk" then
                                     LogPathTendersKsk <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_gmt" then
+                                    TempPathTendersGmt <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_gmt" then
+                                    LogPathTendersGmt <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -485,6 +493,7 @@ module Settings =
                 | Kamaz -> TempPathTendersKamaz
                 | Uni -> TempPathTendersUni
                 | Ksk -> TempPathTendersKsk
+                | Gmt -> TempPathTendersGmt
 
             let LogPathTenders =
                 match arg with
@@ -536,6 +545,7 @@ module Settings =
                 | Kamaz -> LogPathTendersKamaz
                 | Uni -> LogPathTendersUni
                 | Ksk -> LogPathTendersKsk
+                | Gmt -> LogPathTendersGmt
 
             { Database = Database
               TempPathTenders = TempPathTenders

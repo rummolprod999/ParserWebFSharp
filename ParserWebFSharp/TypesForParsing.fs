@@ -55,6 +55,7 @@ type Arguments =
     | Kamaz
     | Uni
     | Ksk
+    | Gmt
 
 type SlavNeft =
     | MEGION
@@ -480,3 +481,11 @@ type KskRec =
       PwName: string
       Nmck: string
       DocList: List<IElement>}
+
+type GmtRec =
+    { Href: string
+      DateEnd: DateTime
+      DatePub: DateTime
+      PurNum: string
+      PurName: string
+      PwName: string}

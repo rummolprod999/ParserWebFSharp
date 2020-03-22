@@ -5,7 +5,6 @@
     <e p="$APPLICATION_CONFIG_DIR$/extensions" t="IncludeRecursive" />
     <e p="$USER_HOME$/.Rider2019.3/system/extResources" t="IncludeRecursive" />
     <e p="$USER_HOME$/.Rider2019.3/system/resharper-host/local/Transient/ReSharperHost/v193/SolutionCaches/_ParserWebFSharp.1417816402.00" t="ExcludeRecursive" />
-    <e p="$USER_HOME$/.Rider2019.3/system/rust_expanded_macros/PhTdRrKo/expansions" t="IncludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p=".git/info/exclude" t="IncludeRecursive" />
       <e p="ParserWebFSharp" t="IncludeRecursive">
@@ -30,6 +29,7 @@
         <e p="ParserEstoreSpb.fs" t="Include" />
         <e p="ParserEten.fs" t="Include" />
         <e p="ParserForScience.fs" t="Include" />
+        <e p="ParserGmt.fs" t="Include" />
         <e p="ParserGosYakut.fs" t="Include" />
         <e p="ParserIrkutskOil.fs" t="Include" />
         <e p="ParserKamaz.fs" t="Include" />
@@ -85,6 +85,7 @@
         <e p="TenderEstoreSpb.fs" t="Include" />
         <e p="TenderEten.fs" t="Include" />
         <e p="TenderForScience.fs" t="Include" />
+        <e p="TenderGmt.fs" t="Include" />
         <e p="TenderGosYakut.fs" t="Include" />
         <e p="TenderIrkutskOil.fs" t="Include" />
         <e p="TenderKamaz.fs" t="Include" />
@@ -130,5 +131,6 @@
       <e p="ParserWebFSharp.sln" t="IncludeFlat" />
       <e p="packages" t="ExcludeRecursive" />
     </e>
+    <e p="/rust_expanded_macros/PhTdRrKo" t="IncludeRecursive" />
   </component>
 </project>
