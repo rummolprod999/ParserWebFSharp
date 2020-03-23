@@ -14,7 +14,11 @@ module TypeE =
             try
                 Some(DateTime.ParseExact(this, pat, CultureInfo.InvariantCulture))
             with ex -> None
-
+        
+        member this.DateFromStringOrMin(pat: string) =
+            try
+                DateTime.ParseExact(this, pat, CultureInfo.InvariantCulture)
+            with ex -> DateTime.MinValue
         member this.DateFromString(pat: string, exc: string) =
             match this.DateFromString(pat) with
             | None -> Error(exc)
