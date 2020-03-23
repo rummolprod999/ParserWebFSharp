@@ -127,6 +127,8 @@ module Settings =
         let mutable LogPathTendersGmt = ""
         let mutable TempPathTendersYmz = ""
         let mutable LogPathTendersYmz = ""
+        let mutable TempPathTendersUnipro = ""
+        let mutable LogPathTendersUnipro = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -438,6 +440,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_ymz" then
                                     LogPathTendersYmz <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_unipro" then
+                                    TempPathTendersUnipro <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_unipro" then
+                                    LogPathTendersUnipro <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -503,6 +511,7 @@ module Settings =
                 | Ksk -> TempPathTendersKsk
                 | Gmt -> TempPathTendersGmt
                 | Ymz -> TempPathTendersYmz
+                | Unipro -> TempPathTendersUnipro
 
             let LogPathTenders =
                 match arg with
@@ -556,6 +565,7 @@ module Settings =
                 | Ksk -> LogPathTendersKsk
                 | Gmt -> LogPathTendersGmt
                 | Ymz -> LogPathTendersYmz
+                | Unipro -> LogPathTendersUnipro
 
             { Database = Database
               TempPathTenders = TempPathTenders

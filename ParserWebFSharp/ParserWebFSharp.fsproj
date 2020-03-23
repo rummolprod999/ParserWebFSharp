@@ -119,6 +119,8 @@
     <Compile Include="ParserGmt.fs" />
     <Compile Include="TenderYmz.fs" />
     <Compile Include="ParserYmz.fs" />
+    <Compile Include="TenderUnipro.fs" />
+    <Compile Include="ParserUnipro.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

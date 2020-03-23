@@ -57,6 +57,7 @@ type Arguments =
     | Ksk
     | Gmt
     | Ymz
+    | Unipro
 
 type SlavNeft =
     | MEGION
