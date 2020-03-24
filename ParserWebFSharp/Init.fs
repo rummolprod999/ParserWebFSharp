@@ -77,6 +77,7 @@ type Init(s: Settings.T, arg: Arguments) =
         | Gmt -> this.ParsingGmt()
         | Ymz -> this.ParsingYmz()
         | Unipro -> this.ParsingUnipro()
+        | Apps -> this.ParsingApps()
 
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -558,6 +559,15 @@ type Init(s: Settings.T, arg: Arguments) =
             with ex -> Logging.Log.logger ex
             Logging.Log.logger "Конец парсинга"
             Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderUnipro.tenderCount)
-            Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderUnipro.tenderUpCount) 
+            Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderUnipro.tenderUpCount)
+            
+    member private this.ParsingApps() =
+            Logging.Log.logger "Начало парсинга"
+            try
+                 this.GetParser(ParserApps(s))
+            with ex -> Logging.Log.logger ex
+            Logging.Log.logger "Конец парсинга"
+            Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderApps.tenderCount)
+            Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderApps.tenderUpCount) 
     member private this.GetParser(p: Parser) = p.Parsing()
 

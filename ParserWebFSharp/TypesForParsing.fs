@@ -58,6 +58,7 @@ type Arguments =
     | Gmt
     | Ymz
     | Unipro
+    | Apps
 
 type SlavNeft =
     | MEGION
@@ -498,3 +499,8 @@ type YmzRec =
       DatePub: DateTime
       PurNum: string
       PurName: string}
+    
+type AppsRec =
+    { Href: string
+      PurName: string
+      PurNum: string}

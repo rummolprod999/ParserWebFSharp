@@ -129,6 +129,8 @@ module Settings =
         let mutable LogPathTendersYmz = ""
         let mutable TempPathTendersUnipro = ""
         let mutable LogPathTendersUnipro = ""
+        let mutable TempPathTendersApps = ""
+        let mutable LogPathTendersApps = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -446,6 +448,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_unipro" then
                                     LogPathTendersUnipro <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_apps" then
+                                    TempPathTendersApps <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_apps" then
+                                    LogPathTendersApps <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -512,6 +520,7 @@ module Settings =
                 | Gmt -> TempPathTendersGmt
                 | Ymz -> TempPathTendersYmz
                 | Unipro -> TempPathTendersUnipro
+                | Apps -> TempPathTendersApps
 
             let LogPathTenders =
                 match arg with
@@ -566,6 +575,7 @@ module Settings =
                 | Gmt -> LogPathTendersGmt
                 | Ymz -> LogPathTendersYmz
                 | Unipro -> LogPathTendersUnipro
+                | Apps -> LogPathTendersApps
 
             { Database = Database
               TempPathTenders = TempPathTenders

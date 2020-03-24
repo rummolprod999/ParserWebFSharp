@@ -16,6 +16,7 @@
         <e p="Logging.fs" t="Include" />
         <e p="ParserAero.fs" t="Include" />
         <e p="ParserAkd.fs" t="Include" />
+        <e p="ParserApps.fs" t="Include" />
         <e p="ParserAriba.fs" t="Include" />
         <e p="ParserAsgor.fs" t="Include" />
         <e p="ParserBeeline.fs" t="Include" />
@@ -73,6 +74,7 @@
         <e p="Settings.fs" t="Include" />
         <e p="TenderAero.fs" t="Include" />
         <e p="TenderAkd.fs" t="Include" />
+        <e p="TenderApps.fs" t="Include" />
         <e p="TenderAriba.fs" t="Include" />
         <e p="TenderAsgor.fs" t="Include" />
         <e p="TenderBeeline.fs" t="Include" />
