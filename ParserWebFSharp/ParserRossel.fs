@@ -231,7 +231,7 @@ type ParserRossel(stn: Settings.T) =
             | x -> x.Text.Trim()
 
         let ten =
-            { Href = href
+            { RosSelRec.Href = href
               PurNum = purNum
               PurName = purName }
 

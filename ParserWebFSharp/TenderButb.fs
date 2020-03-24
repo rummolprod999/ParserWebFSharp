@@ -369,6 +369,7 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
             let cmd = new MySqlCommand(addReq, con)
             cmd.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
             cmd.Parameters.AddWithValue("@content", requirement) |> ignore
+            cmd.ExecuteNonQuery() |> ignore
         let okpd2 = this.GetDefaultFromNullS <| this.checkElement (elem, ".//td[2]/span")
         let name = this.GetDefaultFromNullS <| this.checkElement (elem, ".//td[3]/a/span")
         let quantityT = this.GetDefaultFromNullS <| this.checkElement (elem, ".//td[4]/span")
