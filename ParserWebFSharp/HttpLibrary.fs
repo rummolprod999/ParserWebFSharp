@@ -197,6 +197,30 @@ module Download =
                     Thread.Sleep(5000)
             s
 
+    let DownloadStringUtf8Bot url =
+            let mutable s = null
+            let count = ref 0
+            let mutable continueLooping = true
+
+            let getWebClient() =
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance)
+                let a = new TimedWebClientBot()
+                a
+            while continueLooping do
+                try
+                    //let t ():string = (new TimedWebClient()).DownloadString(url: Uri)
+                    let task = Task.Run(fun () -> (getWebClient()).DownloadString(url : string))
+                    if task.Wait(TimeSpan.FromSeconds(30.)) then
+                        s <- task.Result
+                        continueLooping <- false
+                    else raise <| new TimeoutException()
+                with _ ->
+                    if !count >= 5 then
+                        Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток" url !count)
+                        continueLooping <- false
+                    else incr count
+                    Thread.Sleep(5000)
+            s
     let DownloadFileSimple (url : string) (patharch : string) : FileInfo =
         let mutable ret = null
         let downCount = ref 0

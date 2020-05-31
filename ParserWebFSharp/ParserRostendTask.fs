@@ -24,7 +24,7 @@ type ParserRostendTask(stn : Settings.T) =
             with ex -> Logging.Log.logger ex
 
     member private this.ParserPage(url : string) =
-        let Page = Download.DownloadString1251Bot url
+        let Page = Download.DownloadStringUtf8Bot url
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", url)
         | s ->
@@ -61,19 +61,19 @@ type ParserRostendTask(stn : Settings.T) =
 
     member private this.AddTenderToList(t : IElement) =
         let PurName =
-            match t.QuerySelector("div.description a") with
+            match t.QuerySelector("div.tender-info a.description") with
             | null -> ""
             | ur -> ur.TextContent.Trim()
 
         let HrefT =
-            match t.QuerySelector("div.description a") with
+            match t.QuerySelector("div.tender-info a.description") with
             | null -> ""
             | ur -> ur.GetAttribute("href").Trim()
 
         let Href = sprintf "http://rostender.info%s" HrefT
 
         let PurNumT =
-            match t.QuerySelector("div.tender-info div.row  div:nth-of-type(1)") with
+            match t.QuerySelector("span.tender-number") with
             | null -> ""
             | ur -> ur.TextContent.Trim()
 
@@ -83,7 +83,7 @@ type ParserRostendTask(stn : Settings.T) =
             | None -> ""
 
         let mutable PubDateT =
-            match t.QuerySelector("div.tender-info div.row  div:nth-of-type(2) div") with
+            match t.QuerySelector("span.tender-date-info") with
             | null -> ""
             | ur -> ur.TextContent.Trim().RegexCutWhitespace()
 
