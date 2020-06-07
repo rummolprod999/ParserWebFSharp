@@ -365,11 +365,11 @@ type Init(s: Settings.T, arg: Arguments) =
     member private this.ParsingSmart() =
         Logging.Log.logger "Начало парсинга"
         try
-             this.GetParser(ParserSmart(s))
+             this.GetParser(ParserSmartNew(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
-        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderSmart.tenderCount)
-        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderSmart.tenderUpCount)
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderSmartNew.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderSmartNew.tenderUpCount)
 
     member private this.ParsingRtsGen() =
         Logging.Log.logger "Начало парсинга"

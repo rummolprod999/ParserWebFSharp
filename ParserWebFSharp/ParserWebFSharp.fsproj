@@ -5,9 +5,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ToolsFun.fs" />
+    <Compile Include="DocumentBuilderModule.fs" />
     <Compile Include="DocumentBuilder.fs" />
     <Compile Include="TenderBuilder.fs" />
     <Compile Include="TypeExtensions.fs" />
+    <Compile Include="NewtonExt.fs" />
     <Compile Include="TypesForParsing.fs" />
     <Compile Include="Settings.fs" />
     <Compile Include="Logging.fs" />
@@ -123,6 +125,8 @@
     <Compile Include="ParserUnipro.fs" />
     <Compile Include="TenderApps.fs" />
     <Compile Include="ParserApps.fs" />
+    <Compile Include="TenderSmartNew.fs" />
+    <Compile Include="ParserSmartNew.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
@@ -139,6 +143,7 @@
     <PackageReference Include="SharpZipLib" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="smarttender.json" />
     <Content Include="test.html" />
   </ItemGroup>
 </Project>

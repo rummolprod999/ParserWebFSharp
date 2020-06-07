@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="$APPLICATION_CONFIG_DIR$/consoles/db" t="IncludeRecursive" />
-    <e p="$APPLICATION_CONFIG_DIR$/extensions" t="IncludeRecursive" />
-    <e p="$USER_HOME$/.Rider2019.3/system/extResources" t="IncludeRecursive" />
-    <e p="$USER_HOME$/.Rider2019.3/system/resharper-host/local/Transient/ReSharperHost/v193/SolutionCaches/_ParserWebFSharp.1417816402.00" t="ExcludeRecursive" />
+    <e p="$USER_HOME$/.cache/JetBrains/Rider2020.1/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.cache/JetBrains/Rider2020.1/resharper-host/local/Transient/ReSharperHost/v201/SolutionCaches/_ParserWebFSharp.1417816402.00" t="ExcludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p=".git/info/exclude" t="IncludeRecursive" />
       <e p="ParserWebFSharp" t="IncludeRecursive">
         <e p="AbstractParser.fs" t="Include" />
         <e p="AbstractTender.fs" t="Include" />
         <e p="DocumentBuilder.fs" t="Include" />
+        <e p="DocumentBuilderModule.fs" t="Include" />
         <e p="HttpLibrary.fs" t="Include" />
         <e p="Init.fs" t="Include" />
         <e p="Logging.fs" t="Include" />
+        <e p="NewtonExt.fs" t="Include" />
         <e p="ParserAero.fs" t="Include" />
         <e p="ParserAkd.fs" t="Include" />
         <e p="ParserApps.fs" t="Include" />
@@ -56,6 +56,7 @@
         <e p="ParserSibServ.fs" t="Include" />
         <e p="ParserSlav.fs" t="Include" />
         <e p="ParserSmart.fs" t="Include" />
+        <e p="ParserSmartNew.fs" t="Include" />
         <e p="ParserStroyTorgi.fs" t="Include" />
         <e p="ParserTGuru.fs" t="Include" />
         <e p="ParserTPlusParall.fs" t="Include" />
@@ -114,6 +115,7 @@
         <e p="TenderSibServ.fs" t="Include" />
         <e p="TenderSlav.fs" t="Include" />
         <e p="TenderSmart.fs" t="Include" />
+        <e p="TenderSmartNew.fs" t="Include" />
         <e p="TenderStroyTorgi.fs" t="Include" />
         <e p="TenderTGuru.fs" t="Include" />
         <e p="TenderTPlus.fs" t="Include" />
@@ -132,11 +134,11 @@
         <e p="TypesForParsing.fs" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="obj" t="ExcludeRecursive" />
+        <e p="smarttender.json" t="Include" />
         <e p="test.html" t="Include" />
       </e>
       <e p="ParserWebFSharp.sln" t="IncludeFlat" />
       <e p="packages" t="ExcludeRecursive" />
     </e>
-    <e p="/rust_expanded_macros/PhTdRrKo" t="IncludeRecursive" />
   </component>
 </project>
