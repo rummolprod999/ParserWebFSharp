@@ -43,6 +43,11 @@ module TypeE =
             match this with
             | Tools.RegexMatch1 regex gr1 -> Some(gr1)
             | _ -> None
+        
+        member this.Get1FromRegexpDotAll(regex: string): string option =
+            match this with
+            | Tools.RegexMatch1DotALL regex gr1 -> Some(gr1)
+            | _ -> None
 
         member this.Get1FromRegexpOrDefaul(regex: string): string =
             match this with

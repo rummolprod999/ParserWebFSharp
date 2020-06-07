@@ -334,6 +334,20 @@ type SmartRec =
       DateEnd: DateTime
       status: string
       PwayName: string }
+    
+type SmartRecNew =
+    { Id: int
+      PurNum: string
+      PurName: string
+      Nmck: string
+      OrgName: string
+      OrgContactName: string
+      OrgContactEmail: string
+      OrgContactPhone: string
+      DatePub: DateTime
+      DateEnd: DateTime
+      status: string
+      PwayName: string }
 
 type RtsGenRec =
     { Href: string

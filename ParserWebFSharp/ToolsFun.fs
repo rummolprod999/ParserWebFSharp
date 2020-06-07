@@ -27,6 +27,14 @@ module Tools =
             | fst :: [] -> Some(fst)
             | _ -> None
         else None
+    
+    let (|RegexMatch1DotALL|_|) (pattern : string) (input : string) =
+        let result = Regex.Match(input, pattern, RegexOptions.Singleline)
+        if result.Success then
+            match (List.tail [ for g in result.Groups -> g.Value ]) with
+            | fst :: [] -> Some(fst)
+            | _ -> None
+        else None
 
     let inline InlineFEWE (x : ^a) (s : string) =
         try

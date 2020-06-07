@@ -6,6 +6,7 @@ open System.Net
 open System.Text
 open System.Threading
 open System.Threading.Tasks
+open System.Net.Http
 
 module Download =
     type TimedWebClient() =
@@ -292,3 +293,24 @@ module Download =
                 else incr count
                 Thread.Sleep(5000)
         s
+        
+    let DownloadSmartTender (page : int) : string =
+        let url = "https://smarttender.biz/ProZorroTenders/GetTenders/"
+        let json = "{'searchParam':{'TradeSegment':1,'TenderMode':1,'Page':" + (page.ToString()) + ",'ClassificationGroupId':null,'Sorting':2,'AssignedManagerIds':[],'OrganizerIds':[],'TenderStatuses':[],'GroupedBiddingTypeCodes':[],'BiddingTypeCodes':[],'AddressSearchTypes':[1],'RegionInfos':[],'CategoryIds':[],'AwardStatusCodes':[],'MainProcurementCategoryIds':[],'RationaleIds':[],'PaymentTermTypeIds':[],'MyFilterId':null}}"
+        let mutable ret = null
+        let count = ref 0
+        let mutable cc = true
+        while cc do
+            try
+                use client = new HttpClient()
+                let response = client.PostAsync(url, new StringContent(json, Encoding.UTF8, "application/json")).Result;
+                ret <- response.Content.ReadAsStringAsync().Result
+                cc <- false
+            with ex ->
+                Logging.Log.logger(ex)
+                if !count >= 3 then
+                    Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток" url !count)
+                    cc <- false
+                else incr count
+                Thread.Sleep(5000)
+        ret
