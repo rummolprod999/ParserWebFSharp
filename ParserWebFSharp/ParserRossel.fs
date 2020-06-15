@@ -21,7 +21,7 @@ type ParserRossel(stn: Settings.T) =
                     jse.ExecuteScript("window.scrollBy(0,250)", "") |> ignore
                     Thread.Sleep(100)
     do
-        options.AddArguments("headless")
+        //options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
 
@@ -42,6 +42,7 @@ type ParserRossel(stn: Settings.T) =
         try
             try
                 this.ParserSelen driver
+                this.ParserSelenKim driver
                 this.ParserSelenAtom driver
                 this.ParserSelenRt driver
                 this.ParserSelenVtb driver
@@ -49,7 +50,6 @@ type ParserRossel(stn: Settings.T) =
                 this.ParserSelenRushidro driver
                 this.ParserSelenRosgeo driver
                 this.ParserSelenRosseti driver
-                this.ParserSelenKim driver
                 driver.Manage().Cookies.DeleteAllCookies()
             with ex -> Logging.Log.logger ex
         finally
