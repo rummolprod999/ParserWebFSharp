@@ -20,6 +20,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
     static member val tenderCountRushidro = ref 0
     static member val tenderCountRosgeo = ref 0
     static member val tenderCountRosseti = ref 0
+    static member val tenderCountKim = ref 0
     static member val tenderUpCount = ref 0
     static member val tenderUpCountAtom = ref 0
     static member val tenderUpCountRt = ref 0
@@ -28,6 +29,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
     static member val tenderUpCountRushidro = ref 0
     static member val tenderUpCountRosgeo = ref 0
     static member val tenderUpCountRosseti = ref 0
+    static member val tenderUpCountKim = ref 0
     
     member private this.GetDateS(input : string) : string option =
         match input with
@@ -275,6 +277,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
                 | 48 -> incr TenderRossel.tenderUpCountRushidro
                 | 49 -> incr TenderRossel.tenderUpCountRosgeo
                 | 50 -> incr TenderRossel.tenderUpCountRosseti
+                | 260 -> incr TenderRossel.tenderUpCountKim
                 | _ -> ()
             | false -> 
                 match typeFz with
@@ -286,6 +289,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
                 | 48 -> incr TenderRossel.tenderCountRushidro
                 | 49 -> incr TenderRossel.tenderCountRosgeo
                 | 50 -> incr TenderRossel.tenderCountRosseti
+                | 260 -> incr TenderRossel.tenderCountKim
                 | _ -> ()
             let documents = doc.QuerySelectorAll("ul.documents__list > li > a")
             documents |> Seq.iter (this.ParsingDocs con !idTender)
