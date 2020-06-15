@@ -49,6 +49,7 @@ type ParserRossel(stn: Settings.T) =
                 this.ParserSelenRushidro driver
                 this.ParserSelenRosgeo driver
                 this.ParserSelenRosseti driver
+                this.ParserSelenKim driver
                 driver.Manage().Cookies.DeleteAllCookies()
             with ex -> Logging.Log.logger ex
         finally
@@ -178,6 +179,22 @@ type ParserRossel(stn: Settings.T) =
         this.Clicker driver "//button[contains( . , 'Найти')]"
         pageReloader driver 1000
         this.ParserListTenders driver
+        
+    member private this.ParserSelenKim(driver: ChromeDriver) =
+        let wait = new WebDriverWait(driver, timeoutB)
+        driver.Navigate().GoToUrl(urlk)
+        Thread.Sleep(5000)
+        wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
+        |> ignore
+        this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
+        driver.FindElementByCssSelector("#form_procedures_search > div.search-form__advancedfilter > div:nth-child(1) > div > span > span.selection > span") .SendKeys(Keys.Space)
+        driver.FindElementByCssSelector("body > span > span > span.select2-search.select2-search--dropdown > input") .SendKeys("Корпоративный интернет-магазин")
+        Thread.Sleep(5000)
+        driver.FindElementByXPath("//span[. = 'Корпоративный интернет-магазин']/parent::li").Click()
+        Thread.Sleep(3000)
+        this.Clicker driver "//button[contains( . , 'Найти')]"
+        pageReloader driver 1000
+        this.ParserListTenders driver
 
     member private this.ParserListTenders(driver: ChromeDriver) =
         driver.SwitchTo().DefaultContent() |> ignore
@@ -215,6 +232,7 @@ type ParserRossel(stn: Settings.T) =
         | x when purNum.StartsWith("RH") -> this.ParserSelect driver t purNum 48
         | x when purNum.StartsWith("GEO") -> this.ParserSelect driver t purNum 49
         | x when purNum.StartsWith("ROSSETI") -> this.ParserSelect driver t purNum 50
+        | x when purNum.StartsWith("KIM") -> this.ParserSelect driver t purNum 260
         | _ -> ()
 
     member private this.ParserSelect (driver: ChromeDriver) (t: IWebElement) (purNum: string) (tFz: int) =
