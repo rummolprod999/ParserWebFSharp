@@ -58,9 +58,9 @@ module Download =
             let wr = base.GetWebRequest(address) :?> HttpWebRequest
             wr.Timeout <- 60000
             wr.KeepAlive <- true
-            wr.UserAgent <- "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0"
+            wr.UserAgent <- "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.56 Safari/537.36"
             wr.Headers.Add("Referer", "https://tenders.irkutskoil.ru/")
-            wr.Headers.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+            wr.Headers.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
             wr.Headers.Add("DNT", "1")
             //let r = wr.GetResponse()
             //printfn "%d" r.ContentLength
@@ -127,6 +127,7 @@ module Download =
         s
         
     let DownloadStringIrkutsk url =
+        ServicePointManager.ServerCertificateValidationCallback <- fun sender certificate chain sslPolicyErrors -> true
         let mutable s = null
         let count = ref 0
         let mutable continueLooping = true
@@ -138,7 +139,8 @@ module Download =
                     s <- task.Result
                     continueLooping <- false
                 else raise <| new TimeoutException()
-            with _ ->
+            with ex ->
+                Logging.Log.logger ex
                 if !count >= 3 then
                     Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток" url !count)
                     continueLooping <- false
