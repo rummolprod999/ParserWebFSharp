@@ -59,6 +59,7 @@ type Arguments =
     | Ymz
     | Unipro
     | Apps
+    | RtsCorp
 
 type SlavNeft =
     | MEGION
@@ -518,3 +519,16 @@ type AppsRec =
     { Href: string
       PurName: string
       PurNum: string}
+
+type RtsCorpRec =
+    { Href: string
+      PurNum: string
+      PurName: string
+      OrgName: string
+      CusName: string
+      Nmck: string
+      RegionName: string
+      status: string
+      ContrGuarantee: string
+      ApplGuarantee: string
+      Currency: string }

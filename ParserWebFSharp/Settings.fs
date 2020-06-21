@@ -131,6 +131,8 @@ module Settings =
         let mutable LogPathTendersUnipro = ""
         let mutable TempPathTendersApps = ""
         let mutable LogPathTendersApps = ""
+        let mutable TempPathTendersRtsCorp = ""
+        let mutable LogPathTendersRtsCorp = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -454,6 +456,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_apps" then
                                     LogPathTendersApps <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_rts_corp" then
+                                    TempPathTendersRtsCorp <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_rts_corp" then
+                                    LogPathTendersRtsCorp <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -521,6 +529,7 @@ module Settings =
                 | Ymz -> TempPathTendersYmz
                 | Unipro -> TempPathTendersUnipro
                 | Apps -> TempPathTendersApps
+                | RtsCorp -> TempPathTendersRtsCorp
 
             let LogPathTenders =
                 match arg with
@@ -576,6 +585,7 @@ module Settings =
                 | Ymz -> LogPathTendersYmz
                 | Unipro -> LogPathTendersUnipro
                 | Apps -> LogPathTendersApps
+                | RtsCorp -> LogPathTendersRtsCorp
 
             { Database = Database
               TempPathTenders = TempPathTenders
