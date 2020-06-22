@@ -43,7 +43,7 @@ type ParserRtsCorp(stn: Settings.T) =
         
         for t in listTendersCorp do
             try
-                __.ParserTendersList223 t
+                __.ParserTendersListCorp t
             with ex -> Logging.Log.logger (ex)
         ()
     
