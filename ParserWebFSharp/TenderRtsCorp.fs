@@ -92,7 +92,7 @@ type TenderRtsCorp(stn: Settings.T, tn: RtsCorpRec, typeFz: int, etpName: string
                         let idEtp = this.GetEtp con settings
                         let numVersion = 1
                         let idPlacingWay = ref 0
-                        let pwName = InlineHtmlNavigator nav".//td[contains(., 'Правило проведения')]/following-sibling::span/a/span"
+                        let pwName = InlineHtmlNavigator nav"//td[contains(., 'Правило проведения')]/following-sibling::td/span/a/span"
                         match pwName with
                         | "" -> ()
                         | _ -> idPlacingWay := this.GetPlacingWay con pwName settings
@@ -233,7 +233,7 @@ type TenderRtsCorp(stn: Settings.T, tn: RtsCorpRec, typeFz: int, etpName: string
             cmd16.Parameters.AddWithValue("@contract_guarantee_amount", contrAmount) |> ignore
             cmd16.Parameters.AddWithValue("@delivery_term", delivTerm) |> ignore
             cmd16.ExecuteNonQuery() |> ignore
-        let purObjects = l.SelectNodes ("//div[@class = 'header2' and contains(., 'Информация об объектах')]/following-sibling::div//table/tbody/tr")
+        let purObjects = l.SelectNodes (".//div[@class = 'header2' and contains(., 'Информация об объектах')]/following-sibling::div//table/tbody/tr")
         if purObjects <> null then
             for po in purObjects do
                 let namePo = po.Gsn("./td[1]")
@@ -243,7 +243,7 @@ type TenderRtsCorp(stn: Settings.T, tn: RtsCorpRec, typeFz: int, etpName: string
                 let quantity = po.Gsn("./td[4]").GetPriceFromString()
                 let price = po.Gsn("./td[5]").GetPriceFromString()
                 let sum = nmck
-                if namePo <> "" then
+                if namePo <> "" && quantity <> "" then
                     let insertLotitem = sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum, price = @price, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, okpd_name = @okpd_name" stn.Prefix
                     let cmd19 = new MySqlCommand(insertLotitem, con)
                     cmd19.Prepare()

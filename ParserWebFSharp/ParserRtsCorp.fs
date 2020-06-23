@@ -11,9 +11,9 @@ open OpenQA.Selenium.Support.UI
 type ParserRtsCorp(stn: Settings.T) =
     inherit Parser()
     let set = stn
-    let pageC = 5
-    let listTenders223 = new List<RtsCorpRec>()
-    let listTendersCorp = new List<RtsCorpRec>()
+    let pageC = 3
+    let listTenders223 = List<RtsCorpRec>()
+    let listTendersCorp = List<RtsCorpRec>()
     let options = ChromeOptions()
     let timeoutB = TimeSpan.FromSeconds(60.)
     let mutable wait = None
@@ -28,7 +28,7 @@ type ParserRtsCorp(stn: Settings.T) =
         let driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
         driver.Manage().Window.Maximize()
-        __.Wait <- new WebDriverWait(driver, timeoutB)
+        __.Wait <- WebDriverWait(driver, timeoutB)
         try
             try
                 __.ParserSelen driver
@@ -93,7 +93,7 @@ type ParserRtsCorp(stn: Settings.T) =
         ()
     
     member private this.ParserTenders(i: IWebElement) =
-        let builder = new TenderBuilder()
+        let builder = TenderBuilder()
         let result =
             builder {
                 let! purNum = i.findElementWithoutException ("./tbody/tr[1]//li[contains(., 'Номер на площадке')]//p", sprintf "purNum not found, inner text - %s" i.Text)
