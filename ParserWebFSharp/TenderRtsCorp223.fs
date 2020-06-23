@@ -162,7 +162,7 @@ type TenderRtsCorp223(stn: Settings.T, tn: RtsCorpRec, typeFz: int, etpName: str
                             cmd5.Parameters.AddWithValue("@file_name", ((string)(att.SelectToken("FileName")))) |> ignore
                             cmd5.Parameters.AddWithValue("@url", (string)(att.SelectToken("Url"))) |> ignore
                             cmd5.ExecuteNonQuery() |> ignore
-            with ex -> Logging.Log.logger (ex) 
+            with ex -> Logging.Log.logger (ex.Message) 
 
         ()
     member private this.GetLots(con: MySqlConnection, idTender: int, doc: HtmlDocument) =
