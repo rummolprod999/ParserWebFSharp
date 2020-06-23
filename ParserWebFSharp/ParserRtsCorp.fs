@@ -61,7 +61,7 @@ type ParserRtsCorp(stn: Settings.T) =
             try
                 __.GetNextpage driver t
                 ()
-            with ex -> Logging.Log.logger (ex)
+            with ex -> Logging.Log.logger (ex.Message)
         ()
         
     member __.GetNextpage(driver: ChromeDriver) (i : int) =
