@@ -21,7 +21,7 @@ type ParserRossel(stn: Settings.T) =
                     jse.ExecuteScript("window.scrollBy(0,250)", "") |> ignore
                     Thread.Sleep(100)
     do
-        //options.AddArguments("headless")
+        options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
 
@@ -36,25 +36,124 @@ type ParserRossel(stn: Settings.T) =
         | _ -> None
 
     override this.Parsing() =
+        this.ParsingSelen()
+        this.ParsingSelenKim()
+        this.ParsingSelenAtom()
+        this.ParsingSelenRt()
+        this.ParsingSelenVtb()
+        this.ParsingSelenRosteh()
+        this.ParsingSelenRushidro()
+        this.ParsingSelenRosgeo()
+        this.ParsingSelenRosseti()
+        ()
+        
+    member private this.ParsingSelen() =
         let driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
         //driver.Manage().Window.Maximize()
         try
             try
                 this.ParserSelen driver
+                driver.Manage().Cookies.DeleteAllCookies()
+            with ex -> Logging.Log.logger ex
+        finally
+            driver.Quit()
+    
+    member private this.ParsingSelenKim() =
+        let driver = new ChromeDriver("/usr/local/bin", options)
+        driver.Manage().Timeouts().PageLoad <- timeoutB
+        //driver.Manage().Window.Maximize()
+        try
+            try
                 this.ParserSelenKim driver
+                driver.Manage().Cookies.DeleteAllCookies()
+            with ex -> Logging.Log.logger ex
+        finally
+            driver.Quit()
+    
+    member private this.ParsingSelenAtom() =
+        let driver = new ChromeDriver("/usr/local/bin", options)
+        driver.Manage().Timeouts().PageLoad <- timeoutB
+        //driver.Manage().Window.Maximize()
+        try
+            try
                 this.ParserSelenAtom driver
+                driver.Manage().Cookies.DeleteAllCookies()
+            with ex -> Logging.Log.logger ex
+        finally
+            driver.Quit()
+    
+    member private this.ParsingSelenRt() =
+        let driver = new ChromeDriver("/usr/local/bin", options)
+        driver.Manage().Timeouts().PageLoad <- timeoutB
+        //driver.Manage().Window.Maximize()
+        try
+            try
                 this.ParserSelenRt driver
+                driver.Manage().Cookies.DeleteAllCookies()
+            with ex -> Logging.Log.logger ex
+        finally
+            driver.Quit()
+    
+    member private this.ParsingSelenVtb() =
+        let driver = new ChromeDriver("/usr/local/bin", options)
+        driver.Manage().Timeouts().PageLoad <- timeoutB
+        //driver.Manage().Window.Maximize()
+        try
+            try
                 this.ParserSelenVtb driver
+                driver.Manage().Cookies.DeleteAllCookies()
+            with ex -> Logging.Log.logger ex
+        finally
+            driver.Quit()
+            
+    member private this.ParsingSelenRosteh() =
+        let driver = new ChromeDriver("/usr/local/bin", options)
+        driver.Manage().Timeouts().PageLoad <- timeoutB
+        //driver.Manage().Window.Maximize()
+        try
+            try
                 this.ParserSelenRosteh driver
+                driver.Manage().Cookies.DeleteAllCookies()
+            with ex -> Logging.Log.logger ex
+        finally
+            driver.Quit()
+    
+    member private this.ParsingSelenRushidro() =
+        let driver = new ChromeDriver("/usr/local/bin", options)
+        driver.Manage().Timeouts().PageLoad <- timeoutB
+        //driver.Manage().Window.Maximize()
+        try
+            try
                 this.ParserSelenRushidro driver
+                driver.Manage().Cookies.DeleteAllCookies()
+            with ex -> Logging.Log.logger ex
+        finally
+            driver.Quit()
+    
+    member private this.ParsingSelenRosgeo() =
+        let driver = new ChromeDriver("/usr/local/bin", options)
+        driver.Manage().Timeouts().PageLoad <- timeoutB
+        //driver.Manage().Window.Maximize()
+        try
+            try
                 this.ParserSelenRosgeo driver
+                driver.Manage().Cookies.DeleteAllCookies()
+            with ex -> Logging.Log.logger ex
+        finally
+            driver.Quit()
+    
+    member private this.ParsingSelenRosseti() =
+        let driver = new ChromeDriver("/usr/local/bin", options)
+        driver.Manage().Timeouts().PageLoad <- timeoutB
+        //driver.Manage().Window.Maximize()
+        try
+            try
                 this.ParserSelenRosseti driver
                 driver.Manage().Cookies.DeleteAllCookies()
             with ex -> Logging.Log.logger ex
         finally
             driver.Quit()
-
     member private this.ParserSelen(driver: ChromeDriver) =
         let wait = new WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
