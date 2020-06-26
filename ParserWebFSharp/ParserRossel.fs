@@ -21,7 +21,7 @@ type ParserRossel(stn: Settings.T) =
                     jse.ExecuteScript("window.scrollBy(0,250)", "") |> ignore
                     Thread.Sleep(100)
     do
-        options.AddArguments("headless")
+        //options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
 
@@ -36,7 +36,6 @@ type ParserRossel(stn: Settings.T) =
         | _ -> None
 
     override this.Parsing() =
-        this.ParsingSelen()
         this.ParsingSelenKim()
         this.ParsingSelenAtom()
         this.ParsingSelenRt()
@@ -45,6 +44,7 @@ type ParserRossel(stn: Settings.T) =
         this.ParsingSelenRushidro()
         this.ParsingSelenRosgeo()
         this.ParsingSelenRosseti()
+        this.ParsingSelen()
         ()
         
     member private this.ParsingSelen() =
