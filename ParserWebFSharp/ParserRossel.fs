@@ -21,7 +21,7 @@ type ParserRossel(stn: Settings.T) =
                     jse.ExecuteScript("window.scrollBy(0,250)", "") |> ignore
                     Thread.Sleep(100)
     do
-        options.AddArguments("headless")
+        //options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
 
@@ -321,7 +321,7 @@ type ParserRossel(stn: Settings.T) =
             match this.GetPurNumNew(purNumM) with
             | None -> raise <| System.NullReferenceException(sprintf "purNum not found in %s" purNumM)
             | Some pr -> pr.Trim()
-
+        Logging.Log.logger purNum
         match purNum with
         | x when purNum.StartsWith("COM") -> this.ParserSelect driver t purNum 42
         | x when purNum.StartsWith("ATOM") -> this.ParserSelect driver t purNum 43
