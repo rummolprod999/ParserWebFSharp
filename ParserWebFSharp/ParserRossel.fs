@@ -21,7 +21,7 @@ type ParserRossel(stn: Settings.T) =
                     jse.ExecuteScript("window.scrollBy(0,250)", "") |> ignore
                     Thread.Sleep(100)
     do
-        //options.AddArguments("headless")
+        options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
 
