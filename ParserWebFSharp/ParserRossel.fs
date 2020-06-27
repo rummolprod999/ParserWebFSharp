@@ -36,41 +36,33 @@ type ParserRossel(stn: Settings.T) =
         | _ -> None
 
     override this.Parsing() =
+        let driver = new ChromeDriver("/usr/local/bin", options)
+        driver.Manage().Timeouts().PageLoad <- timeoutB
+        //driver.Manage().Window.Maximize()
         try
-            this.ParsingSelenKim()
-        with ex -> Logging.Log.logger ex
-        Thread.Sleep(5000)
-        try
-            this.ParsingSelenAtom()
-        with ex -> Logging.Log.logger ex
-        Thread.Sleep(5000)
-        try
-            this.ParsingSelenRt()
-        with ex -> Logging.Log.logger ex
-        Thread.Sleep(5000)
-        try
-            this.ParsingSelenVtb()
-        with ex -> Logging.Log.logger ex
-        Thread.Sleep(5000)
-        try
-            this.ParsingSelenRosteh()
-        with ex -> Logging.Log.logger ex
-        Thread.Sleep(5000)
-        try
-            this.ParsingSelenRushidro()
-        with ex -> Logging.Log.logger ex
-        Thread.Sleep(5000)
-        try
-            this.ParsingSelenRosgeo()
-        with ex -> Logging.Log.logger ex
-        Thread.Sleep(5000)
-        try
-            this.ParsingSelenRosseti()
-        with ex -> Logging.Log.logger ex
-        Thread.Sleep(5000)
-        try
-            this.ParsingSelen()
-        with ex -> Logging.Log.logger ex
+            try
+                driver.Manage().Cookies.DeleteAllCookies()
+                this.ParserSelen driver
+                driver.Manage().Cookies.DeleteAllCookies()
+                this.ParserSelenKim driver
+                driver.Manage().Cookies.DeleteAllCookies()
+                this.ParserSelenAtom driver
+                driver.Manage().Cookies.DeleteAllCookies()
+                this.ParserSelenRt driver
+                driver.Manage().Cookies.DeleteAllCookies()
+                this.ParserSelenVtb driver
+                driver.Manage().Cookies.DeleteAllCookies()
+                this.ParserSelenRosteh driver
+                driver.Manage().Cookies.DeleteAllCookies()
+                this.ParserSelenRushidro driver
+                driver.Manage().Cookies.DeleteAllCookies()
+                this.ParserSelenRosgeo driver
+                driver.Manage().Cookies.DeleteAllCookies()
+                this.ParserSelenRosseti driver
+                driver.Manage().Cookies.DeleteAllCookies()
+            with ex -> Logging.Log.logger ex
+        finally
+            driver.Quit()
         ()
         
     member private this.ParsingSelen() =
@@ -347,7 +339,6 @@ type ParserRossel(stn: Settings.T) =
             match this.GetPurNumNew(purNumM) with
             | None -> raise <| System.NullReferenceException(sprintf "purNum not found in %s" purNumM)
             | Some pr -> pr.Trim()
-        Logging.Log.logger purNum
         match purNum with
         | x when purNum.StartsWith("COM") -> this.ParserSelect driver t purNum 42
         | x when purNum.StartsWith("ATOM") -> this.ParserSelect driver t purNum 43
@@ -379,5 +370,6 @@ type ParserRossel(stn: Settings.T) =
               PurName = purName }
 
         let T = TenderRossel(set, ten, tFz)
-        listTenders.Add(T)
+        if  not <| listTenders.Exists(fun t -> t.PurNum = purNum) then
+            listTenders.Add(T)
 

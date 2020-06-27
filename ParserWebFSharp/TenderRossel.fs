@@ -31,6 +31,8 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
     static member val tenderUpCountRosseti = ref 0
     static member val tenderUpCountKim = ref 0
     
+    member public this.PurNum =
+        tn.PurNum
     member private this.GetDateS(input : string) : string option =
         match input with
         | Tools.RegexMatch1 @"(\d{2}\.\d{2}\.\d{2} \d{2}:\d{2}:\d{2})" gr1 -> Some(gr1)
