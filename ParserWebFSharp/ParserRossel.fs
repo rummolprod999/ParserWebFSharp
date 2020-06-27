@@ -38,27 +38,45 @@ type ParserRossel(stn: Settings.T) =
     override this.Parsing() =
         let driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
-        //driver.Manage().Window.Maximize()
         try
             try
-                driver.Manage().Cookies.DeleteAllCookies()
-                this.ParserSelen driver
-                driver.Manage().Cookies.DeleteAllCookies()
-                this.ParserSelenKim driver
-                driver.Manage().Cookies.DeleteAllCookies()
-                this.ParserSelenAtom driver
-                driver.Manage().Cookies.DeleteAllCookies()
-                this.ParserSelenRt driver
-                driver.Manage().Cookies.DeleteAllCookies()
-                this.ParserSelenVtb driver
-                driver.Manage().Cookies.DeleteAllCookies()
-                this.ParserSelenRosteh driver
-                driver.Manage().Cookies.DeleteAllCookies()
-                this.ParserSelenRushidro driver
-                driver.Manage().Cookies.DeleteAllCookies()
-                this.ParserSelenRosgeo driver
-                driver.Manage().Cookies.DeleteAllCookies()
-                this.ParserSelenRosseti driver
+                try
+                    driver.Manage().Cookies.DeleteAllCookies()
+                    this.ParserSelen driver
+                with ex -> Logging.Log.logger ex
+                try
+                    driver.Manage().Window.Maximize()
+                    driver.Manage().Cookies.DeleteAllCookies()
+                    this.ParserSelenKim driver
+                with ex -> Logging.Log.logger ex
+                try
+                    driver.Manage().Cookies.DeleteAllCookies()
+                    this.ParserSelenAtom driver
+                with ex -> Logging.Log.logger ex
+                try
+                    driver.Manage().Cookies.DeleteAllCookies()
+                    this.ParserSelenRt driver
+                with ex -> Logging.Log.logger ex
+                try
+                    driver.Manage().Cookies.DeleteAllCookies()
+                    this.ParserSelenVtb driver
+                with ex -> Logging.Log.logger ex
+                try
+                    driver.Manage().Cookies.DeleteAllCookies()
+                    this.ParserSelenRosteh driver
+                with ex -> Logging.Log.logger ex
+                try
+                    driver.Manage().Cookies.DeleteAllCookies()
+                    this.ParserSelenRushidro driver
+                with ex -> Logging.Log.logger ex
+                try
+                    driver.Manage().Cookies.DeleteAllCookies()
+                    this.ParserSelenRosgeo driver
+                with ex -> Logging.Log.logger ex
+                try
+                    driver.Manage().Cookies.DeleteAllCookies()
+                    this.ParserSelenRosseti driver
+                with ex -> Logging.Log.logger ex
                 driver.Manage().Cookies.DeleteAllCookies()
             with ex -> Logging.Log.logger ex
         finally
