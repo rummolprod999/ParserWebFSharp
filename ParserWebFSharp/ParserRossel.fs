@@ -36,19 +36,45 @@ type ParserRossel(stn: Settings.T) =
         | _ -> None
 
     override this.Parsing() =
-        this.ParsingSelenKim()
-        this.ParsingSelenAtom()
-        this.ParsingSelenRt()
-        this.ParsingSelenVtb()
-        this.ParsingSelenRosteh()
-        this.ParsingSelenRushidro()
-        this.ParsingSelenRosgeo()
-        this.ParsingSelenRosseti()
-        this.ParsingSelen()
+        try
+            this.ParsingSelenKim()
+        with ex -> Logging.Log.logger ex
+        Thread.Sleep(5000)
+        try
+            this.ParsingSelenAtom()
+        with ex -> Logging.Log.logger ex
+        Thread.Sleep(5000)
+        try
+            this.ParsingSelenRt()
+        with ex -> Logging.Log.logger ex
+        Thread.Sleep(5000)
+        try
+            this.ParsingSelenVtb()
+        with ex -> Logging.Log.logger ex
+        Thread.Sleep(5000)
+        try
+            this.ParsingSelenRosteh()
+        with ex -> Logging.Log.logger ex
+        Thread.Sleep(5000)
+        try
+            this.ParsingSelenRushidro()
+        with ex -> Logging.Log.logger ex
+        Thread.Sleep(5000)
+        try
+            this.ParsingSelenRosgeo()
+        with ex -> Logging.Log.logger ex
+        Thread.Sleep(5000)
+        try
+            this.ParsingSelenRosseti()
+        with ex -> Logging.Log.logger ex
+        Thread.Sleep(5000)
+        try
+            this.ParsingSelen()
+        with ex -> Logging.Log.logger ex
         ()
         
     member private this.ParsingSelen() =
-        let driver = new ChromeDriver("/usr/local/bin", options)
+        use driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
         //driver.Manage().Window.Maximize()
         try
@@ -60,7 +86,7 @@ type ParserRossel(stn: Settings.T) =
             driver.Quit()
     
     member private this.ParsingSelenKim() =
-        let driver = new ChromeDriver("/usr/local/bin", options)
+        use driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
         //driver.Manage().Window.Maximize()
         try
@@ -72,7 +98,7 @@ type ParserRossel(stn: Settings.T) =
             driver.Quit()
     
     member private this.ParsingSelenAtom() =
-        let driver = new ChromeDriver("/usr/local/bin", options)
+        use driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
         //driver.Manage().Window.Maximize()
         try
@@ -84,7 +110,7 @@ type ParserRossel(stn: Settings.T) =
             driver.Quit()
     
     member private this.ParsingSelenRt() =
-        let driver = new ChromeDriver("/usr/local/bin", options)
+        use driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
         //driver.Manage().Window.Maximize()
         try
@@ -96,7 +122,7 @@ type ParserRossel(stn: Settings.T) =
             driver.Quit()
     
     member private this.ParsingSelenVtb() =
-        let driver = new ChromeDriver("/usr/local/bin", options)
+        use driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
         //driver.Manage().Window.Maximize()
         try
@@ -108,7 +134,7 @@ type ParserRossel(stn: Settings.T) =
             driver.Quit()
             
     member private this.ParsingSelenRosteh() =
-        let driver = new ChromeDriver("/usr/local/bin", options)
+        use driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
         //driver.Manage().Window.Maximize()
         try
@@ -120,7 +146,7 @@ type ParserRossel(stn: Settings.T) =
             driver.Quit()
     
     member private this.ParsingSelenRushidro() =
-        let driver = new ChromeDriver("/usr/local/bin", options)
+        use driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
         //driver.Manage().Window.Maximize()
         try
@@ -132,7 +158,7 @@ type ParserRossel(stn: Settings.T) =
             driver.Quit()
     
     member private this.ParsingSelenRosgeo() =
-        let driver = new ChromeDriver("/usr/local/bin", options)
+        use driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
         //driver.Manage().Window.Maximize()
         try
@@ -144,7 +170,7 @@ type ParserRossel(stn: Settings.T) =
             driver.Quit()
     
     member private this.ParsingSelenRosseti() =
-        let driver = new ChromeDriver("/usr/local/bin", options)
+        use driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
         //driver.Manage().Window.Maximize()
         try
