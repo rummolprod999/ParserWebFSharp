@@ -11,6 +11,9 @@ module Start =
         if argv.Length = 0 then
             printf "Bad arguments, use %s" arguments
             Environment.Exit(1)
+        if argv.Length = 0 then
+            Settings.RosselNum <- argv.[1]
+            ()
         match argv.[0] with
         | "irkutskoil" ->
             let settings = Settings.getSettings (IrkutskOil)

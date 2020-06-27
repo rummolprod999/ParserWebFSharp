@@ -11,6 +11,7 @@ module Settings =
         if path <> null then path.Substring(5)
         else ""
 
+    let mutable internal RosselNum = ""
     let mutable internal UserTenderer = ""
     let mutable internal UserCisLink = ""
     let mutable internal PassCisLink = ""

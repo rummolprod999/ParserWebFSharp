@@ -40,43 +40,48 @@ type ParserRossel(stn: Settings.T) =
         driver.Manage().Timeouts().PageLoad <- timeoutB
         try
             try
-                try
-                    driver.Manage().Cookies.DeleteAllCookies()
-                    this.ParserSelen driver
-                with ex -> Logging.Log.logger ex
-                try
-                    driver.Manage().Window.Maximize()
-                    driver.Manage().Cookies.DeleteAllCookies()
-                    this.ParserSelenKim driver
-                with ex -> Logging.Log.logger ex
-                try
-                    driver.Manage().Cookies.DeleteAllCookies()
-                    this.ParserSelenAtom driver
-                with ex -> Logging.Log.logger ex
-                try
-                    driver.Manage().Cookies.DeleteAllCookies()
-                    this.ParserSelenRt driver
-                with ex -> Logging.Log.logger ex
-                try
-                    driver.Manage().Cookies.DeleteAllCookies()
-                    this.ParserSelenVtb driver
-                with ex -> Logging.Log.logger ex
-                try
-                    driver.Manage().Cookies.DeleteAllCookies()
-                    this.ParserSelenRosteh driver
-                with ex -> Logging.Log.logger ex
-                try
-                    driver.Manage().Cookies.DeleteAllCookies()
-                    this.ParserSelenRushidro driver
-                with ex -> Logging.Log.logger ex
-                try
-                    driver.Manage().Cookies.DeleteAllCookies()
-                    this.ParserSelenRosgeo driver
-                with ex -> Logging.Log.logger ex
-                try
-                    driver.Manage().Cookies.DeleteAllCookies()
-                    this.ParserSelenRosseti driver
-                with ex -> Logging.Log.logger ex
+                match Settings.RosselNum with
+                | "1" -> try
+                            driver.Manage().Cookies.DeleteAllCookies()
+                            this.ParserSelen driver
+                         with ex -> Logging.Log.logger ex
+                | "2" -> try
+                            driver.Manage().Cookies.DeleteAllCookies()
+                            this.ParserSelenAtom driver
+                         with ex -> Logging.Log.logger ex
+                | "3" -> try
+                            driver.Manage().Cookies.DeleteAllCookies()
+                            this.ParserSelenRt driver
+                         with ex -> Logging.Log.logger ex
+                | "4" -> try
+                            driver.Manage().Cookies.DeleteAllCookies()
+                            this.ParserSelenVtb driver
+                         with ex -> Logging.Log.logger ex
+                | "5" -> try
+                            driver.Manage().Cookies.DeleteAllCookies()
+                            this.ParserSelenRosteh driver
+                         with ex -> Logging.Log.logger ex
+                | "6" -> try
+                            driver.Manage().Cookies.DeleteAllCookies()
+                            this.ParserSelenRushidro driver
+                         with ex -> Logging.Log.logger ex
+                | "7" -> try
+                            driver.Manage().Cookies.DeleteAllCookies()
+                            this.ParserSelenRushidro driver
+                         with ex -> Logging.Log.logger ex
+                | "8" -> try
+                            driver.Manage().Cookies.DeleteAllCookies()
+                            this.ParserSelenRosgeo driver
+                         with ex -> Logging.Log.logger ex
+                | "9" -> try
+                            driver.Manage().Cookies.DeleteAllCookies()
+                            this.ParserSelenRosseti driver
+                         with ex -> Logging.Log.logger ex
+                | "10" -> try
+                            driver.Manage().Cookies.DeleteAllCookies()
+                            this.ParserSelenKim driver
+                          with ex -> Logging.Log.logger ex
+                 | _ -> ()
                 driver.Manage().Cookies.DeleteAllCookies()
             with ex -> Logging.Log.logger ex
         finally
