@@ -33,7 +33,7 @@ type ParserTGuru(stn : Settings.T) =
     
     member private this.ParsingTenderAngle (t : IElement) (url : string) =
         let href =
-            match t.QuerySelector("td a:nth-of-type(1)") with
+            match t.QuerySelector("td a.tender_link") with
             | null -> ""
             | ur -> ur.GetAttribute("href").Trim()
         match href with
@@ -42,7 +42,7 @@ type ParserTGuru(stn : Settings.T) =
             raise <| System.NullReferenceException(sprintf "Href not contains http://www.tenderguru.ru in %s" url)
         | _ -> ()
         let PurName =
-            match t.QuerySelector("td a:nth-of-type(1)") with
+            match t.QuerySelector("td a.tender_link") with
             | null -> raise <| System.NullReferenceException(sprintf "PurName not found in %s" href)
             | ur -> ur.TextContent.Trim()
         
