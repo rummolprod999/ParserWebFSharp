@@ -62,7 +62,7 @@ type ParserTPlusParall(stn : Settings.T) =
             | None -> ""
         
         let region =
-            match t.QuerySelector("h2.title + p") with
+            match t.QuerySelector("h2.title + span") with
             | null -> ""
             | ur -> ur.TextContent.Trim().RegexCutWhitespace()
         
@@ -71,36 +71,40 @@ type ParserTPlusParall(stn : Settings.T) =
             | null -> ""
             | ur -> ur.TextContent.Trim().RegexDeleteWhitespace()
         
-        let dateT =
-            match t.QuerySelector("div.date") with
+        let dateTEnd =
+            match t.QuerySelector("div.date > span:nth-of-type(3)") with
             | null -> ""
             | ur -> ur.TextContent.Trim().RegexCutWhitespace()
         
         let dateEndT =
-            match dateT with
-            | Tools.RegexMatch2 @"Завершение:\s+(\d{2}\.\d{2}\.\d{4})\s+(\d{1,2}:\d{2})" (gr1, gr2) -> 
-                Some(sprintf "%s %s" gr1 gr2)
+            match dateTEnd with
+            | Tools.RegexMatch1 @"(\d{2}\.\d{2}\.\d{4})" (gr1) -> 
+                Some(sprintf "%s" gr1)
             | _ -> None
         
         let dateEnd =
             match dateEndT with
             | None -> DateTime.MinValue
             | Some e -> 
-                match e.DateFromString("dd.MM.yyyy H:mm") with
+                match e.DateFromString("dd.MM.yyyy") with
                 | Some d -> d
                 | None -> DateTime.MinValue
         
+        let dateTPub =
+            match t.QuerySelector("div.date > span:nth-of-type(1)") with
+            | null -> ""
+            | ur -> ur.TextContent.Trim().RegexCutWhitespace()
         let datePubT =
-            match dateT with
-            | Tools.RegexMatch2 @"Опубликован:\s+(\d{2}\.\d{2}\.\d{4})\s+(\d{1,2}:\d{2})" (gr1, gr2) -> 
-                Some(sprintf "%s %s" gr1 gr2)
+            match dateTPub with
+            | Tools.RegexMatch1 @"(\d{2}\.\d{2}\.\d{4})" (gr1) -> 
+                Some(sprintf "%s" gr1)
             | _ -> None
         
         let datePub =
             match datePubT with
             | None -> DateTime.MinValue
             | Some e -> 
-                match e.DateFromString("dd.MM.yyyy H:mm") with
+                match e.DateFromString("dd.MM.yyyy") with
                 | Some d -> d
                 | None -> DateTime.MinValue
         
