@@ -134,6 +134,8 @@ module Settings =
         let mutable LogPathTendersApps = ""
         let mutable TempPathTendersRtsCorp = ""
         let mutable LogPathTendersRtsCorp = ""
+        let mutable TempPathTendersSeverStal = ""
+        let mutable LogPathTendersSeverStal = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -463,6 +465,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_rts_corp" then
                                     LogPathTendersRtsCorp <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_severstal" then
+                                    TempPathTendersSeverStal <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_severstal" then
+                                    LogPathTendersSeverStal <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -531,6 +539,7 @@ module Settings =
                 | Unipro -> TempPathTendersUnipro
                 | Apps -> TempPathTendersApps
                 | RtsCorp -> TempPathTendersRtsCorp
+                | Sever -> TempPathTendersSeverStal
 
             let LogPathTenders =
                 match arg with
@@ -587,6 +596,7 @@ module Settings =
                 | Unipro -> LogPathTendersUnipro
                 | Apps -> LogPathTendersApps
                 | RtsCorp -> LogPathTendersRtsCorp
+                | Sever -> LogPathTendersSeverStal
 
             { Database = Database
               TempPathTenders = TempPathTenders

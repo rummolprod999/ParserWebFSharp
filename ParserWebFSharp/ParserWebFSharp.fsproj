@@ -130,6 +130,8 @@
     <Compile Include="TenderRtsCorp223.fs" />
     <Compile Include="TenderRtsCorp.fs" />
     <Compile Include="ParserRtsCorp.fs" />
+    <Compile Include="TenderSeverStal.fs" />
+    <Compile Include="ParserSeverStal.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

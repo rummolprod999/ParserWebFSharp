@@ -60,6 +60,7 @@ type Arguments =
     | Unipro
     | Apps
     | RtsCorp
+    | Sever
 
 type SlavNeft =
     | MEGION
@@ -532,3 +533,11 @@ type RtsCorpRec =
       ContrGuarantee: string
       ApplGuarantee: string
       Currency: string }
+
+type SeverStalRec =
+    { Href: string
+      PurName: string
+      PurNum: string
+      AddInfo: string
+      DateEnd: DateTime
+      DatePub: DateTime}

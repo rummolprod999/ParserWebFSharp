@@ -79,6 +79,7 @@ type Init(s: Settings.T, arg: Arguments) =
         | Unipro -> this.ParsingUnipro()
         | Apps -> this.ParsingApps()
         | RtsCorp -> this.ParsingRtsCorp()
+        | Sever -> this.ParsingSever()
 
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -582,6 +583,15 @@ type Init(s: Settings.T, arg: Arguments) =
             Logging.Log.logger (sprintf "Добавили тендеров 223 %d" !TenderRtsCorp223.tenderCount)
             Logging.Log.logger (sprintf "Обновили тендеров 223 %d" !TenderRtsCorp223.tenderUpCount)
             Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderRtsCorp.tenderCount)
-            Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderRtsCorp.tenderUpCount) 
+            Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderRtsCorp.tenderUpCount)
+    
+    member private this.ParsingSever() =
+            Logging.Log.logger "Начало парсинга"
+            try
+                 this.GetParser(ParserSeverStal(s))
+            with ex -> Logging.Log.logger ex
+            Logging.Log.logger "Конец парсинга"
+            Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderSeverStal.tenderCount)
+            Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderSeverStal.tenderUpCount) 
     member private this.GetParser(p: Parser) = p.Parsing()
 
