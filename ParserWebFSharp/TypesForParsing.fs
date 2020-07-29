@@ -541,3 +541,14 @@ type SeverStalRec =
       AddInfo: string
       DateEnd: DateTime
       DatePub: DateTime}
+    
+type BidMartNewRec =
+    { Href: string
+      PurName: string
+      PurNum: string
+      Status: string
+      CusName: string
+      Nmck: string
+      Currency: string
+      DateEnd: DateTime
+      DatePub: DateTime}

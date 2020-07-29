@@ -15,6 +15,8 @@ module Settings =
     let mutable internal UserTenderer = ""
     let mutable internal UserCisLink = ""
     let mutable internal PassCisLink = ""
+    let mutable internal UserBidMart = ""
+    let mutable internal PassBidMart = ""
     type T =
         { Database: string
           TempPathTenders: string
@@ -478,6 +480,8 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "usertenderer" then UserTenderer <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "usercislink" then UserCisLink <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passcislink" then PassCisLink <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "userbidmart" then UserBidMart <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "passbidmart" then PassBidMart <- (xnode :?> XmlNode).InnerText
                 else if (xnode :?> XmlNode).Name = "port" then Port <- Int32.Parse((xnode :?> XmlNode).InnerText)
             let connectstring =
                 sprintf

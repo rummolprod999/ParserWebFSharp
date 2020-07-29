@@ -252,11 +252,11 @@ type Init(s: Settings.T, arg: Arguments) =
     member private this.ParsingBidMart() =
         Logging.Log.logger "Начало парсинга"
         try
-            this.GetParser(ParserBidMart(s))
+            this.GetParser(ParserBidMartNew(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
-        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderBidMart.tenderCount)
-        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderBidMart.tenderUpCount)
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderBidMartNew.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderBidMartNew.tenderUpCount)
 
     member private this.ParsingComita() =
         Logging.Log.logger "Начало парсинга"
