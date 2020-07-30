@@ -547,6 +547,7 @@ type BidMartNewRec =
       PurName: string
       PurNum: string
       Status: string
+      DelivPlace: string
       CusName: string
       Nmck: string
       Currency: string

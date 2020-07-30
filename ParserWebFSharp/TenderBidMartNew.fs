@@ -1,9 +1,12 @@
 namespace ParserWeb
 
+open System.Threading
 open MySql.Data.MySqlClient
 open System
 open System.Data
+open OpenQA.Selenium
 open OpenQA.Selenium.Chrome
+open OpenQA.Selenium.Support.UI
 open Tools
 open TypeE
 open System.Collections.Generic
@@ -17,16 +20,35 @@ type TenderBidMartNew(stn: Settings.T, tn: BidMartNewRec, typeFz: int, etpName: 
 
 
     override this.Parsing() =
-        let builder = DocumentBuilder()
+        let builder = TenderBuilder()
         use con = new MySqlConnection(stn.ConStr)
         let res =
                    builder {
-                       return ""
+                        con.Open()
+                        let selectTend = sprintf "SELECT id_tender FROM %stender WHERE purchase_number = @purchase_number AND type_fz = @type_fz AND end_date = @end_date" stn.Prefix
+                        let cmd: MySqlCommand = new MySqlCommand(selectTend, con)
+                        cmd.Prepare()
+                        cmd.Parameters.AddWithValue("@purchase_number", tn.PurNum) |> ignore
+                        cmd.Parameters.AddWithValue("@type_fz", typeFz) |> ignore
+                        cmd.Parameters.AddWithValue("@end_date", tn.DateEnd) |> ignore
+                        let reader: MySqlDataReader = cmd.ExecuteReader()
+                        if reader.HasRows then reader.Close()
+                                               return! Error ""
+                        reader.Close()
+                        let wait = new WebDriverWait(driver, TimeSpan.FromSeconds(60.))
+                        driver.Navigate().GoToUrl(tn.Href)
+                        Thread.Sleep(1000)
+                        driver.SwitchTo().DefaultContent() |> ignore
+                        wait.Until (fun dr -> dr.FindElement(By.XPath("//div[@class = 'header']")).Displayed) |> ignore
+                        let body = driver.FindElement(By.XPath("//body"))
+                        let! pubDateT = body.findElementWithoutException("//label[. = 'Дата создания закупки']/following-sibling::span", sprintf <|"pubDateT not found %s" <| tn.Href)
+                        printfn "%s" pubDateT
+                        return ""
                    }
         match res with
-                | Succ _ -> ()
-                | Err e when e = "" -> ()
-                | Err r -> Logging.Log.logger r
+                | Success _ -> ()
+                | Error e when e = "" -> ()
+                | Error r -> Logging.Log.logger r
         ()
         
     member private this.SetCancelStatus(con: MySqlConnection, dateUpd: DateTime) =
