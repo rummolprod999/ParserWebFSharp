@@ -83,7 +83,7 @@ type ParserBidMartNew(stn: Settings.T) =
         with ex -> Logging.Log.logger (ex, t.Href)
         ()
     member private this.GetListTenders(driver : ChromeDriver) =
-        pageReloader driver 1 //TODO change it
+        pageReloader driver 500
         Thread.Sleep(3000)
         driver.SwitchTo().DefaultContent() |> ignore
         ()
@@ -101,7 +101,7 @@ type ParserBidMartNew(stn: Settings.T) =
             let! hrefT = i.findWElementWithoutException(".//a[contains(@class, 'link-color')]", sprintf "hrefT not found, text the element - %s" i.Text)
             let! href = hrefT.findAttributeWithoutException ("href", "href not found")
             let! purNum = href.Get1 ("/(\d+)$", sprintf "purNum not found %s" href )
-            let! purName = i.findElementWithoutException(".//a[@class = 'link-color']", sprintf "purName not found %s" i.Text)
+            let! purName = i.findElementWithoutException(".//a[contains(@class, 'link-color')]", sprintf "purName not found %s" i.Text)
             let! delivPlace = i.findElementWithoutException("./td[6]", sprintf "delivPlace not found %s" i.Text)
             let! status = i.findElementWithoutException("./td[3]", sprintf "status not found %s" i.Text)
             let! cusName = i.findElementWithoutException("./td[4]", sprintf "cusName not found %s" i.Text)
