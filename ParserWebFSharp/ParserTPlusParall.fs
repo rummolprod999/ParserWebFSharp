@@ -25,7 +25,7 @@ type ParserTPlusParall(stn : Settings.T) =
             with ex -> Logging.Log.logger ex
     
     member private this.ParserPage(url : string) =
-        let Page = Download.DownloadString url
+        let Page = Download.DownloadStringRts url
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", url)
         | s -> 
@@ -114,10 +114,13 @@ type ParserTPlusParall(stn : Settings.T) =
             | ur -> ur.TextContent.Replace("Статус:", "").Trim()
         
         let mutable Page = ""
-        let exist = this.TenderExister purNum datePub dateEnd status
-        match exist with
-        | NoExist -> Page <- Download.DownloadString Href
-        | Exist -> ()
+        let mutable exist = Exist
+        try
+            exist <- this.TenderExister purNum datePub dateEnd status
+            match exist with
+            | NoExist -> Page <- Download.DownloadStringRts Href
+            | Exist -> ()
+        with ex -> Logging.Log.logger ex
         let tn =
             { Href = Href
               PurNum = purNum

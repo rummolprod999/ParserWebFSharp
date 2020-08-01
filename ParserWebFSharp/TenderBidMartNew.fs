@@ -90,7 +90,7 @@ type TenderBidMartNew(stn: Settings.T, tn: BidMartNewRec, typeFz: int, etpName: 
                         let idPlacingWay = ref 0
                         let!  pwName = body.findElementWithoutExceptionOptional("//label[. = 'Процедура']/following-sibling::span", sprintf <|"pwName not found %s" <| tn.Href)
                         let mutable pwName = pwName
-                        if pwName.Length > 0 then pwName <- pwName.Substring(0, pwName.IndexOf("#"))
+                        if pwName.Length > 0 && pwName.IndexOf("#") > 0 then pwName <- pwName.Substring(0, pwName.IndexOf("#"))
                         match pwName with
                         | "" -> ()
                         | x -> idPlacingWay := this.GetPlacingWay con pwName settings
