@@ -7,7 +7,7 @@ open System
 open System.Data
 open TypeE
 
-type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : string, PlacingWayName : string, OrgName : string) =
+type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : string, PlacingWayName : string, OrgName : string, hrefLot: string) =
     inherit Tender("«Группа ЛСР»", "http://zakupki.lsrgroup.ru")
     let settings = stn
     let typeFz = 34
@@ -16,9 +16,10 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
     
     override this.Parsing() =
         let Page = Download.DownloadString urlT
-        match Page with
-        | null | "" -> Logging.Log.logger ("Dont get page", urlT)
-        | s -> this.ParserPage(s)
+        let PageLot = Download.DownloadString hrefLot
+        match (Page, PageLot) with
+        | (null, _) | ("", _) -> Logging.Log.logger ("Dont get page", urlT)
+        | (s, p) -> this.ParserPage(s, p)
     
     member private this.ParsingDocs (con : MySqlConnection) (idTender : int) (elem : IElement) =
         let docName = elem.TextContent.Trim()
@@ -37,37 +38,50 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
             cmd5.ExecuteNonQuery() |> ignore
         ()
     
-    member private this.ParserPage(p : string) =
+    member private this.ParserPage(p : string, lot : string) =
         let parser = new HtmlParser()
         let doc = parser.Parse(p)
-        let datePub = DateTime.Now
-        let endDateT = doc.QuerySelector("li:contains('Дата окончания подачи') > span:first-child")
+        let parserLot = new HtmlParser()
+        let lotDoc = parserLot.Parse(lot)
+        let pubDateT = doc.QuerySelector("label:contains('Дата начала подачи заявок') + div > div")
+        let pubDateS =
+            match pubDateT with
+            | null -> ""
+            | _ -> pubDateT.TextContent.Replace("г.", "").Trim().RegexReplace()
+        let datePub =
+            match pubDateS.DateFromString("dd.MM.yyyy") with
+            | Some d -> d
+            | None -> 
+                match pubDateS.DateFromString("dd.MM.yyyy HH:mm") with
+                | Some d -> d
+                | None -> raise <| System.Exception(sprintf "can not parse pubDateS %s, %s" pubDateS urlT)
+        let endDateT = doc.QuerySelector("label:contains('Дата окончания подачи') + div > div")
         
         let endDateS =
             match endDateT with
             | null -> ""
-            | _ -> endDateT.TextContent.Replace("г.", "").Trim().ReplaceDate().RegexReplace()
+            | _ -> endDateT.TextContent.Replace("г.", "").Trim().RegexReplace()
         
         let endDate =
-            match endDateS.DateFromString("d.MM.yyyy") with
+            match endDateS.DateFromString("dd.MM.yyyy") with
             | Some d -> d
             | None -> 
-                match endDateS.DateFromString("d.MM.yyyy HH:mm") with
+                match endDateS.DateFromString("dd.MM.yyyy HH:mm") with
                 | Some d -> d
                 | None -> raise <| System.Exception(sprintf "can not parse endDateS %s, %s" endDateS urlT)
         
-        let scoringDateT = doc.QuerySelector("li:contains('Подведение итогов') > span:first-child")
+        let scoringDateT = doc.QuerySelector("label:contains('Подведение итогов') + div div")
         
         let scoringDateS =
             match scoringDateT with
             | null -> ""
-            | _ -> scoringDateT.TextContent.Replace("г.", "").Trim().ReplaceDate().RegexReplace()
+            | _ -> scoringDateT.TextContent.Replace("г.", "").Trim().RegexReplace()
         
         let scoringDate =
-            match scoringDateS.DateFromString("d.MM.yyyy") with
+            match scoringDateS.DateFromString("dd.MM.yyyy") with
             | Some d -> d
             | None -> 
-                match scoringDateS.DateFromString("d.MM.yyyy HH:mm") with
+                match scoringDateS.DateFromString("dd.MM.yyyy HH:mm") with
                 | Some d -> d
                 | None -> DateTime.MinValue
         
@@ -113,6 +127,7 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
             commandBuilder.ConflictOption <- ConflictOption.OverwriteChanges
             adapter.Update(dt) |> ignore
             let Printform = href
+            let OrgName = doc.QuerySelector("label:contains('Организатор') + div > div a").TextContent.Trim()
             let IdOrg = ref 0
             match OrgName with
             | "" -> ()
@@ -145,6 +160,7 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
                     IdOrg := int cmd5.LastInsertedId
                     ()
             let idPlacingWay = ref 0
+            let PlacingWayName = doc.QuerySelector("label:contains('Способ проведения') + div > div").TextContent.Trim()
             match PlacingWayName with
             | "" -> ()
             | x -> idPlacingWay := this.GetPlacingWay con PlacingWayName settings
@@ -182,14 +198,16 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
             match updated with
             | true -> incr TenderLsr.tenderUpCount
             | false -> incr TenderLsr.tenderCount
-            let documents = doc.QuerySelectorAll("div.tender_versions a.dload")
+            let documents = doc.QuerySelectorAll("a.file-download-link")
             documents |> Seq.iter (this.ParsingDocs con !idTender)
             let lotNumber = 1
             let idLot = ref 0
-            let insertLot = sprintf "INSERT INTO %slot SET id_tender = @id_tender, lot_number = @lot_number" stn.Prefix
+            let LotName = lotDoc.QuerySelector("label:contains('Наименование лота') + div > div").TextContent.Trim()
+            let insertLot = sprintf "INSERT INTO %slot SET id_tender = @id_tender, lot_number = @lot_number, lot_name = @lot_name" stn.Prefix
             let cmd12 = new MySqlCommand(insertLot, con)
             cmd12.Parameters.AddWithValue("@id_tender", !idTender) |> ignore
             cmd12.Parameters.AddWithValue("@lot_number", lotNumber) |> ignore
+            cmd12.Parameters.AddWithValue("@lot_name", LotName) |> ignore
             cmd12.ExecuteNonQuery() |> ignore
             idLot := int cmd12.LastInsertedId
             let idCustomer = ref 0
@@ -224,8 +242,23 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
             cmd19.Prepare()
             cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
             cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
-            cmd19.Parameters.AddWithValue("@name", purName) |> ignore
+            cmd19.Parameters.AddWithValue("@name", LotName) |> ignore
             cmd19.ExecuteNonQuery() |> ignore
+            let delivPlace = lotDoc.QuerySelector("label:contains('Регион') + div > div").TextContent.Trim()
+            if delivPlace <> "" then
+                let insertCustomerRequirement =
+                    sprintf
+                        "INSERT INTO %scustomer_requirement SET id_lot = @id_lot, id_customer = @id_customer, delivery_place = @delivery_place, application_guarantee_amount = @application_guarantee_amount, contract_guarantee_amount = @contract_guarantee_amount, delivery_term = @delivery_term"
+                        stn.Prefix
+                let cmd16 = new MySqlCommand(insertCustomerRequirement, con)
+                cmd16.Prepare()
+                cmd16.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+                cmd16.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
+                cmd16.Parameters.AddWithValue("@delivery_place", delivPlace) |> ignore
+                cmd16.Parameters.AddWithValue("@application_guarantee_amount", "") |> ignore
+                cmd16.Parameters.AddWithValue("@contract_guarantee_amount", "") |> ignore
+                cmd16.Parameters.AddWithValue("@delivery_term", "") |> ignore
+                cmd16.ExecuteNonQuery() |> ignore
             try 
                 this.AddVerNumber con purNum stn typeFz
             with ex -> 
