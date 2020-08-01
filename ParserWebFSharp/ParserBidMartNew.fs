@@ -36,7 +36,7 @@ type ParserBidMartNew(stn: Settings.T) =
     override __.Parsing() =
         let driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
-        driver.Manage().Window.Maximize()
+        //driver.Manage().Window.Maximize()
         try 
             try 
                 __.ParserSelen driver
