@@ -39,13 +39,16 @@ type ParserMpkz(stn: Settings.T) =
         let builder = DocumentBuilder()
         let res = builder {
                        let! href = t.GsnAtrDocWithError "div.list-lot__name a" "href" <| sprintf "href not found %s %s " url (t.TextContent)
-                       let! purNum = t.GsnDocWithError "div.lot__tags span:contains('Тендер') > a" <| sprintf "purNum not found %s %s " url (t.TextContent)
+                       let! purNum1 = t.GsnDoc "div.lot__tags span:contains('Тендер') > a"
+                       let! purNum2 = t.GsnDoc "div.lot__tags span:contains('Лот') > a"
+                       let purNum = if purNum1 <> "" then purNum1 else purNum2
+                       if purNum = "" then return ""
                        let href = sprintf "https://mp.kz%s" href
                        let! purName = t.GsnDocWithError "div.list-lot__name a" <| sprintf "purName not found %s %s " url (t.TextContent)
-                       let! orgName = t.GsnDocWithError "small a" <| sprintf "orgName not found %s %s " url (t.TextContent)
+                       let! orgName = t.GsnDoc "small a"
                        let! dateEndT = t.GsnDocWithError "small[title='Дата завершения торга']" <| sprintf "dateEndT not found %s %s " url (t.TextContent)
                        let! dateEnd = dateEndT.DateFromStringDoc ("dd.MM.yyyy HH:mm", sprintf "dateEndT not found %s %s " href dateEndT)
-                       let! nmck = t.GsnDocWithError "span.list-lot__price" <| sprintf "nmck not found %s %s " url (t.TextContent)
+                       let! nmck = t.GsnDoc "span.list-lot__price"
                        let nmck = nmck.GetPriceFromStringKz()
                        let tend = { Href = href
                                     DateEnd = dateEnd
