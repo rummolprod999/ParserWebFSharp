@@ -149,6 +149,7 @@ module Download =
         s
 
     let DownloadString1251 url =
+        ServicePointManager.ServerCertificateValidationCallback <- fun sender certificate chain sslPolicyErrors -> true
         let mutable s = null
         let count = ref 0
         let mutable continueLooping = true
