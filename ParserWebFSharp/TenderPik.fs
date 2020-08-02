@@ -170,13 +170,11 @@ type TenderPik(stn : Settings.T, tn : PikRec, typeFz : int, etpName : string, et
             cmd19.Parameters.AddWithValue("@name", tn.PurName) |> ignore
             cmd19.Parameters.AddWithValue("@sum", "") |> ignore
             cmd19.ExecuteNonQuery() |> ignore
-            let addAttach =
-                sprintf 
-                    "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url, description = @description" 
-                    stn.Prefix
-            let cmd5 = new MySqlCommand(addAttach, con)
-            cmd5.Prepare()
+            
             for d in tn.Docs do
+                let addAttach = sprintf "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url, description = @description" stn.Prefix
+                let cmd5 = new MySqlCommand(addAttach, con)
+                cmd5.Prepare()
                 cmd5.Parameters.AddWithValue("@id_tender", !idTender) |> ignore
                 cmd5.Parameters.AddWithValue("@file_name", "Документация") |> ignore
                 cmd5.Parameters.AddWithValue("@url", d) |> ignore
