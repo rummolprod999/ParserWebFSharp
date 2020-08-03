@@ -61,6 +61,7 @@ type Arguments =
     | Apps
     | RtsCorp
     | Sever
+    | Medic
 
 type SlavNeft =
     | MEGION
@@ -551,5 +552,15 @@ type BidMartNewRec =
       CusName: string
       Nmck: string
       Currency: string
+      DateEnd: DateTime
+      DatePub: DateTime}
+    
+type MedicRec =
+    { Href: string
+      PurName: string
+      PurNum: string
+      CusName: string
+      CusPerson: string
+      CusPhone: string
       DateEnd: DateTime
       DatePub: DateTime}

@@ -21,8 +21,9 @@ type Init(s: Settings.T, arg: Arguments) =
             | true -> ()
         match arg with
         | x ->
-            Logging.FileLog <- sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar x
-                               <| DateTime.Now.ToString("dd_MM_yyyy")
+            Logging.FileLog <-
+                sprintf "%s%clog_parsing_%O_%s.log" s.LogPathTenders Path.DirectorySeparatorChar x
+                <| DateTime.Now.ToString("dd_MM_yyyy")
 
     member public this.Parsing() =
         match arg with
@@ -80,6 +81,7 @@ type Init(s: Settings.T, arg: Arguments) =
         | Apps -> this.ParsingApps()
         | RtsCorp -> this.ParsingRtsCorp()
         | Sever -> this.ParsingSever()
+        | Medic -> this.ParsingMedic()
 
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -151,8 +153,10 @@ type Init(s: Settings.T, arg: Arguments) =
         Logging.Log.logger (sprintf "Обновили Холдинг «Росгео» тендеров %d" !TenderRossel.tenderUpCountRosgeo)
         Logging.Log.logger (sprintf "Добавили ПАО «Россети» тендеров %d" !TenderRossel.tenderCountRosseti)
         Logging.Log.logger (sprintf "Обновили ПАО «Россети» тендеров %d" !TenderRossel.tenderUpCountRosseti)
-        Logging.Log.logger (sprintf "Добавили Корпоративный интернет-магазин тендеров %d" !TenderRossel.tenderCountKim)
-        Logging.Log.logger (sprintf "Обновили Корпоративный интернет-магазин тендеров %d" !TenderRossel.tenderUpCountKim)
+        Logging.Log.logger
+            (sprintf "Добавили Корпоративный интернет-магазин тендеров %d" !TenderRossel.tenderCountKim)
+        Logging.Log.logger
+            (sprintf "Обновили Корпоративный интернет-магазин тендеров %d" !TenderRossel.tenderUpCountKim)
 
     member private this.ParsingNeft() =
         Logging.Log.logger "Начало парсинга"
@@ -169,7 +173,8 @@ type Init(s: Settings.T, arg: Arguments) =
             this.GetParser(ParserSlav(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
-        Logging.Log.logger (sprintf "Добавили тендеров ОАО «Славнефть-Мегионнефтегаз» %d" !TenderSlav.tenderCountMegion)
+        Logging.Log.logger
+            (sprintf "Добавили тендеров ОАО «Славнефть-Мегионнефтегаз» %d" !TenderSlav.tenderCountMegion)
         Logging.Log.logger
             (sprintf "Обновили тендеров ОАО «Славнефть-Мегионнефтегаз» %d" !TenderSlav.tenderUpCountMegion)
         Logging.Log.logger (sprintf "Добавили тендеров ООО «Байкитская НГРЭ» %d" !TenderSlav.tenderCountNgre)
@@ -342,7 +347,7 @@ type Init(s: Settings.T, arg: Arguments) =
     member private this.ParsingAriba() =
         Logging.Log.logger "Начало парсинга"
         try
-             this.GetParser(ParserAriba(s))
+            this.GetParser(ParserAriba(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderAriba.tenderCount)
@@ -351,7 +356,7 @@ type Init(s: Settings.T, arg: Arguments) =
     member private this.ParsingBeeline() =
         Logging.Log.logger "Начало парсинга"
         try
-             this.GetParser(ParserBeeline(s))
+            this.GetParser(ParserBeeline(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderBeeline.tenderCount)
@@ -360,7 +365,7 @@ type Init(s: Settings.T, arg: Arguments) =
     member private this.ParsingTsm() =
         Logging.Log.logger "Начало парсинга"
         try
-             this.GetParser(ParserTsm(s))
+            this.GetParser(ParserTsm(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderTsm.tenderCount)
@@ -369,7 +374,7 @@ type Init(s: Settings.T, arg: Arguments) =
     member private this.ParsingSmart() =
         Logging.Log.logger "Начало парсинга"
         try
-             this.GetParser(ParserSmartNew(s))
+            this.GetParser(ParserSmartNew(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderSmartNew.tenderCount)
@@ -378,7 +383,7 @@ type Init(s: Settings.T, arg: Arguments) =
     member private this.ParsingRtsGen() =
         Logging.Log.logger "Начало парсинга"
         try
-             this.GetParser(ParserRtsGen(s))
+            this.GetParser(ParserRtsGen(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderRtsGen.tenderCount)
@@ -387,7 +392,7 @@ type Init(s: Settings.T, arg: Arguments) =
     member private this.ParsingTj() =
         Logging.Log.logger "Начало парсинга"
         try
-             this.GetParser(ParserTj(s))
+            this.GetParser(ParserTj(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderTj.tenderCount)
@@ -396,7 +401,7 @@ type Init(s: Settings.T, arg: Arguments) =
     member private this.ParsingTurk() =
         Logging.Log.logger "Начало парсинга"
         try
-             this.GetParser(ParserTurk(s))
+            this.GetParser(ParserTurk(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderTurk.tenderCount)
@@ -405,7 +410,7 @@ type Init(s: Settings.T, arg: Arguments) =
     member private this.ParsingKg() =
         Logging.Log.logger "Начало парсинга"
         try
-             this.GetParser(ParserKg(s))
+            this.GetParser(ParserKg(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderKg.tenderCount)
@@ -414,7 +419,7 @@ type Init(s: Settings.T, arg: Arguments) =
     member private this.ParsingEten() =
         Logging.Log.logger "Начало парсинга"
         try
-             this.GetParser(ParserEten(s))
+            this.GetParser(ParserEten(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderEten.tenderCount)
@@ -423,7 +428,7 @@ type Init(s: Settings.T, arg: Arguments) =
     member private this.ParsingCisLink() =
         Logging.Log.logger "Начало парсинга"
         try
-             this.GetParser(ParserCisLink(s))
+            this.GetParser(ParserCisLink(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderCisLink.tenderCount)
@@ -432,7 +437,7 @@ type Init(s: Settings.T, arg: Arguments) =
     member private this.ParsingPetr() =
         Logging.Log.logger "Начало парсинга"
         try
-             this.GetParser(ParserPetr(s))
+            this.GetParser(ParserPetr(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderPetr.tenderCount)
@@ -441,157 +446,166 @@ type Init(s: Settings.T, arg: Arguments) =
     member private this.ParsingMpKz() =
         Logging.Log.logger "Начало парсинга"
         try
-             this.GetParser(ParserMpkz(s))
+            this.GetParser(ParserMpkz(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderMpkz.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderMpkz.tenderUpCount)
-        
+
     member private this.ParsingEstoreSpb() =
         Logging.Log.logger "Начало парсинга"
         try
-             this.GetParser(ParserEstoreSpb(s))
+            this.GetParser(ParserEstoreSpb(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderEstoreSpb.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderEstoreSpb.tenderUpCount)
-    
+
     member private this.ParsingRosAgro() =
         Logging.Log.logger "Начало парсинга"
         try
-             this.GetParser(ParserRosAgro(s))
+            this.GetParser(ParserRosAgro(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderRosAgro.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderRosAgro.tenderUpCount)
-    
+
     member private this.ParsingNeftReg() =
         Logging.Log.logger "Начало парсинга"
         try
-             this.GetParser(ParserNeftReg(s))
+            this.GetParser(ParserNeftReg(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderNeftReg.tenderCount)
-        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderNeftReg.tenderUpCount)  
-    
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderNeftReg.tenderUpCount)
+
     member private this.ParsingForScience() =
         Logging.Log.logger "Начало парсинга"
         try
-             this.GetParser(ParserForScience(s))
+            this.GetParser(ParserForScience(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderForScience.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderForScience.tenderUpCount)
-        
-    
+
+
     member private this.ParsingVolgZmo() =
         Logging.Log.logger "Начало парсинга"
         try
-             this.GetParser(ParserVolgZmo(s))
+            this.GetParser(ParserVolgZmo(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderVolgZmo.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderVolgZmo.tenderUpCount)
-    
-    member private this.ParsingRusal() =
-            Logging.Log.logger "Начало парсинга"
-            try
-                 this.GetParser(ParserRusal(s))
-            with ex -> Logging.Log.logger ex
-            Logging.Log.logger "Конец парсинга"
-            Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderRusal.tenderCount)
-            Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderRusal.tenderUpCount)
-    
-    member private this.ParsingMoek() =
-            Logging.Log.logger "Начало парсинга"
-            try
-                 this.GetParser(ParserMoek(s))
-            with ex -> Logging.Log.logger ex
-            Logging.Log.logger "Конец парсинга"
-            Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderMoek.tenderCount)
-            Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderMoek.tenderUpCount)
-    
-    member private this.ParsingKamaz() =
-            Logging.Log.logger "Начало парсинга"
-            try
-                 this.GetParser(ParserKamaz(s))
-            with ex -> Logging.Log.logger ex
-            Logging.Log.logger "Конец парсинга"
-            Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderKamaz.tenderCount)
-            Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderKamaz.tenderUpCount)
-    
-    member private this.ParsingUni() =
-            Logging.Log.logger "Начало парсинга"
-            try
-                 this.GetParser(ParserUni(s))
-            with ex -> Logging.Log.logger ex
-            Logging.Log.logger "Конец парсинга"
-            Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderUni.tenderCount)
-            Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderUni.tenderUpCount)
-    
-    member private this.ParsingKsk() =
-            Logging.Log.logger "Начало парсинга"
-            try
-                 this.GetParser(ParserKsk(s))
-            with ex -> Logging.Log.logger ex
-            Logging.Log.logger "Конец парсинга"
-            Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderKsk.tenderCount)
-            Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderKsk.tenderUpCount)
-    
-    member private this.ParsingGmt() =
-            Logging.Log.logger "Начало парсинга"
-            try
-                 this.GetParser(ParserGmt(s))
-            with ex -> Logging.Log.logger ex
-            Logging.Log.logger "Конец парсинга"
-            Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderGmt.tenderCount)
-            Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderGmt.tenderUpCount)
-    
-    member private this.ParsingYmz() =
-            Logging.Log.logger "Начало парсинга"
-            try
-                 this.GetParser(ParserYmz(s))
-            with ex -> Logging.Log.logger ex
-            Logging.Log.logger "Конец парсинга"
-            Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderYmz.tenderCount)
-            Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderYmz.tenderUpCount)
-    
-    member private this.ParsingUnipro() =
-            Logging.Log.logger "Начало парсинга"
-            try
-                 this.GetParser(ParserUnipro(s))
-            with ex -> Logging.Log.logger ex
-            Logging.Log.logger "Конец парсинга"
-            Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderUnipro.tenderCount)
-            Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderUnipro.tenderUpCount)
-            
-    member private this.ParsingApps() =
-            Logging.Log.logger "Начало парсинга"
-            try
-                 this.GetParser(ParserApps(s))
-            with ex -> Logging.Log.logger ex
-            Logging.Log.logger "Конец парсинга"
-            Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderApps.tenderCount)
-            Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderApps.tenderUpCount) 
-            
-    member private this.ParsingRtsCorp() =
-            Logging.Log.logger "Начало парсинга"
-            try
-                 this.GetParser(ParserRtsCorp(s))
-            with ex -> Logging.Log.logger ex
-            Logging.Log.logger "Конец парсинга"
-            Logging.Log.logger (sprintf "Добавили тендеров 223 %d" !TenderRtsCorp223.tenderCount)
-            Logging.Log.logger (sprintf "Обновили тендеров 223 %d" !TenderRtsCorp223.tenderUpCount)
-            Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderRtsCorp.tenderCount)
-            Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderRtsCorp.tenderUpCount)
-    
-    member private this.ParsingSever() =
-            Logging.Log.logger "Начало парсинга"
-            try
-                 this.GetParser(ParserSeverStal(s))
-            with ex -> Logging.Log.logger ex
-            Logging.Log.logger "Конец парсинга"
-            Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderSeverStal.tenderCount)
-            Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderSeverStal.tenderUpCount) 
-    member private this.GetParser(p: Parser) = p.Parsing()
 
+    member private this.ParsingRusal() =
+        Logging.Log.logger "Начало парсинга"
+        try
+            this.GetParser(ParserRusal(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderRusal.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderRusal.tenderUpCount)
+
+    member private this.ParsingMoek() =
+        Logging.Log.logger "Начало парсинга"
+        try
+            this.GetParser(ParserMoek(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderMoek.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderMoek.tenderUpCount)
+
+    member private this.ParsingKamaz() =
+        Logging.Log.logger "Начало парсинга"
+        try
+            this.GetParser(ParserKamaz(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderKamaz.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderKamaz.tenderUpCount)
+
+    member private this.ParsingUni() =
+        Logging.Log.logger "Начало парсинга"
+        try
+            this.GetParser(ParserUni(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderUni.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderUni.tenderUpCount)
+
+    member private this.ParsingKsk() =
+        Logging.Log.logger "Начало парсинга"
+        try
+            this.GetParser(ParserKsk(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderKsk.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderKsk.tenderUpCount)
+
+    member private this.ParsingGmt() =
+        Logging.Log.logger "Начало парсинга"
+        try
+            this.GetParser(ParserGmt(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderGmt.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderGmt.tenderUpCount)
+
+    member private this.ParsingYmz() =
+        Logging.Log.logger "Начало парсинга"
+        try
+            this.GetParser(ParserYmz(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderYmz.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderYmz.tenderUpCount)
+
+    member private this.ParsingUnipro() =
+        Logging.Log.logger "Начало парсинга"
+        try
+            this.GetParser(ParserUnipro(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderUnipro.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderUnipro.tenderUpCount)
+
+    member private this.ParsingApps() =
+        Logging.Log.logger "Начало парсинга"
+        try
+            this.GetParser(ParserApps(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderApps.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderApps.tenderUpCount)
+
+    member private this.ParsingRtsCorp() =
+        Logging.Log.logger "Начало парсинга"
+        try
+            this.GetParser(ParserRtsCorp(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров 223 %d" !TenderRtsCorp223.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров 223 %d" !TenderRtsCorp223.tenderUpCount)
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderRtsCorp.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderRtsCorp.tenderUpCount)
+
+    member private this.ParsingSever() =
+        Logging.Log.logger "Начало парсинга"
+        try
+            this.GetParser(ParserSeverStal(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderSeverStal.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderSeverStal.tenderUpCount)
+
+    member private this.ParsingMedic() =
+        Logging.Log.logger "Начало парсинга"
+        try
+            this.GetParser(ParserMedic(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderMedic.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderMedic.tenderUpCount)
+
+    member private this.GetParser(p: Parser) = p.Parsing()
