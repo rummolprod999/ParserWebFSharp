@@ -172,14 +172,16 @@ type TenderPik(stn : Settings.T, tn : PikRec, typeFz : int, etpName : string, et
             cmd19.ExecuteNonQuery() |> ignore
             
             for d in tn.Docs do
-                let addAttach = sprintf "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url, description = @description" stn.Prefix
-                let cmd5 = new MySqlCommand(addAttach, con)
-                cmd5.Prepare()
-                cmd5.Parameters.AddWithValue("@id_tender", !idTender) |> ignore
-                cmd5.Parameters.AddWithValue("@file_name", "Документация") |> ignore
-                cmd5.Parameters.AddWithValue("@url", d) |> ignore
-                cmd5.Parameters.AddWithValue("@description", "") |> ignore
-                cmd5.ExecuteNonQuery() |> ignore
+                try
+                    let addAttach = sprintf "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url, description = @description" stn.Prefix
+                    let cmd5 = new MySqlCommand(addAttach, con)
+                    cmd5.Prepare()
+                    cmd5.Parameters.AddWithValue("@id_tender", !idTender) |> ignore
+                    cmd5.Parameters.AddWithValue("@file_name", "Документация") |> ignore
+                    cmd5.Parameters.AddWithValue("@url", d) |> ignore
+                    cmd5.Parameters.AddWithValue("@description", "") |> ignore
+                    cmd5.ExecuteNonQuery() |> ignore
+                with ex -> ()
             try 
                 this.AddVerNumber con tn.PurNum stn typeFz
             with ex -> 
