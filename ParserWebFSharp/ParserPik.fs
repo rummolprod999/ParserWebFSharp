@@ -38,10 +38,10 @@ type ParserPik(stn : Settings.T) =
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
-        wait.Until(fun dr -> dr.FindElement(By.XPath("//button[@class = 'close-button ng-star-inserted']")).Displayed) |> ignore
+        (*wait.Until(fun dr -> dr.FindElement(By.XPath("//button[@class = 'close-button ng-star-inserted']")).Displayed) |> ignore
         driver.SwitchTo().DefaultContent() |> ignore
         driver.FindElement(By.XPath("//button[@class = 'close-button ng-star-inserted']")).Click()
-        driver.SwitchTo().DefaultContent() |> ignore
+        driver.SwitchTo().DefaultContent() |> ignore*)
         wait.Until(fun dr -> dr.FindElement(By.XPath("//app-table-container/app-table-row")).Displayed) |> ignore
         this.ParserListTenders driver
         this.GetNextPage driver wait
