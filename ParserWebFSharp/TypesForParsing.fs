@@ -62,6 +62,7 @@ type Arguments =
     | RtsCorp
     | Sever
     | Medic
+    | Bidzaar
 
 type SlavNeft =
     | MEGION
@@ -562,5 +563,14 @@ type MedicRec =
       CusName: string
       CusPerson: string
       CusPhone: string
+      DateEnd: DateTime
+      DatePub: DateTime}
+
+type BidzaarRec =
+    { Href: string
+      PurName: string
+      PurNum: string
+      CusName: string
+      PwName: string
       DateEnd: DateTime
       DatePub: DateTime}

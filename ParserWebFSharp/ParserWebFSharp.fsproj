@@ -109,6 +109,8 @@
     <Compile Include="ParserVolgZmo.fs" />
     <Compile Include="TenderMedic.fs" />
     <Compile Include="ParserMedic.fs" />
+    <Compile Include="TenderBidZaar.fs" />
+    <Compile Include="ParserBidZaar.fs" />
     <Compile Include="TenderRusal.fs" />
     <Compile Include="ParserRusal.fs" />
     <Compile Include="TenderMoek.fs" />

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="$USER_HOME$/.cache/JetBrains/Rider2020.1/extResources" t="IncludeRecursive" />
-    <e p="$USER_HOME$/.cache/JetBrains/Rider2020.1/resharper-host/local/Transient/ReSharperHost/v201/SolutionCaches/_ParserWebFSharp.1417816402.00" t="ExcludeRecursive" />
+    <e p="$USER_HOME$/.cache/JetBrains/Rider2020.2/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.cache/JetBrains/Rider2020.2/resharper-host/local/Transient/Rider/v202/SolutionCaches/_ParserWebFSharp.1417816402.00" t="ExcludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p=".git/info/exclude" t="IncludeRecursive" />
       <e p="ParserWebFSharp" t="IncludeRecursive">
@@ -22,6 +22,7 @@
         <e p="ParserBeeline.fs" t="Include" />
         <e p="ParserBidMart.fs" t="Include" />
         <e p="ParserBidMartNew.fs" t="Include" />
+        <e p="ParserBidZaar.fs" t="Include" />
         <e p="ParserBtg.fs" t="Include" />
         <e p="ParserButb.fs" t="Include" />
         <e p="ParserChPt.fs" t="Include" />
@@ -85,6 +86,7 @@
         <e p="TenderBeeline.fs" t="Include" />
         <e p="TenderBidMart.fs" t="Include" />
         <e p="TenderBidMartNew.fs" t="Include" />
+        <e p="TenderBidZaar.fs" t="Include" />
         <e p="TenderBtg.fs" t="Include" />
         <e p="TenderBuilder.fs" t="Include" />
         <e p="TenderButb.fs" t="Include" />
