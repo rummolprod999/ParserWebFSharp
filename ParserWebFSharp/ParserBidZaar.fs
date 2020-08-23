@@ -25,7 +25,7 @@ type ParserBidZaar(stn: Settings.T) =
     let options = ChromeOptions()
 
     do 
-        //options.AddArguments("headless")
+        options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
         options.AddArguments("disable-dev-shm-usage")
@@ -108,6 +108,26 @@ type ParserBidZaar(stn: Settings.T) =
     member private this.ParserTenders (i : IWebElement) =
         let builder = TenderBuilder()
         let res = builder {
+            let! hrefT = i.findWElementWithoutException(".//a[contains(@class, 'item ng-star-inserted')]", sprintf "hrefT not found, text the element - %s" i.Text)
+            let! href = hrefT.findAttributeWithoutException ("href", "href not found")
+            let! purNum = i.findElementWithoutException(".//div[contains(@class, 'number')]", sprintf "purNum not found %s" i.Text)
+            let! purName = i.findElementWithoutException(".//div[@class = 'body']/div[@class = 'name']", sprintf "purName not found %s" i.Text)
+            let! pwName = i.findElementWithoutException(".//cgn-prs-status[@class = 'status proposal']", sprintf "pwName not found %s" i.Text)
+            let! cusName = i.findElementWithoutException(".//cgn-prs-side-info[@class = 'side-info']//div[@class = 'name']", sprintf "cusName not found %s" i.Text)
+            let! pubDateT = i.findElementWithoutException(".//div[@class='title' and . = 'Опубликована']/following-sibling::div", sprintf "pubDateT not found %s" i.Text)
+            let! datePub = pubDateT.DateFromString("dd.MM.yyyy • HH:mm", sprintf "datePub not parse %s" pubDateT)
+            let! endDateT = i.findElementWithoutException(".//div[@class='title' and . = 'Прием предложений до']/following-sibling::div", sprintf "endDateT not found %s" i.Text)
+            let! dateEnd1 = endDateT.Get1("(\d{2}\.\d{2}\.\d{4}.+\d{2}:\d{2})", sprintf "dateEnd1 not found %s" endDateT)
+            let! dateEnd = dateEnd1.DateFromString("dd.MM.yyyy • HH:mm", sprintf "endDate not parse %s" dateEnd1)
+            let ten =
+                    { Href = href
+                      PurName = purName
+                      PurNum = purNum
+                      CusName = cusName
+                      PwName = pwName
+                      DateEnd = dateEnd
+                      DatePub = datePub }
+            listTenders.Add(ten)
             return ""
         }
         match res with
