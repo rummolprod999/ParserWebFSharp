@@ -252,6 +252,31 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
                 cmd19.Parameters.AddWithValue("@okpd_name", okpdName) |> ignore
                 cmd19.ExecuteNonQuery() |> ignore
                 ()
+        let purObjects = l.SelectNodes (".//table[contains(., 'ОКВЭД2')]//tbody/tr[position() > 1]")
+        if purObjects <> null then
+            for po in purObjects do
+                let namePo = po.Gsn("./td[1]")
+                let namePo = if namePo <> "" then namePo else lotName
+                let namePo = (sprintf "%s" namePo).Trim()
+                let okpdName = po.Gsn("./td[2]")
+                let okei = po.Gsn("./td[4]")
+                let quantity = po.Gsn("./td[5]").GetPriceFromString()
+                let price = ""
+                let sum = ""
+                let insertLotitem = sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum, price = @price, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, okpd_name = @okpd_name" stn.Prefix
+                let cmd19 = new MySqlCommand(insertLotitem, con)
+                cmd19.Prepare()
+                cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+                cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
+                cmd19.Parameters.AddWithValue("@name", namePo) |> ignore
+                cmd19.Parameters.AddWithValue("@sum", sum) |> ignore
+                cmd19.Parameters.AddWithValue("@price", price) |> ignore
+                cmd19.Parameters.AddWithValue("@quantity_value", quantity) |> ignore
+                cmd19.Parameters.AddWithValue("@customer_quantity_value", quantity) |> ignore
+                cmd19.Parameters.AddWithValue("@okei", okei) |> ignore
+                cmd19.Parameters.AddWithValue("@okpd_name", okpdName) |> ignore
+                cmd19.ExecuteNonQuery() |> ignore
+                ()
         ()
     member private this.SetCancelStatus(con: MySqlConnection, dateUpd: DateTime) =
         let mutable cancelStatus = 0
