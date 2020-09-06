@@ -40,6 +40,7 @@
         <e p="ParserKsk.fs" t="Include" />
         <e p="ParserLsr.fs" t="Include" />
         <e p="ParserMedic.fs" t="Include" />
+        <e p="ParserMetodholding.fs" t="Include" />
         <e p="ParserMoek.fs" t="Include" />
         <e p="ParserMpKz.fs" t="Include" />
         <e p="ParserNeft.fs" t="Include" />
@@ -105,6 +106,7 @@
         <e p="TenderKsk.fs" t="Include" />
         <e p="TenderLsr.fs" t="Include" />
         <e p="TenderMedic.fs" t="Include" />
+        <e p="TenderMetodholding.fs" t="Include" />
         <e p="TenderMoek.fs" t="Include" />
         <e p="TenderMpKz.fs" t="Include" />
         <e p="TenderNeft.fs" t="Include" />

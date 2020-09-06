@@ -146,6 +146,8 @@ module Settings =
         let mutable LogPathTendersMedic = ""
         let mutable TempPathTendersBidzaar = ""
         let mutable LogPathTendersBidzaar = ""
+        let mutable TempPathTendersMetodholding = ""
+        let mutable LogPathTendersMetodholding  = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -493,6 +495,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_bidzaar" then
                                     LogPathTendersBidzaar <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_metodholding" then
+                                    TempPathTendersMetodholding <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_metodholding" then
+                                    LogPathTendersMetodholding <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -570,6 +578,7 @@ module Settings =
                 | Sever -> TempPathTendersSeverStal
                 | Medic -> TempPathTendersMedic
                 | Bidzaar -> TempPathTendersBidzaar
+                | Metodholding -> TempPathTendersMetodholding
 
             let LogPathTenders =
                 match arg with
@@ -629,6 +638,7 @@ module Settings =
                 | Sever -> LogPathTendersSeverStal
                 | Medic -> LogPathTendersMedic
                 | Bidzaar -> LogPathTendersBidzaar
+                | Metodholding -> LogPathTendersMetodholding
 
             { Database = Database
               TempPathTenders = TempPathTenders

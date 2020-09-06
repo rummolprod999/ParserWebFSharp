@@ -63,6 +63,7 @@ type Arguments =
     | Sever
     | Medic
     | Bidzaar
+    | Metodholding
 
 type SlavNeft =
     | MEGION
@@ -572,5 +573,16 @@ type BidzaarRec =
       PurNum: string
       CusName: string
       PwName: string
+      DateEnd: DateTime
+      DatePub: DateTime}
+
+type MetodholdingRec =
+    { Href: string
+      PurName: string
+      PurNum: string
+      CusName: string
+      Person: string
+      PersonEmail: string
+      PersonPhone: string
       DateEnd: DateTime
       DatePub: DateTime}
