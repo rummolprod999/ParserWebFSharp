@@ -1,11 +1,8 @@
 namespace ParserWeb
 
-open System
-open System.Linq.Expressions
 open TypeE
 open AngleSharp.Dom
 open AngleSharp.Parser.Html
-open System.Web
 
 type ParserEstoreSpb(stn: Settings.T) =
     inherit Parser()

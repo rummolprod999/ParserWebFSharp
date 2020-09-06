@@ -1,15 +1,9 @@
 namespace ParserWeb
 
-open System
-open System.Linq.Expressions
 open TypeE
 open AngleSharp.Dom
 open AngleSharp.Parser.Html
 open System.Linq
-open System.Linq.Expressions
-open System.Web
-open Tools
-open System.Collections.Generic
 
 type ParserGmt(stn: Settings.T) =
     inherit Parser()

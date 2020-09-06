@@ -1,7 +1,6 @@
 namespace ParserWeb
 
 open MySql.Data.MySqlClient
-open Newtonsoft.Json
 open Newtonsoft.Json.Linq
 open System
 open System.Data

@@ -1,10 +1,5 @@
 namespace ParserWeb
 
-open System
-open TypeE
-open AngleSharp.Dom
-open AngleSharp.Parser.Html
-open System.Web
 open Newtonsoft.Json.Linq
 open NewtonExt
 open DocumentBuilderNewton

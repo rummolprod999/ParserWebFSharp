@@ -10,10 +10,7 @@ open System.Data
 open OpenQA.Selenium
 open OpenQA.Selenium.Chrome
 open OpenQA.Selenium.Support.UI
-open Tools
 open TypeE
-open System.Collections.Generic
-open System.Web
 
 type TenderBidMartNew(stn: Settings.T, tn: BidMartNewRec, typeFz: int, etpName: string, etpUrl: string, driver : ChromeDriver) =
     inherit Tender(etpName, etpUrl)

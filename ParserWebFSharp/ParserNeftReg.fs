@@ -1,12 +1,9 @@
 namespace ParserWeb
 
-open System
-open System.Linq.Expressions
 open TypeE
 open AngleSharp.Dom
 open AngleSharp.Parser.Html
 open System.Linq
-open System.Web
 
 type ParserNeftReg(stn: Settings.T) =
     inherit Parser()

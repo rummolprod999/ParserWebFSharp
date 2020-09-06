@@ -3,11 +3,7 @@ namespace ParserWeb
 open MySql.Data.MySqlClient
 open System
 open System.Data
-open Tools
 open TypeE
-open HtmlAgilityPack
-open System.Web
-open System.Collections.Generic
 
 type TenderSeverStal(stn: Settings.T, tn: SeverStalRec, typeFz: int, etpName: string, etpUrl: string) =
     inherit Tender(etpName, etpUrl)

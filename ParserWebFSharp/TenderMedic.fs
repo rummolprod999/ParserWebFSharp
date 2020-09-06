@@ -1,8 +1,6 @@
 namespace ParserWeb
 
 open System.Collections.ObjectModel
-open System.Globalization
-open System.Text.RegularExpressions
 open System.Threading
 open MySql.Data.MySqlClient
 open System
@@ -10,10 +8,7 @@ open System.Data
 open OpenQA.Selenium
 open OpenQA.Selenium.Chrome
 open OpenQA.Selenium.Support.UI
-open Tools
 open TypeE
-open System.Collections.Generic
-open System.Web
 
 type TenderMedic(stn: Settings.T, tn: MedicRec, typeFz: int, etpName: string, etpUrl: string, driver : ChromeDriver) =
     inherit Tender(etpName, etpUrl)

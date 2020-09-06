@@ -4,7 +4,6 @@ open HtmlAgilityPack
 open MySql.Data.MySqlClient
 open System
 open System.Data
-open Tools
 open TypeE
 open System.Collections.Generic
 

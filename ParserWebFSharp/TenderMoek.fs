@@ -7,7 +7,6 @@ open System.Data
 open Tools
 open TypeE
 open System.Collections.Generic
-open System.Web
 
 type TenderMoek(stn: Settings.T, tn: MoekRec, typeFz: int, etpName: string, etpUrl: string) =
     inherit Tender(etpName, etpUrl)

@@ -581,8 +581,6 @@ type MetodholdingRec =
       PurName: string
       PurNum: string
       CusName: string
-      Person: string
-      PersonEmail: string
-      PersonPhone: string
       DateEnd: DateTime
-      DatePub: DateTime}
+      DatePub: DateTime
+      Attr: string}

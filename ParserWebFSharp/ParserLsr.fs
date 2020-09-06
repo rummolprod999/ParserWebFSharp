@@ -4,13 +4,7 @@ open System
 open OpenQA.Selenium
 open OpenQA.Selenium.Chrome
 open OpenQA.Selenium.Support.UI
-open System.Linq
 open System.Collections.Generic
-open System.Linq.Expressions
-open System.Threading
-open System.Web
-open Tools
-open TypeE
 open System.Threading
 
 type ParserLsr(stn : Settings.T) = 

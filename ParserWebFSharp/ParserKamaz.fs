@@ -3,8 +3,6 @@ namespace ParserWeb
 open System
 open System.Collections.Generic
 open System.Threading
-open TypeE
-open OpenQA.Selenium
 open OpenQA.Selenium.Chrome
 open OpenQA.Selenium.Support.UI
 

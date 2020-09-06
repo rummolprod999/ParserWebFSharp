@@ -1,6 +1,7 @@
 namespace ParserWeb
 
 open System
+open System.Collections.Generic
 open System.IO
 open System.Net
 open System.Text
@@ -308,6 +309,26 @@ module Download =
                 use client = new HttpClient()
                 let response = client.PostAsync(url, new StringContent(json, Encoding.UTF8, "application/json")).Result;
                 ret <- response.Content.ReadAsStringAsync().Result
+                cc <- false
+            with ex ->
+                Logging.Log.logger(ex)
+                if !count >= 3 then
+                    Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток" url !count)
+                    cc <- false
+                else incr count
+                Thread.Sleep(5000)
+        ret
+    
+    let DownloadPost (dict: Dictionary<string, string>, url: string) : string =
+        let content = new FormUrlEncodedContent(dict) :> HttpContent
+        let mutable ret = null
+        let count = ref 0
+        let mutable cc = true
+        while cc do
+            try
+                use client = new HttpClient()
+                let response: Task<HttpResponseMessage> = client.PostAsync(url, content);
+                ret <- response.Result.Content.ReadAsStringAsync().Result
                 cc <- false
             with ex ->
                 Logging.Log.logger(ex)

@@ -6,8 +6,6 @@ open System.Data
 open Tools
 open TypeE
 open HtmlAgilityPack
-open System.Web
-open System.Collections.Generic
 
 type TenderApps(stn: Settings.T, tn: AppsRec, typeFz: int, etpName: string, etpUrl: string) =
     inherit Tender(etpName, etpUrl)

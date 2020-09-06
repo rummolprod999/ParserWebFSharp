@@ -3,10 +3,8 @@ namespace ParserWeb
 open MySql.Data.MySqlClient
 open System
 open System.Data
-open Tools
 open TypeE
 open HtmlAgilityPack
-open System.Web
 open System.Collections.Generic
 
 type TenderYmz(stn: Settings.T, tn: YmzRec, typeFz: int, etpName: string, etpUrl: string) =

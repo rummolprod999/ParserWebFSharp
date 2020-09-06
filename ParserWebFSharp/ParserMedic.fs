@@ -1,17 +1,9 @@
 namespace ParserWeb
 
 open System
-open System.Linq.Expressions
 open TypeE
-open AngleSharp.Dom
-open AngleSharp.Parser.Html
-open System.Linq
 open System.Collections.Generic
-open System.Linq.Expressions
 open System.Threading
-open System.Web
-open Tools
-open TypeE
 open OpenQA.Selenium
 open OpenQA.Selenium.Chrome
 open OpenQA.Selenium.Support.UI
