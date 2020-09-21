@@ -140,6 +140,8 @@
     <Compile Include="ParserMetodholding.fs" />
     <Compile Include="TenderBidMartNew.fs" />
     <Compile Include="ParserBidMartNew.fs" />
+    <Compile Include="TenderBhm.fs" />
+    <Compile Include="ParserBhm.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

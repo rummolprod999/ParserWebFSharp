@@ -64,6 +64,7 @@ type Arguments =
     | Medic
     | Bidzaar
     | Metodholding
+    | Bhm
 
 type SlavNeft =
     | MEGION
@@ -584,3 +585,22 @@ type MetodholdingRec =
       DateEnd: DateTime
       DatePub: DateTime
       Attr: string}
+
+type BhmProductRec =
+    {
+        Name: string
+        Okei: string
+        Quantity: string
+    }
+     
+type BhmRec =
+    { Href: string
+      PurName: string
+      PurNum: string
+      PersonName: string
+      PersonPhone: string
+      PersonEmail: string
+      DateEnd: DateTime
+      DatePub: DateTime
+      Products: List<BhmProductRec>}
+      

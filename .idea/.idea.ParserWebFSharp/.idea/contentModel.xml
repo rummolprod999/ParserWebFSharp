@@ -20,6 +20,7 @@
         <e p="ParserAriba.fs" t="Include" />
         <e p="ParserAsgor.fs" t="Include" />
         <e p="ParserBeeline.fs" t="Include" />
+        <e p="ParserBhm.fs" t="Include" />
         <e p="ParserBidMart.fs" t="Include" />
         <e p="ParserBidMartNew.fs" t="Include" />
         <e p="ParserBidZaar.fs" t="Include" />
@@ -85,6 +86,7 @@
         <e p="TenderAriba.fs" t="Include" />
         <e p="TenderAsgor.fs" t="Include" />
         <e p="TenderBeeline.fs" t="Include" />
+        <e p="TenderBhm.fs" t="Include" />
         <e p="TenderBidMart.fs" t="Include" />
         <e p="TenderBidMartNew.fs" t="Include" />
         <e p="TenderBidZaar.fs" t="Include" />
