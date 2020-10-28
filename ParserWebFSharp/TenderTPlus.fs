@@ -6,7 +6,7 @@ open System
 open System.Data
 open TypeE
 
-type TenderTplus(stn : Settings.T, tn : TPlusRec, typeFz : int, etpName : string, etpUrl : string, Page : string) =
+type TenderTplus(stn : Settings.T, tn : TPlusRec, typeFz : int, etpName : string, etpUrl : string, _Page : string) =
     inherit Tender(etpName, etpUrl)
     let settings = stn
     static member val tenderCount = ref 0

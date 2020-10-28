@@ -5,7 +5,7 @@ open System
 open System.Data
 open OpenQA.Selenium.Chrome
 
-type TenderEten(stn: Settings.T, tn: EtenRec, typeFz: int, etpName: string, etpUrl: string, driver: ChromeDriver) =
+type TenderEten(stn: Settings.T, tn: EtenRec, typeFz: int, etpName: string, etpUrl: string, _driver: ChromeDriver) =
     inherit Tender(etpName, etpUrl)
     let settings = stn
     let _ = TimeSpan.FromSeconds(30.)

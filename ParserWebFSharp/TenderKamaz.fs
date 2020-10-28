@@ -5,7 +5,7 @@ open System
 open System.Data
 open OpenQA.Selenium.Chrome
 
-type TenderKamaz(stn: Settings.T, tn: KamazRec, typeFz: int, etpName: string, etpUrl: string, driver: ChromeDriver) =
+type TenderKamaz(stn: Settings.T, tn: KamazRec, typeFz: int, etpName: string, etpUrl: string, _driver: ChromeDriver) =
     inherit Tender(etpName, etpUrl)
     let _ = stn
     let _ = TimeSpan.FromSeconds(30.)

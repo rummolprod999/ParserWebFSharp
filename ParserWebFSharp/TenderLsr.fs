@@ -7,7 +7,7 @@ open System
 open System.Data
 open TypeE
 
-type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : string, PlacingWayName : string, OrgName : string, hrefLot: string) =
+type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : string, _PlacingWayName : string, _OrgName : string, hrefLot: string) =
     inherit Tender("«Группа ЛСР»", "http://zakupki.lsrgroup.ru")
     let settings = stn
     let typeFz = 34
