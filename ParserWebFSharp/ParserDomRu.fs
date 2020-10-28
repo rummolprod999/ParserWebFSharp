@@ -1,9 +1,5 @@
 namespace ParserWeb
 
-open System
-open System.Collections.Generic
-open System.Globalization
-open TypeE
 open AngleSharp.Dom
 open AngleSharp.Parser.Html
 open System.Linq
