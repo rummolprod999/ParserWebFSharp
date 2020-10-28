@@ -5,7 +5,7 @@ open System
 open System.Data
 open TypeE
 
-type TenderDomRu(stn: Settings.T, tn: BhmRec, typeFz: int, etpName: string, etpUrl: string) =
+type TenderDomRu(stn: Settings.T, tn: DomRuRec, typeFz: int, etpName: string, etpUrl: string) =
     inherit Tender(etpName, etpUrl)
     let settings = stn
     static member val tenderCount = ref 0

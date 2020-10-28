@@ -150,6 +150,8 @@ module Settings =
         let mutable LogPathTendersMetodholding  = ""
         let mutable TempPathTendersBhm = ""
         let mutable LogPathTendersBhm  = ""
+        let mutable TempPathTendersDomru = ""
+        let mutable LogPathTendersDomru  = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -509,6 +511,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_bhm" then
                                     LogPathTendersBhm <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_domru" then
+                                    TempPathTendersDomru <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_domru" then
+                                    LogPathTendersDomru <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -588,6 +596,7 @@ module Settings =
                 | Bidzaar -> TempPathTendersBidzaar
                 | Metodholding -> TempPathTendersMetodholding
                 | Bhm -> TempPathTendersBhm
+                | Domru -> TempPathTendersDomru
 
             let LogPathTenders =
                 match arg with
@@ -649,6 +658,7 @@ module Settings =
                 | Bidzaar -> LogPathTendersBidzaar
                 | Metodholding -> LogPathTendersMetodholding
                 | Bhm -> LogPathTendersBhm
+                | Domru -> LogPathTendersDomru
 
             { Database = Database
               TempPathTenders = TempPathTenders

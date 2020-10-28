@@ -65,6 +65,7 @@ type Arguments =
     | Bidzaar
     | Metodholding
     | Bhm
+    | Domru
 
 type SlavNeft =
     | MEGION
@@ -603,4 +604,11 @@ type BhmRec =
       DateEnd: DateTime
       DatePub: DateTime
       Products: List<BhmProductRec>}
+type DomRuRec =
+    { Href: string
+      PurName: string
+      PurNum: string
+      DateEnd: DateTime
+      DatePub: DateTime
+      PwName: String}
       
