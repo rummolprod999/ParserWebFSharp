@@ -35,7 +35,7 @@ type TenderVend(stn : Settings.T, tn : VendRec, typeFz : int, etpName : string, 
             
             let s =
                 match Page with
-                | null | "" -> raise <| System.Exception(sprintf "can not get Page %s" tn.Href)
+                | null | "" -> raise <| System.Exception(sprintf "cannot get Page %s" tn.Href)
                 | s -> s
             
             let htmlDoc = new HtmlDocument()
@@ -189,7 +189,7 @@ type TenderVend(stn : Settings.T, tn : VendRec, typeFz : int, etpName : string, 
             let docList = new List<DocSibServ>()
             let docs = htmlDoc.DocumentNode.SelectNodes("//div[contains(@class, 'fileUploadLink')]/a")
             match docs with
-            | null -> Logging.Log.logger ("Can not get documents on page", tn.Href)
+            | null -> Logging.Log.logger ("cannot get documents on page", tn.Href)
             | _ -> 
                 for doc in docs do
                     try 

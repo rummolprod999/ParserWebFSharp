@@ -33,7 +33,7 @@ type TenderBtg(stn : Settings.T, tn : BtgRec, typeFz : int, etpName : string, et
             
             let s =
                 match Page with
-                | null | "" -> raise <| System.Exception(sprintf "can not get Page %s" tn.Href)
+                | null | "" -> raise <| System.Exception(sprintf "cannot get Page %s" tn.Href)
                 | s -> s
             
             let htmlDoc = new HtmlDocument()
@@ -188,7 +188,7 @@ type TenderBtg(stn : Settings.T, tn : BtgRec, typeFz : int, etpName : string, et
             let docList = new List<DocSibServ>()
             let docs = htmlDoc.DocumentNode.SelectNodes("//span[contains(@class, 'file')]/a")
             match docs with
-            | null -> Logging.Log.logger ("Can not get documents on page", tn.Href)
+            | null -> Logging.Log.logger ("cannot get documents on page", tn.Href)
             | _ -> 
                 for doc in docs do
                     try 

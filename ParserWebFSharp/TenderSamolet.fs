@@ -28,7 +28,7 @@ type TenderSamolet(stn : Settings.T, tn : SamoletRec, typeFz : int, etpName : st
         let dateEnd =
             match dateEndT.DateFromString("dd.MM.yyyy HH:mm") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "can not parse dateEndT %s, %s" dateEndT tn.Href)
+            | None -> raise <| System.Exception(sprintf "cannot parse dateEndT %s, %s" dateEndT tn.Href)
         let dateScoringT = driver.findElementWithoutException ("//div[. = 'Дата подведения итогов (Дата ТК)']/following-sibling::div")
         let dateScoring =
             match dateScoringT.DateFromString("dd.MM.yyyy HH:mm") with

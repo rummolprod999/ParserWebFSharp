@@ -69,7 +69,7 @@ type ParserTGuru(stn : Settings.T) =
         let datePub =
             match pubDateT.DateFromString("dd-MM-yyyy") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "can not parse datePub %s" pubDateT)
+            | None -> raise <| System.Exception(sprintf "cannot parse datePub %s" pubDateT)
         
         let endDateT =
             match text.Get1FromRegexp @"Осталось\s*(\d+)\s*дней" with

@@ -104,7 +104,7 @@ type ParserTenderer(stn : Settings.T) =
         let datePub =
             match pubDateT.DateFromString("dd-MM-yyyy") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "can not parse datePub %s" pubDateT)
+            | None -> raise <| System.Exception(sprintf "cannot parse datePub %s" pubDateT)
         
         let biddingDateT =
             match t.QuerySelector("div:nth-child(3) span:contains('Дата проведения')") with

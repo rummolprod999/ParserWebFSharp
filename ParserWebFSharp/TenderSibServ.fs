@@ -33,7 +33,7 @@ type TenderSibServ(stn : Settings.T, tn : SibServRec, typeFz : int, etpName : st
             
             let s =
                 match Page with
-                | null | "" -> raise <| System.Exception(sprintf "can not get Page %s" tn.Href)
+                | null | "" -> raise <| System.Exception(sprintf "cannot get Page %s" tn.Href)
                 | s -> s
             
             let htmlDoc = new HtmlDocument()
@@ -187,7 +187,7 @@ type TenderSibServ(stn : Settings.T, tn : SibServRec, typeFz : int, etpName : st
                 htmlDoc.DocumentNode.SelectNodes
                     ("//h2[contains(., 'Техническая документация по лоту:')]/following-sibling::ul/li")
             match docs with
-            | null -> Logging.Log.logger ("Can not get documents on page", tn.Href)
+            | null -> Logging.Log.logger ("cannot get documents on page", tn.Href)
             | _ -> 
                 for doc in docs do
                     try 

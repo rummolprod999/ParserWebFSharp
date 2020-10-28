@@ -55,7 +55,7 @@ type ParserAsgor(stn : Settings.T) =
         let datePub =
             match (dateCons PubDateT).DateFromString("d MM yyyy HH:mm") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "can not parse datePub %s" PubDateT)
+            | None -> raise <| System.Exception(sprintf "cannot parse datePub %s" PubDateT)
         
         let EndDateT =
             match t.QuerySelector("div.date div:contains('Рассмотрение заявок:') + div") with
@@ -65,7 +65,7 @@ type ParserAsgor(stn : Settings.T) =
         let dateEnd =
             match (dateCons EndDateT).DateFromString("d MM yyyy HH:mm") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "can not parse dateEnd %s" EndDateT)
+            | None -> raise <| System.Exception(sprintf "cannot parse dateEnd %s" EndDateT)
         
         Href <- sprintf "https://etp.asgor.su%s" Href
         let OrgName =

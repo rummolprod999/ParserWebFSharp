@@ -70,22 +70,22 @@ type ParserNeft(stn : Settings.T) =
         let pubDateS =
             match this.GetDateS DateS @"Дата начала подачи заявок.*(\d{2}.\d{2}.\d{4})" with
             | Some dtP -> dtP
-            | None -> raise <| System.Exception(sprintf "can not apply regex to datePub %s" url)
+            | None -> raise <| System.Exception(sprintf "cannot apply regex to datePub %s" url)
         
         let datePub =
             match pubDateS.DateFromString("dd.MM.yyyy") with
             | Some d -> d.AddHours(-2.)
-            | None -> raise <| System.Exception(sprintf "can not parse datePub %s" pubDateS)
+            | None -> raise <| System.Exception(sprintf "cannot parse datePub %s" pubDateS)
         
         let endDateS =
             match this.GetDateS DateS @"Дата окончания подачи заявок.*(\d{2}.\d{2}.\d{4} \d{2}:\d{2})" with
             | Some dtP -> dtP
-            | None -> raise <| System.Exception(sprintf "can not apply regex to dateEnd %s" url)
+            | None -> raise <| System.Exception(sprintf "cannot apply regex to dateEnd %s" url)
         
         let dateEnd =
             match endDateS.DateFromString("dd.MM.yyyy HH:mm") with
             | Some d -> d.AddHours(-2.)
-            | None -> raise <| System.Exception(sprintf "can not parse dateEnd %s" endDateS)
+            | None -> raise <| System.Exception(sprintf "cannot parse dateEnd %s" endDateS)
         
         let ten =
             { NeftRec.Href = url

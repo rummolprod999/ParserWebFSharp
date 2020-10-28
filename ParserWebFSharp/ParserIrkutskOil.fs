@@ -28,7 +28,7 @@ type ParserIrkutskOil(stn : Settings.T) =
             | null -> ""
             | ur -> ur.GetAttribute("href").Trim()
         match urlT with
-        | "" -> Logging.Log.logger ("Can not find href on page ", url)
+        | "" -> Logging.Log.logger ("cannot find href on page ", url)
         | url -> 
             try 
                 let T = TenderIrkutskOil(stn, url)

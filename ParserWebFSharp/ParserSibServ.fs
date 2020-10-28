@@ -83,7 +83,7 @@ type ParserSibServ(stn : Settings.T) =
         let datePub =
             match datePubT.DateFromString("dd.MM.yyyy HH:mm") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "can not parse datePubT %s, %s" datePubT url)
+            | None -> raise <| System.Exception(sprintf "cannot parse datePubT %s, %s" datePubT url)
         
         let dateEndT =
             match dateT.RegexCutWhitespace()
@@ -94,7 +94,7 @@ type ParserSibServ(stn : Settings.T) =
         let dateEnd =
             match dateEndT.DateFromString("dd.MM.yyyy HH:mm") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "can not parse dateEndT %s, %s" dateEndT url)
+            | None -> raise <| System.Exception(sprintf "cannot parse dateEndT %s, %s" dateEndT url)
         
         let ten =
             { Href = href

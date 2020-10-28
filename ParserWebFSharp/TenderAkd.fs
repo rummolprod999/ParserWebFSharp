@@ -62,7 +62,7 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
             | None -> 
                 match pubDateS.DateFromString("d.MM.yyyy HH:mm") with
                 | Some d -> d
-                | None -> raise <| System.Exception(sprintf "can not parse datePub %s, %s" pubDateS urlT)
+                | None -> raise <| System.Exception(sprintf "cannot parse datePub %s, %s" pubDateS urlT)
         
         let endDateT = doc.QuerySelector("th:contains('Окончание приема заявок') + td > span")
         

@@ -34,7 +34,7 @@ type TenderNeft(stn : Settings.T, tn : NeftRec) =
             reader.Close()
             let Page = Download.DownloadString tn.Href
             match Page with
-            | null | "" -> raise <| System.Exception(sprintf "can not download page %s" tn.Href)
+            | null | "" -> raise <| System.Exception(sprintf "cannot download page %s" tn.Href)
             | s -> ()
             let parser = new HtmlParser()
             let doc = parser.Parse(Page)
@@ -200,7 +200,7 @@ type TenderNeft(stn : Settings.T, tn : NeftRec) =
         let url = sprintf "https://zakupki.nefteavtomatika.ru%s" urlT
         let Page = Download.DownloadString url
         match Page with
-        | null | "" -> raise <| System.Exception(sprintf "can not download page %s" url)
+        | null | "" -> raise <| System.Exception(sprintf "cannot download page %s" url)
         | s -> ()
         let parser = new HtmlParser()
         let doc = parser.Parse(Page)

@@ -33,7 +33,7 @@ type TenderGosYakut(stn : Settings.T, tn : GosYakutRec, typeFz : int, etpName : 
             reader.Close()
             let Page = Download.DownloadString tn.Href
             match Page with
-            | null | "" -> raise <| System.Exception(sprintf "can not download page %s" tn.Href)
+            | null | "" -> raise <| System.Exception(sprintf "cannot download page %s" tn.Href)
             | s -> ()
             let parser = new HtmlParser()
             let doc = parser.Parse(Page)

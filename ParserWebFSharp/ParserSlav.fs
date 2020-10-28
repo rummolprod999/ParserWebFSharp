@@ -81,7 +81,7 @@ type ParserSlav(stn : Settings.T) =
         let datePub =
             match PubDateT.DateFromString("d.MM.yyyy") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "can not parse datePub %s" PubDateT)
+            | None -> raise <| System.Exception(sprintf "cannot parse datePub %s" PubDateT)
         
         let EndDateT =
             match t.QuerySelector("div:contains('Окончание приема предложений') + div") with
@@ -171,7 +171,7 @@ type ParserSlav(stn : Settings.T) =
         let datePub =
             match PubDateT.DateFromString("d.MM.yyyy") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "can not parse datePub %s" PubDateT)
+            | None -> raise <| System.Exception(sprintf "cannot parse datePub %s" PubDateT)
         
         let EndDateTT =
             match t.QuerySelector("div:contains('Дата окончания приёма оферт:') + div") with
@@ -280,7 +280,7 @@ type ParserSlav(stn : Settings.T) =
         let datePub =
             match PubDateT.DateFromString("dd.MM.yyyy") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "can not parse datePub %s" PubDateT)
+            | None -> raise <| System.Exception(sprintf "cannot parse datePub %s" PubDateT)
         
         let EndDateT =
             match t.QuerySelector("td:nth-child(5)") with

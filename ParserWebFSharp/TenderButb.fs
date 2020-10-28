@@ -230,12 +230,12 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
                 | "" -> false
                 | _ -> true
             match paginator with
-            | "" -> Logging.Log.logger ("can not find lots page count on", purNum)
+            | "" -> Logging.Log.logger ("cannot find lots page count on", purNum)
             | pg -> 
                 let pageT =
                     match this.GetCountPage(pg) with
                     | None -> 
-                        Logging.Log.logger ("can not find lots page count on", purNum)
+                        Logging.Log.logger ("cannot find lots page count on", purNum)
                         "1"
                     | Some pr -> pr.RegexDeleteWhitespace()
                 

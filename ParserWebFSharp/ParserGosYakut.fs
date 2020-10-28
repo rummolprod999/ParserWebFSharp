@@ -78,7 +78,7 @@ type ParserGosYakut(stn : Settings.T) =
         let datePub =
             match (dd PubDateT).DateFromString("dd MM yyyy HH:mm") with
             | Some d -> d.AddHours(-6.)
-            | None -> raise <| System.Exception(sprintf "can not parse datePub %s" PubDateT)
+            | None -> raise <| System.Exception(sprintf "cannot parse datePub %s" PubDateT)
         
         let EndDateT =
             match t.QuerySelector("td:nth-child(6)") with
@@ -88,7 +88,7 @@ type ParserGosYakut(stn : Settings.T) =
         let dateEnd =
             match (dd EndDateT).DateFromString("dd MM yyyy HH:mm") with
             | Some d -> d.AddHours(-6.)
-            | None -> raise <| System.Exception(sprintf "can not parse dateEnd %s" PubDateT)
+            | None -> raise <| System.Exception(sprintf "cannot parse dateEnd %s" PubDateT)
         
         let ten : GosYakutRec =
             { Href = Href

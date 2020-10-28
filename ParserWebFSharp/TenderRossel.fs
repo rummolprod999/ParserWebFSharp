@@ -88,11 +88,11 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
         let mutable pubDateS = pubDateT.TextContent.Trim()
         match this.GetDateS(pubDateS) with
         | Some dtP -> pubDateS <- dtP
-        | None -> raise <| System.Exception(sprintf "can not apply regex to datePub %s" tn.Href)
+        | None -> raise <| System.Exception(sprintf "cannot apply regex to datePub %s" tn.Href)
         let datePub =
             match pubDateS.DateFromString("dd.MM.yy HH:mm:ss") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "can not parse datePub %s" pubDateS)
+            | None -> raise <| System.Exception(sprintf "cannot parse datePub %s" pubDateS)
         
         let mutable endDateT = doc.QuerySelector("td:contains('Приём заявок') + td > p")
         if endDateT = null then

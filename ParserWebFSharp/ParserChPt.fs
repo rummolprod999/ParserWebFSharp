@@ -65,7 +65,7 @@ type ParserChPt(stn : Settings.T) =
         let dateEnd =
             match EndDateT.DateFromString("dd.MM.yyyy HH:mm") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "can not parse dateEnd %s" EndDateT)
+            | None -> raise <| System.Exception(sprintf "cannot parse dateEnd %s" EndDateT)
         
         let datePub = DateTime.Now
         

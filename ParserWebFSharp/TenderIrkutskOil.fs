@@ -46,11 +46,11 @@ type TenderIrkutskOil(stn : Settings.T, urlT : string) =
         let mutable pubDateS = pubDateT.TextContent.Trim()
         match this.GetDateS(pubDateS) with
         | Some dtP -> pubDateS <- dtP
-        | None -> raise <| System.Exception(sprintf "can not apply regex to datePub %s" urlT)
+        | None -> raise <| System.Exception(sprintf "cannot apply regex to datePub %s" urlT)
         let datePub =
             match pubDateS.DateFromString("dd.MM.yyyy HH:mm 'GMT 'K") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "can not parse datePub %s" pubDateS)
+            | None -> raise <| System.Exception(sprintf "cannot parse datePub %s" pubDateS)
         
         let endDateT = doc.QuerySelector("table.lot_list tr.Info td:nth-child(3)")
         match endDateT with
@@ -59,11 +59,11 @@ type TenderIrkutskOil(stn : Settings.T, urlT : string) =
         let mutable endDateS = endDateT.TextContent.Trim()
         match this.GetDateS(endDateS) with
         | Some dtP -> endDateS <- dtP
-        | None -> raise <| System.Exception(sprintf "can not apply regex to endDate %s" urlT)
+        | None -> raise <| System.Exception(sprintf "cannot apply regex to endDate %s" urlT)
         let endDate =
             match endDateS.DateFromString("dd.MM.yyyy HH:mm 'GMT 'K") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "can not parse endDate %s" endDateS)
+            | None -> raise <| System.Exception(sprintf "cannot parse endDate %s" endDateS)
         
         let dateUpd = datePub
         use con = new MySqlConnection(stn.ConStr)

@@ -610,5 +610,6 @@ type DomRuRec =
       PurNum: string
       DateEnd: DateTime
       DatePub: DateTime
-      PwName: String}
+      PwName: String
+      Nmck: String}
       

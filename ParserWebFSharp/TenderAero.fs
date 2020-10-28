@@ -54,7 +54,7 @@ type TenderAero(stn : Settings.T, tn : AeroRec, typeFz : int, etpName : string, 
             reader.Close()
             let Page = Download.DownloadStringBot tn.Href
             match Page with
-            | null | "" -> raise <| System.Exception(sprintf "can not download page %s" tn.Href)
+            | null | "" -> raise <| System.Exception(sprintf "cannot download page %s" tn.Href)
             | s -> ()
             let parser = new HtmlParser()
             let doc = parser.Parse(Page)

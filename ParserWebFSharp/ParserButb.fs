@@ -120,7 +120,7 @@ type ParserButb(stn : Settings.T) =
             | None -> 
                 match datePubS.DateFromString("d.MM.yyyy HH:mm") with
                 | Some d -> d
-                | None -> raise <| System.Exception(sprintf "can not parse datePubS %s, %s" datePubS url)
+                | None -> raise <| System.Exception(sprintf "cannot parse datePubS %s, %s" datePubS url)
         
         let endDateT =
             this.GetDefaultFromNull 
@@ -138,7 +138,7 @@ type ParserButb(stn : Settings.T) =
             | None -> 
                 match endDateS.DateFromString("d.MM.yyyy HH:mm") with
                 | Some d -> d
-                | None -> raise <| System.Exception(sprintf "can not parse endDateS %s, %s" endDateS url)
+                | None -> raise <| System.Exception(sprintf "cannot parse endDateS %s, %s" endDateS url)
         
         let biddingDateT =
             this.GetDefaultFromNull 

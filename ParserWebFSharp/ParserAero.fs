@@ -78,7 +78,7 @@ type ParserAero(stn : Settings.T) =
         let datePub =
             match PubDateT.DateFromString("dd.MM.yyyy - HH:mm") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "can not parse datePub %s" PubDateT)
+            | None -> raise <| System.Exception(sprintf "cannot parse datePub %s" PubDateT)
         
         let EndDateT =
             match t.QuerySelector("td:nth-child(3) span") with
