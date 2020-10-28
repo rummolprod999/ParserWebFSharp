@@ -182,18 +182,18 @@ type ParserRostendTask(stn : Settings.T) =
 
     member private this.TenderChecker(tn : RosTendRecNew) =
         match tn.PurNum with
-        | "" -> raise <| System.NullReferenceException(sprintf "PurNum not found in %s" tn.Href)
+        | "" -> raise <| NullReferenceException(sprintf "PurNum not found in %s" tn.Href)
         | _ -> ()
         match tn.DatePub with
         | a when a = DateTime.MinValue ->
-            raise <| System.NullReferenceException(sprintf "PubDate not found in %s" tn.Href)
+            raise <| NullReferenceException(sprintf "PubDate not found in %s" tn.Href)
         | _ -> ()
         match tn.DateEnd with
         | a when a = DateTime.MinValue ->
-            raise <| System.NullReferenceException(sprintf "DateEnd not found in %s" tn.Href)
+            raise <| NullReferenceException(sprintf "DateEnd not found in %s" tn.Href)
         | _ -> ()
         match tn.PurName with
-        | "" -> raise <| System.NullReferenceException(sprintf "PurName not found in %s" tn.Href)
+        | "" -> raise <| NullReferenceException(sprintf "PurName not found in %s" tn.Href)
         | _ -> ()
         (*match tn.Page with
         | "" -> raise <| System.NullReferenceException(sprintf "Page not found in %s" tn.Href)

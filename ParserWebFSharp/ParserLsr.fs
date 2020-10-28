@@ -71,14 +71,14 @@ type ParserLsr(stn : Settings.T) =
         
         let href = 
             match hrefT with
-            | null -> raise <| System.NullReferenceException(sprintf "href not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "href not found in %s" url)
             | x -> x.GetAttribute("href")
         
         let hrefL = el.FindElement(By.XPath("./td[1]/a"))
         
         let hrefLot = 
             match hrefL with
-            | null -> raise <| System.NullReferenceException(sprintf "href not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "href not found in %s" url)
             | x -> x.GetAttribute("href")
         
         let placingWay = this.GetDefaultFromNull <| el.FindElement(By.XPath("./td[8]"))
@@ -86,7 +86,7 @@ type ParserLsr(stn : Settings.T) =
         
         let purNum = 
             match purNumT with
-            | null -> raise <| System.NullReferenceException(sprintf "purNum not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "purNum not found in %s" url)
             | x -> x.Text.Trim()
         
         let purName = this.GetDefaultFromNull <| el.FindElement(By.XPath("./td[2]/a"))

@@ -96,7 +96,7 @@ type ParserButb(stn : Settings.T) =
         
         let purNum =
             match purNumT with
-            | null -> raise <| System.NullReferenceException(sprintf "purNum not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "purNum not found in %s" url)
             | x -> x.Text.Trim()
         
         //Console.WriteLine(purNum)
@@ -120,7 +120,7 @@ type ParserButb(stn : Settings.T) =
             | None -> 
                 match datePubS.DateFromString("d.MM.yyyy HH:mm") with
                 | Some d -> d
-                | None -> raise <| System.Exception(sprintf "cannot parse datePubS %s, %s" datePubS url)
+                | None -> raise <| Exception(sprintf "cannot parse datePubS %s, %s" datePubS url)
         
         let endDateT =
             this.GetDefaultFromNull 
@@ -138,7 +138,7 @@ type ParserButb(stn : Settings.T) =
             | None -> 
                 match endDateS.DateFromString("d.MM.yyyy HH:mm") with
                 | Some d -> d
-                | None -> raise <| System.Exception(sprintf "cannot parse endDateS %s, %s" endDateS url)
+                | None -> raise <| Exception(sprintf "cannot parse endDateS %s, %s" endDateS url)
         
         let biddingDateT =
             this.GetDefaultFromNull 

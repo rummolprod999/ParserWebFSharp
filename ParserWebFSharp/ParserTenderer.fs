@@ -83,28 +83,28 @@ type ParserTenderer(stn : Settings.T) =
             | null -> ""
             | ur -> ur.GetAttribute("href").Trim()
         match href with
-        | "" -> raise <| System.NullReferenceException(sprintf "Href not found in %s" url)
+        | "" -> raise <| NullReferenceException(sprintf "Href not found in %s" url)
         | x when not (x.StartsWith("http://")) -> href <- sprintf "http://www.tenderer.ru%s" href
         | _ -> ()
         let purName =
             match t.QuerySelector("div:nth-child(3) > a:nth-child(1)") with
-            | null -> raise <| System.NullReferenceException(sprintf "PurName not found in %s" href)
+            | null -> raise <| NullReferenceException(sprintf "PurName not found in %s" href)
             | ur -> ur.TextContent.Trim()
         
         let purNum =
             match t.QuerySelector("div:nth-child(1)") with
-            | null -> raise <| System.NullReferenceException(sprintf "PurNum not found in %s" href)
+            | null -> raise <| NullReferenceException(sprintf "PurNum not found in %s" href)
             | ur -> ur.TextContent.Trim()
         
         let pubDateT =
             match t.QuerySelector("div:nth-child(4)") with
-            | null -> raise <| System.NullReferenceException(sprintf "pubDateT not found in %s" href)
+            | null -> raise <| NullReferenceException(sprintf "pubDateT not found in %s" href)
             | ur -> ur.TextContent.Trim()
         
         let datePub =
             match pubDateT.DateFromString("dd-MM-yyyy") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "cannot parse datePub %s" pubDateT)
+            | None -> raise <| Exception(sprintf "cannot parse datePub %s" pubDateT)
         
         let biddingDateT =
             match t.QuerySelector("div:nth-child(3) span:contains('Дата проведения')") with

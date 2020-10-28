@@ -54,7 +54,7 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
             | None -> 
                 match pubDateS.DateFromString("dd.MM.yyyy HH:mm") with
                 | Some d -> d
-                | None -> raise <| System.Exception(sprintf "cannot parse pubDateS %s, %s" pubDateS urlT)
+                | None -> raise <| Exception(sprintf "cannot parse pubDateS %s, %s" pubDateS urlT)
         let endDateT = doc.QuerySelector("label:contains('Дата окончания подачи') + div > div")
         
         let endDateS =
@@ -68,7 +68,7 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
             | None -> 
                 match endDateS.DateFromString("dd.MM.yyyy HH:mm") with
                 | Some d -> d
-                | None -> raise <| System.Exception(sprintf "cannot parse endDateS %s, %s" endDateS urlT)
+                | None -> raise <| Exception(sprintf "cannot parse endDateS %s, %s" endDateS urlT)
         
         let scoringDateT = doc.QuerySelector("label:contains('Подведение итогов') + div div")
         

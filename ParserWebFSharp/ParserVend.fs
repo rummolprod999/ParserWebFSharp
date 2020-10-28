@@ -85,7 +85,7 @@ type ParserVend(stn : Settings.T) =
                     this.ParserTenders driver t
                 statement <- false
             with
-                | :? OpenQA.Selenium.StaleElementReferenceException -> 
+                | :? StaleElementReferenceException -> 
                     count <- count - 1
                     if count = 0 then Logging.Log.logger ("reload tenders page fail")
                 | ex -> 

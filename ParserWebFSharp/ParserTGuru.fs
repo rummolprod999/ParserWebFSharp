@@ -37,13 +37,13 @@ type ParserTGuru(stn : Settings.T) =
             | null -> ""
             | ur -> ur.GetAttribute("href").Trim()
         match href with
-        | "" -> raise <| System.NullReferenceException(sprintf "Href not found in %s" url)
+        | "" -> raise <| NullReferenceException(sprintf "Href not found in %s" url)
         | x when not (x.StartsWith("http://www.tenderguru.ru")) -> 
-            raise <| System.NullReferenceException(sprintf "Href not contains http://www.tenderguru.ru in %s" url)
+            raise <| NullReferenceException(sprintf "Href not contains http://www.tenderguru.ru in %s" url)
         | _ -> ()
         let PurName =
             match t.QuerySelector("td a.tender_link") with
-            | null -> raise <| System.NullReferenceException(sprintf "PurName not found in %s" href)
+            | null -> raise <| NullReferenceException(sprintf "PurName not found in %s" href)
             | ur -> ur.TextContent.Trim()
         
         let text =
@@ -54,7 +54,7 @@ type ParserTGuru(stn : Settings.T) =
         let purNum =
             match text.Get1FromRegexp @"Номер тендера:\s(\d+)" with
             | Some x -> x.Trim()
-            | None -> raise <| System.NullReferenceException(sprintf "PurNum not found in %s" href)
+            | None -> raise <| NullReferenceException(sprintf "PurNum not found in %s" href)
         
         let regionName =
             match text.Get1FromRegexp @"Регион:\s(.+?)\s\(" with
@@ -64,12 +64,12 @@ type ParserTGuru(stn : Settings.T) =
         let pubDateT =
             match text.Get1FromRegexp @"^(\d{2}-\d{2}-\d{4})" with
             | Some x -> x.Trim()
-            | None -> raise <| System.NullReferenceException(sprintf "pubDateT not found in %s" href)
+            | None -> raise <| NullReferenceException(sprintf "pubDateT not found in %s" href)
         
         let datePub =
             match pubDateT.DateFromString("dd-MM-yyyy") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "cannot parse datePub %s" pubDateT)
+            | None -> raise <| Exception(sprintf "cannot parse datePub %s" pubDateT)
         
         let endDateT =
             match text.Get1FromRegexp @"Осталось\s*(\d+)\s*дней" with

@@ -355,12 +355,12 @@ type ParserRossel(stn: Settings.T) =
 
         let purNumM =
             match purNumT with
-            | null -> raise <| System.NullReferenceException(sprintf "purNum not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "purNum not found in %s" url)
             | x -> x.Text.Trim()
 
         let purNum =
             match this.GetPurNumNew(purNumM) with
-            | None -> raise <| System.NullReferenceException(sprintf "purNum not found in %s" purNumM)
+            | None -> raise <| NullReferenceException(sprintf "purNum not found in %s" purNumM)
             | Some pr -> pr.Trim()
         match purNum with
         | _ when purNum.StartsWith("COM") -> this.ParserSelect driver t purNum 42
@@ -379,12 +379,12 @@ type ParserRossel(stn: Settings.T) =
 
         let href =
             match hrefT with
-            | null -> raise <| System.NullReferenceException(sprintf "href not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "href not found in %s" url)
             | x -> x.GetAttribute("href")
         let PurNameT = t.FindElement(By.XPath(".//div[@class = 'search-results__subject']/a"))
         let purName =
             match PurNameT with
-            | null -> raise <| System.NullReferenceException(sprintf "purName not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "purName not found in %s" url)
             | x -> x.Text.Trim()
 
         let ten =

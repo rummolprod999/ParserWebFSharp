@@ -50,24 +50,24 @@ type ParserSibServ(stn : Settings.T) =
     member private this.ParserTenders (_ : ChromeDriver) (t : IWebElement) =
         let purNum =
             match t.findElementWithoutException ("./following-sibling::p[1]") with
-            | "" -> raise <| System.NullReferenceException(sprintf "purNum not found in %s" url)
+            | "" -> raise <| NullReferenceException(sprintf "purNum not found in %s" url)
             | x -> x.Replace("Лот №", "")
         
         let purName =
             match t.findElementWithoutException ("./following-sibling::p[2]") with
-            | "" -> raise <| System.NullReferenceException(sprintf "purNume not found in %s" url)
+            | "" -> raise <| NullReferenceException(sprintf "purNume not found in %s" url)
             | x -> x
         
         let href =
             match t.FindElement(By.XPath("./following-sibling::p/a[contains(., 'подробнее')]")) with
-            | null -> raise <| System.NullReferenceException(sprintf "href not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "href not found in %s" url)
             | x -> x.GetAttribute("href")
         
         let requesttext = "Запрос на участие в лоте"
         
         let hrefrequest =
             match t.FindElement(By.XPath("./following-sibling::p/a[contains(., 'Запрос')]")) with
-            | null -> raise <| System.NullReferenceException(sprintf "href not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "href not found in %s" url)
             | x -> x.GetAttribute("href")
         
         let listDoc = List<DocSibServ>()
@@ -78,23 +78,23 @@ type ParserSibServ(stn : Settings.T) =
         let datePubT =
             match dateT.RegexCutWhitespace().Get1FromRegexp @"Дата публикации лота:\s(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2})" with
             | Some x -> x.Trim()
-            | None -> raise <| System.NullReferenceException(sprintf "datePubT not found in %s %s" url dateT)
+            | None -> raise <| NullReferenceException(sprintf "datePubT not found in %s %s" url dateT)
         
         let datePub =
             match datePubT.DateFromString("dd.MM.yyyy HH:mm") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "cannot parse datePubT %s, %s" datePubT url)
+            | None -> raise <| Exception(sprintf "cannot parse datePubT %s, %s" datePubT url)
         
         let dateEndT =
             match dateT.RegexCutWhitespace()
                        .Get1FromRegexp @"Дата окончания приема заявок:\s(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2})" with
             | Some x -> x.Trim()
-            | None -> raise <| System.NullReferenceException(sprintf "dateEndT not found in %s %s" url dateT)
+            | None -> raise <| NullReferenceException(sprintf "dateEndT not found in %s %s" url dateT)
         
         let dateEnd =
             match dateEndT.DateFromString("dd.MM.yyyy HH:mm") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "cannot parse dateEndT %s, %s" dateEndT url)
+            | None -> raise <| Exception(sprintf "cannot parse dateEndT %s, %s" dateEndT url)
         
         let ten =
             { Href = href

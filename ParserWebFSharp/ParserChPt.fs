@@ -28,12 +28,12 @@ type ParserChPt(stn : Settings.T) =
     member private this.ParsingTender (t : IElement) (url : string) =
         let PurNum =
             match t.QuerySelector("div:nth-child(1) a") with
-            | null -> raise <| System.NullReferenceException(sprintf "PurNum not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "PurNum not found in %s" url)
             | ur -> ur.TextContent.Trim()
         
         let PurName =
             match t.QuerySelector("div.name a") with
-            | null -> raise <| System.NullReferenceException(sprintf "PurName not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "PurName not found in %s" url)
             | ur -> ur.TextContent.Trim()
         
         let HrefT =
@@ -52,12 +52,12 @@ type ParserChPt(stn : Settings.T) =
         
         let EndDateT1 =
             match t.QuerySelector("div:nth-child(6) span:nth-child(1)") with
-            | null -> raise <| System.NullReferenceException(sprintf "EndDateT1 not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "EndDateT1 not found in %s" url)
             | ur -> ur.TextContent.RegexCutWhitespace().Trim()
         
         let EndDateT2 =
             match t.QuerySelector("div:nth-child(6) span:nth-child(2)") with
-            | null -> raise <| System.NullReferenceException(sprintf "EndDateT2 not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "EndDateT2 not found in %s" url)
             | ur -> ur.TextContent.RegexCutWhitespace().Trim()
         
         let EndDateT = sprintf "%s %s" EndDateT1 EndDateT2
@@ -65,7 +65,7 @@ type ParserChPt(stn : Settings.T) =
         let dateEnd =
             match EndDateT.DateFromString("dd.MM.yyyy HH:mm") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "cannot parse dateEnd %s" EndDateT)
+            | None -> raise <| Exception(sprintf "cannot parse dateEnd %s" EndDateT)
         
         let datePub = DateTime.Now
         

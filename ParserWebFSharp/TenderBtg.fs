@@ -33,7 +33,7 @@ type TenderBtg(stn : Settings.T, tn : BtgRec, typeFz : int, etpName : string, et
             
             let s =
                 match Page with
-                | null | "" -> raise <| System.Exception(sprintf "cannot get Page %s" tn.Href)
+                | null | "" -> raise <| Exception(sprintf "cannot get Page %s" tn.Href)
                 | s -> s
             
             let htmlDoc = HtmlDocument()

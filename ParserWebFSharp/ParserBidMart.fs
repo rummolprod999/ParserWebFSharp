@@ -79,7 +79,7 @@ type ParserBidMart(stn : Settings.T) =
                 let dateEnd =
                     match dateEndT.DateFromString("dd.MM.yyyy") with
                     | Some d -> d
-                    | None -> raise <| System.Exception(sprintf "cannot parse dateEndT %s, %s" dateEndT url)
+                    | None -> raise <| Exception(sprintf "cannot parse dateEndT %s, %s" dateEndT url)
                 
                 let ten =
                     { Href = href

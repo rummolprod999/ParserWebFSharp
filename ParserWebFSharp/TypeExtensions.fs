@@ -8,7 +8,7 @@ open OpenQA.Selenium
 module TypeE =
     open System.Collections.Generic
 
-    type System.String with
+    type String with
 
         member this.DateFromString(pat: string) =
             try

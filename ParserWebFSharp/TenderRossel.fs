@@ -83,22 +83,22 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
         let purName = tn.PurName
         let pubDateT = doc.QuerySelector("td:contains('Публикация извещения') + td > p")
         match pubDateT with
-        | null -> raise <| System.NullReferenceException(sprintf "pubDate not found in %s" tn.Href)
+        | null -> raise <| NullReferenceException(sprintf "pubDate not found in %s" tn.Href)
         | _ -> ()
         let mutable pubDateS = pubDateT.TextContent.Trim()
         match this.GetDateS(pubDateS) with
         | Some dtP -> pubDateS <- dtP
-        | None -> raise <| System.Exception(sprintf "cannot apply regex to datePub %s" tn.Href)
+        | None -> raise <| Exception(sprintf "cannot apply regex to datePub %s" tn.Href)
         let datePub =
             match pubDateS.DateFromString("dd.MM.yy HH:mm:ss") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "cannot parse datePub %s" pubDateS)
+            | None -> raise <| Exception(sprintf "cannot parse datePub %s" pubDateS)
         
         let mutable endDateT = doc.QuerySelector("td:contains('Приём заявок') + td > p")
         if endDateT = null then
             endDateT <- doc.QuerySelector("td:contains('Прием заявок') + td > p")
         match endDateT with
-        | null -> raise <| System.NullReferenceException(sprintf "endDate not found in %s" tn.Href)
+        | null -> raise <| NullReferenceException(sprintf "endDate not found in %s" tn.Href)
         | _ -> ()
         let mutable endDateS = endDateT.TextContent.Trim()
         match this.GetDateS(endDateS) with

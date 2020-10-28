@@ -40,25 +40,25 @@ type ParserAero(stn : Settings.T) =
             | null -> ""
             | ur -> ur.GetAttribute("href").Trim()
         match HrefDocT with
-        | "" | null -> raise <| System.NullReferenceException(sprintf "HrefDocT not found in %s" url)
+        | "" | null -> raise <| NullReferenceException(sprintf "HrefDocT not found in %s" url)
         | _ -> ()
         let HrefDoc = sprintf "https://www.aeroflot.ru%s" HrefDocT
         
         let PurName =
             match t.QuerySelector("td.views-field-title a") with
-            | null -> raise <| System.NullReferenceException(sprintf "PurName not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "PurName not found in %s" url)
             | ur -> ur.TextContent.Trim()
         
         let mutable FullN =
             match t.QuerySelector("td.views-field-title") with
-            | null -> raise <| System.NullReferenceException(sprintf "FullN not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "FullN not found in %s" url)
             | ur -> ur.TextContent.Trim()
         
         FullN <- FullN.Replace(PurName, "")
         let purNum =
             match FullN.Get1FromRegexp @"№\s*(\d+)," with
             | Some x -> x.Trim()
-            | None -> raise <| System.NullReferenceException(sprintf "purNum not found in %s %s" url PurName)
+            | None -> raise <| NullReferenceException(sprintf "purNum not found in %s %s" url PurName)
         
         let pWay =
             match FullN.Get1FromRegexp @"(.+?)," with
@@ -72,13 +72,13 @@ type ParserAero(stn : Settings.T) =
         
         let PubDateT =
             match t.QuerySelector("td:nth-child(2) span") with
-            | null -> raise <| System.NullReferenceException(sprintf "PubDateT not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "PubDateT not found in %s" url)
             | ur -> ur.TextContent.Trim()
         
         let datePub =
             match PubDateT.DateFromString("dd.MM.yyyy - HH:mm") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "cannot parse datePub %s" PubDateT)
+            | None -> raise <| Exception(sprintf "cannot parse datePub %s" PubDateT)
         
         let EndDateT =
             match t.QuerySelector("td:nth-child(3) span") with

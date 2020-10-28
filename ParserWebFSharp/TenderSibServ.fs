@@ -33,7 +33,7 @@ type TenderSibServ(stn : Settings.T, tn : SibServRec, typeFz : int, etpName : st
             
             let s =
                 match Page with
-                | null | "" -> raise <| System.Exception(sprintf "cannot get Page %s" tn.Href)
+                | null | "" -> raise <| Exception(sprintf "cannot get Page %s" tn.Href)
                 | s -> s
             
             let htmlDoc = HtmlDocument()

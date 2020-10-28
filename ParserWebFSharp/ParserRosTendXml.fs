@@ -61,15 +61,15 @@ type ParserRosTendXml(stn : Settings.T) =
     member private this.ParserTender(token : JToken) =
         let PurNum = (Tools.teststring <| (token.SelectToken("tenderNumber")))
         match PurNum with
-        | "" -> raise <| System.NullReferenceException(sprintf "PurNum not found in %s" "")
+        | "" -> raise <| NullReferenceException(sprintf "PurNum not found in %s" "")
         | _ -> ()
         let Href = (Tools.teststring <| (token.SelectToken("href")))
         match Href with
-        | "" -> raise <| System.NullReferenceException(sprintf "Href not found in %s" PurNum)
+        | "" -> raise <| NullReferenceException(sprintf "Href not found in %s" PurNum)
         | _ -> ()
         let PurName = (Tools.teststring <| (token.SelectToken("name")))
         match PurName with
-        | "" -> raise <| System.NullReferenceException(sprintf "PurName not found in %s" PurNum)
+        | "" -> raise <| NullReferenceException(sprintf "PurName not found in %s" PurNum)
         | _ -> ()
         (*let mutable verNum = (Tools.teststring <| (token.SelectToken("versionNumber")))
         match verNum with
@@ -78,12 +78,12 @@ type ParserRosTendXml(stn : Settings.T) =
         let _ = ""
         let PubDateT = JsonConvert.SerializeObject(token.SelectToken("publishDate"))
         match PubDateT with
-        | null -> raise <| System.NullReferenceException(sprintf "PubDate not found in %s" Href)
+        | null -> raise <| NullReferenceException(sprintf "PubDate not found in %s" Href)
         | _ -> ()
         let mutable pubDate = Tools.testdate PubDateT
         match pubDate with
         | a when a = DateTime.MinValue -> 
-            raise <| System.NullReferenceException(sprintf "PubDate not found in %s" PubDateT)
+            raise <| NullReferenceException(sprintf "PubDate not found in %s" PubDateT)
         | _ -> pubDate <- pubDate.AddHours(1.)
         let EndDateT = JsonConvert.SerializeObject(token.SelectToken("endDate"))
         let mutable endDate = Tools.testdate EndDateT

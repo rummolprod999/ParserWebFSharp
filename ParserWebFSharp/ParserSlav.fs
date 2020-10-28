@@ -45,43 +45,43 @@ type ParserSlav(stn : Settings.T) =
             | null -> ""
             | ur -> ur.GetAttribute("href").Trim()
         match HrefDocT with
-        | "" | null -> raise <| System.NullReferenceException(sprintf "HrefDocT not found in %s" url)
+        | "" | null -> raise <| NullReferenceException(sprintf "HrefDocT not found in %s" url)
         | _ -> ()
         let HrefDoc = sprintf "http://sn-mng.ru%s" HrefDocT
         
         let NameDoc =
             match t.QuerySelector("div.tab_docs div.file_wrap a") with
-            | null -> raise <| System.NullReferenceException(sprintf "NameDoc not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "NameDoc not found in %s" url)
             | ur -> ur.TextContent.Trim()
         
         let PurName =
             match t.QuerySelector("div:contains('Наименование закупки') + div") with
-            | null -> raise <| System.NullReferenceException(sprintf "PurName not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "PurName not found in %s" url)
             | ur -> ur.TextContent.Trim()
         
         let PurNumT =
             match t.QuerySelector("div.head div.title") with
-            | null -> raise <| System.NullReferenceException(sprintf "PurNum not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "PurNum not found in %s" url)
             | ur -> ur.TextContent.Trim()
         
         let purNum = PurNumT.Replace("ПДО №", "").Trim()
         
         let CusName =
             match t.QuerySelector("div:contains('Заказчик') + div") with
-            | null -> raise <| System.NullReferenceException(sprintf "CusName not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "CusName not found in %s" url)
             | ur -> ur.TextContent.Trim()
         
         let OrgName = CusName
         
         let PubDateT =
             match t.QuerySelector("div:contains('Начало приема предложений') + div") with
-            | null -> raise <| System.NullReferenceException(sprintf "PubDateT not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "PubDateT not found in %s" url)
             | ur -> ur.TextContent.ReplaceDate().Replace(";", "").RegexDeleteWhitespace().Trim()
         
         let datePub =
             match PubDateT.DateFromString("d.MM.yyyy") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "cannot parse datePub %s" PubDateT)
+            | None -> raise <| Exception(sprintf "cannot parse datePub %s" PubDateT)
         
         let EndDateT =
             match t.QuerySelector("div:contains('Окончание приема предложений') + div") with
@@ -137,13 +137,13 @@ type ParserSlav(stn : Settings.T) =
             | null -> ""
             | ur -> ur.GetAttribute("href").Trim()
         match HrefDocT with
-        | "" | null -> raise <| System.NullReferenceException(sprintf "HrefDocT not found in %s %s" url t.TextContent)
+        | "" | null -> raise <| NullReferenceException(sprintf "HrefDocT not found in %s %s" url t.TextContent)
         | _ -> ()
         let HrefDoc = sprintf "http://www.refinery.yaroslavl.su%s" HrefDocT
         
         let NameDoc =
             match t.QuerySelector("a.download") with
-            | null -> raise <| System.NullReferenceException(sprintf "NameDoc not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "NameDoc not found in %s" url)
             | ur -> ur.TextContent.RegexCutWhitespace().Trim()
         
         let PurName = NameDoc
@@ -151,7 +151,7 @@ type ParserSlav(stn : Settings.T) =
         let purNum =
             match PurName.Get1FromRegexp @"(\d{3}-\D{2}-\d{4})" with
             | Some x -> x
-            | None -> raise <| System.NullReferenceException(sprintf "purNum not found in %s %s" url PurName)
+            | None -> raise <| NullReferenceException(sprintf "purNum not found in %s %s" url PurName)
         
         let CusName =
             match t.QuerySelector("div:contains('Заказчик тендера:') + div") with
@@ -165,13 +165,13 @@ type ParserSlav(stn : Settings.T) =
         
         let PubDateT =
             match t.QuerySelector("div:contains('Опубликовано') + div") with
-            | null -> raise <| System.NullReferenceException(sprintf "PubDateT not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "PubDateT not found in %s" url)
             | ur -> ur.TextContent.ReplaceDate().Replace("г.", "").RegexDeleteWhitespace().Trim()
         
         let datePub =
             match PubDateT.DateFromString("d.MM.yyyy") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "cannot parse datePub %s" PubDateT)
+            | None -> raise <| Exception(sprintf "cannot parse datePub %s" PubDateT)
         
         let EndDateTT =
             match t.QuerySelector("div:contains('Дата окончания приёма оферт:') + div") with
@@ -243,44 +243,44 @@ type ParserSlav(stn : Settings.T) =
             | null -> ""
             | ur -> ur.GetAttribute("href").Trim()
         match HrefDocT with
-        | "" | null -> raise <| System.NullReferenceException(sprintf "HrefDocT not found in %s %s" url t.TextContent)
+        | "" | null -> raise <| NullReferenceException(sprintf "HrefDocT not found in %s %s" url t.TextContent)
         | _ -> ()
         let HrefDoc = sprintf "http://www.slavneft.ru%s" HrefDocT
         
         let NameDoc =
             match t.QuerySelector("td:nth-child(1) a") with
-            | null -> raise <| System.NullReferenceException(sprintf "NameDoc not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "NameDoc not found in %s" url)
             | ur -> ur.TextContent.Trim()
         
         let PurName =
             match t.QuerySelector("td:nth-child(1) a") with
-            | null -> raise <| System.NullReferenceException(sprintf "PurName not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "PurName not found in %s" url)
             | ur -> ur.TextContent.Trim()
         
         let purNum =
             match PurName.Get1FromRegexp @"ПДО №?\s*(.+)" with
             | Some x -> x
-            | None -> raise <| System.NullReferenceException(sprintf "purNum not found in %s %s" url PurName)
+            | None -> raise <| NullReferenceException(sprintf "purNum not found in %s %s" url PurName)
         
         let CusName =
             match t.QuerySelector("td:nth-child(2)") with
-            | null -> raise <| System.NullReferenceException(sprintf "CusName not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "CusName not found in %s" url)
             | ur -> ur.TextContent.Trim()
         
         let OrgName =
             match t.QuerySelector("td:nth-child(3)") with
-            | null -> raise <| System.NullReferenceException(sprintf "OrgName not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "OrgName not found in %s" url)
             | ur -> ur.TextContent.Trim()
         
         let PubDateT =
             match t.QuerySelector("td:nth-child(4)") with
-            | null -> raise <| System.NullReferenceException(sprintf "PubDateT not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "PubDateT not found in %s" url)
             | ur -> ur.TextContent.Trim()
         
         let datePub =
             match PubDateT.DateFromString("dd.MM.yyyy") with
             | Some d -> d
-            | None -> raise <| System.Exception(sprintf "cannot parse datePub %s" PubDateT)
+            | None -> raise <| Exception(sprintf "cannot parse datePub %s" PubDateT)
         
         let EndDateT =
             match t.QuerySelector("td:nth-child(5)") with

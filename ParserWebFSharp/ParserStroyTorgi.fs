@@ -50,13 +50,13 @@ type ParserStroyTorgi(stn : Settings.T) =
     member private this.ParsingTender(t : IElement) =
         let UrlT = t.GetAttribute("data-href").Trim()
         match UrlT with
-        | "" | null -> raise <| System.NullReferenceException(sprintf "UrlT not found in %s" url)
+        | "" | null -> raise <| NullReferenceException(sprintf "UrlT not found in %s" url)
         | _ -> ()
         let Url = sprintf "https://stroytorgi.ru%s" UrlT
         
         let mutable purNum =
             match t.QuerySelector("div:nth-child(1) div:nth-child(2)") with
-            | null -> raise <| System.NullReferenceException(sprintf "purNum not found in %s" url)
+            | null -> raise <| NullReferenceException(sprintf "purNum not found in %s" url)
             | ur -> ur.TextContent.Trim()
         
         let category =

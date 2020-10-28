@@ -52,7 +52,7 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
         let doc = parser.Parse(p)
         let pubDateT = doc.QuerySelector("th:contains('Публикация электронной процедуры') + td > span")
         match pubDateT with
-        | null -> raise <| System.NullReferenceException(sprintf "pubDate not found in %s" urlT)
+        | null -> raise <| NullReferenceException(sprintf "pubDate not found in %s" urlT)
         | _ -> ()
         let pubDateS = pubDateT.TextContent.Replace("г.", "").Trim().ReplaceDate().RegexReplace()
         
@@ -62,7 +62,7 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
             | None -> 
                 match pubDateS.DateFromString("d.MM.yyyy HH:mm") with
                 | Some d -> d
-                | None -> raise <| System.Exception(sprintf "cannot parse datePub %s, %s" pubDateS urlT)
+                | None -> raise <| Exception(sprintf "cannot parse datePub %s, %s" pubDateS urlT)
         
         let endDateT = doc.QuerySelector("th:contains('Окончание приема заявок') + td > span")
         

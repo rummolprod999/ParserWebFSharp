@@ -35,7 +35,7 @@ type TenderVend(stn : Settings.T, tn : VendRec, typeFz : int, etpName : string, 
             
             let s =
                 match Page with
-                | null | "" -> raise <| System.Exception(sprintf "cannot get Page %s" tn.Href)
+                | null | "" -> raise <| Exception(sprintf "cannot get Page %s" tn.Href)
                 | s -> s
             
             let htmlDoc = HtmlDocument()
