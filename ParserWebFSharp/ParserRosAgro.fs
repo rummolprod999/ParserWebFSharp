@@ -43,7 +43,7 @@ type ParserRosAgro(stn: Settings.T) =
             let! datePub = datePubT.DateFromStringDoc ("dd.MM.yyyy", sprintf "datePub not found %s %s " href datePubT)
             let! nmck = t.GsnDocWithError "td:nth-of-type(5)" <| sprintf "nmck not found %s %s " url (t.TextContent)
             let nmck = nmck.GetPriceFromStringKz()
-            let tend = {Href = href
+            let tend = {RosAgroRec.Href = href
                         DateEnd = dateEnd
                         DatePub = datePub
                         PurName = purName
