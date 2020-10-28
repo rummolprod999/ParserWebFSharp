@@ -91,7 +91,7 @@ module TypeE =
             | None -> ""
         
         member this.GetPriceFromStringKz(?template): string =
-            let templ = defaultArg template @"([\d, ]+)"
+            let _ = defaultArg template @"([\d, ]+)"
             let th = this.Replace("&nbsp;", "").Replace("тг", "")
             match Some(th) with
             | Some x -> Regex.Replace(x.Replace(",", ".").Trim(), @"\s+", "")
@@ -293,10 +293,10 @@ module TypeE =
                 let res = this.FindElements(By.XPath(xpath))
                 match res with
                 | null ->
-                    new Collections.ObjectModel.ReadOnlyCollection<IWebElement>((new List<IWebElement>()) :> IList<IWebElement>)
+                    Collections.ObjectModel.ReadOnlyCollection<IWebElement>((List<IWebElement>()) :> IList<IWebElement>)
                 | r -> r
             with ex ->
-                new Collections.ObjectModel.ReadOnlyCollection<IWebElement>((new List<IWebElement>()) :> IList<IWebElement>)
+                Collections.ObjectModel.ReadOnlyCollection<IWebElement>((List<IWebElement>()) :> IList<IWebElement>)
 
         member this.findElementWithoutException (xpath: string, exc: string) =
             try
@@ -314,7 +314,7 @@ module TypeE =
                 | r -> Success(r)
             with ex -> Error(exc)
 
-        member this.findElementWithoutExceptionOptional (xpath: string, exc: string) =
+        member this.findElementWithoutExceptionOptional (xpath: string, _: string) =
             try
                 let res = this.FindElement(By.XPath(xpath))
                 match res with

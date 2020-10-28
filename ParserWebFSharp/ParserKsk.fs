@@ -24,7 +24,7 @@ type ParserKsk(stn: Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", url)
         | s ->
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let tens = documents.QuerySelectorAll("table.lot").ToList()
             for t in tens do

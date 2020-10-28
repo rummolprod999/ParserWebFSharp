@@ -12,7 +12,7 @@ type ParserNorNic(stn : Settings.T) =
     inherit Parser()
     let set = stn
     let timeoutB = TimeSpan.FromSeconds(30.)
-    let listTenders = new List<NorNicRec>()
+    let listTenders = List<NorNicRec>()
     let urls =
         [ "https://www.nornickel.ru/suppliers/tenders/central/"; "https://www.nornickel.ru/suppliers/tenders/local/" ]
     let options = ChromeOptions()
@@ -22,7 +22,7 @@ type ParserNorNic(stn : Settings.T) =
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
         options.AddArguments("ignore-certificate-errors")
-        options.AcceptInsecureCertificates <- new Nullable<_>(true)
+        options.AcceptInsecureCertificates <- Nullable<_>(true)
     
     override this.Parsing() =
         let driver = new ChromeDriver("/usr/local/bin", options)
@@ -44,11 +44,11 @@ type ParserNorNic(stn : Settings.T) =
             with ex -> Logging.Log.logger (ex)
     
     member private this.ParserUrl (url : string) (driver : ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
-        let hundr = driver.FindElement(By.XPath("//span[@class = 'select2-selection__rendered']")).Click()
+        let _ = driver.FindElement(By.XPath("//span[@class = 'select2-selection__rendered']")).Click()
         Thread.Sleep(3000)
         driver.SwitchTo().DefaultContent() |> ignore
         //let hundr = driver.FindElement(By.XPath("//li[. = '100']")).Click()
@@ -103,7 +103,7 @@ type ParserNorNic(stn : Settings.T) =
         ()
     
     member private this.ParserTenders(el : IWebElement) =
-        let builder = new TenderBuilder()
+        let builder = TenderBuilder()
         
         let result =
             builder { 
@@ -138,5 +138,5 @@ type ParserNorNic(stn : Settings.T) =
                 return "ok"
             }
         match result with
-        | Success r -> ()
+        | Success _ -> ()
         | Error e -> Logging.Log.logger e

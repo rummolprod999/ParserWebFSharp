@@ -13,7 +13,7 @@ type ParserTj(stn: Settings.T) =
     let set = stn
     let pageC = 10
     let spage = "http://test.zakupki.gov.tj/reestr-zakazov-v-elektronnoy-forme/"
-    let listTenders = new List<TjRec>()
+    let listTenders = List<TjRec>()
     let options = ChromeOptions()
     let timeoutB = TimeSpan.FromSeconds(60.)
     let mutable wait = None
@@ -29,7 +29,7 @@ type ParserTj(stn: Settings.T) =
         let driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
         driver.Manage().Window.Maximize()
-        __.Wait <- new WebDriverWait(driver, timeoutB)
+        __.Wait <- WebDriverWait(driver, timeoutB)
         try
             try
                 __.ParserSelen driver
@@ -104,7 +104,7 @@ type ParserTj(stn: Settings.T) =
                               Logging.Log.logger (ex)
         ()
     member private this.ParserTenders(i: IWebElement) =
-        let builder = new TenderBuilder()
+        let builder = TenderBuilder()
         let result =
             builder {
                 let! purNumT = i.findElementWithoutException (".//td[2]/strong", sprintf "purNumT not found, inner text - %s" i.Text)

@@ -8,10 +8,10 @@ open OpenQA.Selenium.Support.UI
 
 type ParserKamaz(stn: Settings.T) =
     inherit Parser()
-    let set = stn
+    let _ = stn
     let timeoutB = TimeSpan.FromSeconds(60.)
     let url = "https://web-1c.kamaz.ru/pur/ru_RU/"
-    let listTenders = new List<KamazRec>()
+    let _ = List<KamazRec>()
     let options = ChromeOptions()
 
     do
@@ -33,7 +33,7 @@ type ParserKamaz(stn: Settings.T) =
             driver.Quit()
         ()
     member private this.ParserSelen(driver: ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let _ = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore

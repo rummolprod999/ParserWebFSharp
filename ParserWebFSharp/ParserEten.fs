@@ -13,7 +13,7 @@ type ParserEten(stn: Settings.T) =
     let set = stn
     let timeoutB = TimeSpan.FromSeconds(60.)
     let url = "http://etender.gov.md/proceduri"
-    let listTenders = new List<EtenRec>()
+    let listTenders = List<EtenRec>()
     let options = ChromeOptions()
 
     do
@@ -36,7 +36,7 @@ type ParserEten(stn: Settings.T) =
         ()
 
     member private this.ParserSelen(driver: ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
@@ -71,7 +71,7 @@ type ParserEten(stn: Settings.T) =
         ()
 
     member private this.ParserTenders(i: IWebElement) =
-        let builder = new TenderBuilder()
+        let builder = TenderBuilder()
         let result =
             builder {
                 let! purNum = i.findElementWithoutException (".//td[2]", sprintf "purNum not found, inner text - %s" i.Text)

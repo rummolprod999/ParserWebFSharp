@@ -13,7 +13,7 @@ type ParserBidMartNew(stn: Settings.T) =
     let set = stn
     let url = "https://www.bidmart.by/b2c/sellers/tender"
     let timeoutB = TimeSpan.FromSeconds(60.)
-    let listTenders = new List<BidMartNewRec>()
+    let listTenders = List<BidMartNewRec>()
     let options = ChromeOptions()
     let pageReloader (driver: ChromeDriver) (x: int) =
                 for i in 1..x do
@@ -47,7 +47,7 @@ type ParserBidMartNew(stn: Settings.T) =
         
         ()
     member private __.ParserSelen(driver : ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore

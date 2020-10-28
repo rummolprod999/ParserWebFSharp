@@ -8,7 +8,7 @@ open TypeE
 type ParserAero(stn : Settings.T) =
     inherit Parser()
     let set = stn
-    let pageC = 10
+    let _ = 10
     
     override this.Parsing() =
         for i in 1..10 do
@@ -25,7 +25,7 @@ type ParserAero(stn : Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", url)
         | s -> 
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let tens = documents.QuerySelectorAll("div.view-content table.list tbody tr")
             for t in tens do

@@ -27,7 +27,7 @@ type TenderIrkutskOil(stn : Settings.T, urlT : string) =
         | _ -> None
     
     member private this.ParserPage(p : string) =
-        let parser = new HtmlParser()
+        let parser = HtmlParser()
         let doc = parser.Parse(p)
         let purNumT = doc.QuerySelector("table.lot_list tr.Info td")
         match purNumT with

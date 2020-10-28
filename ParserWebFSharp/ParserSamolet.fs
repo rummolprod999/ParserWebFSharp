@@ -13,7 +13,7 @@ type ParserSamolet(stn : Settings.T) =
     let set = stn
     let timeoutB = TimeSpan.FromSeconds(30.)
     let url = "https://tender.samoletgroup.ru/trades"
-    let listTenders = new List<SamoletRec>()
+    let listTenders = List<SamoletRec>()
     let options = ChromeOptions()
     
     do 
@@ -35,7 +35,7 @@ type ParserSamolet(stn : Settings.T) =
         ()
     
     member private this.ParserSelen(driver : ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
@@ -63,8 +63,8 @@ type ParserSamolet(stn : Settings.T) =
             this.ParserTenders driver t
         ()
     
-    member private this.ParserTenders (driver : ChromeDriver) (i : IWebElement) =
-        let builder = new TenderBuilder()
+    member private this.ParserTenders (_ : ChromeDriver) (i : IWebElement) =
+        let builder = TenderBuilder()
         
         let result =
             builder { 
@@ -88,5 +88,5 @@ type ParserSamolet(stn : Settings.T) =
                 return "ok"
             }
         match result with
-        | Success r -> ()
+        | Success _ -> ()
         | Error e -> Logging.Log.logger e

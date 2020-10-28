@@ -9,7 +9,7 @@ open TypeE
 
 type ParserButb(stn : Settings.T) =
     inherit Parser()
-    let set = stn
+    let _ = stn
     let timeoutB = TimeSpan.FromSeconds(120.)
     let url = "http://zakupki.butb.by/auctions/reestrauctions.html"
     let options = ChromeOptions()
@@ -32,7 +32,7 @@ type ParserButb(stn : Settings.T) =
             driver.Quit()
     
     member private this.ParserSelen(driver : ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         wait.Until
@@ -73,7 +73,7 @@ type ParserButb(stn : Settings.T) =
         let mutable tmp = m
         driver.SwitchTo().DefaultContent() |> ignore
         while tmp <> 1 do
-            let wait = new WebDriverWait(driver, timeoutB)
+            let wait = WebDriverWait(driver, timeoutB)
             wait.Until(fun dr -> dr.FindElement(By.XPath("//a[img[@title = 'Следующая страница']]")).Displayed) 
             |> ignore
             this.Clicker driver "//a[img[@title = 'Следующая страница']]"
@@ -84,7 +84,7 @@ type ParserButb(stn : Settings.T) =
         ()
     
     member private this.ParserTender (driver : ChromeDriver) (s : int) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         Thread.Sleep(5000)
         wait.Until
             (fun dr -> 

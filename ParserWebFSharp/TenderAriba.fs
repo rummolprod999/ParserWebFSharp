@@ -89,7 +89,7 @@ type TenderAriba(stn : Settings.T, tn : AribaRec, typeFz : int, etpName : string
             let idPlacingWay = ref 0
             match tn.PwName with
             | "" -> ()
-            | x -> idPlacingWay := this.GetPlacingWay con tn.PwName settings
+            | _ -> idPlacingWay := this.GetPlacingWay con tn.PwName settings
             let idEtp = this.GetEtp con settings
             let numVersion = 1
             let idRegion = 0

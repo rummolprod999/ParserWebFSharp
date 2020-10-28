@@ -88,7 +88,7 @@ type TenderAsgor(stn : Settings.T, tn : AsgorRec, typeFz : int, etpName : string
             let idPlacingWay = ref 0
             match tn.PwayName with
             | "" -> ()
-            | x -> idPlacingWay := this.GetPlacingWay con tn.PwayName settings
+            | _ -> idPlacingWay := this.GetPlacingWay con tn.PwayName settings
             let idEtp = this.GetEtp con settings
             let numVersion = 1
             let idRegion = 0

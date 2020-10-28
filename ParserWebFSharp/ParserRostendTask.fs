@@ -14,8 +14,8 @@ type ParserRostendTask(stn : Settings.T) =
     let set = stn
     let count = 600
     let strtPg = "http://rostender.info/tender?pg="
-    member val locker = new Object()
-    member val listTenders = new Queue<RosTendRecNew>()
+    member val locker = Object()
+    member val listTenders = Queue<RosTendRecNew>()
 
     override this.Parsing() =
         for i in 1..count do
@@ -28,7 +28,7 @@ type ParserRostendTask(stn : Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", url)
         | s ->
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let mutable tens = documents.QuerySelectorAll("div.table-constructor > div.tender-row")
             if tens.Length > 0 then
@@ -37,13 +37,13 @@ type ParserRostendTask(stn : Settings.T) =
             ()
 
     member private this.ThreadWorker(tensN : IEnumerable<_>) =
-        let listElem = new List<_>(tensN)
+        let listElem = List<_>(tensN)
         while listElem.Count > 10 do
             let ls = listElem.Take(10)
             listElem.RemoveAllFromList(ls)
-            this.Worker(new List<_>(ls))
+            this.Worker(List<_>(ls))
             ()
-        this.Worker(new List<_>(listElem))
+        this.Worker(List<_>(listElem))
 
     member private this.Worker(l : List<_>) =
         Task.Factory.StartNew(fun () -> Parallel.ForEach(l, this.TaskerParall) |> ignore) |> ignore

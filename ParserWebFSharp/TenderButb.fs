@@ -74,7 +74,7 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
                         "//tr[contains(., 'Сведения об организаторе')]/following-sibling::tr[contains(., 'Полное наименование')]/td[2]")
             match OrgName with
             | "" -> ()
-            | x -> 
+            | _ -> 
                 let selectOrg = sprintf "SELECT id_organizer FROM %sorganizer WHERE full_name = @full_name" stn.Prefix
                 let cmd3 = new MySqlCommand(selectOrg, con)
                 cmd3.Prepare()
@@ -126,7 +126,7 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
                         "//tr[contains(., 'Регистрационный номер')]/following-sibling::tr[contains(., 'Вид процедуры закупки')]/td[2]")
             match PlacingWayName with
             | "" -> ()
-            | x -> idPlacingWay := this.GetPlacingWay con PlacingWayName settings
+            | _ -> idPlacingWay := this.GetPlacingWay con PlacingWayName settings
             let idEtp = this.GetEtp con settings
             let numVersion = 1
             let mutable idRegion = 0
@@ -184,7 +184,7 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
             let idCustomer = ref 0
             match cusAddr with
             | "" -> ()
-            | xc -> 
+            | _ -> 
                 let CustomerName =
                     this.GetDefaultFromNullS 
                     <| this.checkElement 
@@ -334,7 +334,7 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
         let b = Regex.Replace(p, @"\s+", "")
         b
     
-    member private this.GetLots (driver : ChromeDriver, idTender : int, idCustomer : int, requirement : string, 
+    member private this.GetLots (_ : ChromeDriver, idTender : int, idCustomer : int, requirement : string, 
                                  con : MySqlConnection, pricecheck : bool) (elem : IWebElement) =
         let idLot = ref 0
         let lotNumT = this.GetDefaultFromNullS <| this.checkElement (elem, ".//td[1]/span")
@@ -364,7 +364,7 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
         idLot := int cmd12.LastInsertedId
         match requirement with
         | "" -> ()
-        | r -> 
+        | _ -> 
             let addReq = sprintf "INSERT INTO %srequirement SET id_lot = @id_lot, content = @content" stn.Prefix
             let cmd = new MySqlCommand(addReq, con)
             cmd.Parameters.AddWithValue("@id_lot", !idLot) |> ignore

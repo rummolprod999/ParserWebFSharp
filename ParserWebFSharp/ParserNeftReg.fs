@@ -20,7 +20,7 @@ type ParserNeftReg(stn: Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", url)
         | s ->
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let tens = documents.QuerySelectorAll("table.tableorg tr[id ^='trauction']").ToList()
             for t in 0..tens.Count-1 do

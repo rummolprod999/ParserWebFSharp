@@ -69,7 +69,7 @@ type TenderKsk(stn: Settings.T, tn: KskRec, typeFz: int, etpName: string, etpUrl
                         let idPlacingWay = ref 0
                         match tn.PwName with
                         | "" -> ()
-                        | x -> idPlacingWay := this.GetPlacingWay con tn.PwName settings
+                        | _ -> idPlacingWay := this.GetPlacingWay con tn.PwName settings
                         let idTender = ref 0
                         let insertTender = String.Format ("INSERT INTO {0}tender SET id_xml = @id_xml, purchase_number = @purchase_number, doc_publish_date = @doc_publish_date, href = @href, purchase_object_info = @purchase_object_info, type_fz = @type_fz, id_organizer = @id_organizer, id_placing_way = @id_placing_way, id_etp = @id_etp, end_date = @end_date, scoring_date = @scoring_date, bidding_date = @bidding_date, cancel = @cancel, date_version = @date_version, num_version = @num_version, notice_version = @notice_version, xml = @xml, print_form = @print_form, id_region = @id_region", stn.Prefix)
                         let cmd9 = new MySqlCommand(insertTender, con)

@@ -60,7 +60,7 @@ type TenderSlav(stn : Settings.T, tn : SlavNeftRec, typeFz : int, etpName : stri
             let IdOrg = ref 0
             match tn.OrgName with
             | "" -> ()
-            | x -> 
+            | _ -> 
                 let selectOrg = sprintf "SELECT id_organizer FROM %sorganizer WHERE full_name = @full_name" stn.Prefix
                 let cmd3 = new MySqlCommand(selectOrg, con)
                 cmd3.Prepare()

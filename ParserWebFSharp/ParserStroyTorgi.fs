@@ -10,12 +10,12 @@ open TypeE
 type ParserStroyTorgi(stn : Settings.T) =
     inherit Parser()
     let set = stn
-    let timeoutB = TimeSpan.FromSeconds(120.)
+    let _ = TimeSpan.FromSeconds(120.)
     let url =
         "https://stroytorgi.ru/trades/page20?category=0&filter_category=0&filter_sum_min=0&filter_sum_max=9999999999999"
     let options = ChromeOptions()
     let CreateDriver opt = lazy (new ChromeDriver("/usr/local/bin", opt))
-    let mutable driver = null
+    let mutable _ = null
     
     do 
         options.AddArguments("headless")
@@ -38,7 +38,7 @@ type ParserStroyTorgi(stn : Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", url)
         | s -> 
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let tens = documents.QuerySelectorAll("ul.table-auction li[data-href^= '/trades/']")
             for t in tens do

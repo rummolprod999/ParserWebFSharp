@@ -105,7 +105,7 @@ type TenderNorNic(stn : Settings.T, tn : NorNicRec, typeFz : int, etpName : stri
             let idPlacingWay = ref 0
             match tn.PwName with
             | "" -> ()
-            | x -> idPlacingWay := this.GetPlacingWay con tn.PwName settings
+            | _ -> idPlacingWay := this.GetPlacingWay con tn.PwName settings
             let idTender = ref 0
             let insertTender =
                 String.Format

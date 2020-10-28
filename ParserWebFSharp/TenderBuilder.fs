@@ -21,7 +21,7 @@ type TenderBuilder() =
 
     member this.Combine(a, b) =
         match a with
-        | Success a' -> b()
+        | Success _ -> b()
         | Error e -> Error e
 
     member this.Run(f) = f()

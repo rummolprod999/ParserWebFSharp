@@ -36,9 +36,9 @@ type TenderSibServ(stn : Settings.T, tn : SibServRec, typeFz : int, etpName : st
                 | null | "" -> raise <| System.Exception(sprintf "cannot get Page %s" tn.Href)
                 | s -> s
             
-            let htmlDoc = new HtmlDocument()
+            let htmlDoc = HtmlDocument()
             htmlDoc.LoadHtml(s)
-            let nav = (htmlDoc.CreateNavigator()) :?> HtmlNodeNavigator
+            let _ = (htmlDoc.CreateNavigator()) :?> HtmlNodeNavigator
             let href = tn.Href
             let mutable cancelStatus = 0
             let mutable updated = false

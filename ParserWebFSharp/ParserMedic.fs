@@ -13,7 +13,7 @@ type ParserMedic(stn: Settings.T) =
     let set = stn
     let url = "https://tender.medicina.ru/list.php"
     let timeoutB = TimeSpan.FromSeconds(60.)
-    let listTenders = new List<MedicRec>()
+    let listTenders = List<MedicRec>()
     let options = ChromeOptions()
 
     do 
@@ -36,7 +36,7 @@ type ParserMedic(stn: Settings.T) =
         ()
     
     member private __.Auth(driver : ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.SwitchTo().DefaultContent() |> ignore
         driver.FindElement(By.XPath("//a[. = 'Войти']")).Click()
         driver.SwitchTo().DefaultContent() |> ignore
@@ -51,7 +51,7 @@ type ParserMedic(stn: Settings.T) =
         
         ()
     member private __.ParserSelen(driver : ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore

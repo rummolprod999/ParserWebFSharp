@@ -14,7 +14,7 @@ type ParserGosYakut(stn : Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", url)
         | s -> 
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let tens = documents.QuerySelectorAll("div.table-responsive table.table tbody tr")
             for t in tens do

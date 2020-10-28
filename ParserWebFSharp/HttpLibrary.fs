@@ -79,7 +79,7 @@ module Download =
                 if task.Wait(TimeSpan.FromSeconds(60.)) then
                     s <- task.Result
                     continueLooping <- false
-                else raise <| new TimeoutException()
+                else raise <| TimeoutException()
             with _ ->
                 if !count >= 3 then
                     Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток" url !count)
@@ -99,7 +99,7 @@ module Download =
                 if task.Wait(TimeSpan.FromSeconds(30.)) then
                     s <- task.Result
                     continueLooping <- false
-                else raise <| new TimeoutException()
+                else raise <| TimeoutException()
             with _ ->
                 if !count >= 1 then
                     Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток" url !count)
@@ -118,7 +118,7 @@ module Download =
                 if task.Wait(TimeSpan.FromSeconds(60.)) then
                     s <- task.Result
                     continueLooping <- false
-                else raise <| new TimeoutException()
+                else raise <| TimeoutException()
             with _ ->
                 if !count >= 3 then
                     Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток" url !count)
@@ -139,7 +139,7 @@ module Download =
                 if task.Wait(TimeSpan.FromSeconds(30.)) then
                     s <- task.Result
                     continueLooping <- false
-                else raise <| new TimeoutException()
+                else raise <| TimeoutException()
             with ex ->
                 Logging.Log.logger ex
                 if !count >= 3 then
@@ -167,7 +167,7 @@ module Download =
                 if task.Wait(TimeSpan.FromSeconds(30.)) then
                     s <- task.Result
                     continueLooping <- false
-                else raise <| new TimeoutException()
+                else raise <| TimeoutException()
             with _ ->
                 if !count >= 3 then
                     Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток" url !count)
@@ -193,7 +193,7 @@ module Download =
                     if task.Wait(TimeSpan.FromSeconds(30.)) then
                         s <- task.Result
                         continueLooping <- false
-                    else raise <| new TimeoutException()
+                    else raise <| TimeoutException()
                 with _ ->
                     if !count >= 5 then
                         Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток" url !count)
@@ -218,7 +218,7 @@ module Download =
                     if task.Wait(TimeSpan.FromSeconds(30.)) then
                         s <- task.Result
                         continueLooping <- false
-                    else raise <| new TimeoutException()
+                    else raise <| TimeoutException()
                 with _ ->
                     if !count >= 5 then
                         Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток" url !count)
@@ -234,10 +234,10 @@ module Download =
             try
                 let wc = new WebClient()
                 wc.DownloadFile(url, patharch)
-                ret <- new FileInfo(patharch)
+                ret <- FileInfo(patharch)
                 cc <- false
             with _ ->
-                let FileD = new FileInfo(patharch)
+                let FileD = FileInfo(patharch)
                 if FileD.Exists then FileD.Delete()
                 if !downCount = 0 then
                     Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток" url !downCount)
@@ -263,7 +263,7 @@ module Download =
                 if task.Wait(TimeSpan.FromSeconds(30.)) then
                     s <- task.Result
                     continueLooping <- false
-                else raise <| new TimeoutException()
+                else raise <| TimeoutException()
             with _ ->
                 if !count >= 3 then
                     Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток" url !count)
@@ -289,7 +289,7 @@ module Download =
                 if task.Wait(TimeSpan.FromSeconds(650.)) then
                     s <- task.Result
                     continueLooping <- false
-                else raise <| new TimeoutException()
+                else raise <| TimeoutException()
             with _ ->
                 if !count >= 3 then
                     Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток" url !count)

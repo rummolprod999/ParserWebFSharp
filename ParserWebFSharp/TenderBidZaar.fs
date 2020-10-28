@@ -33,7 +33,7 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
                         if reader.HasRows then reader.Close()
                                                return! Error ""
                         reader.Close()
-                        let wait = new WebDriverWait(driver, TimeSpan.FromSeconds(60.))
+                        let wait = WebDriverWait(driver, TimeSpan.FromSeconds(60.))
                         driver.Navigate().GoToUrl(tn.Href)
                         Thread.Sleep(1000)
                         driver.SwitchTo().DefaultContent() |> ignore
@@ -172,7 +172,7 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
                         | Error r -> Logging.Log.logger r
         ()
     
-    member private this.GetPurObjs(con: MySqlConnection, idTender: int, driver: ChromeDriver, idLot: int, idCustomer: int) =
+    member private this.GetPurObjs(con: MySqlConnection, _: int, driver: ChromeDriver, idLot: int, idCustomer: int) =
         try
             let url = tn.Href + "/positions"
             driver.Navigate().GoToUrl(url)

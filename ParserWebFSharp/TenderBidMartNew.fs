@@ -36,7 +36,7 @@ type TenderBidMartNew(stn: Settings.T, tn: BidMartNewRec, typeFz: int, etpName: 
                         if reader.HasRows then reader.Close()
                                                return! Error ""
                         reader.Close()
-                        let wait = new WebDriverWait(driver, TimeSpan.FromSeconds(60.))
+                        let wait = WebDriverWait(driver, TimeSpan.FromSeconds(60.))
                         driver.Navigate().GoToUrl(tn.Href)
                         Thread.Sleep(1000)
                         driver.SwitchTo().DefaultContent() |> ignore
@@ -90,7 +90,7 @@ type TenderBidMartNew(stn: Settings.T, tn: BidMartNewRec, typeFz: int, etpName: 
                         if pwName.Length > 0 && pwName.IndexOf("#") > 0 then pwName <- pwName.Substring(0, pwName.IndexOf("#"))
                         match pwName with
                         | "" -> ()
-                        | x -> idPlacingWay := this.GetPlacingWay con pwName settings
+                        | _ -> idPlacingWay := this.GetPlacingWay con pwName settings
                         let idTender = ref 0
                         let insertTender = String.Format ("INSERT INTO {0}tender SET id_xml = @id_xml, purchase_number = @purchase_number, doc_publish_date = @doc_publish_date, href = @href, purchase_object_info = @purchase_object_info, type_fz = @type_fz, id_organizer = @id_organizer, id_placing_way = @id_placing_way, id_etp = @id_etp, end_date = @end_date, scoring_date = @scoring_date, bidding_date = @bidding_date, cancel = @cancel, date_version = @date_version, num_version = @num_version, notice_version = @notice_version, xml = @xml, print_form = @print_form, id_region = @id_region", stn.Prefix)
                         let cmd9 = new MySqlCommand(insertTender, con)
@@ -187,7 +187,7 @@ type TenderBidMartNew(stn: Settings.T, tn: BidMartNewRec, typeFz: int, etpName: 
                 | Error r -> Logging.Log.logger r
         ()
     
-    member private this.GetPurObjs(con: MySqlConnection, idTender: int, pos: ReadOnlyCollection<IWebElement>, idLot: int, idCustomer: int) =
+    member private this.GetPurObjs(con: MySqlConnection, _: int, pos: ReadOnlyCollection<IWebElement>, idLot: int, idCustomer: int) =
         for p in pos do
             let name = p.findElementWithoutException("./td/a")
             let QuantT = p.findElementWithoutException("./td[3]")

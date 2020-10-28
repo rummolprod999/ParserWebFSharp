@@ -22,7 +22,7 @@ type ParserMpkz(stn: Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", url)
         | s ->
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let tens = documents.QuerySelectorAll("div#lot-list div.row.list-lot")
             for t in tens do
@@ -58,7 +58,7 @@ type ParserMpkz(stn: Settings.T) =
                        return ""
                        }
         match res with
-                | Succ r -> ()
+                | Succ _ -> ()
                 | Err e when e = "" -> ()
                 | Err r -> Logging.Log.logger r
         

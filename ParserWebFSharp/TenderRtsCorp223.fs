@@ -34,7 +34,7 @@ type TenderRtsCorp223(stn: Settings.T, tn: RtsCorpRec, typeFz: int, etpName: str
                         reader.Close()
                         let Page = Download.DownloadStringRts tn.Href
                         if Page = "" || Page = null then return! Err(sprintf "%s" tn.Href)
-                        let htmlDoc = new HtmlDocument()
+                        let htmlDoc = HtmlDocument()
                         htmlDoc.LoadHtml(Page)
                         let nav = (htmlDoc.CreateNavigator()) :?> HtmlNodeNavigator
                         let dateUpd = DateTime.Now
@@ -138,14 +138,14 @@ type TenderRtsCorp223(stn: Settings.T, tn: RtsCorpRec, typeFz: int, etpName: str
                         return ""
                         }
         match res with
-                | Succ r -> ()
+                | Succ _ -> ()
                 | Err e when e = "" -> ()
                 | Err r -> Logging.Log.logger r
         ()
 
 
     member private this.GetAttachments(con: MySqlConnection, idTender: int, purNum: string) =
-        let b, x = Int32.TryParse(purNum)
+        let b, _ = Int32.TryParse(purNum)
         if b then
             try
                 let page = Download.DownloadStringRts <| sprintf "https://zmo-new-webapi.rts-tender.ru/api/Trade/%s/GetTradeDocuments" purNum

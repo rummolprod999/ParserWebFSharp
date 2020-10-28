@@ -72,7 +72,7 @@ module NewtonExt =
                    with _ -> DateTime.MinValue
 
         member this.GetElements(path: string) =
-            let els = new List<JToken>()
+            let els = List<JToken>()
             match this.SelectToken(path) with
             | null -> ()
             | x when x.Type = JTokenType.Object -> els.Add(x)

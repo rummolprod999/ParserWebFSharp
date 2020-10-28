@@ -24,7 +24,7 @@ type ParserApps(stn: Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", url)
         | s ->
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let tens = documents.QuerySelectorAll("ul li a[href *='ViewTender']").ToList()
             for t in tens do
@@ -34,7 +34,7 @@ type ParserApps(stn: Settings.T) =
             ()
         ()
     
-    member private __.ParsingTender (t: IElement) (url: string) =
+    member private __.ParsingTender (t: IElement) (_: string) =
         let builder = DocumentBuilder()
         let res = builder {
             let purName = t.TextContent

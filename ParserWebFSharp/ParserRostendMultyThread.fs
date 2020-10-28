@@ -14,8 +14,8 @@ type ParserRostendMultyThread(stn : Settings.T) =
     let set = stn
     let count = 500
     let strtPg = "http://rostender.info/tender?pg="
-    member val locker = new Object()
-    member val listTenders = new Queue<RosTendRec>()
+    member val locker = Object()
+    member val listTenders = Queue<RosTendRec>()
 
     override this.Parsing() =
         for i in 1..count do
@@ -28,7 +28,7 @@ type ParserRostendMultyThread(stn : Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", url)
         | s ->
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let mutable tens = documents.QuerySelectorAll("table.b-new-tenders-table tbody tr")
             if tens.Length > 0 then
@@ -37,13 +37,13 @@ type ParserRostendMultyThread(stn : Settings.T) =
             ()
 
     member private this.ThreadWorker(tensN : IEnumerable<_>) =
-        let listElem = new List<_>(tensN)
+        let listElem = List<_>(tensN)
         while listElem.Count > 5 do
             let ls = listElem.Take(5)
             listElem.RemoveAllFromList(ls)
-            this.Worker(new List<_>(ls))
+            this.Worker(List<_>(ls))
             ()
-        this.Worker(new List<_>(listElem))
+        this.Worker(List<_>(listElem))
 
     member private this.Worker(l : List<_>) =
         for t in l do
@@ -162,7 +162,7 @@ type ParserRostendMultyThread(stn : Settings.T) =
         match tn.Page with
         | "" -> raise <| System.NullReferenceException(sprintf "Page not found in %s" tn.Href)
         | _ -> ()
-        let parser = new HtmlParser()
+        let parser = HtmlParser()
         let documents = parser.Parse(tn.Page)
 
         let EndDateT =

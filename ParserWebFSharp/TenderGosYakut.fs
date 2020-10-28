@@ -34,8 +34,8 @@ type TenderGosYakut(stn : Settings.T, tn : GosYakutRec, typeFz : int, etpName : 
             let Page = Download.DownloadString tn.Href
             match Page with
             | null | "" -> raise <| System.Exception(sprintf "cannot download page %s" tn.Href)
-            | s -> ()
-            let parser = new HtmlParser()
+            | _ -> ()
+            let parser = HtmlParser()
             let doc = parser.Parse(Page)
             let mutable cancelStatus = 0
             let mutable updated = false
@@ -97,7 +97,7 @@ type TenderGosYakut(stn : Settings.T, tn : GosYakutRec, typeFz : int, etpName : 
             let idPlacingWay = ref 0
             match tn.PwayName with
             | "" -> ()
-            | x -> idPlacingWay := this.GetPlacingWay con tn.PwayName settings
+            | _ -> idPlacingWay := this.GetPlacingWay con tn.PwayName settings
             let idEtp = this.GetEtp con settings
             let numVersion = 1
             let idRegion = 0

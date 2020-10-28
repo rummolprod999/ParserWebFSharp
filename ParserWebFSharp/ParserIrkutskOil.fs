@@ -5,7 +5,7 @@ open AngleSharp.Parser.Html
 
 type ParserIrkutskOil(stn : Settings.T) = 
     inherit Parser()
-    let set = stn
+    let _ = stn
     let url = "https://tenders.irkutskoil.ru/tenders.php"
     
     override this.Parsing() = 
@@ -13,7 +13,7 @@ type ParserIrkutskOil(stn : Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get start page", url)
         | s -> 
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let tens = documents.QuerySelectorAll("table.lot_list tr.Info")
             for t in tens do

@@ -8,7 +8,7 @@ open OpenQA.Selenium.Chrome
 type TenderCisLink(stn: Settings.T, tn: CisLinkRec, typeFz: int, etpName: string, etpUrl: string, driver: ChromeDriver) =
     inherit Tender(etpName, etpUrl)
     let settings = stn
-    let timeoutB = TimeSpan.FromSeconds(30.)
+    let _ = TimeSpan.FromSeconds(30.)
     static member val tenderCount = ref 0
     static member val tenderUpCount = ref 0
 

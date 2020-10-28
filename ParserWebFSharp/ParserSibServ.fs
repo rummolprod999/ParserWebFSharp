@@ -33,7 +33,7 @@ type ParserSibServ(stn : Settings.T) =
         ()
     
     member private this.ParserSelen(driver : ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         wait.Until
@@ -47,7 +47,7 @@ type ParserSibServ(stn : Settings.T) =
                 this.ParserTenders driver t
             with ex -> Logging.Log.logger (ex)
     
-    member private this.ParserTenders (driver : ChromeDriver) (t : IWebElement) =
+    member private this.ParserTenders (_ : ChromeDriver) (t : IWebElement) =
         let purNum =
             match t.findElementWithoutException ("./following-sibling::p[1]") with
             | "" -> raise <| System.NullReferenceException(sprintf "purNum not found in %s" url)
@@ -70,7 +70,7 @@ type ParserSibServ(stn : Settings.T) =
             | null -> raise <| System.NullReferenceException(sprintf "href not found in %s" url)
             | x -> x.GetAttribute("href")
         
-        let listDoc = new List<DocSibServ>()
+        let listDoc = List<DocSibServ>()
         listDoc.Add({ name = requesttext
                       url = hrefrequest })
         let dateT = this.GetDefaultFromNull <| t.FindElement(By.XPath("./following-sibling::p[4]"))

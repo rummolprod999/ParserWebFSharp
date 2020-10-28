@@ -36,8 +36,8 @@ type TenderStroyTorgi(stn : Settings.T, tn : StroyTorgiRec, typeFz : int, etpNam
             let Page = Download.DownloadString tn.Url
             match Page with
             | null | "" -> raise <| System.Exception(sprintf "cannot download page %s" tn.Url)
-            | s -> ()
-            let parser = new HtmlParser()
+            | _ -> ()
+            let parser = HtmlParser()
             let doc = parser.Parse(Page)
             let mutable cancelStatus = 0
             let mutable updated = false

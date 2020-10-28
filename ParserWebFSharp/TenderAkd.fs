@@ -48,7 +48,7 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
         ()
     
     member private this.ParserPage(p : string) =
-        let parser = new HtmlParser()
+        let parser = HtmlParser()
         let doc = parser.Parse(p)
         let pubDateT = doc.QuerySelector("th:contains('Публикация электронной процедуры') + td > span")
         match pubDateT with
@@ -157,7 +157,7 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
             let OrgName = this.GetDefaultFromNull <| doc.QuerySelector("th:contains('Организатор торгов') + td")
             match OrgName with
             | "" -> ()
-            | x -> 
+            | _ -> 
                 let selectOrg = sprintf "SELECT id_organizer FROM %sorganizer WHERE full_name = @full_name" stn.Prefix
                 let cmd3 = new MySqlCommand(selectOrg, con)
                 cmd3.Prepare()
@@ -192,7 +192,7 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
                 this.GetDefaultFromNull <| doc.QuerySelector("th:contains('Наименование способа размещения') + td")
             match PlacingWayName with
             | "" -> ()
-            | x -> idPlacingWay := this.GetPlacingWay con PlacingWayName settings
+            | _ -> idPlacingWay := this.GetPlacingWay con PlacingWayName settings
             let idEtp = this.GetEtp con settings
             let numVersion = 1
             let mutable idRegion = 0
@@ -293,7 +293,7 @@ type TenderAkd(stn : Settings.T, urlT : string, purNum : string) =
             let delivTerm = this.GetDefaultFromNull <| doc.QuerySelector("th:contains('Сроки исполнения') + td")
             let delivTerm1 = this.GetDefaultFromNull <| doc.QuerySelector("th:contains('Сроки и условия оплаты') + td")
             match (delivTerm, delivTerm1) with
-            | (x, y) & ("", "") -> ()
+            | (_, _) & ("", "") -> ()
             | (x, y) -> 
                 let deliv = sprintf "Сроки исполнения: %s \n Сроки и условия оплаты: %s" x y
                 let insertCustomerRequirement =

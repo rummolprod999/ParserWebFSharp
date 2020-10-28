@@ -24,7 +24,7 @@ type ParserSmart(stn: Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", url)
         | s ->
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let tens = documents.QuerySelectorAll("#tenders > tbody > tr.head")
             for t in tens do
@@ -61,7 +61,7 @@ type ParserSmart(stn: Settings.T) =
                        return ""
                    }
         match res with
-                | Succ r -> ()
+                | Succ _ -> ()
                 | Err e when e = "" -> ()
                 | Err r -> Logging.Log.logger r
         ()

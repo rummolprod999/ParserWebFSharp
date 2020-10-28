@@ -33,7 +33,7 @@ type TenderTj(stn: Settings.T, tn: TjRec, typeFz: int, etpName: string, etpUrl: 
                         reader.Close()
                         let Page = Download.DownloadString tn.Href
                         if Page = "" || Page = null then return! Err(sprintf "%s" tn.Href)
-                        let htmlDoc = new HtmlDocument()
+                        let htmlDoc = HtmlDocument()
                         htmlDoc.LoadHtml(Page)
                         let nav = (htmlDoc.CreateNavigator()) :?> HtmlNodeNavigator
                         let dateUpd = DateTime.Now

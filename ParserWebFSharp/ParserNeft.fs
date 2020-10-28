@@ -21,7 +21,7 @@ type ParserNeft(stn : Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get start page", urlT)
         | s -> 
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let tens = documents.QuerySelectorAll("table.table tr.registerBox")
             for t in tens do

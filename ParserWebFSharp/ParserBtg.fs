@@ -13,7 +13,7 @@ type ParserBtg(stn : Settings.T) =
     let set = stn
     let timeoutB = TimeSpan.FromSeconds(30.)
     let url = "http://www.btg.by/tenders/"
-    let listTenders = new List<BtgRec>()
+    let listTenders = List<BtgRec>()
     let options = ChromeOptions()
     
     do 
@@ -34,7 +34,7 @@ type ParserBtg(stn : Settings.T) =
         ()
     
     member private this.ParserSelen(driver : ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
@@ -50,7 +50,7 @@ type ParserBtg(stn : Settings.T) =
             with ex -> Logging.Log.logger (ex)
         ()
     
-    member private this.ParserTendersList (driver : ChromeDriver) (t : BtgRec) =
+    member private this.ParserTendersList (_ : ChromeDriver) (t : BtgRec) =
         try 
             let T = TenderBtg(set, t, 115, "ОАО «Газпром трансгаз Беларусь»", "http://www.btg.by")
             T.Parsing()
@@ -81,8 +81,8 @@ type ParserBtg(stn : Settings.T) =
             with ex -> Logging.Log.logger (ex)
         ()
     
-    member private this.ParserTenders (driver : ChromeDriver) (t : IWebElement) =
-        let builder = new TenderBuilder()
+    member private this.ParserTenders (_ : ChromeDriver) (t : IWebElement) =
+        let builder = TenderBuilder()
         
         let result =
             builder { 
@@ -112,6 +112,6 @@ type ParserBtg(stn : Settings.T) =
                 return "ok"
             }
         match result with
-        | Success r -> ()
+        | Success _ -> ()
         | Error e -> Logging.Log.logger e
         ()

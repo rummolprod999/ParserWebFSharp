@@ -13,7 +13,7 @@ type ParserKg(stn : Settings.T) =
     let set = stn
     let timeoutB = TimeSpan.FromSeconds(60.)
     let url = "http://zakupki.gov.kg/popp/view/order/list.xhtml"
-    let listTenders = new List<KgRec>()
+    let listTenders = List<KgRec>()
     let options = ChromeOptions()
     let pageC = 100
     
@@ -37,7 +37,7 @@ type ParserKg(stn : Settings.T) =
         ()
     
     member private this.ParserSelen(driver : ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
@@ -59,7 +59,7 @@ type ParserKg(stn : Settings.T) =
     
     member private this.PreparedPage(driver : ChromeDriver) =
         driver.SwitchTo().DefaultContent() |> ignore
-        let jse = driver :> IJavaScriptExecutor
+        let _ = driver :> IJavaScriptExecutor
         try
             //jse.ExecuteScript("document.querySelector('div.links button:nth-of-type(2)').click()", "") |> ignore
              this.Clicker driver <| "//select[@class = 'ui-paginator-rpp-options']"
@@ -75,7 +75,7 @@ type ParserKg(stn : Settings.T) =
         for t in tenders do
             this.ParserTenders t
         () 
-    member private this.ParserTendersList (driver : ChromeDriver) (t : KgRec) =
+    member private this.ParserTendersList (_ : ChromeDriver) (t : KgRec) =
         try 
             let T = TenderKg(set, t, 208, "Министерство финансов Кыргызской Республики", "http://zakupki.gov.kg")
             T.Parsing()
@@ -91,7 +91,7 @@ type ParserKg(stn : Settings.T) =
         Thread.Sleep(3000)
         __.ParserListTenders driver
     member private this.ParserTenders (i : IWebElement) =
-        let builder = new TenderBuilder()
+        let builder = TenderBuilder()
         let result =
             builder {
                 let! purNum = i.findElementWithoutException (".//td[1]", sprintf "purNum not found, inner text - %s" i.Text)
@@ -127,6 +127,6 @@ type ParserKg(stn : Settings.T) =
                 return "ok"
             }
         match result with
-        | Success r -> ()
+        | Success _ -> ()
         | Error e -> Logging.Log.logger e
         ()

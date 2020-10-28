@@ -33,7 +33,7 @@ type TenderRtsCorp(stn: Settings.T, tn: RtsCorpRec, typeFz: int, etpName: string
                         reader.Close()
                         let Page = Download.DownloadStringRts tn.Href
                         if Page = "" || Page = null then return! Err(sprintf "%s" tn.Href)
-                        let htmlDoc = new HtmlDocument()
+                        let htmlDoc = HtmlDocument()
                         htmlDoc.LoadHtml(Page)
                         let nav = (htmlDoc.CreateNavigator()) :?> HtmlNodeNavigator
                         let dateUpd = DateTime.Now
@@ -137,13 +137,13 @@ type TenderRtsCorp(stn: Settings.T, tn: RtsCorpRec, typeFz: int, etpName: string
                         return ""
                         }
         match res with
-                | Succ r -> ()
+                | Succ _ -> ()
                 | Err e when e = "" -> ()
                 | Err r -> Logging.Log.logger r
         ()
 
 
-    member private this.GetAttachments(con: MySqlConnection, idTender: int, purNum: string, doc: HtmlDocument) =
+    member private this.GetAttachments(con: MySqlConnection, idTender: int, _: string, doc: HtmlDocument) =
         let documents = doc.DocumentNode.SelectNodes("//div[@class = 'header2' and . = 'Документы']/following-sibling::div//table/tbody/tr")
         if documents <> null then
             for d in documents do

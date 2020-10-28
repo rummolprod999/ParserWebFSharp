@@ -7,7 +7,7 @@ open System.Threading
 
 module Logging =
     let mutable FileLog = ""
-    let locker = new Object()
+    let locker = Object()
     
     type Log() =
         static member logger ([<ParamArray>] args : Object []) =

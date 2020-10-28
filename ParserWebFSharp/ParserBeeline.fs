@@ -13,7 +13,7 @@ type ParserBeeline(stn : Settings.T) as __ =
     let set = stn
     let timeoutB = TimeSpan.FromSeconds(30.)
     let url = "https://moskva.beeline.ru/business/partners/tenders/"
-    let listTenders = new List<BeelineRec>()
+    let listTenders = List<BeelineRec>()
     let options = ChromeOptions()
 
     do
@@ -35,7 +35,7 @@ type ParserBeeline(stn : Settings.T) as __ =
         ()
 
     member private __.ParserSelen(driver : ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
@@ -65,7 +65,7 @@ type ParserBeeline(stn : Settings.T) as __ =
         ()
 
     member private __.ParserTenders(i : IWebElement) =
-        let builder = new TenderBuilder()
+        let builder = TenderBuilder()
         let result =
             builder {
                 let! href = i.findAttributeWithoutException ("href", "href not found")
@@ -85,6 +85,6 @@ type ParserBeeline(stn : Settings.T) as __ =
                 return "ok"
                 }
         match result with
-        | Success r -> ()
+        | Success _ -> ()
         | Error e -> Logging.Log.logger e
         ()

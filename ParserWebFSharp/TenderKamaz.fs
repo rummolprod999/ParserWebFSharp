@@ -7,8 +7,8 @@ open OpenQA.Selenium.Chrome
 
 type TenderKamaz(stn: Settings.T, tn: KamazRec, typeFz: int, etpName: string, etpUrl: string, driver: ChromeDriver) =
     inherit Tender(etpName, etpUrl)
-    let settings = stn
-    let timeoutB = TimeSpan.FromSeconds(30.)
+    let _ = stn
+    let _ = TimeSpan.FromSeconds(30.)
     static member val tenderCount = ref 0
     static member val tenderUpCount = ref 0
 
@@ -16,7 +16,7 @@ type TenderKamaz(stn: Settings.T, tn: KamazRec, typeFz: int, etpName: string, et
     override this.Parsing() =
         let builder = TenderBuilder()
         use con = new MySqlConnection(stn.ConStr)
-        let dateUpd = DateTime.Now
+        let _ = DateTime.Now
         let res =
                    builder {return ""}
         match res with

@@ -121,7 +121,7 @@ type TenderComita(stn : Settings.T, tn : ComitaRec, typeFz : int, etpName : stri
                 | x -> x.Trim()
             match PwayName with
             | "" -> ()
-            | x -> idPlacingWay := this.GetPlacingWay con PwayName settings
+            | _ -> idPlacingWay := this.GetPlacingWay con PwayName settings
             let idEtp = this.GetEtp con settings
             let numVersion = 1
             let idRegion = 0

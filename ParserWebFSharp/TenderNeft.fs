@@ -35,8 +35,8 @@ type TenderNeft(stn : Settings.T, tn : NeftRec) =
             let Page = Download.DownloadString tn.Href
             match Page with
             | null | "" -> raise <| System.Exception(sprintf "cannot download page %s" tn.Href)
-            | s -> ()
-            let parser = new HtmlParser()
+            | _ -> ()
+            let parser = HtmlParser()
             let doc = parser.Parse(Page)
             let mutable cancelStatus = 0
             let mutable updated = false
@@ -66,7 +66,7 @@ type TenderNeft(stn : Settings.T, tn : NeftRec) =
             let status = this.GetDefaultFromNull <| doc.QuerySelector("td:contains('Статус закупки') + td span")
             match tn.OrgName with
             | "" -> ()
-            | x -> 
+            | _ -> 
                 let selectOrg = sprintf "SELECT id_organizer FROM %sorganizer WHERE full_name = @full_name" stn.Prefix
                 let cmd3 = new MySqlCommand(selectOrg, con)
                 cmd3.Prepare()
@@ -201,8 +201,8 @@ type TenderNeft(stn : Settings.T, tn : NeftRec) =
         let Page = Download.DownloadString url
         match Page with
         | null | "" -> raise <| System.Exception(sprintf "cannot download page %s" url)
-        | s -> ()
-        let parser = new HtmlParser()
+        | _ -> ()
+        let parser = HtmlParser()
         let doc = parser.Parse(Page)
         let lotName = this.GetDefaultFromNull <| doc.QuerySelector("td:contains('Наименование лота') + td span")
         let delivPlace = this.GetDefaultFromNull <| doc.QuerySelector("td:contains('Особые требования') + td span")

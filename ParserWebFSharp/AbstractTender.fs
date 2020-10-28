@@ -137,7 +137,7 @@ type Tender =
         ()
 
     member this.TenderKwords (con: MySqlConnection) (idTender: int) (stn: Settings.T): unit =
-        let resString = new StringBuilder()
+        let resString = StringBuilder()
         let selectPurObj =
             sprintf
                 "SELECT DISTINCT po.name, po.okpd_name FROM %spurchase_object AS po LEFT JOIN %slot AS l ON l.id_lot = po.id_lot WHERE l.id_tender = @id_tender"
@@ -274,7 +274,7 @@ type Tender =
                     //Logging.Log.logger ex.Message
                     breakIt <- false
                     incr count
-                | e -> incr count
+                | _ -> incr count
                        //Logging.Log.logger e.Message
 
     member this.GetDefaultFromNullS(e: IWebElement) =

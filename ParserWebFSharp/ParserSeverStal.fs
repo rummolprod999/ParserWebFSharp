@@ -25,7 +25,7 @@ type ParserSeverStal(stn: Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", url)
         | s ->
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let tens = documents.QuerySelectorAll("div.box.procedures table.table tbody tr").ToList().Skip(1)
             for t in tens do

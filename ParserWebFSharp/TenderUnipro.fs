@@ -35,7 +35,7 @@ type TenderUnipro(stn: Settings.T, tn: YmzRec, typeFz: int, etpName: string, etp
                         reader.Close()
                         let Page = Download.DownloadString tn.Href
                         if Page = "" || Page = null then return! Err(sprintf "%s" tn.Href)
-                        let htmlDoc = new HtmlDocument()
+                        let htmlDoc = HtmlDocument()
                         htmlDoc.LoadHtml(Page)
                         let nav = (htmlDoc.CreateNavigator()) :?> HtmlNodeNavigator
                         let dateUpd = DateTime.Now
@@ -83,7 +83,7 @@ type TenderUnipro(stn: Settings.T, tn: YmzRec, typeFz: int, etpName: string, etp
                         let pwName = HttpUtility.HtmlDecode(pwName).Replace("ФОРМА И СПОСОБ ЗАКУПКИ:", "").Trim()
                         match pwName with
                         | "" -> ()
-                        | x -> idPlacingWay := this.GetPlacingWay con pwName settings
+                        | _ -> idPlacingWay := this.GetPlacingWay con pwName settings
                         let idTender = ref 0
                         let insertTender = String.Format ("INSERT INTO {0}tender SET id_xml = @id_xml, purchase_number = @purchase_number, doc_publish_date = @doc_publish_date, href = @href, purchase_object_info = @purchase_object_info, type_fz = @type_fz, id_organizer = @id_organizer, id_placing_way = @id_placing_way, id_etp = @id_etp, end_date = @end_date, scoring_date = @scoring_date, bidding_date = @bidding_date, cancel = @cancel, date_version = @date_version, num_version = @num_version, notice_version = @notice_version, xml = @xml, print_form = @print_form, id_region = @id_region", stn.Prefix)
                         let cmd9 = new MySqlCommand(insertTender, con)
@@ -198,7 +198,7 @@ type TenderUnipro(stn: Settings.T, tn: YmzRec, typeFz: int, etpName: string, etp
             cmd16.ExecuteNonQuery() |> ignore
     
     member private this.GetAttachments(con: MySqlConnection, idTender: int, doc: HtmlDocument) =
-            let docList = new List<DocSibServ>()
+            let docList = List<DocSibServ>()
             let docs = doc.DocumentNode.SelectNodes("//a[contains(@href, '/files/')]")
             match docs with
             | null -> ()

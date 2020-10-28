@@ -12,7 +12,7 @@ type ParserTenderer(stn : Settings.T) =
     let set = stn
     let pageC = 250
     let spage = "http://www.tenderer.ru/kom/"
-    let listPathTenders = new List<string>()
+    let listPathTenders = List<string>()
     
     override this.Parsing() =
         this.GetPathList spage
@@ -26,7 +26,7 @@ type ParserTenderer(stn : Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get start page", stpage)
         | s -> 
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let tensurl = documents.QuerySelectorAll("div.page_tenders li a[href $='index.html']")
             tensurl
@@ -53,7 +53,7 @@ type ParserTenderer(stn : Settings.T) =
         match Page with
         | null | "" -> false
         | s -> 
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let mutable tens = documents.QuerySelectorAll("div.tender_table ul li")
             if tens.Length < 2 then false
@@ -69,7 +69,7 @@ type ParserTenderer(stn : Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", url)
         | s -> 
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let tens = documents.QuerySelectorAll("div.tender_table ul li").Skip(1)
             for t in tens do

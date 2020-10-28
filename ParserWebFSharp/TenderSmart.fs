@@ -151,7 +151,7 @@ type TenderSmart(stn: Settings.T, tn: SmartRec, typeFz: int, etpName: string, et
                         return ""
                    }
         match res with
-                | Succ r -> ()
+                | Succ _ -> ()
                 | Err e when e = "" -> ()
                 | Err r -> Logging.Log.logger r
         ()

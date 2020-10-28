@@ -7,7 +7,7 @@ open System.Data
 type TenderKg(stn: Settings.T, tn: KgRec, typeFz: int, etpName: string, etpUrl: string) =
     inherit Tender(etpName, etpUrl)
     let settings = stn
-    let timeoutB = TimeSpan.FromSeconds(30.)
+    let _ = TimeSpan.FromSeconds(30.)
     static member val tenderCount = ref 0
     static member val tenderUpCount = ref 0
 
@@ -65,7 +65,7 @@ type TenderKg(stn: Settings.T, tn: KgRec, typeFz: int, etpName: string, etpUrl: 
                     let idPlacingWay = ref 0
                     match tn.PwName with
                     | "" -> ()
-                    | x -> idPlacingWay := this.GetPlacingWay con tn.PwName settings
+                    | _ -> idPlacingWay := this.GetPlacingWay con tn.PwName settings
                     let idEtp = this.GetEtp con settings
                     let numVersion = 1
                     let idRegion = 0

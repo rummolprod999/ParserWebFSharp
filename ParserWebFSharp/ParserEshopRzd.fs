@@ -13,7 +13,7 @@ type ParserEshopRzd(stn : Settings.T) =
     let set = stn
     let timeoutB = TimeSpan.FromSeconds(30.)
     let url = "https://eshoprzd.ru/purchases"
-    let listTenders = new List<EshopRzdRec>()
+    let listTenders = List<EshopRzdRec>()
     let options = ChromeOptions()
     
     do 
@@ -34,7 +34,7 @@ type ParserEshopRzd(stn : Settings.T) =
         ()
     
     member private this.ParserSelen(driver : ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         wait.Until
@@ -76,8 +76,8 @@ type ParserEshopRzd(stn : Settings.T) =
         with ex -> Logging.Log.logger (ex, t.Href)
         ()
     
-    member private this.ParserTenders (driver : ChromeDriver) (t : IWebElement) =
-        let builder = new TenderBuilder()
+    member private this.ParserTenders (_ : ChromeDriver) (t : IWebElement) =
+        let builder = TenderBuilder()
         
         let result =
             builder { 
@@ -124,6 +124,6 @@ type ParserEshopRzd(stn : Settings.T) =
                 return "ok"
             }
         match result with
-        | Success r -> ()
+        | Success _ -> ()
         | Error e -> Logging.Log.logger e
         ()

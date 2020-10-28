@@ -34,7 +34,7 @@ type TenderNeftReg(stn: Settings.T, tn: NeftRegRec, typeFz: int, etpName: string
                         reader.Close()
                         let Page = Download.DownloadString tn.Href
                         if Page = "" || Page = null then return! Err(sprintf "%s" tn.Href)
-                        let htmlDoc = new HtmlDocument()
+                        let htmlDoc = HtmlDocument()
                         htmlDoc.LoadHtml(Page)
                         let nav = (htmlDoc.CreateNavigator()) :?> HtmlNodeNavigator
                         let dateUpd = DateTime.Now
@@ -79,7 +79,7 @@ type TenderNeftReg(stn: Settings.T, tn: NeftRegRec, typeFz: int, etpName: string
                         let idPlacingWay = ref 0
                         match tn.PwName with
                         | "" -> ()
-                        | x -> idPlacingWay := this.GetPlacingWay con tn.PwName settings
+                        | _ -> idPlacingWay := this.GetPlacingWay con tn.PwName settings
                         let idTender = ref 0
                         let! datePubT = nav.GsnDocWithError "//h4[. = 'Дата начала / окончания подачи заявок']/following-sibling::span[1]" <| sprintf "datePubT not found %s" tn.Href
                         let! datePub = datePubT.DateFromStringDoc ("dd.MM.yyyy / HH:mm", sprintf "datePub not found %s %s " tn.Href datePubT)
@@ -126,7 +126,7 @@ type TenderNeftReg(stn: Settings.T, tn: NeftRegRec, typeFz: int, etpName: string
         ()
     
     member private this.GetAttachments(con: MySqlConnection, idTender: int, doc: HtmlDocument) =
-            let docList = new List<DocSibServ>()
+            let docList = List<DocSibServ>()
             let docs = doc.DocumentNode.SelectNodes("//div[@class = 'fileloads']/a")
             match docs with
             | null -> ()
@@ -154,7 +154,7 @@ type TenderNeftReg(stn: Settings.T, tn: NeftRegRec, typeFz: int, etpName: string
                 cmd5.ExecuteNonQuery() |> ignore
             ()
     member private this.GetLots(con: MySqlConnection, idTender: int, doc: HtmlDocument, orgName: string) =
-        let nav = (doc.CreateNavigator()) :?> HtmlNodeNavigator
+        let _ = (doc.CreateNavigator()) :?> HtmlNodeNavigator
         let idLot = ref 0
         let insertLot = sprintf "INSERT INTO %slot SET id_tender = @id_tender, lot_number = @lot_number, max_price = @max_price, currency = @currency, finance_source = @finance_source" stn.Prefix
         let cmd12 = new MySqlCommand(insertLot, con)

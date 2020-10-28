@@ -14,8 +14,8 @@ type ParserRosTendParall(stn : Settings.T) =
     let set = stn
     let count = 500
     let strtPg = "http://rostender.info/tender?pg="
-    member val locker = new Object()
-    member val listTenders = new Queue<RosTendRec>()
+    member val locker = Object()
+    member val listTenders = Queue<RosTendRec>()
     
     override this.Parsing() =
         for i in 1..count do
@@ -28,7 +28,7 @@ type ParserRosTendParall(stn : Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", url)
         | s -> 
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let mutable tens = documents.QuerySelectorAll("table.b-new-tenders-table tbody tr")
             if tens.Length > 0 then 
@@ -151,7 +151,7 @@ type ParserRosTendParall(stn : Settings.T) =
         match tn.Page with
         | "" -> raise <| System.NullReferenceException(sprintf "Page not found in %s" tn.Href)
         | _ -> ()
-        let parser = new HtmlParser()
+        let parser = HtmlParser()
         let documents = parser.Parse(tn.Page)
         
         let EndDateT =

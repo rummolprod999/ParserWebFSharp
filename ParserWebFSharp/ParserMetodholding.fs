@@ -25,7 +25,7 @@ type ParserMetodholding(stn: Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", url)
         | s ->
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let tens = documents.QuerySelectorAll("td > a[onclick^='send(this,']").ToList()
             for t in tens do
@@ -44,11 +44,11 @@ type ParserMetodholding(stn: Settings.T) =
     
     
     member private __.ParsingOrg org section url =
-        let parametrs = new Dictionary<string, string>()
+        let parametrs = Dictionary<string, string>()
         parametrs.Add("SENDITEM", org)
         parametrs.Add("SENDVALUE", section)
         let Page = Download.DownloadPost(parametrs, url)
-        let parser = new HtmlParser()
+        let parser = HtmlParser()
         let documents = parser.Parse(Page)
         let tens = documents.QuerySelectorAll("table.info_table tbody tr").ToList().Skip(1)
         for t in tens do

@@ -33,7 +33,7 @@ type TenderMedic(stn: Settings.T, tn: MedicRec, typeFz: int, etpName: string, et
                         if reader.HasRows then reader.Close()
                                                return! Error ""
                         reader.Close()
-                        let wait = new WebDriverWait(driver, TimeSpan.FromSeconds(60.))
+                        let wait = WebDriverWait(driver, TimeSpan.FromSeconds(60.))
                         driver.Navigate().GoToUrl(tn.Href)
                         Thread.Sleep(1000)
                         driver.SwitchTo().DefaultContent() |> ignore
@@ -159,7 +159,7 @@ type TenderMedic(stn: Settings.T, tn: MedicRec, typeFz: int, etpName: string, et
                 | Error r -> Logging.Log.logger r
         ()
     
-    member private this.GetPurObjs(con: MySqlConnection, idTender: int, pos: ReadOnlyCollection<IWebElement>, idLot: int, idCustomer: int) =
+    member private this.GetPurObjs(con: MySqlConnection, _: int, pos: ReadOnlyCollection<IWebElement>, idLot: int, idCustomer: int) =
         for p in pos do
             let name = p.findElementWithoutException("./td[2]")
             

@@ -39,9 +39,9 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
         ()
     
     member private this.ParserPage(p : string, lot : string) =
-        let parser = new HtmlParser()
+        let parser = HtmlParser()
         let doc = parser.Parse(p)
-        let parserLot = new HtmlParser()
+        let parserLot = HtmlParser()
         let lotDoc = parserLot.Parse(lot)
         let pubDateT = doc.QuerySelector("label:contains('Дата начала подачи заявок') + div > div")
         let pubDateS =
@@ -131,7 +131,7 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
             let IdOrg = ref 0
             match OrgName with
             | "" -> ()
-            | x -> 
+            | _ -> 
                 let selectOrg = sprintf "SELECT id_organizer FROM %sorganizer WHERE full_name = @full_name" stn.Prefix
                 let cmd3 = new MySqlCommand(selectOrg, con)
                 cmd3.Prepare()
@@ -163,7 +163,7 @@ type TenderLsr(stn : Settings.T, urlT : string, purNum : string, purName : strin
             let PlacingWayName = doc.QuerySelector("label:contains('Способ проведения') + div > div").TextContent.Trim()
             match PlacingWayName with
             | "" -> ()
-            | x -> idPlacingWay := this.GetPlacingWay con PlacingWayName settings
+            | _ -> idPlacingWay := this.GetPlacingWay con PlacingWayName settings
             let idEtp = this.GetEtp con settings
             let numVersion = 1
             let mutable idRegion = 0

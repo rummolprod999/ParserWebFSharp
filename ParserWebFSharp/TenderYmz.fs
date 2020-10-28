@@ -33,9 +33,9 @@ type TenderYmz(stn: Settings.T, tn: YmzRec, typeFz: int, etpName: string, etpUrl
                         let dateUpd = DateTime.Now
                         let Page = Download.DownloadStringRts tn.Href
                         if Page = "" || Page = null then return! Err(sprintf "%s" tn.Href)
-                        let htmlDoc = new HtmlDocument()
+                        let htmlDoc = HtmlDocument()
                         htmlDoc.LoadHtml(Page)
-                        let nav = (htmlDoc.CreateNavigator()) :?> HtmlNodeNavigator
+                        let _ = (htmlDoc.CreateNavigator()) :?> HtmlNodeNavigator
                         let (cancelStatus, updated) = this.SetCancelStatus(con, dateUpd)
                         let Printform = tn.Href
                         let IdOrg = ref 0
@@ -169,7 +169,7 @@ type TenderYmz(stn: Settings.T, tn: YmzRec, typeFz: int, etpName: string, etpUrl
         cmd19.Parameters.AddWithValue("@okpd2_code", "") |> ignore
         cmd19.ExecuteNonQuery() |> ignore
     member private this.GetAttachments(con: MySqlConnection, idTender: int, doc: HtmlDocument) =
-            let docList = new List<DocSibServ>()
+            let docList = List<DocSibServ>()
             let docs = doc.DocumentNode.SelectNodes("//a[@class = 'document-item']")
             match docs with
             | null -> ()

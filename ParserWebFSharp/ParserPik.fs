@@ -13,7 +13,7 @@ type ParserPik(stn : Settings.T) =
     let set = stn
     let timeoutB = TimeSpan.FromSeconds(30.)
     let url = "https://tender.pik.ru/tenders"
-    let listTenders = new List<PikRec>()
+    let listTenders = List<PikRec>()
     let options = ChromeOptions()
     
     do 
@@ -34,7 +34,7 @@ type ParserPik(stn : Settings.T) =
         ()
     
     member private this.ParserSelen(driver : ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
@@ -63,7 +63,7 @@ type ParserPik(stn : Settings.T) =
             with ex -> Logging.Log.logger (ex)
         ()
     
-    member private this.ParserTendersList (driver : ChromeDriver) (t : PikRec) =
+    member private this.ParserTendersList (_ : ChromeDriver) (t : PikRec) =
         try 
             let T = TenderPik(set, t, 125, "ПАО «Группа Компаний ПИК»", "https://tender.pik.ru/")
             T.Parsing()
@@ -81,11 +81,11 @@ type ParserPik(stn : Settings.T) =
     member private this.ParserTenders (driver : ChromeDriver) (i : int) =
         driver.SwitchTo().DefaultContent() |> ignore
         let t = driver.FindElement(By.XPath(sprintf "//app-table-container/app-table-row[position() ='%d']" i))
-        let builder = new TenderBuilder()
+        let builder = TenderBuilder()
         
         let result =
             builder { 
-                let! purNameT = t.findElementWithoutException 
+                let! _ = t.findElementWithoutException 
                                     ("./app-table-column[1]", sprintf "purNameT not found %s" t.Text)
                 let! orgNameT = t.findElementWithoutException 
                                     ("./app-table-column[3]", sprintf "orgNameT not found %s" t.Text)
@@ -108,7 +108,7 @@ type ParserPik(stn : Settings.T) =
                 let href = driver.Url
                 let! purNum = href.Get1("/tenders/(.+)", sprintf "purNum not found %s" href)
                 let docs = pop.FindElements(By.XPath(".//li/a"))
-                let Docs = new List<string>()
+                let Docs = List<string>()
                 docs |> Seq.iter (fun x -> Docs.Add(x.GetAttribute("href")))
                 let ten =
                     { Href = href
@@ -125,6 +125,6 @@ type ParserPik(stn : Settings.T) =
                 return "ok"
             }
         match result with
-        | Success r -> ()
+        | Success _ -> ()
         | Error e -> Logging.Log.logger e
         ()

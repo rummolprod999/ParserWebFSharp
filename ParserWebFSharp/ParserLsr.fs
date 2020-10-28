@@ -9,9 +9,9 @@ open System.Threading
 
 type ParserLsr(stn : Settings.T) = 
     inherit Parser()
-    let set = stn
+    let _ = stn
     let timeoutB = TimeSpan.FromSeconds(300.)
-    let listTenders = new List<TenderLsr>()
+    let listTenders = List<TenderLsr>()
     let url = "https://zakupki.lsr.ru/Tenders"
     let options = ChromeOptions()
     

@@ -50,7 +50,7 @@ type ParserBidMart(stn : Settings.T) =
             driver.Quit()
     
     member private this.ParserSelen(driver : ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         wait.Until
@@ -62,7 +62,7 @@ type ParserBidMart(stn : Settings.T) =
                 this.ParserTenders driver t
             with ex -> Logging.Log.logger ex
     
-    member private this.ParserTenders (driver : ChromeDriver) (t : IWebElement) =
+    member private this.ParserTenders (_ : ChromeDriver) (t : IWebElement) =
         let defined = DefinedBuilder()
         
         let res =

@@ -20,7 +20,7 @@ type TenderSamolet(stn : Settings.T, tn : SamoletRec, typeFz : int, etpName : st
         driver.Navigate().GoToUrl(tn.Href)
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         wait.Until
             (fun dr ->
             (dr.FindElement (By.XPath ("//div[contains(@class, 'mat-tab-label-content') and contains(., 'Извещение и документация')]"))).Displayed) |> ignore

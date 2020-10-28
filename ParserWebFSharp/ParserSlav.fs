@@ -29,7 +29,7 @@ type ParserSlav(stn : Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get start page", url)
         | s -> 
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let tens = documents.QuerySelectorAll("div.zakupka_single_wrap")
             for t in tens do
@@ -121,7 +121,7 @@ type ParserSlav(stn : Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get start page", url)
         | s -> 
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let tens = documents.QuerySelectorAll("div.tender__inside")
             for t in tens do
@@ -225,7 +225,7 @@ type ParserSlav(stn : Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get start page", url)
         | s -> 
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let tens = documents.QuerySelectorAll("table.contest tr:not(th)")
             if tens.Count() > 0 then 

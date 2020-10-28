@@ -12,7 +12,7 @@ type TenderTplus(stn : Settings.T, tn : TPlusRec, typeFz : int, etpName : string
     static member val tenderCount = ref 0
     static member val tenderUpCount = ref 0
     override this.Parsing() =
-        let parser = new HtmlParser()
+        let parser = HtmlParser()
         let doc = parser.Parse(tn.Page)
         let dateUpd = DateTime.Now
         use con = new MySqlConnection(stn.ConStr)
@@ -116,7 +116,7 @@ type TenderTplus(stn : Settings.T, tn : TPlusRec, typeFz : int, etpName : string
                 | null -> ""
                 | ur -> ur.TextContent.RegexDeleteWhitespace().Trim()
             
-            let Okei =
+            let _ =
                 match doc.QuerySelector("table.lot_table tbody tr td:nth-child(2)") with
                 | null -> ""
                 | ur -> ur.TextContent.Trim()

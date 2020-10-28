@@ -13,7 +13,7 @@ type ParserRtsGen(stn: Settings.T) =
     let set = stn
     let pageC = 55
     let spage = "https://223.rts-tender.ru/supplier/auction/Trade/Search.aspx"
-    let listTenders = new List<RtsGenRec>()
+    let listTenders = List<RtsGenRec>()
     let options = ChromeOptions()
     let timeoutB = TimeSpan.FromSeconds(60.)
     let mutable wait = None
@@ -28,7 +28,7 @@ type ParserRtsGen(stn: Settings.T) =
         let driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
         driver.Manage().Window.Maximize()
-        __.Wait <- new WebDriverWait(driver, timeoutB)
+        __.Wait <- WebDriverWait(driver, timeoutB)
         try
             try
                 __.ParserSelen driver
@@ -112,7 +112,7 @@ type ParserRtsGen(stn: Settings.T) =
                               Logging.Log.logger (ex)
         ()
     member private this.ParserTenders(i: IWebElement) =
-        let builder = new TenderBuilder()
+        let builder = TenderBuilder()
         let result =
             builder {
                 let! purNum = i.findElementWithoutException (".//td[5]", sprintf "purNum not found, inner text - %s" i.Text)

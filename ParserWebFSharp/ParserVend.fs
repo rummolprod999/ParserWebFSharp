@@ -13,7 +13,7 @@ type ParserVend(stn : Settings.T) =
     let set = stn
     let timeoutB = TimeSpan.FromSeconds(30.)
     let url = "http://vendorportal.ru/Market/OfferInvitationOpen"
-    let listTenders = new List<VendRec>()
+    let listTenders = List<VendRec>()
     let options = ChromeOptions()
     
     do 
@@ -34,7 +34,7 @@ type ParserVend(stn : Settings.T) =
         ()
     
     member private this.ParserSelen(driver : ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
@@ -49,7 +49,7 @@ type ParserVend(stn : Settings.T) =
             with ex -> Logging.Log.logger (ex)
         ()
     
-    member private this.ParserTendersList (driver : ChromeDriver) (t : VendRec) =
+    member private this.ParserTendersList (_ : ChromeDriver) (t : VendRec) =
         try 
             let T = TenderVend(set, t, 116, "Портал поставщиков Южного Урала", "http://vendorportal.ru/")
             T.Parsing()
@@ -94,8 +94,8 @@ type ParserVend(stn : Settings.T) =
             statement <- false
         ()
     
-    member private this.ParserTenders (driver : ChromeDriver) (t : IWebElement) =
-        let builder = new TenderBuilder()
+    member private this.ParserTenders (_ : ChromeDriver) (t : IWebElement) =
+        let builder = TenderBuilder()
         
         let result =
             builder { 
@@ -133,6 +133,6 @@ type ParserVend(stn : Settings.T) =
                 return "ok"
             }
         match result with
-        | Success r -> ()
+        | Success _ -> ()
         | Error e -> Logging.Log.logger e
         ()

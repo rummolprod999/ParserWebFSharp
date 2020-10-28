@@ -37,7 +37,7 @@ type TenderYarRegion(stn : Settings.T, tn : YarRegionRec, typeFz : int, etpName 
             driver.SwitchTo().DefaultContent() |> ignore
             driver.SwitchTo().Frame(driver.FindElements(By.TagName("iframe")).[0]) |> ignore
             let timeoutB = TimeSpan.FromSeconds(30.)
-            let wait = new WebDriverWait(driver, timeoutB)
+            let wait = WebDriverWait(driver, timeoutB)
             wait.Until
                 (fun dr -> 
                 dr.FindElement(By.XPath("//td[label[contains(., 'Закупка')]]/following-sibling::td")).Displayed) 
@@ -135,7 +135,7 @@ type TenderYarRegion(stn : Settings.T, tn : YarRegionRec, typeFz : int, etpName 
                 | x -> x.Trim()
             match PwayName with
             | "" -> ()
-            | x -> idPlacingWay := this.GetPlacingWay con PwayName settings
+            | _ -> idPlacingWay := this.GetPlacingWay con PwayName settings
             let idEtp = this.GetEtp con settings
             let numVersion = 1
             let mutable idRegion = 0

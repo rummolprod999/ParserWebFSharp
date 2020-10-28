@@ -30,11 +30,11 @@ type TenderMetodholding(stn: Settings.T, tn: MetodholdingRec, typeFz: int, etpNa
                         if reader.HasRows then reader.Close()
                                                return! Err ""
                         reader.Close()
-                        let parametrs = new Dictionary<string, string>()
+                        let parametrs = Dictionary<string, string>()
                         parametrs.Add("SENDITEM", tn.Attr)
                         parametrs.Add("SENDVALUE", tn.PurNum)
                         let Page = Download.DownloadPost(parametrs, tn.Href)
-                        let parser = new HtmlParser()
+                        let parser = HtmlParser()
                         let document = parser.Parse(Page)
                         let dateUpd = DateTime.Now
                         let (cancelStatus, updated) = this.SetCancelStatus(con, dateUpd)

@@ -38,7 +38,7 @@ type TenderVend(stn : Settings.T, tn : VendRec, typeFz : int, etpName : string, 
                 | null | "" -> raise <| System.Exception(sprintf "cannot get Page %s" tn.Href)
                 | s -> s
             
-            let htmlDoc = new HtmlDocument()
+            let htmlDoc = HtmlDocument()
             htmlDoc.LoadHtml(s)
             let nav = (htmlDoc.CreateNavigator()) :?> HtmlNodeNavigator
             let href = tn.Href
@@ -107,7 +107,7 @@ type TenderVend(stn : Settings.T, tn : VendRec, typeFz : int, etpName : string, 
             let idPlacingWay = ref 0
             match tn.PwName with
             | "" -> ()
-            | x -> idPlacingWay := this.GetPlacingWay con tn.PwName settings
+            | _ -> idPlacingWay := this.GetPlacingWay con tn.PwName settings
             let idTender = ref 0
             let insertTender =
                 String.Format
@@ -182,11 +182,11 @@ type TenderVend(stn : Settings.T, tn : VendRec, typeFz : int, etpName : string, 
             cmd12.Parameters.AddWithValue("@currency", currency) |> ignore
             cmd12.ExecuteNonQuery() |> ignore
             idLot := int cmd12.LastInsertedId
-            let insertLotitem =
+            let _ =
                 sprintf 
                     "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum" 
                     stn.Prefix
-            let docList = new List<DocSibServ>()
+            let docList = List<DocSibServ>()
             let docs = htmlDoc.DocumentNode.SelectNodes("//div[contains(@class, 'fileUploadLink')]/a")
             match docs with
             | null -> Logging.Log.logger ("cannot get documents on page", tn.Href)

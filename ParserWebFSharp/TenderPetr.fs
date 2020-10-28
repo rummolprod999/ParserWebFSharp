@@ -37,7 +37,7 @@ type TenderPetr(stn: Settings.T, tn: EshopRzdRec, typeFz: int, etpName: string, 
             Thread.Sleep(5000)
             driver.SwitchTo().DefaultContent() |> ignore
             let timeoutB = TimeSpan.FromSeconds(30.)
-            let wait = new WebDriverWait(driver, timeoutB)
+            let wait = WebDriverWait(driver, timeoutB)
             wait.Until
                 (fun dr ->
                 dr.FindElement(By.XPath("//td[contains(., 'Дата публикации')]/following-sibling::td")).Displayed)

@@ -21,7 +21,7 @@ type DocumentBuilder() =
 
     member this.Combine(a, b) =
         match a with
-        | Succ a' -> b()
+        | Succ _ -> b()
         | Err e -> Err e
 
     member this.Run(f) = f()

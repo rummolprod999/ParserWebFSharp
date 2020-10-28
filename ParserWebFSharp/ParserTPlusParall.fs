@@ -15,8 +15,8 @@ type ParserTPlusParall(stn : Settings.T) =
     let count = 1000
     let TypeFz = 96
     let strtPg = sprintf "https://tenderplus.kz/zakupki?page=%d&lot-sort=-pub_date"
-    member val locker = new Object()
-    member val listTenders = new Queue<TPlusRec>()
+    member val locker = Object()
+    member val listTenders = Queue<TPlusRec>()
     
     override this.Parsing() =
         for i in 1..count do
@@ -29,7 +29,7 @@ type ParserTPlusParall(stn : Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", url)
         | s -> 
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let mutable tens = documents.QuerySelectorAll("div.tenders-list > div[data-key]")
             for t in tens do

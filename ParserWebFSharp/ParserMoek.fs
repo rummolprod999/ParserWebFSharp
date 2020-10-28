@@ -13,7 +13,7 @@ type ParserMoek(stn: Settings.T) =
     let set = stn
     let url = "https://www.moek.ru/tenders/#1"
     let timeoutB = TimeSpan.FromSeconds(60.)
-    let listTenders = new List<MoekRec>()
+    let listTenders = List<MoekRec>()
     let options = ChromeOptions()
     do 
         options.AddArguments("headless")
@@ -34,7 +34,7 @@ type ParserMoek(stn: Settings.T) =
         ()
     
     member private this.ParserSelen(driver : ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
@@ -49,7 +49,7 @@ type ParserMoek(stn: Settings.T) =
             with ex -> Logging.Log.logger (ex) 
         ()
     
-    member private this.ParserTendersList (driver : ChromeDriver) (t : MoekRec) =
+    member private this.ParserTendersList (_ : ChromeDriver) (t : MoekRec) =
         try 
             let T = TenderMoek(set, t, 239, "ПАО «МОЭК»", "https://www.moek.ru/")
             T.Parsing()

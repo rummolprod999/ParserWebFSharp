@@ -24,7 +24,7 @@ type ParserForScience(stn: Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", url)
         | s ->
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let tens = documents.QuerySelectorAll("div#fin-supports-list-inner > a.fin-list").ToList()
             for t in tens do
@@ -45,12 +45,12 @@ type ParserForScience(stn: Settings.T) =
             let purName = purName.Replace(datePubT, "").Trim()
             let! datePub = datePubT.DateFromStringDoc ("dd.MM.yyyy", sprintf "datePub not found %s %s " href datePubT)
             let! endDateT = t.GsnDocWithError "div.fin-list-info-in strong" <| sprintf "endDateT not found %s %s " url (t.TextContent)
-            let check, numD = Int32.TryParse(endDateT)
+            let _, numD = Int32.TryParse(endDateT)
             let endDate = DateTime.Now.AddDays(float numD).Date
             let! orgName = t.GsnDocWithError "div.fin-list-info-in-last" <| sprintf "orgName not found %s %s " url (t.TextContent)
             let! nmckT = t.GsnDoc "div.fin-list-info-in:nth-of-type(2) strong"
             let! nmckPer = t.GsnDoc "div.fin-list-info-in:nth-of-type(2)" 
-            let check, nmckNum = Double.TryParse(nmckT)
+            let _, nmckNum = Double.TryParse(nmckT)
             let nmck = match nmckPer with
                        | x when x.Contains("тыс") -> nmckNum * 1000.0
                        | x when x.Contains("млн") -> nmckNum * 1000000.0

@@ -7,7 +7,7 @@ open TypeE
 
 type TenderDomRu(stn: Settings.T, tn: DomRuRec, typeFz: int, etpName: string, etpUrl: string) =
     inherit Tender(etpName, etpUrl)
-    let settings = stn
+    let _ = stn
     static member val tenderCount = ref 0
     static member val tenderUpCount = ref 0
 

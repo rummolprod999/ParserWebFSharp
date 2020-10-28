@@ -8,7 +8,7 @@ open OpenQA.Selenium.Chrome
 type TenderEten(stn: Settings.T, tn: EtenRec, typeFz: int, etpName: string, etpUrl: string, driver: ChromeDriver) =
     inherit Tender(etpName, etpUrl)
     let settings = stn
-    let timeoutB = TimeSpan.FromSeconds(30.)
+    let _ = TimeSpan.FromSeconds(30.)
     static member val tenderCount = ref 0
     static member val tenderUpCount = ref 0
 
@@ -65,7 +65,7 @@ type TenderEten(stn: Settings.T, tn: EtenRec, typeFz: int, etpName: string, etpU
                         let idPlacingWay = ref 0
                         match tn.PwName with
                         | "" -> ()
-                        | x -> idPlacingWay := this.GetPlacingWay con tn.PwName settings
+                        | _ -> idPlacingWay := this.GetPlacingWay con tn.PwName settings
                         let idEtp = this.GetEtp con settings
                         let numVersion = 1
                         let idRegion = 0

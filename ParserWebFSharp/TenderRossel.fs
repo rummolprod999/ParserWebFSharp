@@ -78,7 +78,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
         | s -> this.ParserPage(s)
     
     member private this.ParserPage(p : string) =
-        let parser = new HtmlParser()
+        let parser = HtmlParser()
         let doc = parser.Parse(p)
         let purName = tn.PurName
         let pubDateT = doc.QuerySelector("td:contains('Публикация извещения') + td > p")
@@ -187,7 +187,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
             let OrgName = this.GetDefaultFromNull <| doc.QuerySelector("td:contains('Организатор') + td > p")
             match OrgName with
             | "" -> ()
-            | x -> 
+            | _ -> 
                 let selectOrg = sprintf "SELECT id_organizer FROM %sorganizer WHERE full_name = @full_name" stn.Prefix
                 let cmd3 = new MySqlCommand(selectOrg, con)
                 cmd3.Prepare()
@@ -222,7 +222,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
             let idPlacingWay = ref 0
             match PlacingWayName with
             | "" -> ()
-            | x -> idPlacingWay := this.GetPlacingWay con PlacingWayName settings
+            | _ -> idPlacingWay := this.GetPlacingWay con PlacingWayName settings
             let idEtp = this.GetEtp con settings
             let numVersion = 1
             let mutable idRegion = 0

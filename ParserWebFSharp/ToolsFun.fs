@@ -55,7 +55,7 @@ module Tools =
     let createMD5 (s : string) : string =
         use md5Hash = MD5.Create()
         let data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(s))
-        let sBuilder = new StringBuilder()
+        let sBuilder = StringBuilder()
         for i in data do
             sBuilder.Append(i.ToString("x2")) |> ignore
         sBuilder.ToString()

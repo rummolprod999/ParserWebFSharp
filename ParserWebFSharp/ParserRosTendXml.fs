@@ -21,7 +21,7 @@ type ParserRosTendXml(stn : Settings.T) =
         let file = Download.DownloadFileSimple url patharch
         match file with
         | null -> ()
-        | f -> 
+        | _ -> 
             Tools.UnzippedTargz patharch stn.TempPathTenders
             let file = String.Format("{0}{1}{2}.xml", stn.TempPathTenders, Path.DirectorySeparatorChar, export)
             try 
@@ -30,13 +30,13 @@ type ParserRosTendXml(stn : Settings.T) =
         ()
     
     member private this.ParsingFile(f : string) =
-        let fileInf = new FileInfo(f)
+        let fileInf = FileInfo(f)
         match fileInf.Exists with
         | false -> ()
         | true -> 
             use sr = new StreamReader(f, Encoding.Default)
             let ftext = sr.ReadToEnd()
-            let doc = new XmlDocument()
+            let doc = XmlDocument()
             doc.LoadXml(ftext)
             let jsons = JsonConvert.SerializeXmlNode(doc)
             let json = JObject.Parse(jsons)
@@ -75,7 +75,7 @@ type ParserRosTendXml(stn : Settings.T) =
         match verNum with
         | "" -> verNum <- "1"
         | _ -> ()*)
-        let VerNum = ""
+        let _ = ""
         let PubDateT = JsonConvert.SerializeObject(token.SelectToken("publishDate"))
         match PubDateT with
         | null -> raise <| System.NullReferenceException(sprintf "PubDate not found in %s" Href)

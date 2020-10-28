@@ -13,7 +13,7 @@ type ParserBidZaar(stn: Settings.T) =
     let set = stn
     let url = "https://bidzaar.com/procedures/public"
     let timeoutB = TimeSpan.FromSeconds(60.)
-    let listTenders = new List<BidzaarRec>()
+    let listTenders = List<BidzaarRec>()
     let options = ChromeOptions()
 
     do 
@@ -36,7 +36,7 @@ type ParserBidZaar(stn: Settings.T) =
         ()
     
     member private __.ParserSelen(driver : ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
@@ -75,7 +75,7 @@ type ParserBidZaar(stn: Settings.T) =
         with ex -> Logging.Log.logger ex
         ()
     member private __.Auth(driver : ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.SwitchTo().DefaultContent() |> ignore
         driver.FindElement(By.XPath("//button[span[contains(., 'ВХОД')]]")).Click()
         driver.SwitchTo().Frame(0) |> ignore

@@ -157,7 +157,7 @@ module Settings =
         let mutable PassDb = ""
         let mutable Server = ""
         let mutable Port = 3306
-        let xDoc = new XmlDocument()
+        let xDoc = XmlDocument()
         xDoc.Load(sprintf "%s%csetting_tenders.xml" PathProgram Path.DirectorySeparatorChar)
         let xRoot = xDoc.DocumentElement
         if xRoot <> null then

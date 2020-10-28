@@ -32,7 +32,7 @@ type TenderTsm(stn : Settings.T, tn : SamoletRec, typeFz : int, etpName : string
             let res =
                    builder {
                         driver.Navigate().GoToUrl(tn.Href)
-                        let wait = new WebDriverWait(driver, timeoutB)
+                        let wait = WebDriverWait(driver, timeoutB)
                         Thread.Sleep(5000)
                         driver.SwitchTo().DefaultContent() |> ignore
                         wait.Until (fun dr -> (dr.FindElement (By.XPath ("//div[contains(@class, 'mat-tab-label-content') and contains(., 'Извещение и документация')]"))).Displayed) |> ignore
@@ -180,7 +180,7 @@ type TenderTsm(stn : Settings.T, tn : SamoletRec, typeFz : int, etpName : string
                         return ""
                    }
             match res with
-                | Success r -> ()
+                | Success _ -> ()
                 | Error e when e = "" -> ()
                 | Error r -> Logging.Log.logger r
             ()

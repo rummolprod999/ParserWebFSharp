@@ -13,7 +13,7 @@ type ParserRossel(stn: Settings.T) =
     let timeoutB = TimeSpan.FromSeconds(30.)
     let url = "https://www.roseltorg.ru/search/com"
     let urlk = "https://www.roseltorg.ru/procedures/search"
-    let listTenders = new List<TenderRossel>()
+    let listTenders = List<TenderRossel>()
     let options = ChromeOptions()
     let pageReloader (driver: ChromeDriver) (x: int) =
                 for i in 1..x do
@@ -196,7 +196,7 @@ type ParserRossel(stn: Settings.T) =
         finally
             driver.Quit()
     member private this.ParserSelen(driver: ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
@@ -209,7 +209,7 @@ type ParserRossel(stn: Settings.T) =
         this.ParserListTenders driver
 
     member private this.ParserSelenAtom(driver: ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(urlk)
         Thread.Sleep(5000)
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
@@ -225,7 +225,7 @@ type ParserRossel(stn: Settings.T) =
         this.ParserListTenders driver
 
     member private this.ParserSelenRt(driver: ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(urlk)
         Thread.Sleep(5000)
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
@@ -241,7 +241,7 @@ type ParserRossel(stn: Settings.T) =
         this.ParserListTenders driver
 
     member private this.ParserSelenVtb(driver: ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(urlk)
         Thread.Sleep(5000)
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
@@ -257,7 +257,7 @@ type ParserRossel(stn: Settings.T) =
         this.ParserListTenders driver
 
     member private this.ParserSelenRosteh(driver: ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(urlk)
         Thread.Sleep(5000)
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
@@ -273,7 +273,7 @@ type ParserRossel(stn: Settings.T) =
         this.ParserListTenders driver
 
     member private this.ParserSelenRushidro(driver: ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(urlk)
         Thread.Sleep(5000)
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
@@ -289,7 +289,7 @@ type ParserRossel(stn: Settings.T) =
         this.ParserListTenders driver
 
     member private this.ParserSelenRosseti(driver: ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(urlk)
         Thread.Sleep(5000)
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
@@ -305,7 +305,7 @@ type ParserRossel(stn: Settings.T) =
         this.ParserListTenders driver
 
     member private this.ParserSelenRosgeo(driver: ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(urlk)
         Thread.Sleep(5000)
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
@@ -321,7 +321,7 @@ type ParserRossel(stn: Settings.T) =
         this.ParserListTenders driver
         
     member private this.ParserSelenKim(driver: ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(urlk)
         Thread.Sleep(5000)
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
@@ -363,18 +363,18 @@ type ParserRossel(stn: Settings.T) =
             | None -> raise <| System.NullReferenceException(sprintf "purNum not found in %s" purNumM)
             | Some pr -> pr.Trim()
         match purNum with
-        | x when purNum.StartsWith("COM") -> this.ParserSelect driver t purNum 42
-        | x when purNum.StartsWith("ATOM") -> this.ParserSelect driver t purNum 43
-        | x when purNum.StartsWith("RT") -> this.ParserSelect driver t purNum 45
-        | x when purNum.StartsWith("VTB") -> this.ParserSelect driver t purNum 46
-        | x when purNum.StartsWith("OPK") -> this.ParserSelect driver t purNum 47
-        | x when purNum.StartsWith("RH") -> this.ParserSelect driver t purNum 48
-        | x when purNum.StartsWith("GEO") -> this.ParserSelect driver t purNum 49
-        | x when purNum.StartsWith("ROSSETI") -> this.ParserSelect driver t purNum 50
-        | x when purNum.StartsWith("KIM") -> this.ParserSelect driver t purNum 260
+        | _ when purNum.StartsWith("COM") -> this.ParserSelect driver t purNum 42
+        | _ when purNum.StartsWith("ATOM") -> this.ParserSelect driver t purNum 43
+        | _ when purNum.StartsWith("RT") -> this.ParserSelect driver t purNum 45
+        | _ when purNum.StartsWith("VTB") -> this.ParserSelect driver t purNum 46
+        | _ when purNum.StartsWith("OPK") -> this.ParserSelect driver t purNum 47
+        | _ when purNum.StartsWith("RH") -> this.ParserSelect driver t purNum 48
+        | _ when purNum.StartsWith("GEO") -> this.ParserSelect driver t purNum 49
+        | _ when purNum.StartsWith("ROSSETI") -> this.ParserSelect driver t purNum 50
+        | _ when purNum.StartsWith("KIM") -> this.ParserSelect driver t purNum 260
         | _ -> ()
 
-    member private this.ParserSelect (driver: ChromeDriver) (t: IWebElement) (purNum: string) (tFz: int) =
+    member private this.ParserSelect (_: ChromeDriver) (t: IWebElement) (purNum: string) (tFz: int) =
         let hrefT = t.FindElement(By.XPath(".//a[@class = 'search-results__link']"))
 
         let href =

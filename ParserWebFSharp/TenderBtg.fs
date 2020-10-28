@@ -36,9 +36,9 @@ type TenderBtg(stn : Settings.T, tn : BtgRec, typeFz : int, etpName : string, et
                 | null | "" -> raise <| System.Exception(sprintf "cannot get Page %s" tn.Href)
                 | s -> s
             
-            let htmlDoc = new HtmlDocument()
+            let htmlDoc = HtmlDocument()
             htmlDoc.LoadHtml(s)
-            let nav = (htmlDoc.CreateNavigator()) :?> HtmlNodeNavigator
+            let _ = (htmlDoc.CreateNavigator()) :?> HtmlNodeNavigator
             let href = tn.Href
             let mutable cancelStatus = 0
             let mutable updated = false
@@ -103,7 +103,7 @@ type TenderBtg(stn : Settings.T, tn : BtgRec, typeFz : int, etpName : string, et
             let idPlacingWay = ref 0
             match tn.PwName with
             | "" -> ()
-            | x -> idPlacingWay := this.GetPlacingWay con tn.PwName settings
+            | _ -> idPlacingWay := this.GetPlacingWay con tn.PwName settings
             let idTender = ref 0
             let insertTender =
                 String.Format
@@ -185,7 +185,7 @@ type TenderBtg(stn : Settings.T, tn : BtgRec, typeFz : int, etpName : string, et
             cmd19.Parameters.AddWithValue("@name", tn.PurName) |> ignore
             cmd19.Parameters.AddWithValue("@sum", "") |> ignore
             cmd19.ExecuteNonQuery() |> ignore
-            let docList = new List<DocSibServ>()
+            let docList = List<DocSibServ>()
             let docs = htmlDoc.DocumentNode.SelectNodes("//span[contains(@class, 'file')]/a")
             match docs with
             | null -> Logging.Log.logger ("cannot get documents on page", tn.Href)

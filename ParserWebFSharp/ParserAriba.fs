@@ -13,7 +13,7 @@ type ParserAriba(stn : Settings.T) =
     let set = stn
     let timeoutB = TimeSpan.FromSeconds(30.)
     let url = "https://service.ariba.com/Discovery.aw/125007041/aw?awh=r&awssk=iV7OWrxR#b0"
-    let listTenders = new List<AribaRec>()
+    let listTenders = List<AribaRec>()
     let options = ChromeOptions()
     let (+%%) (a : DateTime) (b : float) : DateTime = a.AddHours(b)
 
@@ -36,7 +36,7 @@ type ParserAriba(stn : Settings.T) =
         ()
 
     member private this.ParserSelen(driver : ChromeDriver) =
-        let wait = new WebDriverWait(driver, timeoutB)
+        let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
@@ -109,12 +109,12 @@ type ParserAriba(stn : Settings.T) =
                 this.ParserListTenders driver
                 breakIt <- false
             with
-                | ex when !count > 3 ->
+                | _ when !count > 3 ->
                     breakIt <- false
                 | e -> Logging.Log.logger (e)
                        incr count
-    member private this.ParserTenders (driver : ChromeDriver) (i : IWebElement) =
-        let builder = new TenderBuilder()
+    member private this.ParserTenders (_ : ChromeDriver) (i : IWebElement) =
+        let builder = TenderBuilder()
 
         let result =
             builder {
@@ -166,6 +166,6 @@ type ParserAriba(stn : Settings.T) =
                 return "ok"
             }
         match result with
-        | Success r -> ()
+        | Success _ -> ()
         | Error e -> Logging.Log.logger e
         ()

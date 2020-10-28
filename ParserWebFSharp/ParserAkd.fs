@@ -5,7 +5,7 @@ open AngleSharp.Parser.Html
 
 type ParserAkd(stn : Settings.T) = 
     inherit Parser()
-    let set = stn
+    let _ = stn
     let url = "http://www.a-k-d.ru/page/torg_list_buy?page="
     
     override this.Parsing() = 
@@ -21,7 +21,7 @@ type ParserAkd(stn : Settings.T) =
         match Page with
         | null | "" -> Logging.Log.logger ("Don't get page", page)
         | s -> 
-            let parser = new HtmlParser()
+            let parser = HtmlParser()
             let documents = parser.Parse(s)
             let tens = documents.QuerySelectorAll("div.list-items div.tender-item")
             for t in tens do

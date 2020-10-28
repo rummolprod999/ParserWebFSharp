@@ -19,7 +19,7 @@ type ParserSmartNew(stn: Settings.T) =
         let Page = Download.DownloadSmartTender page
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page")
-        | s -> __.ParsingResultJson Page
+        | _ -> __.ParsingResultJson Page
         ()
     
     member private __.ParsingResultJson(res: string) =
