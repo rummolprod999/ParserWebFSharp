@@ -59,7 +59,6 @@ type ParserDomRu(stn: Settings.T) =
                   Nmck=nmck}
             let T = TenderDomRu(set, ten, 280, "Портал закупок Дом.ru", "https://zakupki.domru.ru/")
             T.Parsing()
-            printfn "%A" ten
             return ""
         }
         match res with
