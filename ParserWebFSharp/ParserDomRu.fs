@@ -3,10 +3,11 @@ namespace ParserWeb
 open AngleSharp.Dom
 open AngleSharp.Parser.Html
 open System.Linq
+open TypeE
 
 type ParserDomRu(stn: Settings.T) =
     inherit Parser()
-    let _ = stn
+    let set = stn
 
     let urls = [|"https://zakupki.domru.ru/"|]
 
@@ -25,7 +26,7 @@ type ParserDomRu(stn: Settings.T) =
         | s ->
             let parser = HtmlParser()
             let documents = parser.Parse(s)
-            let tens = documents.QuerySelectorAll("table.contractor_search_table tr[id^='For_']").ToList().Skip(1)
+            let tens = documents.QuerySelectorAll("table.contractor_search_table tr[id^='For_']").ToList()
             for t in tens do
                     try
                         __.ParsingTender t url
@@ -33,10 +34,32 @@ type ParserDomRu(stn: Settings.T) =
             ()
         ()
     
-    member private __.ParsingTender (t: IElement) (_: string) =
+    member private __.ParsingTender (t: IElement) (url: string) =
         let builder = DocumentBuilder()
         let res = builder {
-            printfn "%s" t.TextContent
+            let! purName = t.GsnDocWithError "td:nth-child(2) a" <| sprintf "purName not found %s %s " url (t.TextContent)
+            let! href = t.GsnAtrDocWithError "td:nth-child(2) a" "href" <| sprintf "href not found %s %s " url (t.TextContent)
+            let href = sprintf "https://zakupki.domru.ru%s" href
+            let! pwName = t.GsnDocWithError "td:nth-child(1)" <| sprintf "pwName not found %s %s " url (t.TextContent)
+            let! nmck = t.GsnDoc "td:nth-child(3)" 
+            let nmck = nmck.GetPriceFromString @"([\d,.   \s]+)"
+            let! datePubT = t.GsnDocWithError "td:nth-child(4)" <| sprintf "datePubT not found %s %s " url (t.TextContent)
+            let datePubT = datePubT.RegexReplace().ReplaceDateAriba()
+            let datePub = datePubT.DateFromStringOrMin("dd.MM.yyyy")
+            let! dateEndT = t.GsnDocWithError "td:nth-child(5)" <| sprintf "dateEndT not found %s %s " url (t.TextContent)
+            let dateEndT = dateEndT.RegexReplace().ReplaceDateAriba()
+            let dateEnd = dateEndT.DateFromStringOrMin("dd.MM.yyyy HH:mm")
+            let ten =
+                { Href=href
+                  PurNum = "Портал закупок Дом.ru"
+                  PurName=purName
+                  DateEnd=dateEnd
+                  DatePub=datePub
+                  PwName=pwName
+                  Nmck=nmck}
+            let T = TenderDomRu(set, ten, 280, "Портал закупок Дом.ru", "https://zakupki.domru.ru/")
+            T.Parsing()
+            printfn "%A" ten
             return ""
         }
         match res with

@@ -607,7 +607,7 @@ type BhmRec =
 type DomRuRec =
     { Href: string
       PurName: string
-      PurNum: string
+      mutable PurNum: string
       DateEnd: DateTime
       DatePub: DateTime
       PwName: String
