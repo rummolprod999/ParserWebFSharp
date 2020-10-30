@@ -152,18 +152,48 @@ type TenderDomRu(stn: Settings.T, tn: DomRuRec, typeFz: int, etpName: string, et
                 | Err r -> Logging.Log.logger r
     
     member private this.GetLots(con: MySqlConnection, idTender: int, doc: HtmlDocument, idCustomer) =
-         let lots = doc.DocumentNode.SelectNodes("//h2[. = 'Лоты']/following-sibling::div[1]/table/tbody/tr").Skip(1)
+         let lots = doc.DocumentNode.SelectNodes("//h2[. = 'Лоты']/following-sibling::div[1]/table/tr").Skip(1)
          if lots <> null then
             for l in lots do
                 this.GetLot(con, idTender, l, idCustomer)
          ()
     
     member private this.GetLot(con: MySqlConnection, idTender: int, doc: HtmlNode, idCustomer) =
-        
+        let lotNum = doc.Gsn "./td[1]"
+        let lotNum = Int32.Parse(lotNum)
+        let nmck = doc.Gsn "./td[3]/div" 
+        let mutable nmck = nmck.GetPriceFromString @"([\d,.   \s]+)"
+        if nmck = "" then nmck <- tn.Nmck
+        let lotName = doc.Gsn "./td[2]/a"
+        let idLot = ref 0
+        let insertLot = sprintf "INSERT INTO %slot SET id_tender = @id_tender, lot_number = @lot_number, max_price = @max_price, currency = @currency, lot_name = @lot_name" stn.Prefix
+        let cmd12 = new MySqlCommand(insertLot, con)
+        cmd12.Parameters.AddWithValue("@id_tender", idTender) |> ignore
+        cmd12.Parameters.AddWithValue("@lot_number", lotNum) |> ignore
+        cmd12.Parameters.AddWithValue("@max_price", nmck) |> ignore
+        cmd12.Parameters.AddWithValue("@currency", "") |> ignore
+        cmd12.Parameters.AddWithValue("@lot_name", lotName) |> ignore
+        cmd12.ExecuteNonQuery() |> ignore
+        idLot := int cmd12.LastInsertedId
+        if lotName <> "" then
+                    let insertLotitem = sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum, price = @price, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, okpd_name = @okpd_name" stn.Prefix
+                    let cmd19 = new MySqlCommand(insertLotitem, con)
+                    cmd19.Prepare()
+                    cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+                    cmd19.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+                    cmd19.Parameters.AddWithValue("@name", lotName) |> ignore
+                    cmd19.Parameters.AddWithValue("@sum", nmck) |> ignore
+                    cmd19.Parameters.AddWithValue("@price", "") |> ignore
+                    cmd19.Parameters.AddWithValue("@quantity_value", "") |> ignore
+                    cmd19.Parameters.AddWithValue("@customer_quantity_value", "") |> ignore
+                    cmd19.Parameters.AddWithValue("@okei", "") |> ignore
+                    cmd19.Parameters.AddWithValue("@okpd_name", "") |> ignore
+                    cmd19.ExecuteNonQuery() |> ignore
         ()
     member private this.GetAttachments(con: MySqlConnection, idTender: int, doc: HtmlDocument) =
-        let documents = doc.DocumentNode.SelectNodes("//h2[. = 'Сообщения']/following-sibling::div/table/tbody/tr").Skip(1)
+        let documents = doc.DocumentNode.SelectNodes("//h2[. = 'Сообщения']/following-sibling::div/table/tr")
         if documents <> null then
+            let documents = documents.Skip(1)
             for d in documents do
                 let docName = d.Gsn("./td[1]/a")
                 let docUrl = d.GsnAtr "./td[1]/a" "href"
