@@ -144,6 +144,8 @@
     <Compile Include="ParserBhm.fs" />
     <Compile Include="TenderDomRu.fs" />
     <Compile Include="ParserDomRu.fs" />
+    <Compile Include="TenderSamaraGips.fs" />
+    <Compile Include="ParserSamaraGips.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

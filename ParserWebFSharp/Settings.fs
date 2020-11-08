@@ -152,6 +152,8 @@ module Settings =
         let mutable LogPathTendersBhm  = ""
         let mutable TempPathTendersDomru = ""
         let mutable LogPathTendersDomru  = ""
+        let mutable TempPathTendersSamaraGips = ""
+        let mutable LogPathTendersSamaraGips  = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -517,6 +519,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_domru" then
                                     LogPathTendersDomru <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_samaragips" then
+                                    TempPathTendersSamaraGips <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_samaragips" then
+                                    LogPathTendersSamaraGips <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -597,6 +605,7 @@ module Settings =
                 | Metodholding -> TempPathTendersMetodholding
                 | Bhm -> TempPathTendersBhm
                 | Domru -> TempPathTendersDomru
+                | Samaragips -> TempPathTendersSamaraGips
 
             let LogPathTenders =
                 match arg with
@@ -659,6 +668,7 @@ module Settings =
                 | Metodholding -> LogPathTendersMetodholding
                 | Bhm -> LogPathTendersBhm
                 | Domru -> LogPathTendersDomru
+                | Samaragips -> LogPathTendersSamaraGips
 
             { Database = Database
               TempPathTenders = TempPathTenders

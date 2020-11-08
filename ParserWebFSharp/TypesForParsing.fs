@@ -66,6 +66,7 @@ type Arguments =
     | Metodholding
     | Bhm
     | Domru
+    | Samaragips
 
 type SlavNeft =
     | MEGION
@@ -612,4 +613,11 @@ type DomRuRec =
       DatePub: DateTime
       PwName: String
       Nmck: String}
+
+type SamaraGipsRec =
+    { Href: string
+      PurName: string
+      PurNum: string
+      Status: String
+      DatePub: DateTime}
       
