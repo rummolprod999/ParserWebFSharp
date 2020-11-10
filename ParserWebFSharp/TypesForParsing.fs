@@ -628,6 +628,7 @@ type SamaraGoldenSeed =
       PurNum: string
       Status: String
       Type: String
+      CusName: String
       DatePub: DateTime
       DateEnd: DateTime}
       
