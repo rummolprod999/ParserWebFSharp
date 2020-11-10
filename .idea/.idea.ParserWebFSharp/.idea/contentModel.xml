@@ -38,6 +38,7 @@
         <e p="ParserEten.fs" t="Include" />
         <e p="ParserForScience.fs" t="Include" />
         <e p="ParserGmt.fs" t="Include" />
+        <e p="ParserGoldenSeed.fs" t="Include" />
         <e p="ParserGosYakut.fs" t="Include" />
         <e p="ParserIrkutskOil.fs" t="Include" />
         <e p="ParserKamaz.fs" t="Include" />
@@ -107,6 +108,7 @@
         <e p="TenderEten.fs" t="Include" />
         <e p="TenderForScience.fs" t="Include" />
         <e p="TenderGmt.fs" t="Include" />
+        <e p="TenderGoldenSeed.fs" t="Include" />
         <e p="TenderGosYakut.fs" t="Include" />
         <e p="TenderIrkutskOil.fs" t="Include" />
         <e p="TenderKamaz.fs" t="Include" />

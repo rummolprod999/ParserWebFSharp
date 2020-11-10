@@ -67,6 +67,7 @@ type Arguments =
     | Bhm
     | Domru
     | Samaragips
+    | Goldenseed
 
 type SlavNeft =
     | MEGION
@@ -620,4 +621,13 @@ type SamaraGipsRec =
       PurNum: string
       Status: String
       DatePub: DateTime}
+
+type SamaraGoldenSeed =
+    { Href: string
+      PurName: string
+      PurNum: string
+      Status: String
+      Type: String
+      DatePub: DateTime
+      DateEnd: DateTime}
       
