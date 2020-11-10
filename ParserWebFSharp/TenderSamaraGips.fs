@@ -5,7 +5,6 @@ open System
 open System.Data
 open HtmlAgilityPack
 open TypeE
-open System.Web
 open System.Linq
 open Tools
 
