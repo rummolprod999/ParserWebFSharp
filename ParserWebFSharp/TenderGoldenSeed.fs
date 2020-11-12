@@ -4,7 +4,7 @@ open MySql.Data.MySqlClient
 open System
 open System.Data
 
-type TenderGoldenSeed(stn: Settings.T, tn: SamaraGoldenSeed, typeFz: int, etpName: string, etpUrl: string) =
+type TenderGoldenSeed(stn: Settings.T, tn: SamaraGoldenSeedRec, typeFz: int, etpName: string, etpUrl: string) =
     inherit Tender(etpName, etpUrl)
     let settings = stn
     static member val tenderCount = ref 0

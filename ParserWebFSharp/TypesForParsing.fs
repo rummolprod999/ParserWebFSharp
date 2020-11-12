@@ -68,6 +68,7 @@ type Arguments =
     | Domru
     | Samaragips
     | Goldenseed
+    | Kaustik
 
 type SlavNeft =
     | MEGION
@@ -622,13 +623,23 @@ type SamaraGipsRec =
       Status: String
       DatePub: DateTime}
 
-type SamaraGoldenSeed =
+type SamaraGoldenSeedRec =
     { Href: string
       PurName: string
       PurNum: string
       Status: String
       Type: String
       CusName: String
+      DatePub: DateTime
+      DateEnd: DateTime}
+
+type KaustikRec =
+    { Href: string
+      PurName: string
+      PurNum: string
+      AttachName: String
+      AttachUrl: String
+      NoticeVer: String
       DatePub: DateTime
       DateEnd: DateTime}
       

@@ -26,7 +26,7 @@ type ParserGoldenSeed(stn: Settings.T) =
         | s ->
             let parser = HtmlParser()
             let documents = parser.Parse(s)
-            let tens = documents.QuerySelectorAll("div.vacancy-filter-result-item-left").ToList().Skip(1)
+            let tens = documents.QuerySelectorAll("div.vacancy-filter-result-item-left").ToList()
             for t in tens do
                     try
                         __.ParsingTender t url

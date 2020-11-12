@@ -148,6 +148,8 @@
     <Compile Include="ParserSamaraGips.fs" />
     <Compile Include="TenderGoldenSeed.fs" />
     <Compile Include="ParserGoldenSeed.fs" />
+    <Compile Include="TenderKaustik.fs" />
+    <Compile Include="ParserKaustik.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

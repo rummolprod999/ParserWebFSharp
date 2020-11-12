@@ -355,3 +355,9 @@ module TypeE =
         member x.RemoveAllFromList(ls: IEnumerable<_>) =
             for el in ls do
                 x.Remove(el) |> ignore
+    
+    type HtmlAgilityPack.HtmlNode with
+        member this.SelectNodesOrEmpty(xpath: string) =
+            match this.SelectNodes(xpath) with
+            | null -> HtmlAgilityPack.HtmlNodeCollection(null)
+            | x -> x
