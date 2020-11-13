@@ -16,6 +16,7 @@ type TenderKaustik(stn: Settings.T, tn: KaustikRec, typeFz: int, etpName: string
         use con = new MySqlConnection(stn.ConStr)
         let res =
                    builder {
+                       printfn "%A" tn
                        return ""
                    }
         match res with
