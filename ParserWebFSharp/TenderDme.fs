@@ -16,6 +16,7 @@ type TenderDme(stn: Settings.T, tn: DmeRec, typeFz: int, etpName: string, etpUrl
         use con = new MySqlConnection(stn.ConStr)
         let res =
                    builder {
+                       printfn "%A" tn
                        return ""
                        }
         match res with

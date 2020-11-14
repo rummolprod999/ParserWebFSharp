@@ -649,6 +649,7 @@ type DmeRec =
       PurName: string
       PurNum: string
       CusName: String
+      PwName: String
       PersonName: String
       PersonPhone: String
       PersonEmail: String
