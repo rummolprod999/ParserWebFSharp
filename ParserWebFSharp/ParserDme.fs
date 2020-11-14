@@ -3,6 +3,7 @@ namespace ParserWeb
 open System
 open TypeE
 open HtmlAgilityPack
+open System.Linq
 
 type ParserDme(stn: Settings.T) =
     inherit Parser()
@@ -24,7 +25,8 @@ type ParserDme(stn: Settings.T) =
             let htmlDoc = HtmlDocument()
             htmlDoc.LoadHtml(s)
             let nav = (htmlDoc.CreateNavigator()) :?> HtmlNodeNavigator
-            let tens = nav.CurrentDocument.DocumentNode.SelectNodesOrEmpty("//table[@id = 'sale']//tr[@class = 'rows']")
+            let tens = nav.CurrentDocument.DocumentNode.SelectNodesOrEmpty("//table[@id = 'sale']//tr[@class = 'rows']").ToList()
+            tens.Reverse()
             for t in tens do
                     try
                         __.ParsingTender t url
