@@ -89,6 +89,7 @@ type Init(s: Settings.T, arg: Arguments) =
         | Samaragips -> this.ParsingSamaraGips()
         | Goldenseed -> this.ParsingGoldenSeed()
         | Kaustik -> this.ParsingKaustik()
+        | Dme -> this.ParsingDme()
 
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -677,5 +678,14 @@ type Init(s: Settings.T, arg: Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderKaustik.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderKaustik.tenderUpCount)
+    
+    member private this.ParsingDme() =
+        Logging.Log.logger "Начало парсинга"
+        try
+            this.GetParser(ParserDme(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderDme.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderDme.tenderUpCount)
         
     member private this.GetParser(p: Parser) = p.Parsing()

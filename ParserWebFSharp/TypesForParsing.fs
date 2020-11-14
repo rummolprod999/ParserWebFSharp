@@ -69,6 +69,7 @@ type Arguments =
     | Samaragips
     | Goldenseed
     | Kaustik
+    | Dme
 
 type SlavNeft =
     | MEGION
@@ -640,6 +641,17 @@ type KaustikRec =
       AttachName: String
       AttachUrl: String
       NoticeVer: String
+      DatePub: DateTime
+      DateEnd: DateTime}
+    
+type DmeRec =
+    { Href: string
+      PurName: string
+      PurNum: string
+      CusName: String
+      PersonName: String
+      PersonPhone: String
+      PersonEmail: String
       DatePub: DateTime
       DateEnd: DateTime}
       

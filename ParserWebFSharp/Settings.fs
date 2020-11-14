@@ -158,6 +158,8 @@ module Settings =
         let mutable LogPathTendersGoldenSeed  = ""
         let mutable TempPathTendersKaustik = ""
         let mutable LogPathTendersKaustik  = ""
+        let mutable TempPathTendersDme = ""
+        let mutable LogPathTendersDme  = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -541,6 +543,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_kaustik" then
                                     LogPathTendersKaustik <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_dme" then
+                                    TempPathTendersDme <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_dme" then
+                                    LogPathTendersDme <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -624,6 +632,7 @@ module Settings =
                 | Samaragips -> TempPathTendersSamaraGips
                 | Goldenseed -> TempPathTendersGoldenSeed
                 | Kaustik -> TempPathTendersKaustik
+                | Dme -> TempPathTendersDme
 
             let LogPathTenders =
                 match arg with
@@ -689,6 +698,7 @@ module Settings =
                 | Samaragips -> LogPathTendersSamaraGips
                 | Goldenseed -> LogPathTendersGoldenSeed
                 | Kaustik -> LogPathTendersKaustik
+                | Dme -> LogPathTendersDme
 
             { Database = Database
               TempPathTenders = TempPathTenders
