@@ -160,6 +160,8 @@ module Settings =
         let mutable LogPathTendersKaustik  = ""
         let mutable TempPathTendersDme = ""
         let mutable LogPathTendersDme  = ""
+        let mutable TempPathTendersTele2 = ""
+        let mutable LogPathTendersTele2  = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -549,6 +551,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_dme" then
                                     LogPathTendersDme <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_tele2" then
+                                    TempPathTendersTele2 <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_tele2" then
+                                    LogPathTendersTele2 <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -633,6 +641,7 @@ module Settings =
                 | Goldenseed -> TempPathTendersGoldenSeed
                 | Kaustik -> TempPathTendersKaustik
                 | Dme -> TempPathTendersDme
+                | Tele2 -> TempPathTendersTele2
 
             let LogPathTenders =
                 match arg with
@@ -699,6 +708,7 @@ module Settings =
                 | Goldenseed -> LogPathTendersGoldenSeed
                 | Kaustik -> LogPathTendersKaustik
                 | Dme -> LogPathTendersDme
+                | Tele2 -> LogPathTendersTele2
 
             { Database = Database
               TempPathTenders = TempPathTenders

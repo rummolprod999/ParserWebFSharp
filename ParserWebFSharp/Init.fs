@@ -90,6 +90,7 @@ type Init(s: Settings.T, arg: Arguments) =
         | Goldenseed -> this.ParsingGoldenSeed()
         | Kaustik -> this.ParsingKaustik()
         | Dme -> this.ParsingDme()
+        | Tele2 -> this.ParsingTele2()
 
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -687,5 +688,13 @@ type Init(s: Settings.T, arg: Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderDme.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderDme.tenderUpCount)
-        
+    
+    member private this.ParsingTele2() =
+        Logging.Log.logger "Начало парсинга"
+        try
+            this.GetParser(ParserTele2(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderTele2.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderTele2.tenderUpCount)
     member private this.GetParser(p: Parser) = p.Parsing()

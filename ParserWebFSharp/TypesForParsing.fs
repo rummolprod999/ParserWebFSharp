@@ -70,6 +70,7 @@ type Arguments =
     | Goldenseed
     | Kaustik
     | Dme
+    | Tele2
 
 type SlavNeft =
     | MEGION
@@ -653,6 +654,15 @@ type DmeRec =
       PersonName: String
       PersonPhone: String
       PersonEmail: String
+      DatePub: DateTime
+      DateEnd: DateTime}
+
+type Tele2Rec =
+    { Href: string
+      PurName: string
+      PurNum: string
+      DelivPlace: String
+      DelivTerm: String
       DatePub: DateTime
       DateEnd: DateTime}
       

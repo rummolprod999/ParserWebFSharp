@@ -152,6 +152,8 @@
     <Compile Include="ParserKaustik.fs" />
     <Compile Include="TenderDme.fs" />
     <Compile Include="ParserDme.fs" />
+    <Compile Include="TenderTele2.fs" />
+    <Compile Include="ParserTele2.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

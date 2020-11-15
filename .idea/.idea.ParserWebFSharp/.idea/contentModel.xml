@@ -75,6 +75,7 @@
         <e p="ParserStroyTorgi.fs" t="Include" />
         <e p="ParserTGuru.fs" t="Include" />
         <e p="ParserTPlusParall.fs" t="Include" />
+        <e p="ParserTele2.fs" t="Include" />
         <e p="ParserTenderer.fs" t="Include" />
         <e p="ParserTj.fs" t="Include" />
         <e p="ParserTsm.fs" t="Include" />
@@ -147,6 +148,7 @@
         <e p="TenderStroyTorgi.fs" t="Include" />
         <e p="TenderTGuru.fs" t="Include" />
         <e p="TenderTPlus.fs" t="Include" />
+        <e p="TenderTele2.fs" t="Include" />
         <e p="TenderTenderer.fs" t="Include" />
         <e p="TenderTj.fs" t="Include" />
         <e p="TenderTsm.fs" t="Include" />
