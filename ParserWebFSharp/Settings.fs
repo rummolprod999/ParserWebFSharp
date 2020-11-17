@@ -162,6 +162,8 @@ module Settings =
         let mutable LogPathTendersDme  = ""
         let mutable TempPathTendersTele2 = ""
         let mutable LogPathTendersTele2  = ""
+        let mutable TempPathTendersOsnova = ""
+        let mutable LogPathTendersOsnova  = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -557,6 +559,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_tele2" then
                                     LogPathTendersTele2 <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_osnova" then
+                                    TempPathTendersOsnova <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_osnova" then
+                                    LogPathTendersOsnova <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -642,6 +650,7 @@ module Settings =
                 | Kaustik -> TempPathTendersKaustik
                 | Dme -> TempPathTendersDme
                 | Tele2 -> TempPathTendersTele2
+                | Osnova -> TempPathTendersOsnova
 
             let LogPathTenders =
                 match arg with
@@ -709,6 +718,7 @@ module Settings =
                 | Kaustik -> LogPathTendersKaustik
                 | Dme -> LogPathTendersDme
                 | Tele2 -> LogPathTendersTele2
+                | Osnova -> LogPathTendersOsnova
 
             { Database = Database
               TempPathTenders = TempPathTenders

@@ -71,6 +71,7 @@ type Arguments =
     | Kaustik
     | Dme
     | Tele2
+    | Osnova
 
 type SlavNeft =
     | MEGION
@@ -663,6 +664,13 @@ type Tele2Rec =
       PurNum: string
       DelivPlace: String
       DelivTerm: String
+      DatePub: DateTime
+      DateEnd: DateTime}
+
+type OsnovaRec =
+    { Href: string
+      PurName: string
+      PurNum: string
       DatePub: DateTime
       DateEnd: DateTime}
       

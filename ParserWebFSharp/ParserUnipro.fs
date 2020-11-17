@@ -58,7 +58,7 @@ type ParserUnipro(stn: Settings.T) =
             let mutable dateEnd = dateEndT.DateFromStringOrMin("dd.MM.yy")
             if dateEnd = DateTime.MinValue then
                 dateEnd <- dateEndT.DateFromStringOrMin("dd.MM.yy HH:mm:ss")
-            let tend = {  Href = href
+            let tend = {  YmzRec.Href = href
                           DateEnd = dateEnd
                           DatePub = datePub
                           PurNum = purNum

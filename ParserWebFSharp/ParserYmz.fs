@@ -47,7 +47,7 @@ type ParserYmz(stn: Settings.T) =
             let! dateEndT = t.GsnDocWithError "div.tender-item__descr p" <| sprintf "dateEndT not found %s %s " url (t.TextContent)
             let dateEndT = dateEndT.Replace("Срок подачи заявки до", "").Trim()
             let! dateEnd = dateEndT.DateFromStringDoc ("dd.MM.yyyy", sprintf "dateEnd not found %s %s " href dateEndT)
-            let tend = {  Href = href
+            let tend = {  YmzRec.Href = href
                           DateEnd = dateEnd
                           DatePub = datePub
                           PurNum = purNum
