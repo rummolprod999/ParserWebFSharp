@@ -39,7 +39,22 @@ type ParserOsnova(stn: Settings.T) =
     member private __.ParsingTender (t: HtmlNode) (url: string) =
         let builder = DocumentBuilder()
         let res = builder {
-            printfn "%O" t.InnerText
+            let! purName = t.GsnDocWithError "./td[1]/a" <| sprintf "purName not found %s %s " url (t.InnerText)
+            let! hrefT = t.GsnAtrDocWithError "./td[1]/a" <| "href" <| sprintf "hrefT not found %s %s " url (t.InnerText)
+            let href = sprintf "https://tender.gk-osnova.ru%s" hrefT
+            let! purNum = href.Get1Doc "id=(\d+)$" <| sprintf "purNum not found %s %s " url (t.InnerText)
+            let! dates = t.GsnDocWithError "./td[2]" <| sprintf "dates not found %s %s " url (t.InnerText)
+            let! dateEndT = dates.Get1Doc "с\s+(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2}:\d{2})" <| sprintf "dateEndT not found %s %s " url (dates)
+            let dateEnd = dateEndT.DateFromStringOrMin("dd.MM.yyyy HH:mm:ss")
+            let! datePubT = dates.Get1Doc "по\s+(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2}:\d{2})" <| sprintf "datePubT not found %s %s " url (dates)
+            let datePub = datePubT.DateFromStringOrMin("dd.MM.yyyy HH:mm:ss")
+            let tend = {  Href = href
+                          PurName = purName
+                          PurNum = purNum
+                          DateEnd = dateEnd
+                          DatePub = datePub}          
+            let T = TenderOsnova(set, tend, 287, "ГК \"ОСНОВА\"", "https://tender.gk-osnova.ru/")
+            T.Parsing()
             return ""
         }
         match res with

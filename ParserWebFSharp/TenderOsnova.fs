@@ -20,6 +20,7 @@ type TenderOsnova(stn: Settings.T, tn: OsnovaRec, typeFz: int, etpName: string, 
         use con = new MySqlConnection(stn.ConStr)
         let res =
                    builder {
+                       printfn "%A" tn
                        return ""
                        }
         match res with
