@@ -5,7 +5,6 @@ open System
 open System.Data
 open HtmlAgilityPack
 open TypeE
-open System.Linq
 open Tools
 
 type TenderOsnova(stn: Settings.T, tn: OsnovaRec, typeFz: int, etpName: string, etpUrl: string) =
