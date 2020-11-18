@@ -1,7 +1,5 @@
 namespace ParserWeb
 
-open System
-open System.Web
 open TypeE
 open HtmlAgilityPack
 open System.Linq
