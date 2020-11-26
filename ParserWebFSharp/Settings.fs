@@ -164,6 +164,8 @@ module Settings =
         let mutable LogPathTendersTele2  = ""
         let mutable TempPathTendersOsnova = ""
         let mutable LogPathTendersOsnova  = ""
+        let mutable TempPathTendersSibGenco = ""
+        let mutable LogPathTendersSibGenco  = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -565,6 +567,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_osnova" then
                                     LogPathTendersOsnova <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_sibgenco" then
+                                    TempPathTendersSibGenco <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_sibgenco" then
+                                    LogPathTendersSibGenco <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -651,6 +659,7 @@ module Settings =
                 | Dme -> TempPathTendersDme
                 | Tele2 -> TempPathTendersTele2
                 | Osnova -> TempPathTendersOsnova
+                | Sibgenco -> TempPathTendersSibGenco
 
             let LogPathTenders =
                 match arg with
@@ -719,6 +728,7 @@ module Settings =
                 | Dme -> LogPathTendersDme
                 | Tele2 -> LogPathTendersTele2
                 | Osnova -> LogPathTendersOsnova
+                | Sibgenco -> LogPathTendersSibGenco
 
             { Database = Database
               TempPathTenders = TempPathTenders

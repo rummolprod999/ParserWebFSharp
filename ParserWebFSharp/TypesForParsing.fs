@@ -72,6 +72,7 @@ type Arguments =
     | Dme
     | Tele2
     | Osnova
+    | Sibgenco
 
 type SlavNeft =
     | MEGION
@@ -671,6 +672,15 @@ type OsnovaRec =
     { Href: string
       PurName: string
       PurNum: string
+      DatePub: DateTime
+      DateEnd: DateTime}
+
+type SibGencoRec =
+    { Href: string
+      PurName: string
+      PurNum: string
+      PwName: string
+      Status: string
       DatePub: DateTime
       DateEnd: DateTime}
       

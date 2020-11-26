@@ -156,6 +156,8 @@
     <Compile Include="ParserTele2.fs" />
     <Compile Include="TenderOsnova.fs" />
     <Compile Include="ParserOsnova.fs" />
+    <Compile Include="TenderSibGenco.fs" />
+    <Compile Include="ParserSibGenco.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

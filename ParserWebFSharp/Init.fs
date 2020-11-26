@@ -92,6 +92,7 @@ type Init(s: Settings.T, arg: Arguments) =
         | Dme -> this.ParsingDme()
         | Tele2 -> this.ParsingTele2()
         | Osnova -> this.ParsingOsnova()
+        | Sibgenco -> this.ParsingSibGenco()
 
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -707,4 +708,13 @@ type Init(s: Settings.T, arg: Arguments) =
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderOsnova.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderOsnova.tenderUpCount)
+        
+    member private this.ParsingSibGenco() =
+        Logging.Log.logger "Начало парсинга"
+        try
+            this.GetParser(ParserSibGenco(s))
+        with ex -> Logging.Log.logger ex
+        Logging.Log.logger "Конец парсинга"
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderSibGenco.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderSibGenco.tenderUpCount)
     member private this.GetParser(p: Parser) = p.Parsing()
