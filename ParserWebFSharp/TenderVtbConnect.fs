@@ -22,7 +22,30 @@ type TenderVtbConnect(stn: Settings.T, tn: VtbConnectRec, typeFz: int, etpName: 
         use con = new MySqlConnection(stn.ConStr)
         let res =
                    builder {
-                       return ""
+                        con.Open()
+                        let selectTend = sprintf "SELECT id_tender FROM %stender WHERE purchase_number = @purchase_number AND type_fz = @type_fz AND end_date = @end_date AND  doc_publish_date = @doc_publish_date AND notice_version = @notice_version" stn.Prefix
+                        let cmd: MySqlCommand = new MySqlCommand(selectTend, con)
+                        cmd.Prepare()
+                        cmd.Parameters.AddWithValue("@purchase_number", tn.PurNum) |> ignore
+                        cmd.Parameters.AddWithValue("@type_fz", typeFz) |> ignore
+                        cmd.Parameters.AddWithValue("@end_date", tn.DateEnd) |> ignore
+                        cmd.Parameters.AddWithValue("@doc_publish_date", tn.DatePub) |> ignore
+                        cmd.Parameters.AddWithValue("@notice_version", tn.Status) |> ignore
+                        let reader: MySqlDataReader = cmd.ExecuteReader()
+                        if reader.HasRows then reader.Close()
+                                               return! Error ""
+                        reader.Close()
+                        let wait = WebDriverWait(driver, TimeSpan.FromSeconds(60.))
+                        driver.Navigate().GoToUrl(tn.Href)
+                        Thread.Sleep(1000)
+                        driver.SwitchTo().DefaultContent() |> ignore
+                        wait.Until (fun dr -> dr.FindElement(By.XPath("//body")).Enabled) |> ignore
+                        let body = driver.FindElement(By.XPath("//body"))
+                        let dateUpd = DateTime.Now
+                        let (cancelStatus, updated) = this.SetCancelStatus(con, dateUpd)
+                        let Printform = tn.Href
+                        let IdOrg = ref 0
+                        return ""
                    }
         match res with
                         | Success _ -> ()

@@ -49,12 +49,11 @@ type ParserVtbConnect(stn: Settings.T) =
         driver.SwitchTo().DefaultContent() |> ignore
         wait.Until
             (fun dr -> 
-            dr.FindElement(By.XPath("//div[@class= 'list-item-wrapper ng-star-inserted']/div[@class = 'item'][position() = 1]")).Displayed) |> ignore
+            dr.FindElement(By.XPath("//div[@class= 'auction_items']/div[@class = 'auction_item']")).Displayed) |> ignore
         Thread.Sleep(3000)
         __.Scroll(driver)
         driver.SwitchTo().DefaultContent() |> ignore
         __.ParserListTenders(driver)
-        Thread.Sleep(500000)
         for t in listTenders do
             try 
                 __.ParserTendersList driver t
@@ -69,6 +68,12 @@ type ParserVtbConnect(stn: Settings.T) =
         ()
     
     member private __.Scroll(driver : ChromeDriver) =
+        try
+                driver.FindElement(By.XPath("//div[@class = 'catalog_items_filter']/select")).Click()
+                Thread.Sleep(1000)
+                driver.FindElement(By.XPath("//div[@class = 'catalog_items_filter']/select/option[@value = '100']")).Click()
+                Thread.Sleep(15000)
+        with ex -> Logging.Log.logger ex
         ()
     member private __.Auth(driver : ChromeDriver) =
         let wait = WebDriverWait(driver, timeoutB)
@@ -78,7 +83,9 @@ type ParserVtbConnect(stn: Settings.T) =
             dr.FindElement(By.XPath("//input[@placeholder = 'Введите имя пользователя']")).Displayed) |> ignore
         driver.FindElement(By.XPath("//input[@placeholder = 'Введите имя пользователя']")).SendKeys(Settings.UserVtb)
         driver.FindElement(By.XPath("//input[@placeholder = 'Введите пароль']")).SendKeys(Settings.PassVtb)
-        Thread.Sleep(3000)
+        wait.Until
+            (fun dr -> 
+            dr.FindElement(By.XPath("//input[@placeholder = 'Введите имя пользователя']")).Enabled) |> ignore
         driver.FindElement(By.XPath("//button[@type = 'submit']")).Click()
         Thread.Sleep(3000)
         ()
@@ -86,7 +93,7 @@ type ParserVtbConnect(stn: Settings.T) =
     member private this.ParserListTenders(driver : ChromeDriver) =
         driver.SwitchTo().DefaultContent() |> ignore
         let tenders =
-            driver.FindElementsByXPath("//div[@class= 'list-item-wrapper ng-star-inserted']/div[@class = 'item']")
+            driver.FindElementsByXPath("//div[@class= 'auction_items']/div[@class = 'auction_item']")
         for t in tenders do
             this.ParserTenders t
         ()
@@ -94,6 +101,36 @@ type ParserVtbConnect(stn: Settings.T) =
     member private this.ParserTenders (i : IWebElement) =
         let builder = TenderBuilder()
         let res = builder {
+            let! hrefT = i.findWElementWithoutException(".//a[. = 'Подробнее']", sprintf "hrefT not found, text the element - %s" i.Text)
+            let! href = hrefT.findAttributeWithoutException ("href", "href not found")
+            let! purNum = i.findElementWithoutException(".//p[@class = 'auction_item_number']", sprintf "purNum not found %s" i.Text)
+            let purNum = purNum.Replace("№", "")
+            let! purName = i.findElementWithoutException(".//li[contains(., 'Наименование')]", sprintf "purName not found %s" i.Text)
+            let purName = purName.Replace("Наименование", "").Replace(":", "").Trim()
+            let! orgName = i.findElementWithoutException(".//li[contains(., 'Организатор')]", sprintf "orgName not found %s" i.Text)
+            let orgName = orgName.Replace("Организатор", "").Replace(":", "").Trim()
+            let! pubDateT = i.findElementWithoutException(".//li[contains(., 'Дата публикации')]", sprintf "pubDateT not found %s" i.Text)
+            let pubDateT = pubDateT.Replace("Дата публикации", "").Replace(":", "").Trim()
+            let! datePub = pubDateT.DateFromString("dd.MM.yyyy", sprintf "datePub not parse %s" pubDateT)
+            let! dateEndT = i.findElementWithoutException(".//li[contains(., 'Дата окончания приёма заявок')]", sprintf "dateEndT not found %s" i.Text)
+            let dateEndT = dateEndT.Replace("Дата окончания приёма заявок", "").Replace(":", "").Trim()
+            let! dateEnd = dateEndT.DateFromString("dd.MM.yyyy", sprintf "endDate not parse %s" dateEndT)
+            let! status = i.findElementWithoutException(".//div[contains(@class, 'auction_item_status')]", sprintf "status not found %s" i.Text)
+            let! nmckT = i.findElementWithoutExceptionOptional(".//li[contains(., 'Начальная цена')]", sprintf "nmckT not found %s" i.Text)
+            let nmckT = nmckT.Replace("Начальная цена", "").Replace(":", "").Trim()
+            let nmck = nmckT.GetPriceFromString()
+            let currency = "RUB"
+            let ten =
+                    { Href = href
+                      PurName = purName
+                      PurNum = purNum
+                      OrgName = orgName
+                      Nmck = nmck
+                      Status = status
+                      Currency = currency
+                      DateEnd = dateEnd
+                      DatePub = datePub }
+            listTenders.Add(ten)
             return ""
         }
         match res with
