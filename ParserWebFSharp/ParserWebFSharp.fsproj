@@ -158,6 +158,8 @@
     <Compile Include="ParserOsnova.fs" />
     <Compile Include="TenderSibGenco.fs" />
     <Compile Include="ParserSibGenco.fs" />
+    <Compile Include="TenderVtbConnect.fs" />
+    <Compile Include="ParserVtbConnect.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

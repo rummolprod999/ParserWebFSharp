@@ -73,6 +73,7 @@ type Arguments =
     | Tele2
     | Osnova
     | Sibgenco
+    | Vtbconnect
 
 type SlavNeft =
     | MEGION
@@ -680,6 +681,17 @@ type SibGencoRec =
       PurName: string
       PurNum: string
       PwName: string
+      Status: string
+      DatePub: DateTime
+      DateEnd: DateTime}
+
+type VtbConnectRec =
+    { Href: string
+      PurName: string
+      PurNum: string
+      Nmck: string
+      Currency: string
+      OrgName: string
       Status: string
       DatePub: DateTime
       DateEnd: DateTime}

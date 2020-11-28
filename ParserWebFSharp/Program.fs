@@ -7,7 +7,7 @@ module Start =
     [<EntryPoint>]
     let main argv =
         let arguments =
-            "irkutskoil, akd, lsr, butb, rossel, neft, slav, aero, stroytorgi, asgor, gosyakut, rostend, chpt, tplus, sibserv, tguru, bidmart, comita, eshoprzd, yarregion, btg, vend, pik, nornic, tenderer, samolet, ariba, beeline, tsm, smart, rtsgen, tj, turk, kg, eten, cislink, petr, mpkz, estorespb, rosagro, neftreg, forscience, volgzmo, rusal, moek, kamaz, uni, ksk, gmt, ymz, unipro, apps, rtscorp, sever, medic, bidzaar, metodholding, bhm, domru, samaragips, goldenseed, kaustik, dme, tele2, osnova, sibgenco"
+            "irkutskoil, akd, lsr, butb, rossel, neft, slav, aero, stroytorgi, asgor, gosyakut, rostend, chpt, tplus, sibserv, tguru, bidmart, comita, eshoprzd, yarregion, btg, vend, pik, nornic, tenderer, samolet, ariba, beeline, tsm, smart, rtsgen, tj, turk, kg, eten, cislink, petr, mpkz, estorespb, rosagro, neftreg, forscience, volgzmo, rusal, moek, kamaz, uni, ksk, gmt, ymz, unipro, apps, rtscorp, sever, medic, bidzaar, metodholding, bhm, domru, samaragips, goldenseed, kaustik, dme, tele2, osnova, sibgenco, vtbconnect"
         if argv.Length = 0 then
             printf "Bad arguments, use %s" arguments
             Environment.Exit(1)
@@ -278,6 +278,10 @@ module Start =
         | "sibgenco" ->
             let settings = Settings.getSettings (Sibgenco)
             let p = Init(settings, Sibgenco)
+            p.Parsing()
+        | "vtbconnect" ->
+            let settings = Settings.getSettings (Vtbconnect)
+            let p = Init(settings, Vtbconnect)
             p.Parsing()
         | _ ->
             printf "Bad arguments, use %s" arguments
