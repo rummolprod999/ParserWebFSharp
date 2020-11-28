@@ -197,9 +197,9 @@ type TenderVtbConnect(stn: Settings.T, tn: VtbConnectRec, typeFz: int, etpName: 
                     let name = p.findElementWithoutException(".//li[contains(., 'Наименование')]").Replace("Наименование", "").Replace(":", "").Trim()
                     let okpd2 = p.findElementWithoutException(".//li[contains(., 'Код позиции по ОКПД2')]").Replace("Код позиции по ОКПД2", "").Replace(":", "").Trim()
                     let okei = p.findElementWithoutException(".//li[contains(., 'Единица измерения')]").Replace("Единица измерения", "").Replace(":", "").Trim()
-                    let price = p.findElementWithoutException(".//li[contains(., 'Цена за единицу')]").Replace("Цена за единицу", "").Replace(":", "").Trim()
+                    let price = p.findElementWithoutException(".//li[contains(., 'Цена за единицу')]").Replace("Цена за единицу", "").Replace(":", "").Trim().GetPriceFromString()
                     let quant = p.findElementWithoutException(".//li[contains(., 'Количество')]").Replace("Количество", "").Replace(":", "").Trim()
-                    let sum = p.findElementWithoutException(".//li[contains(., 'Сумма с НДС')]").Replace("Сумма с НДС", "").Replace(":", "").Trim()
+                    let sum = p.findElementWithoutException(".//li[contains(., 'Сумма с НДС')]").Replace("Сумма с НДС", "").Replace(":", "").Trim().GetPriceFromString()
                     let insertLotitem =
                             sprintf 
                                 "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, okpd_name = @okpd_name, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, sum = @sum, okpd2_code = @okpd2_code, price = @price" 
