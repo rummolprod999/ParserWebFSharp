@@ -11,7 +11,7 @@ open OpenQA.Selenium.Support.UI
 type ParserVtbConnect(stn: Settings.T) =
     inherit Parser()
     let set = stn
-    let url = "https://www.vtbconnect.ru/trades/vtb/"
+    let url = sprintf "https://%s:%s@www.vtbconnect.ru/trades/vtb/" Settings.UserVtb Settings.PassVtb
     let timeoutB = TimeSpan.FromSeconds(60.)
     let listTenders = List<BidzaarRec>()
     let options = ChromeOptions()
@@ -38,4 +38,8 @@ type ParserVtbConnect(stn: Settings.T) =
     member private __.ParserSelen(driver : ChromeDriver) =
         let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
+        Thread.Sleep(5000)
+        driver.SwitchTo().DefaultContent() |> ignore
+        
+        Thread.Sleep(500000)
         ()
