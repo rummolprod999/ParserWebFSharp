@@ -17,7 +17,7 @@ type ParserVtbConnect(stn: Settings.T) =
     let options = ChromeOptions()
 
     do 
-        //options.AddArguments("headless")
+        options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
         options.AddArguments("disable-dev-shm-usage")

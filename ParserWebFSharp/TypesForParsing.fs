@@ -693,6 +693,6 @@ type VtbConnectRec =
       Currency: string
       OrgName: string
       Status: string
-      DatePub: DateTime
-      DateEnd: DateTime}
+      mutable DatePub: DateTime
+      mutable DateEnd: DateTime}
       
