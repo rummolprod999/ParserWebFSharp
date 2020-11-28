@@ -11,7 +11,7 @@ open OpenQA.Selenium.Support.UI
 type ParserVtbConnect(stn: Settings.T) =
     inherit Parser()
     let set = stn
-    let url = sprintf "https://%s:%s@www.vtbconnect.ru/trades/vtb/" Settings.UserVtb Settings.PassVtb
+    let url ="https://www.vtbconnect.ru/login?redirect=https://www.vtbconnect.ru/trades/vtb/"
     let timeoutB = TimeSpan.FromSeconds(60.)
     let listTenders = List<BidzaarRec>()
     let options = ChromeOptions()
@@ -40,6 +40,25 @@ type ParserVtbConnect(stn: Settings.T) =
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
-        
+        wait.Until
+            (fun dr -> 
+            dr.FindElement(By.XPath("//input[@placeholder = 'Введите имя пользователя']")).Displayed) |> ignore
+        __.Auth(driver)
+        driver.SwitchTo().DefaultContent() |> ignore
+        Thread.Sleep(3000)
+        driver.SwitchTo().DefaultContent() |> ignore
         Thread.Sleep(500000)
+        ()
+    
+    member private __.Auth(driver : ChromeDriver) =
+        let wait = WebDriverWait(driver, timeoutB)
+        driver.SwitchTo().DefaultContent() |> ignore
+        wait.Until
+            (fun dr -> 
+            dr.FindElement(By.XPath("//input[@placeholder = 'Введите имя пользователя']")).Displayed) |> ignore
+        driver.FindElement(By.XPath("//input[@placeholder = 'Введите имя пользователя']")).SendKeys(Settings.UserVtb)
+        driver.FindElement(By.XPath("//input[@placeholder = 'Введите пароль']")).SendKeys(Settings.PassVtb)
+        Thread.Sleep(3000)
+        driver.FindElement(By.XPath("//button[@type = 'submit']")).Click()
+        Thread.Sleep(3000)
         ()
