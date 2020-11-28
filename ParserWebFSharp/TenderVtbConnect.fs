@@ -37,7 +37,7 @@ type TenderVtbConnect(stn: Settings.T, tn: VtbConnectRec, typeFz: int, etpName: 
                         reader.Close()
                         let wait = WebDriverWait(driver, TimeSpan.FromSeconds(60.))
                         driver.Navigate().GoToUrl(tn.Href)
-                        Thread.Sleep(1000)
+                        Thread.Sleep(5000)
                         driver.SwitchTo().DefaultContent() |> ignore
                         wait.Until (fun dr -> dr.FindElement(By.XPath("//body")).Enabled) |> ignore
                         let body = driver.FindElement(By.XPath("//body"))
@@ -193,6 +193,7 @@ type TenderVtbConnect(stn: Settings.T, tn: VtbConnectRec, typeFz: int, etpName: 
     member private this.GetPurObjs(con: MySqlConnection, po: ReadOnlyCollection<_>, idLot: int, idCustomer: int) =
         for p in po do
             try
+                    p.FindElement(By.XPath("./preceding-sibling::a")).Click()
                     let name = p.findElementWithoutException(".//li[contains(., 'Наименование')]").Replace("Наименование", "").Replace(":", "").Trim()
                     let okpd2 = p.findElementWithoutException(".//li[contains(., 'Код позиции по ОКПД2')]").Replace("Код позиции по ОКПД2", "").Replace(":", "").Trim()
                     let okei = p.findElementWithoutException(".//li[contains(., 'Единица измерения')]").Replace("Единица измерения", "").Replace(":", "").Trim()
