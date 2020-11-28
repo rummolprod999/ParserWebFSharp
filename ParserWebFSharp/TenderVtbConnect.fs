@@ -41,13 +41,16 @@ type TenderVtbConnect(stn: Settings.T, tn: VtbConnectRec, typeFz: int, etpName: 
                         driver.SwitchTo().DefaultContent() |> ignore
                         wait.Until (fun dr -> dr.FindElement(By.XPath("//body")).Enabled) |> ignore
                         let body = driver.FindElement(By.XPath("//body"))
-                        let! pubDateT = body.findElementWithoutException(".//li[contains(., 'Дата публикации')]", sprintf "pubDateT not found %s" tn.Href)
+                        wait.Until (fun dr -> 
+            dr.FindElement(By.XPath("//li[contains(., 'Дата публикации')]")).Displayed) |> ignore
+                        driver.SwitchTo().DefaultContent() |> ignore
+                        let! pubDateT = body.findElementWithoutException("//li[contains(., 'Дата публикации')]", sprintf "pubDateT not found %s" tn.Href)
                         let pubDateT = pubDateT.Replace("Дата публикации", "").Replace(":", "").Trim()
-                        let! datePub = pubDateT.DateFromString("dd.MM.yyyy HH:mm", sprintf "datePub not parse %s" pubDateT)
+                        let! datePub = pubDateT.DateFromString("dd.MM.yyyy HHmm", sprintf "datePub not parse %s" pubDateT)
                         tn.DatePub <- datePub
-                        let! dateEndT = body.findElementWithoutException(".//li[contains(., 'Дата окончания приёма заявок')]", sprintf "dateEndT not found %s" tn.Href)
+                        let! dateEndT = body.findElementWithoutException("//li[contains(., 'Дата окончания приёма заявок')]", sprintf "dateEndT not found %s" tn.Href)
                         let dateEndT = dateEndT.Replace("Дата окончания приёма заявок", "").Replace(":", "").Trim()
-                        let! dateEnd = dateEndT.DateFromString("dd.MM.yyyy HH:mm", sprintf "endDate not parse %s" dateEndT)
+                        let! dateEnd = dateEndT.DateFromString("dd.MM.yyyy HHmm", sprintf "endDate not parse %s" dateEndT)
                         tn.DateEnd <- dateEnd
                         let dateUpd = DateTime.Now
                         let (cancelStatus, updated) = this.SetCancelStatus(con, dateUpd)
@@ -68,13 +71,13 @@ type TenderVtbConnect(stn: Settings.T, tn: VtbConnectRec, typeFz: int, etpName: 
                             | false ->
                                 reader.Close()
                                 let addOrganizer = sprintf "INSERT INTO %sorganizer SET full_name = @full_name, contact_person = @contact_person, post_address = @post_address, fact_address = @fact_address, contact_phone = @contact_phone, inn = @inn, contact_email = @contact_email" stn.Prefix
-                                let! contactPerson = body.findElementWithoutExceptionOptional(".//li[contains(., 'Контактное лицо')]", sprintf "contactPerson not found %s" tn.Href)
+                                let! contactPerson = body.findElementWithoutExceptionOptional("//li[contains(., 'Контактное лицо')]", sprintf "contactPerson not found %s" tn.Href)
                                 let contactPerson = contactPerson.Replace("Контактное лицо", "").Replace(":", "").Trim()
                                 let postAddress = ""
                                 let factAddress = ""
-                                let! phone = body.findElementWithoutExceptionOptional(".//li[contains(., 'Контактный телефон')]", sprintf "phone not found %s" tn.Href)
+                                let! phone = body.findElementWithoutExceptionOptional("//li[contains(., 'Контактный телефон')]", sprintf "phone not found %s" tn.Href)
                                 let phone = phone.Replace("Контактный телефон", "").Replace(":", "").Trim()
-                                let! inn = body.findElementWithoutExceptionOptional(".//li[contains(., 'ИНН организатора')]", sprintf "inn not found %s" tn.Href)
+                                let! inn = body.findElementWithoutExceptionOptional("//li[contains(., 'ИНН организатора')]", sprintf "inn not found %s" tn.Href)
                                 let inn = inn.Replace("ИНН организатора", "").Replace(":", "").Trim()
                                 innOrg <- inn
                                 let email = ""
@@ -111,7 +114,7 @@ type TenderVtbConnect(stn: Settings.T, tn: VtbConnectRec, typeFz: int, etpName: 
                         cmd9.Parameters.AddWithValue("@cancel", cancelStatus) |> ignore
                         cmd9.Parameters.AddWithValue("@date_version", dateUpd) |> ignore
                         cmd9.Parameters.AddWithValue("@num_version", numVersion) |> ignore
-                        cmd9.Parameters.AddWithValue("@notice_version", "") |> ignore
+                        cmd9.Parameters.AddWithValue("@notice_version", tn.Status) |> ignore
                         cmd9.Parameters.AddWithValue("@xml", tn.Href) |> ignore
                         cmd9.Parameters.AddWithValue("@print_form", Printform) |> ignore
                         cmd9.Parameters.AddWithValue("@id_region", 0) |> ignore
@@ -123,14 +126,13 @@ type TenderVtbConnect(stn: Settings.T, tn: VtbConnectRec, typeFz: int, etpName: 
                         //let attachments = body.findElementsWithoutException("//li[div[@class = 'auction_block_list-icon']]/a")
                         //this.GetAttachments(con, !idTender, attachments)
                         let idLot = ref 0
-                        let currency = ""
                         let finSource = ""
                         let insertLot = sprintf "INSERT INTO %slot SET id_tender = @id_tender, lot_number = @lot_number, max_price = @max_price, currency = @currency, finance_source = @finance_source" stn.Prefix
                         let cmd12 = new MySqlCommand(insertLot, con)
                         cmd12.Parameters.AddWithValue("@id_tender", !idTender) |> ignore
                         cmd12.Parameters.AddWithValue("@lot_number", 1) |> ignore
-                        cmd12.Parameters.AddWithValue("@max_price", "") |> ignore
-                        cmd12.Parameters.AddWithValue("@currency", currency) |> ignore
+                        cmd12.Parameters.AddWithValue("@max_price", tn.Nmck) |> ignore
+                        cmd12.Parameters.AddWithValue("@currency", tn.Currency) |> ignore
                         cmd12.Parameters.AddWithValue("@finance_source", finSource) |> ignore
                         cmd12.ExecuteNonQuery() |> ignore
                         idLot := int cmd12.LastInsertedId
@@ -161,9 +163,9 @@ type TenderVtbConnect(stn: Settings.T, tn: VtbConnectRec, typeFz: int, etpName: 
                                 cmd14.Parameters.AddWithValue("@inn", inn) |> ignore
                                 cmd14.ExecuteNonQuery() |> ignore
                                 idCustomer := int cmd14.LastInsertedId
-                        let! deviPlace = body.findElementWithoutExceptionOptional(".//li[contains(., 'Адрес доставки')]", sprintf "deviPlace not found %s" tn.Href)
+                        let! deviPlace = body.findElementWithoutExceptionOptional("//li[contains(., 'Адрес доставки')]", sprintf "deviPlace not found %s" tn.Href)
                         let deviPlace = deviPlace.Replace("Адрес доставки", "").Replace(":", "").Trim()
-                        let! delivTerm = body.findElementWithoutExceptionOptional(".//li[contains(., 'Условия поставки и оплаты товара')]", sprintf "delivTerm not found %s" tn.Href)
+                        let! delivTerm = body.findElementWithoutExceptionOptional("//li[contains(., 'Условия поставки и оплаты товара')]", sprintf "delivTerm not found %s" tn.Href)
                         let delivTerm = delivTerm.Replace("Условия поставки и оплаты товара", "").Replace(":", "").Trim()
                         if deviPlace <> "" || delivTerm <> "" then
                             let insertCustomerRequirement =
@@ -177,7 +179,7 @@ type TenderVtbConnect(stn: Settings.T, tn: VtbConnectRec, typeFz: int, etpName: 
                             cmd16.Parameters.AddWithValue("@delivery_place", deviPlace) |> ignore
                             cmd16.Parameters.AddWithValue("@delivery_term", delivTerm) |> ignore
                             cmd16.ExecuteNonQuery() |> ignore
-                        let por = body.FindElements(By.XPath("//ul[contains(@class, 'auction_accordion-content auction_accordion-content_active')]"))
+                        let por = body.FindElements(By.XPath("//ul[contains(@class, 'auction_accordion-content')]"))
                         this.GetPurObjs(con, por, !idLot, !idCustomer)
                         this.AddVerNumber con tn.PurNum stn typeFz
                         this.TenderKwords con (!idTender) stn
