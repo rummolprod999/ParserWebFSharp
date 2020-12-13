@@ -23,7 +23,7 @@ type TenderRtCi(stn: Settings.T, tn: RtCiRec, typeFz: int, etpName: string, etpU
         let res =
                    builder {
                         con.Open()
-                        printfn "%A" tn
+
                         return ""
                         }
         match res with
