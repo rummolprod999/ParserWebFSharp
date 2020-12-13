@@ -701,6 +701,7 @@ type RtCiRec =
     { Href: string
       PurName: string
       PurNum: string
+      PwName: string
       DatePub: DateTime
       DateEnd: DateTime}
       
