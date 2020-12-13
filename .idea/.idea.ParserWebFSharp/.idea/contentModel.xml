@@ -6,6 +6,7 @@
     <e p="$APPLICATION_CONFIG_DIR$/consoles/db" t="IncludeRecursive" />
     <e p="$APPLICATION_CONFIG_DIR$/extensions" t="IncludeRecursive" />
     <e p="$APPLICATION_CONFIG_DIR$/scratches" t="IncludeRecursive" />
+    <e p="$APPLICATION_PLUGINS_DIR$/bashsupport-pro/builtin" t="IncludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p=".git/info/exclude" t="IncludeRecursive" />
       <e p="ParserWebFSharp" t="IncludeRecursive">
@@ -63,6 +64,7 @@
         <e p="ParserRostendMultyThread.fs" t="Include" />
         <e p="ParserRostendParall.fs" t="Include" />
         <e p="ParserRostendTask.fs" t="Include" />
+        <e p="ParserRtCi.fs" t="Include" />
         <e p="ParserRtsCorp.fs" t="Include" />
         <e p="ParserRtsGen.fs" t="Include" />
         <e p="ParserRusal.fs" t="Include" />
@@ -138,6 +140,7 @@
         <e p="TenderRossel.fs" t="Include" />
         <e p="TenderRostendNew.fs" t="Include" />
         <e p="TenderRostendParall.fs" t="Include" />
+        <e p="TenderRtCi.fs" t="Include" />
         <e p="TenderRtsCorp.fs" t="Include" />
         <e p="TenderRtsCorp223.fs" t="Include" />
         <e p="TenderRtsGen.fs" t="Include" />

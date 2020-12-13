@@ -170,6 +170,8 @@ module Settings =
         let mutable LogPathTendersSibGenco  = ""
         let mutable TempPathTendersVtbConnect = ""
         let mutable LogPathTendersVtbConnect  = ""
+        let mutable TempPathTendersRtCi = ""
+        let mutable LogPathTendersRtCi  = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -583,6 +585,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_vtbconnect" then
                                     LogPathTendersVtbConnect <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_rtci" then
+                                    TempPathTendersRtCi <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_rtci" then
+                                    LogPathTendersRtCi <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -673,6 +681,7 @@ module Settings =
                 | Osnova -> TempPathTendersOsnova
                 | Sibgenco -> TempPathTendersSibGenco
                 | Vtbconnect -> TempPathTendersVtbConnect
+                | Rtci -> TempPathTendersRtCi
 
             let LogPathTenders =
                 match arg with
@@ -743,6 +752,7 @@ module Settings =
                 | Osnova -> LogPathTendersOsnova
                 | Sibgenco -> LogPathTendersSibGenco
                 | Vtbconnect -> LogPathTendersVtbConnect
+                | Rtci -> LogPathTendersRtCi
 
             { Database = Database
               TempPathTenders = TempPathTenders

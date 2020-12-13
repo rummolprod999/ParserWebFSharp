@@ -74,6 +74,7 @@ type Arguments =
     | Osnova
     | Sibgenco
     | Vtbconnect
+    | Rtci
 
 type SlavNeft =
     | MEGION
@@ -695,4 +696,11 @@ type VtbConnectRec =
       Status: string
       mutable DatePub: DateTime
       mutable DateEnd: DateTime}
+ 
+type RtCiRec =
+    { Href: string
+      PurName: string
+      PurNum: string
+      DatePub: DateTime
+      DateEnd: DateTime}
       

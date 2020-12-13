@@ -160,6 +160,8 @@
     <Compile Include="ParserSibGenco.fs" />
     <Compile Include="TenderVtbConnect.fs" />
     <Compile Include="ParserVtbConnect.fs" />
+    <Compile Include="TenderRtCi.fs" />
+    <Compile Include="ParserRtCi.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

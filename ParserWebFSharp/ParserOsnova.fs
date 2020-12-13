@@ -46,7 +46,7 @@ type ParserOsnova(stn: Settings.T) =
             let dateEnd = dateEndT.DateFromStringOrMin("dd.MM.yyyy HH:mm:ss")
             let! datePubT = dates.Get1Doc "по\s+(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2}:\d{2})" <| sprintf "datePubT not found %s %s " url (dates)
             let datePub = datePubT.DateFromStringOrMin("dd.MM.yyyy HH:mm:ss")
-            let tend = {  Href = href
+            let tend = {  OsnovaRec.Href = href
                           PurName = purName
                           PurNum = purNum
                           DateEnd = dateEnd
