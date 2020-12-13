@@ -1,18 +1,15 @@
 namespace ParserWeb
 
-open System.Collections.ObjectModel
-open System.Threading
 open MySql.Data.MySqlClient
 open System
 open System.Data
 open HtmlAgilityPack
-open System.Linq
 open TypeE
 open Tools
 
 type TenderRtCi(stn: Settings.T, tn: RtCiRec, typeFz: int, etpName: string, etpUrl: string) =
     inherit Tender(etpName, etpUrl)
-    let settings = stn
+    let _ = stn
     static member val tenderCount = ref 0
     static member val tenderUpCount = ref 0
 
