@@ -3,6 +3,7 @@ namespace ParserWeb
 open System
 open System.Globalization
 open System.Text.RegularExpressions
+open System.Web
 open OpenQA.Selenium
 
 module TypeE =
@@ -111,7 +112,8 @@ module TypeE =
 
         member this.RegexReplace() = Regex.Replace(this, @"\s+", " ")
         member this.RegexDeleteWhitespace() = Regex.Replace(this, @"\s+", "")
-        member this.RegexCutWhitespace() = Regex.Replace(this, @"\s+", " ")
+        member this.RegexCutWhitespace() = Regex.Replace(this, @"\s+", " ")      
+        member this.HtmlDecode() = HttpUtility.HtmlDecode(this)
 
         member this.GetNmck() =
             let tmp = this.Replace(",", ".").RegexDeleteWhitespace()

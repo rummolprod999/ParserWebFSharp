@@ -46,7 +46,7 @@ type ParserRtCi(stn: Settings.T) =
             let purNum = purNum.Replace("№", "").Trim()
             let! datePubT = t.GsnDocWithError ".//span[. = 'Дата размещения']/following-sibling::span" <| sprintf "datePubT not found %s %s " url (t.InnerText)
             let datePub = datePubT.DateFromStringOrMin("dd.MM.yyyy")
-            let! dateEndT = t.GsnDocWithError ".//span[. = 'Дата и время окончания подачи']/following-sibling::span" <| sprintf "dateEndT not found %s %s " url (t.InnerText)
+            let! dateEndT = t.GsnDoc ".//span[. = 'Дата и время окончания подачи']/following-sibling::span"
             let dateEnd = dateEndT.DateFromStringOrMin("dd.MM.yyyy HH:mm")
             let tend = {  Href = href
                           PurName = HttpUtility.HtmlDecode(purName)
