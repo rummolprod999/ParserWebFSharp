@@ -23,6 +23,8 @@ module Settings =
     let mutable internal PassBidZaar = ""
     let mutable internal UserVtb = ""
     let mutable internal PassVtb = ""
+    let mutable internal UserForumGd = ""
+    let mutable internal PassForumGd = ""
     type T =
         { Database: string
           TempPathTenders: string
@@ -172,6 +174,8 @@ module Settings =
         let mutable LogPathTendersVtbConnect  = ""
         let mutable TempPathTendersRtCi = ""
         let mutable LogPathTendersRtCi  = ""
+        let mutable TempPathTendersForumGd = ""
+        let mutable LogPathTendersForumGd  = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -591,6 +595,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_rtci" then
                                     LogPathTendersRtCi <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_forumgd" then
+                                    TempPathTendersForumGd <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_forumgd" then
+                                    LogPathTendersForumGd <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -606,6 +616,8 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "passbidzaar" then PassBidZaar <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "uservtb" then UserVtb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passvtb" then PassVtb <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "userforumgd" then UserForumGd <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "passforumgd" then PassForumGd <- (xnode :?> XmlNode).InnerText
                 else if (xnode :?> XmlNode).Name = "port" then Port <- Int32.Parse((xnode :?> XmlNode).InnerText)
             let connectstring =
                 sprintf
@@ -682,6 +694,7 @@ module Settings =
                 | Sibgenco -> TempPathTendersSibGenco
                 | Vtbconnect -> TempPathTendersVtbConnect
                 | Rtci -> TempPathTendersRtCi
+                | Forumgd -> TempPathTendersForumGd
 
             let LogPathTenders =
                 match arg with
@@ -753,6 +766,7 @@ module Settings =
                 | Sibgenco -> LogPathTendersSibGenco
                 | Vtbconnect -> LogPathTendersVtbConnect
                 | Rtci -> LogPathTendersRtCi
+                | Forumgd -> LogPathTendersForumGd
 
             { Database = Database
               TempPathTenders = TempPathTenders

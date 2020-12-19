@@ -75,6 +75,7 @@ type Arguments =
     | Sibgenco
     | Vtbconnect
     | Rtci
+    | Forumgd
 
 type SlavNeft =
     | MEGION
@@ -704,4 +705,14 @@ type RtCiRec =
       PwName: string
       DatePub: DateTime
       DateEnd: DateTime}
-      
+
+type ForumGdRec =
+    { Href: string
+      PurName: string
+      PurNum: string
+      PwName: string
+      Status: string
+      Period: string
+      DelivPlace: string
+      DatePub: DateTime
+      DateEnd: DateTime}

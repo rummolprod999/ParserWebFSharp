@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="$USER_HOME$/.cache/JetBrains/Rider2020.2/extResources" t="IncludeRecursive" />
-    <e p="$USER_HOME$/.cache/JetBrains/Rider2020.2/resharper-host/local/Transient/Rider/v202/SolutionCaches/_ParserWebFSharp.1417816402.00" t="ExcludeRecursive" />
+    <e p="$USER_HOME$/.cache/JetBrains/Rider2020.3/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.cache/JetBrains/Rider2020.3/resharper-host/local/Transient/Rider/v203/SolutionCaches/_ParserWebFSharp.1417816402.00" t="ExcludeRecursive" />
     <e p="$APPLICATION_CONFIG_DIR$/consoles/db" t="IncludeRecursive" />
     <e p="$APPLICATION_CONFIG_DIR$/extensions" t="IncludeRecursive" />
     <e p="$APPLICATION_CONFIG_DIR$/scratches" t="IncludeRecursive" />
-    <e p="$APPLICATION_PLUGINS_DIR$/bashsupport-pro/builtin" t="IncludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
-      <e p=".git/info/exclude" t="IncludeRecursive" />
       <e p="ParserWebFSharp" t="IncludeRecursive">
         <e p="AbstractParser.fs" t="Include" />
         <e p="AbstractTender.fs" t="Include" />
@@ -39,6 +37,7 @@
         <e p="ParserEstoreSpb.fs" t="Include" />
         <e p="ParserEten.fs" t="Include" />
         <e p="ParserForScience.fs" t="Include" />
+        <e p="ParserForumGd.fs" t="Include" />
         <e p="ParserGmt.fs" t="Include" />
         <e p="ParserGoldenSeed.fs" t="Include" />
         <e p="ParserGosYakut.fs" t="Include" />
@@ -116,6 +115,7 @@
         <e p="TenderEstoreSpb.fs" t="Include" />
         <e p="TenderEten.fs" t="Include" />
         <e p="TenderForScience.fs" t="Include" />
+        <e p="TenderForumGd.fs" t="Include" />
         <e p="TenderGmt.fs" t="Include" />
         <e p="TenderGoldenSeed.fs" t="Include" />
         <e p="TenderGosYakut.fs" t="Include" />
