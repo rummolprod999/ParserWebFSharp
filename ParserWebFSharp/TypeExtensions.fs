@@ -357,6 +357,13 @@ module TypeE =
                 let attr = this.GetAttribute(attr)
                 Success(attr)
             with ex -> Error(exc)
+    
+    type IWebElement with
+        member this.findAttributeOrEmpty (attr: string) =
+            try
+                let attr = this.GetAttribute(attr)
+                Success(attr)
+            with ex -> Success("")
 
     type List<'T> with
         member x.RemoveAllFromList(ls: IEnumerable<_>) =

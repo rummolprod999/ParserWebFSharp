@@ -88,7 +88,38 @@ type ParserForumGd(stn: Settings.T) =
     member private this.ParserTenders (i : IWebElement) =
         let builder = TenderBuilder()
         let res = builder {
-            printfn "%O" i.Text
+            let! hrefT = i.findAttributeOrEmpty("onclick")
+            let href = match hrefT with
+                        | "" | null -> url
+                        | u -> let urlNum = u.Get1FromRegexpOrDefaul(@"tender/list/(\d+)/',")
+                               match urlNum with
+                               | "" -> url
+                               | x -> sprintf "https://tender.forum-gd.ru/tender/list/%s/" x
+            let! purName = i.findElementWithoutException("./td[2]", sprintf "purName not found %s" i.Text)
+            let! purNum = i.findElementWithoutException("./td[1]", sprintf "purNum not found %s" i.Text)
+            let! purName1 = i.findElementWithoutException("./td[4]", sprintf "purName1 not found %s" i.Text)
+            let purName = sprintf "%s %s" purName purName1
+            let! pwName = i.findElementWithoutException("./td[3]", sprintf "pwName not found %s" i.Text)
+            let! delivPlace = i.findElementWithoutException("./td[5]", sprintf "delivPlace not found %s" i.Text)
+            let! period = i.findElementWithoutException("./td[7]", sprintf "period not found %s" i.Text)
+            let! status = i.findElementWithoutException("./td[10]", sprintf "status not found %s" i.Text)
+            let! pubDateT = i.findElementWithoutException("./td[6]", sprintf "pubDateT not found %s" i.Text)
+            let! datePubT = pubDateT.Get1( "(\d{2}\.\d{2}\.\d{4})", sprintf "datePubT not found %s %s " url (pubDateT))
+            let! datePub = datePubT.DateFromString("dd.MM.yyyy", sprintf "datePub not parse %s" pubDateT)
+            let! endDateT = i.findElementWithoutException("./td[8]", sprintf "endDateT not found %s" i.Text)
+            let! dateEndT = endDateT.Get1Optional( "(\d{2}\.\d{2}\.\d{4})")
+            let dateEnd = dateEndT.DateFromStringOrMin("dd.MM.yyyy")
+            let ten =
+                    { Href = href
+                      PurName = purName.Trim()
+                      PurNum = purNum
+                      Status = status
+                      PwName = pwName
+                      Period = period
+                      DelivPlace = delivPlace
+                      DateEnd = dateEnd
+                      DatePub = datePub }
+            listTenders.Add(ten)
             return ""
         }
         match res with
