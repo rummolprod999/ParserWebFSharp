@@ -37,14 +37,15 @@ type ParserBidZaar(stn: Settings.T) =
     
     member private __.ParserSelen(driver : ChromeDriver) =
         let wait = WebDriverWait(driver, timeoutB)
-        driver.Navigate().GoToUrl(url)
+        driver.Navigate().GoToUrl("https://bidzaar.com/auth/account/login")
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
         wait.Until
             (fun dr -> 
-            dr.FindElement(By.XPath("//button[span[contains(., 'ВХОД')]]")).Displayed) |> ignore
+            dr.FindElement(By.XPath("//button[contains(., 'Войти')]")).Displayed) |> ignore
         __.Auth(driver)
         driver.SwitchTo().DefaultContent() |> ignore
+        driver.Navigate().GoToUrl(url)
         Thread.Sleep(3000)
         driver.SwitchTo().DefaultContent() |> ignore
         wait.Until
@@ -77,8 +78,7 @@ type ParserBidZaar(stn: Settings.T) =
     member private __.Auth(driver : ChromeDriver) =
         let wait = WebDriverWait(driver, timeoutB)
         driver.SwitchTo().DefaultContent() |> ignore
-        driver.FindElement(By.XPath("//button[span[contains(., 'ВХОД')]]")).Click()
-        driver.SwitchTo().Frame(0) |> ignore
+        driver.FindElement(By.XPath("//button[contains(., 'Войти')]")).Click()
         wait.Until
             (fun dr -> 
             dr.FindElement(By.XPath("//input[contains(@name, 'Email')]")).Displayed) |> ignore
@@ -105,8 +105,8 @@ type ParserBidZaar(stn: Settings.T) =
             let! purNum = i.findElementWithoutException(".//div[contains(@class, 'number')]", sprintf "purNum not found %s" i.Text)
             let! purName = i.findElementWithoutException(".//div[@class = 'body']/div[@class = 'name']", sprintf "purName not found %s" i.Text)
             let! pwName = i.findElementWithoutException(".//cgn-prs-status[@class = 'status proposal']", sprintf "pwName not found %s" i.Text)
-            let! cusName = i.findElementWithoutException(".//cgn-prs-side-info[@class = 'side-info']//div[@class = 'name']", sprintf "cusName not found %s" i.Text)
-            let! pubDateT = i.findElementWithoutException(".//div[@class='title' and . = 'Опубликована']/following-sibling::div", sprintf "pubDateT not found %s" i.Text)
+            let! cusName = i.findElementWithoutException(".//cgn-company-name", sprintf "cusName not found %s" i.Text)
+            let! pubDateT = i.findElementWithoutException(".//div[@class='title' and . = 'Опубликован']/following-sibling::div", sprintf "pubDateT not found %s" i.Text)
             let! datePub = pubDateT.DateFromString("dd.MM.yyyy • HH:mm", sprintf "datePub not parse %s" pubDateT)
             let! endDateT = i.findElementWithoutException(".//div[@class='title' and . = 'Прием предложений до']/following-sibling::div", sprintf "endDateT not found %s" i.Text)
             let! dateEnd1 = endDateT.Get1("(\d{2}\.\d{2}\.\d{4}.+\d{2}:\d{2})", sprintf "dateEnd1 not found %s" endDateT)
