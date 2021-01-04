@@ -727,4 +727,5 @@ type EnergyBaseRec =
       Nmck: string
       Currency: string
       DatePub: DateTime
+      DateScoring: DateTime
       DateEnd: DateTime}

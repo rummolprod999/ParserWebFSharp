@@ -19,6 +19,7 @@ type TenderEnergyBase(stn: Settings.T, tn: EnergyBaseRec, typeFz: int, etpName: 
         use con = new MySqlConnection(stn.ConStr)
         let res =
                    builder {
+                       printfn "%A" tn
                        return ""
                    }
         match res with
