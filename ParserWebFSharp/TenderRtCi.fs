@@ -196,7 +196,7 @@ type TenderRtCi(stn: Settings.T, tn: RtCiRec, typeFz: int, etpName: string, etpU
                 let insertLotitem = sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum, price = @price, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, okpd2_code = @okpd2_code" stn.Prefix
                 let cmd19 = new MySqlCommand(insertLotitem, con)
                 cmd19.Prepare()
-                cmd19.Parameters.AddWithValue("@id_lot", idLot) |> ignore
+                cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
                 cmd19.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
                 cmd19.Parameters.AddWithValue("@name", lotName) |> ignore
                 cmd19.Parameters.AddWithValue("@sum", nmck) |> ignore

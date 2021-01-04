@@ -133,7 +133,7 @@ type TenderCisLink(stn: Settings.T, tn: CisLinkRec, typeFz: int, etpName: string
                         let insertLotitem = sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum, price = @price, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei" stn.Prefix
                         let cmd19 = new MySqlCommand(insertLotitem, con)
                         cmd19.Prepare()
-                        cmd19.Parameters.AddWithValue("@id_lot", idLot) |> ignore
+                        cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
                         cmd19.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
                         cmd19.Parameters.AddWithValue("@name", tn.PurName) |> ignore
                         cmd19.Parameters.AddWithValue("@sum", "") |> ignore
