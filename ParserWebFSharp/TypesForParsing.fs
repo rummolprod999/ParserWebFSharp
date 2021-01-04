@@ -76,6 +76,7 @@ type Arguments =
     | Vtbconnect
     | Rtci
     | Forumgd
+    | Energybase
 
 type SlavNeft =
     | MEGION
@@ -714,5 +715,16 @@ type ForumGdRec =
       Status: string
       Period: string
       DelivPlace: string
+      DatePub: DateTime
+      DateEnd: DateTime}
+
+type EnergyBaseRec =
+    { Href: string
+      PurName: string
+      PurNum: string
+      PwName: string
+      CusName: string
+      Nmck: string
+      Currency: string
       DatePub: DateTime
       DateEnd: DateTime}

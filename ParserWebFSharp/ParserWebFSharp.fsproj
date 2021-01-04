@@ -162,6 +162,8 @@
     <Compile Include="ParserVtbConnect.fs" />
     <Compile Include="TenderRtCi.fs" />
     <Compile Include="ParserRtCi.fs" />
+    <Compile Include="TenderEnergyBase.fs" />
+    <Compile Include="ParserEnergyBase.fs" />
     <Compile Include="TenderForumGd.fs" />
     <Compile Include="ParserForumGd.fs" />
     <Compile Include="Init.fs" />

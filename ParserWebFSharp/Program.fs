@@ -7,7 +7,7 @@ module Start =
     [<EntryPoint>]
     let main argv =
         let arguments =
-            "irkutskoil, akd, lsr, butb, rossel, neft, slav, aero, stroytorgi, asgor, gosyakut, rostend, chpt, tplus, sibserv, tguru, bidmart, comita, eshoprzd, yarregion, btg, vend, pik, nornic, tenderer, samolet, ariba, beeline, tsm, smart, rtsgen, tj, turk, kg, eten, cislink, petr, mpkz, estorespb, rosagro, neftreg, forscience, volgzmo, rusal, moek, kamaz, uni, ksk, gmt, ymz, unipro, apps, rtscorp, sever, medic, bidzaar, metodholding, bhm, domru, samaragips, goldenseed, kaustik, dme, tele2, osnova, sibgenco, vtbconnect, rtci, forumgd"
+            "irkutskoil, akd, lsr, butb, rossel, neft, slav, aero, stroytorgi, asgor, gosyakut, rostend, chpt, tplus, sibserv, tguru, bidmart, comita, eshoprzd, yarregion, btg, vend, pik, nornic, tenderer, samolet, ariba, beeline, tsm, smart, rtsgen, tj, turk, kg, eten, cislink, petr, mpkz, estorespb, rosagro, neftreg, forscience, volgzmo, rusal, moek, kamaz, uni, ksk, gmt, ymz, unipro, apps, rtscorp, sever, medic, bidzaar, metodholding, bhm, domru, samaragips, goldenseed, kaustik, dme, tele2, osnova, sibgenco, vtbconnect, rtci, forumgd, energybase"
         if argv.Length = 0 then
             printf "Bad arguments, use %s" arguments
             Environment.Exit(1)
@@ -290,6 +290,10 @@ module Start =
         | "forumgd" ->
             let settings = Settings.getSettings (Forumgd)
             let p = Init(settings, Forumgd)
+            p.Parsing()
+        | "energybase" ->
+            let settings = Settings.getSettings (Energybase)
+            let p = Init(settings, Energybase)
             p.Parsing()
         | _ ->
             printf "Bad arguments, use %s" arguments

@@ -9,7 +9,7 @@ type ParserRtCi(stn: Settings.T) =
     inherit Parser()
     let set = stn
 
-    let url ="https://zakupki.rt-ci.ru/procurement/?PAGEN_1="
+    let url ="https://energybase.ru/tender?page="
 
     override __.Parsing() =
             for i in 10..-1..1 do

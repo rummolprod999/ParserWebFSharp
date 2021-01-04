@@ -176,6 +176,8 @@ module Settings =
         let mutable LogPathTendersRtCi  = ""
         let mutable TempPathTendersForumGd = ""
         let mutable LogPathTendersForumGd  = ""
+        let mutable TempPathTendersEnergyBase = ""
+        let mutable LogPathTendersEnergyBase  = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -601,6 +603,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_forumgd" then
                                     LogPathTendersForumGd <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_energybase" then
+                                    TempPathTendersEnergyBase <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_energybase" then
+                                    LogPathTendersEnergyBase <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                                 (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -695,6 +703,7 @@ module Settings =
                 | Vtbconnect -> TempPathTendersVtbConnect
                 | Rtci -> TempPathTendersRtCi
                 | Forumgd -> TempPathTendersForumGd
+                | Energybase -> TempPathTendersEnergyBase
 
             let LogPathTenders =
                 match arg with
@@ -767,6 +776,7 @@ module Settings =
                 | Vtbconnect -> LogPathTendersVtbConnect
                 | Rtci -> LogPathTendersRtCi
                 | Forumgd -> LogPathTendersForumGd
+                | Energybase -> LogPathTendersEnergyBase
 
             { Database = Database
               TempPathTenders = TempPathTenders
