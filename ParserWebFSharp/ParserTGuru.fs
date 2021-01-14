@@ -13,7 +13,7 @@ type ParserTGuru(stn : Settings.T) =
     override this.Parsing() =
         for i in 1..pageC do
             try 
-                let url = sprintf "http://www.tenderguru.ru/kommercheskie_tendery?region=&cat=&page=%d" i
+                let url = sprintf "https://www.tenderguru.ru/kommercheskie_tendery?region=&cat=&page=%d" i
                 this.ParsingPage url
             with ex -> Logging.Log.logger ex
     
@@ -38,8 +38,8 @@ type ParserTGuru(stn : Settings.T) =
             | ur -> ur.GetAttribute("href").Trim()
         match href with
         | "" -> raise <| NullReferenceException(sprintf "Href not found in %s" url)
-        | x when not (x.StartsWith("http://www.tenderguru.ru")) -> 
-            raise <| NullReferenceException(sprintf "Href not contains http://www.tenderguru.ru in %s" url)
+        | x when not (x.StartsWith("https://www.tenderguru.ru/")) -> 
+            raise <| NullReferenceException(sprintf "Href not contains https://www.tenderguru.ru/ in %s" url)
         | _ -> ()
         let PurName =
             match t.QuerySelector("td a.tender_link") with
