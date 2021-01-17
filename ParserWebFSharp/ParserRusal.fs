@@ -1,5 +1,6 @@
 namespace ParserWeb
 
+open HtmlAgilityPack
 open TypeE
 open AngleSharp.Dom
 open AngleSharp.Parser.Html
@@ -9,7 +10,7 @@ type ParserRusal(stn: Settings.T) =
     inherit Parser()
     let set = stn
 
-    let urls = [|"https://rusal.ru/suppliers/selection/zhd-avia-avto-konteynernye-perevozki/"; "hhttps://rusal.ru/suppliers/selection/materialno-tekhnicheskie-resursy/"; "https://rusal.ru/suppliers/selection/perevalka-i-ekspedirovanie-gruzov-v-morskikh-portakh/"; "https://rusal.ru/suppliers/selection/prochie-uslugi/"; "https://rusal.ru/suppliers/selection/stroitelno-montazhnye-i-remontnye-raboty/"; "https://rusal.ru/suppliers/selection/frakht/"|]
+    let urls = [|"https://rusal.ru/suppliers/selection/zhd-avia-avto-konteynernye-perevozki/"; "https://rusal.ru/suppliers/selection/materialno-tekhnicheskie-resursy/"; "https://rusal.ru/suppliers/selection/perevalka-i-ekspedirovanie-gruzov-v-morskikh-portakh/"; "https://rusal.ru/suppliers/selection/prochie-uslugi/"; "https://rusal.ru/suppliers/selection/stroitelno-montazhnye-i-remontnye-raboty/"; "https://rusal.ru/suppliers/selection/frakht/"|]
 
     override __.Parsing() =
         for url in urls do
@@ -37,11 +38,11 @@ type ParserRusal(stn: Settings.T) =
     member private __.ParsingTender (t: IElement) (url: string) =
         let builder = DocumentBuilder()
         let res = builder {
-            let! href = t.GsnAtrDocWithError "td a" "href" <| sprintf "href not found %s %s " url (t.TextContent)
+            let href = t.GetAttribute("data-href-blank")
             let href = sprintf "https://rusal.ru%s" href
-            let! purName = t.GsnDocWithError "td a" <| sprintf "purName not found %s %s " url (t.TextContent)
-            let! purNum = t.GsnDocWithError "td:nth-of-type(2)" <| sprintf "purNum not found %s %s " url (t.TextContent)
-            let! datePubT = t.GsnDocWithError "td:nth-of-type(1)" <| sprintf "datePubT not found %s %s " url (t.TextContent)
+            let! purName = t.GsnDocWithError "td:nth-of-type(4)" <| sprintf "purName not found %s %s " url (t.TextContent)
+            let! purNum = t.GsnDocWithError "td:nth-of-type(1)" <| sprintf "purNum not found %s %s " url (t.TextContent)
+            let! datePubT = t.GsnDocWithError "td:nth-of-type(2)" <| sprintf "datePubT not found %s %s " url (t.TextContent)
             let! datePub = datePubT.DateFromStringDoc ("dd.MM.yyyy", sprintf "datePub not found %s %s " href datePubT)
             let! endDateT = t.GsnDocWithError "td:nth-of-type(3)" <| sprintf "endDateT not found %s %s " url (t.TextContent)
             let! dateEnd = endDateT.DateFromStringDoc ("dd.MM.yyyy", sprintf "dateEnd not found %s %s " href endDateT)
