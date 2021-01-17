@@ -169,7 +169,7 @@ type TenderButb(stn : Settings.T, purNum : string, datePub : DateTime, endDate :
             let documents =
                 driver.FindElements
                     (By.XPath
-                         ("//table[contains(., 'ДОКУМЕНТЫ')]/following-sibling::table[contains(., 'Тип документа')]/tbody/tr"))
+                         ("//table[contains(., 'ДОКУМЕНТЫ')]/following-sibling::div/table[contains(., 'Тип документа')]/tbody/tr"))
             documents |> Seq.iter (this.ParsingDocs con !idTender)
             let cusInn =
                 this.GetDefaultFromNullS 
