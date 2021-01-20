@@ -19,7 +19,7 @@ type TenderEtpRt(stn: Settings.T, tn: EtpRtRec, typeFz: int, etpName: string, et
         use con = new MySqlConnection(stn.ConStr)
         let res =
                    builder {
-                       
+                       printfn "%A" tn
                        return ""
                    }
         match res with

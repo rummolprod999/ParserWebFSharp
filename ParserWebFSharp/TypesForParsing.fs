@@ -733,5 +733,4 @@ type EnergyBaseRec =
     
 type EtpRtRec =
     { Href: string
-      PurName: string
       PurNum: string}

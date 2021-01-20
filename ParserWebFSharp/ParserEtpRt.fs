@@ -38,6 +38,13 @@ type ParserEtpRt(stn: Settings.T) =
     member private __.ParsingTender (t: HtmlNode) (_: string) =
         let builder = DocumentBuilder()
         let res = builder {
+            let! hrefT = t.GsnAtrDocWithError "./a" <| "href" <| sprintf "hrefT not found %s %s " url (t.InnerText)
+            let href = sprintf "https://etp-rt.ru%s" hrefT
+            let! purNum = href.Get1Doc "/(\d+)$" <| sprintf "purNum not found %s %s " href (t.InnerText)
+            let tend = {  Href = href
+                          PurNum = purNum}          
+            let T = TenderEtpRt(set, tend, 303, "Электронная торговая площадка etp-rt.ru", "https://etp-rt.ru/")
+            T.Parsing()
             return ""
         }
         match res with
