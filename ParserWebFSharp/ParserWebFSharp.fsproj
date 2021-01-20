@@ -166,6 +166,8 @@
     <Compile Include="ParserEnergyBase.fs" />
     <Compile Include="TenderForumGd.fs" />
     <Compile Include="ParserForumGd.fs" />
+    <Compile Include="TenderEtpRt.fs" />
+    <Compile Include="ParserEtpRt.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

@@ -77,6 +77,7 @@ type Arguments =
     | Rtci
     | Forumgd
     | Energybase
+    | EtpRt
 
 type SlavNeft =
     | MEGION
@@ -729,3 +730,8 @@ type EnergyBaseRec =
       DatePub: DateTime
       DateScoring: DateTime
       DateEnd: DateTime}
+    
+type EtpRtRec =
+    { Href: string
+      PurName: string
+      PurNum: string}

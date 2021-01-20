@@ -37,6 +37,7 @@
         <e p="ParserEshopRzd.fs" t="Include" />
         <e p="ParserEstoreSpb.fs" t="Include" />
         <e p="ParserEten.fs" t="Include" />
+        <e p="ParserEtpRt.fs" t="Include" />
         <e p="ParserForScience.fs" t="Include" />
         <e p="ParserForumGd.fs" t="Include" />
         <e p="ParserGmt.fs" t="Include" />
@@ -116,6 +117,7 @@
         <e p="TenderEshopRzd.fs" t="Include" />
         <e p="TenderEstoreSpb.fs" t="Include" />
         <e p="TenderEten.fs" t="Include" />
+        <e p="TenderEtpRt.fs" t="Include" />
         <e p="TenderForScience.fs" t="Include" />
         <e p="TenderForumGd.fs" t="Include" />
         <e p="TenderGmt.fs" t="Include" />

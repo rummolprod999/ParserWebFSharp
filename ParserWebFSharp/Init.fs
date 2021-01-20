@@ -97,6 +97,7 @@ type Init(s: Settings.T, arg: Arguments) =
         | Rtci -> this.ParsingRtCi()
         | Forumgd -> this.ParsingForumGd()
         | Energybase -> this.ParsingEnergyBase()
+        | EtpRt -> this.ParsingEtpRt()
 
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -757,4 +758,13 @@ type Init(s: Settings.T, arg: Arguments) =
             Logging.Log.logger "Конец парсинга"
             Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderEnergyBase.tenderCount)
             Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderEnergyBase.tenderUpCount)
+    
+    member private this.ParsingEtpRt() =
+            Logging.Log.logger "Начало парсинга"
+            try
+                this.GetParser(ParserEtpRt(s))
+            with ex -> Logging.Log.logger ex
+            Logging.Log.logger "Конец парсинга"
+            Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderEtpRt.tenderCount)
+            Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderEtpRt.tenderUpCount)
     member private this.GetParser(p: Parser) = p.Parsing()
