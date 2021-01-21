@@ -148,7 +148,10 @@ type TenderEtpRt(stn: Settings.T, tn: EtpRtRec, typeFz: int, etpName: string, et
                                 cmd14.Parameters.AddWithValue("@inn", "") |> ignore
                                 cmd14.ExecuteNonQuery() |> ignore
                                 idCustomer := int cmd14.LastInsertedId
-                        this.GetLots(con, !idTender, !idCustomer, htmlDoc)
+                        this.GetLots(con, !idTender, !idCustomer, htmlDoc, purName)
+                        this.GetAttachments(con, !idTender, htmlDoc)
+                        this.AddVerNumber con tn.PurNum stn typeFz
+                        this.TenderKwords con (!idTender) stn
                         return ""
                    }
         match res with
@@ -156,8 +159,113 @@ type TenderEtpRt(stn: Settings.T, tn: EtpRtRec, typeFz: int, etpName: string, et
                         | Err e when e = "" -> ()
                         | Err r -> Logging.Log.logger r
     
-    member private this.GetLots(con: MySqlConnection, idTender: int, idCustomer, doc: HtmlDocument) =
-        
+    member private this.GetAttachments(con: MySqlConnection, idTender: int, doc: HtmlDocument) =
+        let nav = (doc.CreateNavigator()) :?> HtmlNodeNavigator
+        let specUrl = nav.GsnAtr "//a[@id = 'docs']" "href"
+        if specUrl <> "" then
+            let Page = Download.DownloadString <| sprintf "https://etp-rt.ru%s" specUrl
+            if Page = "" || Page = null then failwith <| sprintf "cannot download documentation %s" tn.Href
+            let htmlDoc = HtmlDocument()
+            htmlDoc.LoadHtml(Page)
+            let nav = (htmlDoc.CreateNavigator()) :?> HtmlNodeNavigator
+            let docs = htmlDoc.DocumentNode.SelectNodes("//table[contains(@class, 'lot_docs')]//a")
+            if docs <> null then
+                for d in docs do
+                    let docName = d.Gsn(".")
+                    let mutable docUrl = d.GsnAtr "." "href"
+                    if not (docUrl.StartsWith("http://zakupki.gov.ru")) then
+                        docUrl <- sprintf "https://etp-rt.ru%s" docUrl
+                    if docUrl <> "" then
+                        let addAttach = sprintf "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url" stn.Prefix
+                        let cmd5 = new MySqlCommand(addAttach, con)
+                        cmd5.Parameters.AddWithValue("@id_tender", idTender) |> ignore
+                        cmd5.Parameters.AddWithValue("@file_name", docName) |> ignore
+                        cmd5.Parameters.AddWithValue("@url", docUrl) |> ignore
+                        cmd5.ExecuteNonQuery() |> ignore
+                    ()
+        ()
+    member private this.GetLots(con: MySqlConnection, idTender: int, idCustomer, doc: HtmlDocument, purName: String) =
+        let lotNum = ref 1
+        let nav = (doc.CreateNavigator()) :?> HtmlNodeNavigator
+        let nmckT = InlineHtmlNavigator nav "//div[contains(@class, 'start_price price_list')]//div[@class = 'rouble']"
+        let nmck = nmckT.GetPriceFromString()
+        let currency = "Рублей"
+        let idLot = ref 0
+        let insertLot = sprintf "INSERT INTO %slot SET id_tender = @id_tender, lot_number = @lot_number, max_price = @max_price, currency = @currency, lot_name = @lot_name" stn.Prefix
+        let cmd12 = new MySqlCommand(insertLot, con)
+        cmd12.Parameters.AddWithValue("@id_tender", idTender) |> ignore
+        cmd12.Parameters.AddWithValue("@lot_number", !lotNum) |> ignore
+        cmd12.Parameters.AddWithValue("@max_price", nmck) |> ignore
+        cmd12.Parameters.AddWithValue("@currency", currency) |> ignore
+        cmd12.Parameters.AddWithValue("@lot_name", purName) |> ignore
+        cmd12.ExecuteNonQuery() |> ignore
+        idLot := int cmd12.LastInsertedId
+        let specUrl = nav.GsnAtr "//a[@id = 'specs']" "href"
+        if specUrl <> "" then
+            let Page = Download.DownloadString <| sprintf "https://etp-rt.ru%s" specUrl
+            if Page = "" || Page = null then failwith <| sprintf "cannot download specification %s" tn.Href
+            let htmlDoc = HtmlDocument()
+            htmlDoc.LoadHtml(Page)
+            let nav = (htmlDoc.CreateNavigator()) :?> HtmlNodeNavigator
+            let lots = htmlDoc.DocumentNode.SelectNodes("//table[contains(@class, 'table-condensed')]/tbody//tr[not(@class)]")
+            if lots <> null then
+                for l in lots do
+                    let lotName = l.Gsn("./td[2]")
+                    let quantity = l.Gsn("./td[4]")
+                    let quantity = quantity.HtmlDecode()
+                    let okei = l.Gsn("./td[5]")
+                    let price = l.Gsn("./td[6]")
+                    let price = price.HtmlDecode()
+                    let price = price.GetPriceFromString()
+                    let sum = l.Gsn("./td[7]")
+                    let sum = sum.HtmlDecode()
+                    let sum = sum.GetPriceFromString()
+                    let insertLotitem = sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum, price = @price, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, okpd2_code = @okpd2_code" stn.Prefix
+                    let cmd19 = new MySqlCommand(insertLotitem, con)
+                    cmd19.Prepare()
+                    cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+                    cmd19.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+                    cmd19.Parameters.AddWithValue("@name", lotName) |> ignore
+                    cmd19.Parameters.AddWithValue("@sum", sum) |> ignore
+                    cmd19.Parameters.AddWithValue("@price", price) |> ignore
+                    cmd19.Parameters.AddWithValue("@quantity_value", quantity) |> ignore
+                    cmd19.Parameters.AddWithValue("@customer_quantity_value", quantity) |> ignore
+                    cmd19.Parameters.AddWithValue("@okei", okei) |> ignore
+                    cmd19.Parameters.AddWithValue("@okpd2_code", "") |> ignore
+                    cmd19.ExecuteNonQuery() |> ignore
+                    let delivTerm1 = l.Gsn("./td[9]")
+                    let delivTerm2 = l.Gsn("./td[10]")
+                    let delivTerm = sprintf "%s\n%s" delivTerm1 delivTerm2
+                    if delivTerm1 <> "" || delivTerm2 <> "" then
+                        let insertCustomerRequirement =
+                            sprintf
+                                "INSERT INTO %scustomer_requirement SET id_lot = @id_lot, id_customer = @id_customer, delivery_place = @delivery_place, application_guarantee_amount = @application_guarantee_amount, contract_guarantee_amount = @contract_guarantee_amount, delivery_term = @delivery_term"
+                                stn.Prefix
+                        let cmd16 = new MySqlCommand(insertCustomerRequirement, con)
+                        cmd16.Prepare()
+                        cmd16.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+                        cmd16.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+                        cmd16.Parameters.AddWithValue("@delivery_place", "") |> ignore
+                        cmd16.Parameters.AddWithValue("@application_guarantee_amount", "") |> ignore
+                        cmd16.Parameters.AddWithValue("@contract_guarantee_amount", "") |> ignore
+                        cmd16.Parameters.AddWithValue("@delivery_term", delivTerm) |> ignore
+                        cmd16.ExecuteNonQuery() |> ignore
+                    ()
+            ()
+        else
+                let insertLotitem = sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum, price = @price, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, okpd2_code = @okpd2_code" stn.Prefix
+                let cmd19 = new MySqlCommand(insertLotitem, con)
+                cmd19.Prepare()
+                cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+                cmd19.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+                cmd19.Parameters.AddWithValue("@name", purName) |> ignore
+                cmd19.Parameters.AddWithValue("@sum", nmck) |> ignore
+                cmd19.Parameters.AddWithValue("@price", "") |> ignore
+                cmd19.Parameters.AddWithValue("@quantity_value", "") |> ignore
+                cmd19.Parameters.AddWithValue("@customer_quantity_value", "") |> ignore
+                cmd19.Parameters.AddWithValue("@okei", "") |> ignore
+                cmd19.Parameters.AddWithValue("@okpd2_code", "") |> ignore
+                cmd19.ExecuteNonQuery() |> ignore
         ()
     member private this.SetCancelStatus(con: MySqlConnection, dateUpd: DateTime) =
         let mutable cancelStatus = 0
