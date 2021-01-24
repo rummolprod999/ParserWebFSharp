@@ -12,7 +12,7 @@ type ParserEnergyBase(stn: Settings.T) =
     let url ="https://energybase.ru/tender?page="
 
     override __.Parsing() =
-            for i in 10..-1..1 do
+            for i in 40..-1..1 do
             try
                 __.ParsingPage(sprintf "%s%d" url i)
             with ex -> Logging.Log.logger ex
