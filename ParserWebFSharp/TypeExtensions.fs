@@ -80,10 +80,20 @@ module TypeE =
             | Tools.RegexMatch2 regex (gr1, gr2) -> Some(gr1, gr2)
             | _ -> None
         
+        member this.Get4FromRegexp(regex: string): (string * string * string * string) option =
+            match this with
+            | Tools.RegexMatch4 regex (gr1, gr2, gr3, gr4) -> Some(gr1, gr2, gr3, gr4)
+            | _ -> None
+        
         member this.Get2ListRegexp(regex: string) =
             match this.Get2FromRegexp(regex) with
             | Some(gr1, gr2) -> [gr1; gr2]
             | _ -> [""; ""]
+        
+        member this.Get4ListRegexp(regex: string) =
+            match this.Get4FromRegexp(regex) with
+            | Some(gr1, gr2, gr3, gr4) -> [gr1; gr2; gr3; gr4]
+            | _ -> [""; ""; ""; ""]
         
         member this.Get2FromRegexpOptional(regex: string, exc: string) =
             match this with

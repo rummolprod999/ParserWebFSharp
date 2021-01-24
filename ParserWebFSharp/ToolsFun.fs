@@ -19,6 +19,14 @@ module Tools =
             | fst :: snd :: [] -> Some(fst, snd)
             | _ -> None
         else None
+        
+    let (|RegexMatch4|_|) (pattern : string) (input : string) =
+        let result = Regex.Match(input, pattern)
+        if result.Success then
+            match (List.tail [ for g in result.Groups -> g.Value ]) with
+            | fst :: snd :: thr :: [ four ] -> Some(fst, snd, thr, four)
+            | _ -> None
+        else None
 
     let (|RegexMatch1|_|) (pattern : string) (input : string) =
         let result = Regex.Match(input, pattern)

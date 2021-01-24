@@ -190,7 +190,7 @@ type TenderPetr(stn: Settings.T, tn: EshopRzdRec, typeFz: int, etpName: string, 
             cmd12.Parameters.AddWithValue("@currency", tn.Currency) |> ignore
             cmd12.ExecuteNonQuery() |> ignore
             idLot := int cmd12.LastInsertedId
-            let documents = driver.findElementsWithoutException ("//tr[@ng-repeat='file in purchase.attachment']/td/a")
+            (*let documents = driver.findElementsWithoutException ("//tr[@ng-repeat='file in purchase.attachment']/td/a")
             for doc in documents do
                 let docName = doc.Text.RegexCutWhitespace()
                 match docName with
@@ -205,16 +205,18 @@ type TenderPetr(stn: Settings.T, tn: EshopRzdRec, typeFz: int, etpName: string, 
                     cmd5.Parameters.AddWithValue("@id_tender", !idTender) |> ignore
                     cmd5.Parameters.AddWithValue("@file_name", x) |> ignore
                     cmd5.Parameters.AddWithValue("@url", href) |> ignore
-                    cmd5.ExecuteNonQuery() |> ignore
+                    cmd5.ExecuteNonQuery() |> ignore*)
             let purObjects = driver.findElementsWithoutException ("//div[@class = 'panel ng-scope panel-default']")
             for po in purObjects do
                 let nameT = po.findElementWithoutException (".//div[i[contains(., 'ОКПД2:')]]")
                 let okpd2T = po.findElementWithoutException (".//div[i[contains(., 'ОКПД2:')]]/i")
                 let name = nameT.Replace(okpd2T, "").Trim()
                 let okpd2 = okpd2T.Replace("ОКПД2:", "").Trim()
+                let sumOr = po.findElementWithoutException (".//span[contains(@class, 'pull-right ')]")
+                let listSum = sumOr.Get4ListRegexp("^([\d. ]+)\s+₽\s+X\s+(\d+)\s(.+)\s=\s+([\d. ]+)\s+₽")
                 let insertLotitem =
                     sprintf
-                        "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, okpd2_code = @okpd2_code"
+                        "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, okpd2_code = @okpd2_code, sum = @sum, price = @price, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei"
                         stn.Prefix
                 let cmd19 = new MySqlCommand(insertLotitem, con)
                 cmd19.Prepare()
@@ -222,6 +224,11 @@ type TenderPetr(stn: Settings.T, tn: EshopRzdRec, typeFz: int, etpName: string, 
                 cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
                 cmd19.Parameters.AddWithValue("@name", name) |> ignore
                 cmd19.Parameters.AddWithValue("@okpd2_code", okpd2) |> ignore
+                cmd19.Parameters.AddWithValue("@sum", listSum.[3].RegexDeleteWhitespace()) |> ignore
+                cmd19.Parameters.AddWithValue("@price", listSum.[0].RegexDeleteWhitespace()) |> ignore
+                cmd19.Parameters.AddWithValue("@quantity_value", listSum.[1].RegexDeleteWhitespace()) |> ignore
+                cmd19.Parameters.AddWithValue("@customer_quantity_value", listSum.[1].RegexDeleteWhitespace()) |> ignore
+                cmd19.Parameters.AddWithValue("@okei", listSum.[2]) |> ignore
                 cmd19.ExecuteNonQuery() |> ignore
                 ()
             let delivPlace =

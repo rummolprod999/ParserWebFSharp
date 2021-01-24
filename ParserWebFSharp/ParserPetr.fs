@@ -103,11 +103,7 @@ type ParserPetr(stn: Settings.T) =
                                     (".//small[@class = 'calendarSmall ng-binding']", "datePubT not found")
                 let! datePubR = datePubT.Get1(@"(\d{2}\.\d{2}\.\d{4})", sprintf "datePubR not found %s" datePubT)
                 let! datePub = datePubR.DateFromString("dd.MM.yyyy", "datePub not found")
-                let! dateEndT = t.findElementWithoutException
-                                    (".//div[span[contains(., 'Подача оферт до')]]", "dateEndT not found")
-                let! dateEndR = dateEndT.RegexCutWhitespace()
-                                        .Get1(@"(\d{2}\.\d{2}\.\d{4}\s+\d{2}:\d{2})", sprintf "dateEndR not found %s" dateEndT)
-                let! dateEnd = dateEndR.DateFromString("dd.MM.yyyy HH:mm", "dateEnd not found")
+                let dateEnd = DateTime.MinValue
                 let! regionT = t.findElementWithoutExceptionOptional (".//span[contains(@class, 'glyphicon-map-marker')]/parent::div", "")
                 let region = regionT.RegexCutWhitespace()
                 let ten =
