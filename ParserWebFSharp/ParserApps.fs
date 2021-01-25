@@ -9,7 +9,7 @@ type ParserApps(stn: Settings.T) =
     inherit Parser()
     let set = stn
 
-    let urls = [|"https://apps.chtpz.ru/tender/Tender.aspx/Index"|]
+    let urls = [|"https://apps.chelpipegroup.com/tender/Tender.aspx/Index"|]
 
     override __.Parsing() =
         for url in urls do
@@ -39,7 +39,7 @@ type ParserApps(stn: Settings.T) =
         let res = builder {
             let purName = t.TextContent
             let href = t.GetAttribute("href")
-            let href = sprintf "https://apps.chtpz.ru%s" href
+            let href = sprintf "https://apps.chelpipegroup.com%s" href
             let! purNum = href.Get1Doc "/(\d+)$" <| sprintf "purNum not found %s %s " href (t.TextContent)
             let tend = {  AppsRec.Href = href
                           PurName = purName
