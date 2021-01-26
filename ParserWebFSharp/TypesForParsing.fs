@@ -615,7 +615,8 @@ type BhmRec =
       PersonEmail: string
       DateEnd: DateTime
       DatePub: DateTime
-      Products: List<BhmProductRec>}
+      Products: List<BhmProductRec>
+      DocList: List<DocSibServ>}
 type DomRuRec =
     { Href: string
       PurName: string

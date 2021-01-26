@@ -134,6 +134,7 @@ type TenderBhm(stn: Settings.T, tn: BhmRec, typeFz: int, etpName: string, etpUrl
                                 cmd14.Parameters.AddWithValue("@inn", inn) |> ignore
                                 cmd14.ExecuteNonQuery() |> ignore
                                 idCustomer := int cmd14.LastInsertedId
+                        this.GetAtt(con, !idTender)
                         this.GetPos(con, !idLot, !idCustomer)
                         this.AddVerNumber con tn.PurNum stn typeFz
                         this.TenderKwords con (!idTender) stn
@@ -144,6 +145,19 @@ type TenderBhm(stn: Settings.T, tn: BhmRec, typeFz: int, etpName: string, etpUrl
                 | Err e when e = "" -> ()
                 | Err r -> Logging.Log.logger r
     
+    member private this.GetAtt(con: MySqlConnection, idTender: int) =
+        for d in tn.DocList do
+                            let addAttach =
+                                sprintf 
+                                    "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url, description = @description" 
+                                    stn.Prefix
+                            let cmd5 = new MySqlCommand(addAttach, con)
+                            cmd5.Parameters.AddWithValue("@id_tender", idTender) |> ignore
+                            cmd5.Parameters.AddWithValue("@file_name", d.name) |> ignore
+                            cmd5.Parameters.AddWithValue("@url", d.url) |> ignore
+                            cmd5.Parameters.AddWithValue("@description", "") |> ignore
+                            cmd5.ExecuteNonQuery() |> ignore
+                            
     member private this.GetPos(con: MySqlConnection, idLot: int, idCustomer: int) =
         for p in tn.Products do
             let insertLotitem = sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum, price = @price, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, okpd2_code = @okpd2_code" stn.Prefix
@@ -157,6 +171,20 @@ type TenderBhm(stn: Settings.T, tn: BhmRec, typeFz: int, etpName: string, etpUrl
             cmd19.Parameters.AddWithValue("@quantity_value", p.Quantity) |> ignore
             cmd19.Parameters.AddWithValue("@customer_quantity_value", p.Quantity) |> ignore
             cmd19.Parameters.AddWithValue("@okei", p.Okei) |> ignore
+            cmd19.Parameters.AddWithValue("@okpd2_code", "") |> ignore
+            cmd19.ExecuteNonQuery() |> ignore
+        if tn.Products.Count < 1 then
+            let insertLotitem = sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum, price = @price, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, okpd2_code = @okpd2_code" stn.Prefix
+            let cmd19 = new MySqlCommand(insertLotitem, con)
+            cmd19.Prepare()
+            cmd19.Parameters.AddWithValue("@id_lot", idLot) |> ignore
+            cmd19.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+            cmd19.Parameters.AddWithValue("@name", tn.PurName) |> ignore
+            cmd19.Parameters.AddWithValue("@sum", "") |> ignore
+            cmd19.Parameters.AddWithValue("@price", "") |> ignore
+            cmd19.Parameters.AddWithValue("@quantity_value", "") |> ignore
+            cmd19.Parameters.AddWithValue("@customer_quantity_value", "") |> ignore
+            cmd19.Parameters.AddWithValue("@okei", "") |> ignore
             cmd19.Parameters.AddWithValue("@okpd2_code", "") |> ignore
             cmd19.ExecuteNonQuery() |> ignore
         ()

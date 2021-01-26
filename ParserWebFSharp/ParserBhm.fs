@@ -12,7 +12,7 @@ type ParserBhm(stn: Settings.T) =
     inherit Parser()
     let set = stn
 
-    let urls = [|"http://www.oaobhm.ru/tender/"|]
+    let urls = [|"https://bhm.ru/tender/"; "https://bhm.ru/tender/?PAGEN_1=2"; "https://bhm.ru/tender/?PAGEN_1=3"|]
 
     override __.Parsing() =
         for url in urls do
@@ -47,8 +47,8 @@ type ParserBhm(stn: Settings.T) =
             let! datePubT = t.GsnDocWithError "div.tenders__item-topbar > div.tenders__item-date" <| sprintf "datePubT not found %s %s " url (t.TextContent)
             let datePub = datePubT.DateFromStringOrMin("dd.MM.yyyy")
             let! dateEndT = t.GsnDocWithError "div.tenders__item-deadline" <| sprintf "dateEndT not found %s %s " url (t.TextContent)
-            let dateEnd = if dateEndT.Contains("рабочих дня с даты размещения запроса") then
-                                let dateEndP = dateEndT.Get1FromRegexpOrDefaul("(\d+) рабочих дня с даты размещения запроса")
+            let dateEnd = if dateEndT.Contains("рабочих дня с даты размещения") then
+                                let dateEndP = dateEndT.Get1FromRegexpOrDefaul("(\d+) рабочих дня с даты размещения")
                                 datePub.AddDays(float (Int32.Parse(dateEndP)))
                           else
                                 let dateEndP = dateEndT.Get1FromRegexpOrDefaul("(\d{2}\.\d{2}\.\d{4})")
@@ -58,6 +58,8 @@ type ParserBhm(stn: Settings.T) =
             let! personEmail = t.GsnDoc "div.tenders__item-address > div:nth-last-of-type(1)"
             let tens = t.QuerySelectorAll("div.tenders__item-text table tbody tr").ToList().Skip(1)
             let listP = __.CreateProducts(tens)
+            let attachments = t.QuerySelectorAll("div.tenders__item-text a").ToList()
+            let listAtt = __.CreateAttachments(attachments)
             let ten =
                 { Href=href
                   PurName=purName
@@ -67,8 +69,9 @@ type ParserBhm(stn: Settings.T) =
                   PersonEmail=personEmail
                   DateEnd=dateEnd
                   DatePub=datePub
-                  Products=listP}
-            let T = TenderBhm(set, ten, 275, "АО «Борхиммаш»", "http://www.oaobhm.ru/")
+                  Products=listP
+                  DocList=listAtt}
+            let T = TenderBhm(set, ten, 275, "АО «Борхиммаш»", "https://bhm.ru/")
             T.Parsing()
             return ""
         }
@@ -85,14 +88,24 @@ type ParserBhm(stn: Settings.T) =
             let mutable quant = ""
             let mutable pName = ""
             let mutable okei = ""
-            let pNameT = p.QuerySelector("td:nth-child(2) > p")
+            let pNameT = p.QuerySelector("td:nth-child(1)")
             if pNameT <> null then pName <- pNameT.TextContent.Trim()
-            let okeiT = p.QuerySelector("td:nth-child(5) > p")
+            let okeiT = p.QuerySelector("td:nth-child(3)")
             if okeiT <> null then okei <- okeiT.TextContent.Trim()
-            let quantT = p.QuerySelector("td:nth-child(6) > p")
+            let quantT = p.QuerySelector("td:nth-child(4)")
             if quantT <> null then quant <- quantT.TextContent.Trim()
             let prod = {Name=pName
                         Okei=okei
                         Quantity=quant}
             listP.Add(prod)
         listP
+    
+    member private __.CreateAttachments (elements) =
+        let listDoc = List<DocSibServ>()
+        for p in elements do
+            let attName = p.TextContent
+            let href = p.GetAttribute("href")
+            let href = sprintf "https://bhm.ru%s" href
+            listDoc.Add({ name = attName
+                          url = href })
+        listDoc
