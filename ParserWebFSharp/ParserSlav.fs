@@ -16,7 +16,7 @@ type ParserSlav(stn : Settings.T) =
             this.ParserMegion url
         with ex -> Logging.Log.logger ex
         try 
-            let url = "http://www.refinery.yaroslavl.su/procurement/tenders/active/"
+            let url = "http://www.refinery.yaroslavl.su/procurement/tenders/active/filter/year-is-2021/apply/"
             this.ParserYanos url
         with ex -> Logging.Log.logger ex
         try 
@@ -148,10 +148,7 @@ type ParserSlav(stn : Settings.T) =
         
         let PurName = NameDoc
         
-        let purNum =
-            match PurName.Get1FromRegexp @"(\d{3}-\D{2}-\d{4})" with
-            | Some x -> x
-            | None -> raise <| NullReferenceException(sprintf "purNum not found in %s %s" url PurName)
+        let purNum = Tools.createMD5 PurName
         
         let CusName =
             match t.QuerySelector("div:contains('Заказчик тендера:') + div") with
@@ -260,7 +257,7 @@ type ParserSlav(stn : Settings.T) =
         let purNum =
             match PurName.Get1FromRegexp @"ПДО №?\s*(.+)" with
             | Some x -> x
-            | None -> raise <| NullReferenceException(sprintf "purNum not found in %s %s" url PurName)
+            | None -> Tools.createMD5 PurName
         
         let CusName =
             match t.QuerySelector("td:nth-child(2)") with
