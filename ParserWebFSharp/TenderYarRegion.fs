@@ -97,7 +97,7 @@ type TenderYarRegion(stn : Settings.T, tn : YarRegionRec, typeFz : int, etpName 
                             stn.Prefix
                     let contactPerson =
                         driver.findElementWithoutException 
-                            ("//div[. = 'Ответственное должностное лицо']/following-sibling::divn")
+                            ("//div[. = 'Ответственное должностное лицо']/following-sibling::div")
                     let postAddress = ""
                     let factAddress = ""
                     let phone = ""
