@@ -255,14 +255,7 @@ type EshopRzdRec =
       RegionName: string }
 
 type YarRegionRec =
-    { Href: string
-      PurNum: string
-      PurName: string
-      CusName: string
-      DatePub: DateTime
-      mutable DateEnd: DateTime
-      Status: string
-      Nmck: string }
+    { EmptyField: string }
 
 type BtgRec =
     { Href: string
