@@ -12,7 +12,7 @@ type ParserYarRegion(stn : Settings.T) =
     inherit Parser()
     let set = stn
     let timeoutB = TimeSpan.FromSeconds(60.)
-    let url = "http://zakupki.yarregion.ru/purchasesoflowvolume-asp/"
+    let url = "https://zakupki.yarregion.ru/purchasesoflowvolume-asp/"
     let listTenders = List<YarRegionRec>()
     let options = ChromeOptions()
     
