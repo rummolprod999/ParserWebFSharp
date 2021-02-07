@@ -78,6 +78,7 @@ type Arguments =
     | Forumgd
     | Energybase
     | EtpRt
+    | Comitazmo
 
 type SlavNeft =
     | MEGION

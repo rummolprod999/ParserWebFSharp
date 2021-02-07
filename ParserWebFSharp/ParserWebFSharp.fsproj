@@ -168,6 +168,8 @@
     <Compile Include="ParserForumGd.fs" />
     <Compile Include="TenderEtpRt.fs" />
     <Compile Include="ParserEtpRt.fs" />
+    <Compile Include="TenderComitaZmo.fs" />
+    <Compile Include="ParserComitaZmo.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

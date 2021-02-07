@@ -31,6 +31,7 @@
         <e p="ParserChPt.fs" t="Include" />
         <e p="ParserCisLink.fs" t="Include" />
         <e p="ParserComita.fs" t="Include" />
+        <e p="ParserComitaZmo.fs" t="Include" />
         <e p="ParserDme.fs" t="Include" />
         <e p="ParserDomRu.fs" t="Include" />
         <e p="ParserEnergyBase.fs" t="Include" />
@@ -111,6 +112,7 @@
         <e p="TenderChPt.fs" t="Include" />
         <e p="TenderCisLink.fs" t="Include" />
         <e p="TenderComita.fs" t="Include" />
+        <e p="TenderComitaZmo.fs" t="Include" />
         <e p="TenderDme.fs" t="Include" />
         <e p="TenderDomRu.fs" t="Include" />
         <e p="TenderEnergyBase.fs" t="Include" />

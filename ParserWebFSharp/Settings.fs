@@ -180,6 +180,8 @@ module Settings =
         let mutable LogPathTendersEnergyBase  = ""
         let mutable TempPathTendersEtpRt = ""
         let mutable LogPathTendersEtpRt  = ""
+        let mutable TempPathTendersComitaZmo = ""
+        let mutable LogPathTendersComitaZmo = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -617,6 +619,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_etprt" then
                                     LogPathTendersEtpRt <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                                  (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_comitazmo" then
+                    TempPathTendersComitaZmo <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                 (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_comitazmo" then
+                    LogPathTendersComitaZmo <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -713,6 +721,7 @@ module Settings =
                 | Forumgd -> TempPathTendersForumGd
                 | Energybase -> TempPathTendersEnergyBase
                 | EtpRt -> TempPathTendersEtpRt
+                | Comitazmo -> TempPathTendersComitaZmo
 
             let LogPathTenders =
                 match arg with
@@ -787,6 +796,7 @@ module Settings =
                 | Forumgd -> LogPathTendersForumGd
                 | Energybase -> LogPathTendersEnergyBase
                 | EtpRt -> LogPathTendersEtpRt
+                | Comitazmo -> LogPathTendersComitaZmo
 
             { Database = Database
               TempPathTenders = TempPathTenders
