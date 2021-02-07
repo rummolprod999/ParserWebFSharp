@@ -188,7 +188,7 @@ type TenderComita(stn : Settings.T, tn : ComitaRec, typeFz : int, etpName : stri
                     cmd14.Parameters.AddWithValue("@inn", inn) |> ignore
                     cmd14.ExecuteNonQuery() |> ignore
                     idCustomer := int cmd14.LastInsertedId
-            let lots = driver.findElementsWithoutException ("//tbody[@ng-repeat = 'data in dataTableLots']/tr")
+            let lots = driver.findElementsWithoutException ("//tbody[contains(@ng-repeat , 'data in dataTableLots')]/tr[td[@id]]")
             let LotNum = ref 1
             for lot in lots do
                 let LotName =
@@ -196,10 +196,9 @@ type TenderComita(stn : Settings.T, tn : ComitaRec, typeFz : int, etpName : stri
                     | "" -> ""
                     | x -> x.Trim()
                 
-                let Nmck =
-                    match lot.findElementWithoutException ("./td[contains(@class, 'price')]/span/span[1]") with
-                    | "" -> ""
-                    | x -> x.Replace(",", ".").RegexDeleteWhitespace().Trim()
+                let Nmck = match lot.findElementWithoutException (".//td[contains(@class, 'price')]/span/span[1]") with
+                           | "" -> ""
+                           | x -> x.GetPriceFromStringKz().Replace("RUB", "").Trim()
                 
                 let idLot = ref 0
                 let insertLot =
