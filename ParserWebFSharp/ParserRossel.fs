@@ -15,11 +15,20 @@ type ParserRossel(stn: Settings.T) =
     let urlk = "https://www.roseltorg.ru/procedures/search"
     let listTenders = List<TenderRossel>()
     let options = ChromeOptions()
-    let pageReloader (driver: ChromeDriver) (x: int) =
+    let pageReloaderOld (driver: ChromeDriver) (x: int) =
                 for i in 1..x do
                     let jse = driver :> IJavaScriptExecutor
                     jse.ExecuteScript("window.scrollBy(0,250)", "") |> ignore
-                    Thread.Sleep(100)
+                    Thread.Sleep(1000)
+    let pageReloader (driver: ChromeDriver) (x: int) =
+                let wait = WebDriverWait(driver, timeoutB)
+                for i in 1..x do
+                    try
+                        wait.Until(fun dr -> dr.FindElement(By.XPath("//button[contains(@class, 'pagination__more-link')]")).Displayed) |> ignore
+                        let jse = driver :> IJavaScriptExecutor
+                        jse.ExecuteScript("document.querySelector('button.pagination__more-link').click()", "") |> ignore
+                        Thread.Sleep(1000)
+                    with ex -> Logging.Log.logger ex
     do
         //options.AddArguments("headless")
         options.AddArguments("disable-gpu")
@@ -202,10 +211,10 @@ type ParserRossel(stn: Settings.T) =
         wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
         |> ignore
         this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
-        this.Clicker driver "//span[span[contains(., 'Прием заявок')]]/following-sibling::span"
+        this.Clicker driver "//li[span[contains(., 'Прием заявок')]]"
         this.Clicker driver "//li/span[. = 'Работа коммиссии']"
         this.Clicker driver "//button[contains( . , 'Найти')]"
-        pageReloader driver 5000
+        pageReloader driver 100
         this.ParserListTenders driver
 
     member private this.ParserSelenAtom(driver: ChromeDriver) =
@@ -221,7 +230,7 @@ type ParserRossel(stn: Settings.T) =
         driver.FindElementByXPath("//span[. = 'ГК «Росатом»']/parent::li").Click()
         Thread.Sleep(3000)
         this.Clicker driver "//button[contains( . , 'Найти')]"
-        pageReloader driver 1000
+        pageReloader driver 100
         this.ParserListTenders driver
 
     member private this.ParserSelenRt(driver: ChromeDriver) =
@@ -237,7 +246,7 @@ type ParserRossel(stn: Settings.T) =
         driver.FindElementByXPath("//span[. = 'ПАО «Ростелеком» и подведомственных организаций']/parent::li").Click()
         Thread.Sleep(3000)
         this.Clicker driver "//button[contains( . , 'Найти')]"
-        pageReloader driver 1000
+        pageReloader driver 100
         this.ParserListTenders driver
 
     member private this.ParserSelenVtb(driver: ChromeDriver) =
@@ -253,7 +262,7 @@ type ParserRossel(stn: Settings.T) =
         driver.FindElementByXPath("//span[. = 'Группа ВТБ']/parent::li").Click()
         Thread.Sleep(3000)
         this.Clicker driver "//button[contains( . , 'Найти')]"
-        pageReloader driver 1000
+        pageReloader driver 100
         this.ParserListTenders driver
 
     member private this.ParserSelenRosteh(driver: ChromeDriver) =
@@ -269,7 +278,7 @@ type ParserRossel(stn: Settings.T) =
         driver.FindElementByXPath("//span[. = 'ГК «Ростех»']/parent::li").Click()
         Thread.Sleep(3000)
         this.Clicker driver "//button[contains( . , 'Найти')]"
-        pageReloader driver 1000
+        pageReloader driver 100
         this.ParserListTenders driver
 
     member private this.ParserSelenRushidro(driver: ChromeDriver) =
@@ -301,7 +310,7 @@ type ParserRossel(stn: Settings.T) =
         driver.FindElementByXPath("//span[. = 'ПАО «Россети»']/parent::li").Click()
         Thread.Sleep(3000)
         this.Clicker driver "//button[contains( . , 'Найти')]"
-        pageReloader driver 1000
+        pageReloader driver 100
         this.ParserListTenders driver
 
     member private this.ParserSelenRosgeo(driver: ChromeDriver) =
@@ -317,7 +326,7 @@ type ParserRossel(stn: Settings.T) =
         driver.FindElementByXPath("//span[. = 'Холдинг «Росгео»']/parent::li").Click()
         Thread.Sleep(3000)
         this.Clicker driver "//button[contains( . , 'Найти')]"
-        pageReloader driver 1000
+        pageReloader driver 100
         this.ParserListTenders driver
         
     member private this.ParserSelenKim(driver: ChromeDriver) =
@@ -333,7 +342,7 @@ type ParserRossel(stn: Settings.T) =
         driver.FindElementByXPath("//span[. = 'Корпоративный интернет-магазин']/parent::li").Click()
         Thread.Sleep(3000)
         this.Clicker driver "//button[contains( . , 'Найти')]"
-        pageReloader driver 1000
+        pageReloader driver 100
         this.ParserListTenders driver
 
     member private this.ParserListTenders(driver: ChromeDriver) =
