@@ -31,7 +31,7 @@ type ParserTPlusParall(stn : Settings.T) =
         | s -> 
             let parser = HtmlParser()
             let documents = parser.Parse(s)
-            let mutable tens = documents.QuerySelectorAll("div.tenders-list > div[data-key]")
+            let mutable tens = documents.QuerySelectorAll("div.tenders-list div.tender-teaser")
             for t in tens do
                 try 
                     let task = new Task(fun () -> this.AddTenderToList t)
