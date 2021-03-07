@@ -104,7 +104,9 @@ type ParserYarRegion(stn : Settings.T) =
         let builder = TenderBuilder()
         
         let result =
-            builder { 
+            builder {
+                let! x = driver.findElementWithoutException ( sprintf "(//span[@class = 'indicator-icon icon-circle-green'])[%d]" t, "red tender")
+                
                 let el = sprintf "document.querySelectorAll('a.report-link')[%d].click()" t
                 driver.SwitchTo().Window(driver.WindowHandles.[0]) |> ignore
                 driver.SwitchTo().DefaultContent() |> ignore
