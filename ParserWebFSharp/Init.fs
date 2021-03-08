@@ -178,11 +178,11 @@ type Init(s: Settings.T, arg: Arguments) =
     member private this.ParsingNeft() =
         Logging.Log.logger "Начало парсинга"
         try
-            this.GetParser(ParserNeft(s))
+            this.GetParser(ParserNeftNew(s))
         with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
-        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderNeft.tenderCount)
-        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderNeft.tenderUpCount)
+        Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderNeftNew.tenderCount)
+        Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderNeftNew.tenderUpCount)
 
     member private this.ParsingSlav() =
         Logging.Log.logger "Начало парсинга"

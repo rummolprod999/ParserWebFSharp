@@ -28,6 +28,8 @@
     <Compile Include="ParserRossel.fs" />
     <Compile Include="TenderNeft.fs" />
     <Compile Include="ParserNeft.fs" />
+    <Compile Include="TenderNeftNew.fs" />
+    <Compile Include="ParserNeftNew.fs" />
     <Compile Include="TenderSlav.fs" />
     <Compile Include="ParserSlav.fs" />
     <Compile Include="TenderAero.fs" />

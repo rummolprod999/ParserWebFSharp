@@ -729,3 +729,14 @@ type EnergyBaseRec =
 type EtpRtRec =
     { Href: string
       PurNum: string}
+
+type NeftNewRec =
+    { Href: string
+      PurNum: string
+      PurName: string
+      DatePub: DateTime
+      DateEnd: DateTime
+      Status: string
+      OrgName: string
+      ContactPerson: string
+      DocList: List<DocSibServ> }

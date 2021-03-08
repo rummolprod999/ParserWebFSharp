@@ -55,6 +55,7 @@
         <e p="ParserMoek.fs" t="Include" />
         <e p="ParserMpKz.fs" t="Include" />
         <e p="ParserNeft.fs" t="Include" />
+        <e p="ParserNeftNew.fs" t="Include" />
         <e p="ParserNeftReg.fs" t="Include" />
         <e p="ParserNorNic.fs" t="Include" />
         <e p="ParserOsnova.fs" t="Include" />
@@ -136,6 +137,7 @@
         <e p="TenderMoek.fs" t="Include" />
         <e p="TenderMpKz.fs" t="Include" />
         <e p="TenderNeft.fs" t="Include" />
+        <e p="TenderNeftNew.fs" t="Include" />
         <e p="TenderNeftReg.fs" t="Include" />
         <e p="TenderNorNic.fs" t="Include" />
         <e p="TenderOsnova.fs" t="Include" />
