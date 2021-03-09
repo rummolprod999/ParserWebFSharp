@@ -11,7 +11,7 @@ type ParserOsnova(stn: Settings.T) =
     let url ="https://tender.gk-osnova.ru/site?page="
 
     override __.Parsing() =
-            for i in 5..-1..1 do
+            for i in 2..-1..1 do
             try
                 __.ParsingPage(sprintf "%s%d" url i)
             with ex -> Logging.Log.logger ex
@@ -25,7 +25,10 @@ type ParserOsnova(stn: Settings.T) =
             let htmlDoc = HtmlDocument()
             htmlDoc.LoadHtml(s)
             let nav = (htmlDoc.CreateNavigator()) :?> HtmlNodeNavigator
-            let tens = nav.CurrentDocument.DocumentNode.SelectNodesOrEmpty("//div[@class = 'grid-view']//tbody/tr").ToList()
+            let tens = nav.CurrentDocument.DocumentNode.SelectNodesOrEmpty("//div[@class = 'table']//tbody/tr").ToList()
+            let tens2 = nav.CurrentDocument.DocumentNode.SelectNodesOrEmpty("//div[@class = 'table' and label[. = 'Открытые тендеры']]//tr").ToList()
+            tens2.RemoveAt(0)
+            tens.AddRange(tens2)
             tens.Reverse()
             for t in tens do
                     try
@@ -42,9 +45,9 @@ type ParserOsnova(stn: Settings.T) =
             let href = sprintf "https://tender.gk-osnova.ru%s" hrefT
             let! purNum = href.Get1Doc "id=(\d+)$" <| sprintf "purNum not found %s %s " url (t.InnerText)
             let! dates = t.GsnDocWithError "./td[2]" <| sprintf "dates not found %s %s " url (t.InnerText)
-            let! dateEndT = dates.Get1Doc "с\s+(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2}:\d{2})" <| sprintf "dateEndT not found %s %s " url (dates)
+            let! dateEndT = dates.Get1Doc "по\s+(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2}:\d{2})" <| sprintf "dateEndT not found %s %s " url (dates)
             let dateEnd = dateEndT.DateFromStringOrMin("dd.MM.yyyy HH:mm:ss")
-            let! datePubT = dates.Get1Doc "по\s+(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2}:\d{2})" <| sprintf "datePubT not found %s %s " url (dates)
+            let! datePubT = dates.Get1Doc "с\s+(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2}:\d{2})" <| sprintf "datePubT not found %s %s " url (dates)
             let datePub = datePubT.DateFromStringOrMin("dd.MM.yyyy HH:mm:ss")
             let tend = {  OsnovaRec.Href = href
                           PurName = purName
