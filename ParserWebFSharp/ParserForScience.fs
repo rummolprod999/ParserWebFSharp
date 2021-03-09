@@ -44,9 +44,11 @@ type ParserForScience(stn: Settings.T) =
             let! datePubT = t.GsnDocWithError "div.fin-list-title span.fin-list-date" <| sprintf "datePubT not found %s %s " url (t.TextContent)
             let purName = purName.Replace(datePubT, "").Trim()
             let! datePub = datePubT.DateFromStringDoc ("dd.MM.yyyy", sprintf "datePub not found %s %s " href datePubT)
-            let! endDateT = t.GsnDocWithError "div.fin-list-info-in strong" <| sprintf "endDateT not found %s %s " url (t.TextContent)
-            let _, numD = Int32.TryParse(endDateT)
-            let endDate = DateTime.Now.AddDays(float numD).Date
+            let! endDateT = t.GsnDoc "div.fin-list-info-in strong"
+            let b, numD = Int32.TryParse(endDateT)
+            let endDate = match b with
+                          | true -> DateTime.Now.AddDays(float numD).Date
+                          | false -> DateTime.MinValue
             let! orgName = t.GsnDocWithError "div.fin-list-info-in-last" <| sprintf "orgName not found %s %s " url (t.TextContent)
             let! nmckT = t.GsnDoc "div.fin-list-info-in:nth-of-type(2) strong"
             let! nmckPer = t.GsnDoc "div.fin-list-info-in:nth-of-type(2)" 
