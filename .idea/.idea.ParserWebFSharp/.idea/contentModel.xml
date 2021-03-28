@@ -37,6 +37,7 @@
         <e p="ParserEnergyBase.fs" t="Include" />
         <e p="ParserEshopRzd.fs" t="Include" />
         <e p="ParserEstoreSpb.fs" t="Include" />
+        <e p="ParserEstp.fs" t="Include" />
         <e p="ParserEten.fs" t="Include" />
         <e p="ParserEtpRt.fs" t="Include" />
         <e p="ParserForScience.fs" t="Include" />
@@ -119,6 +120,7 @@
         <e p="TenderEnergyBase.fs" t="Include" />
         <e p="TenderEshopRzd.fs" t="Include" />
         <e p="TenderEstoreSpb.fs" t="Include" />
+        <e p="TenderEstp.fs" t="Include" />
         <e p="TenderEten.fs" t="Include" />
         <e p="TenderEtpRt.fs" t="Include" />
         <e p="TenderForScience.fs" t="Include" />

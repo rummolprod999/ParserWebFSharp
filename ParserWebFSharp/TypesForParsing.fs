@@ -79,6 +79,7 @@ type Arguments =
     | Energybase
     | EtpRt
     | Comitazmo
+    | Estp
 
 type SlavNeft =
     | MEGION
@@ -740,3 +741,16 @@ type NeftNewRec =
       OrgName: string
       ContactPerson: string
       DocList: List<DocSibServ> }
+
+type EstpRec =
+    { Href: string
+      PurNum: string
+      PurName: string
+      DatePub: DateTime
+      DateEnd: DateTime
+      Region: string
+      OrgName: string
+      Status: string
+      Price: string
+      Currency: string
+      PlacingWay: string}

@@ -182,6 +182,8 @@ module Settings =
         let mutable LogPathTendersEtpRt  = ""
         let mutable TempPathTendersComitaZmo = ""
         let mutable LogPathTendersComitaZmo = ""
+        let mutable TempPathTendersEstp = ""
+        let mutable LogPathTendersEstp = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -625,6 +627,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_comitazmo" then
                     LogPathTendersComitaZmo <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                 (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_estp" then
+                    TempPathTendersEstp <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                 (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_estp" then
+                    LogPathTendersEstp <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -722,6 +730,7 @@ module Settings =
                 | Energybase -> TempPathTendersEnergyBase
                 | EtpRt -> TempPathTendersEtpRt
                 | Comitazmo -> TempPathTendersComitaZmo
+                | Estp -> TempPathTendersEstp
 
             let LogPathTenders =
                 match arg with
@@ -797,6 +806,7 @@ module Settings =
                 | Energybase -> LogPathTendersEnergyBase
                 | EtpRt -> LogPathTendersEtpRt
                 | Comitazmo -> LogPathTendersComitaZmo
+                | Estp -> LogPathTendersEstp
 
             { Database = Database
               TempPathTenders = TempPathTenders

@@ -172,6 +172,8 @@
     <Compile Include="ParserEtpRt.fs" />
     <Compile Include="TenderComitaZmo.fs" />
     <Compile Include="ParserComitaZmo.fs" />
+    <Compile Include="TenderEstp.fs" />
+    <Compile Include="ParserEstp.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
