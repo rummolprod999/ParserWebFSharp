@@ -51,7 +51,7 @@ type ParserEstp(stn: Settings.T) =
             let! datePubT = t.GsnDocWithError ".//dt[. = 'Дата публикации: (МСК)']/following-sibling::dd/time" <| sprintf "datePubT not found %s %s " href (t.InnerText)
             let! datePub = datePubT.DateFromStringDoc("dd.MM.yyyy HH:mm", sprintf "datePub not found %s %s " href (datePubT))
             let! dateEndT = t.GsnDocWithError ".//dt[. = 'Дата окончания приема заявок: (МСК)']/following-sibling::dd/time" <| sprintf "dateEndT not found %s %s " href (t.InnerText)
-            let! dateEnd = dateEndT.DateFromStringDoc("dd.MM.yyyy HH:mm", sprintf "dateEnd not found %s %s " href (dateEndT))
+            let! dateEnd = dateEndT.DateFromStringDocMin("dd.MM.yyyy HH:mm")
             let! nmckT = t.GsnDoc ".//span[@class = 'estp-tenders__price-value']"
             let nmck = nmckT.GetPriceFromString()
             let! currency = nmckT.Get1OptionalDoc("(\w+)$")
