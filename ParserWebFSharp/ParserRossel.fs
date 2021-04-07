@@ -225,9 +225,9 @@ type ParserRossel(stn: Settings.T) =
         |> ignore
         this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
         driver.FindElementByCssSelector("#form_procedures_search > div.search-form__advancedfilter > div:nth-child(1) > div > span > span.selection > span") .SendKeys(Keys.Space)
-        driver.FindElementByCssSelector("body > span > span > span.select2-search.select2-search--dropdown > input") .SendKeys("ГК «Росатом»")
+        
         Thread.Sleep(5000)
-        driver.FindElementByXPath("//span[. = 'ГК «Росатом»']/parent::li").Click()
+        driver.FindElementByXPath("//li[. = 'ГК «Росатом»']").Click()
         Thread.Sleep(3000)
         this.Clicker driver "//button[contains( . , 'Найти')]"
         pageReloader driver 100
@@ -241,9 +241,8 @@ type ParserRossel(stn: Settings.T) =
         |> ignore
         this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
         driver.FindElementByCssSelector("#form_procedures_search > div.search-form__advancedfilter > div:nth-child(1) > div > span > span.selection > span") .SendKeys(Keys.Space)
-        driver.FindElementByCssSelector("body > span > span > span.select2-search.select2-search--dropdown > input") .SendKeys("ПАО «Ростелеком» и подведомственных организаций")
         Thread.Sleep(5000)
-        driver.FindElementByXPath("//span[. = 'ПАО «Ростелеком» и подведомственных организаций']/parent::li").Click()
+        driver.FindElementByXPath("//li[. = 'ПАО «Ростелеком» и подведомственных организаций']").Click()
         Thread.Sleep(3000)
         this.Clicker driver "//button[contains( . , 'Найти')]"
         pageReloader driver 100
@@ -257,9 +256,8 @@ type ParserRossel(stn: Settings.T) =
         |> ignore
         this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
         driver.FindElementByCssSelector("#form_procedures_search > div.search-form__advancedfilter > div:nth-child(1) > div > span > span.selection > span") .SendKeys(Keys.Space)
-        driver.FindElementByCssSelector("body > span > span > span.select2-search.select2-search--dropdown > input") .SendKeys("Группа ВТБ")
         Thread.Sleep(5000)
-        driver.FindElementByXPath("//span[. = 'Группа ВТБ']/parent::li").Click()
+        driver.FindElementByXPath("//li[. = 'Группа ВТБ']").Click()
         Thread.Sleep(3000)
         this.Clicker driver "//button[contains( . , 'Найти')]"
         pageReloader driver 100
@@ -273,9 +271,8 @@ type ParserRossel(stn: Settings.T) =
         |> ignore
         this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
         driver.FindElementByCssSelector("#form_procedures_search > div.search-form__advancedfilter > div:nth-child(1) > div > span > span.selection > span") .SendKeys(Keys.Space)
-        driver.FindElementByCssSelector("body > span > span > span.select2-search.select2-search--dropdown > input") .SendKeys("ГК «Ростех»")
         Thread.Sleep(5000)
-        driver.FindElementByXPath("//span[. = 'ГК «Ростех»']/parent::li").Click()
+        driver.FindElementByXPath("//li[. = 'ГК «Ростех»']").Click()
         Thread.Sleep(3000)
         this.Clicker driver "//button[contains( . , 'Найти')]"
         pageReloader driver 100
@@ -289,9 +286,8 @@ type ParserRossel(stn: Settings.T) =
         |> ignore
         this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
         driver.FindElementByCssSelector("#form_procedures_search > div.search-form__advancedfilter > div:nth-child(1) > div > span > span.selection > span") .SendKeys(Keys.Space)
-        driver.FindElementByCssSelector("body > span > span > span.select2-search.select2-search--dropdown > input") .SendKeys("Группа «РусГидро»")
         Thread.Sleep(5000)
-        driver.FindElementByXPath("//span[. = 'Группа «РусГидро»']/parent::li").Click()
+        driver.FindElementByXPath("//li[. = 'Группа «РусГидро»']").Click()
         Thread.Sleep(3000)
         this.Clicker driver "//button[contains( . , 'Найти')]"
         pageReloader driver 100
@@ -305,9 +301,8 @@ type ParserRossel(stn: Settings.T) =
         |> ignore
         this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
         driver.FindElementByCssSelector("#form_procedures_search > div.search-form__advancedfilter > div:nth-child(1) > div > span > span.selection > span") .SendKeys(Keys.Space)
-        driver.FindElementByCssSelector("body > span > span > span.select2-search.select2-search--dropdown > input") .SendKeys("ПАО «Россети»")
         Thread.Sleep(5000)
-        driver.FindElementByXPath("//span[. = 'ПАО «Россети»']/parent::li").Click()
+        driver.FindElementByXPath("//li[. = 'ПАО «Россети»']").Click()
         Thread.Sleep(3000)
         this.Clicker driver "//button[contains( . , 'Найти')]"
         pageReloader driver 100
@@ -321,9 +316,8 @@ type ParserRossel(stn: Settings.T) =
         |> ignore
         this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
         driver.FindElementByCssSelector("#form_procedures_search > div.search-form__advancedfilter > div:nth-child(1) > div > span > span.selection > span") .SendKeys(Keys.Space)
-        driver.FindElementByCssSelector("body > span > span > span.select2-search.select2-search--dropdown > input") .SendKeys("Холдинг «Росгео»")
         Thread.Sleep(5000)
-        driver.FindElementByXPath("//span[. = 'Холдинг «Росгео»']/parent::li").Click()
+        driver.FindElementByXPath("//li[. = 'Холдинг «Росгео»']").Click()
         Thread.Sleep(3000)
         this.Clicker driver "//button[contains( . , 'Найти')]"
         pageReloader driver 100
@@ -337,9 +331,8 @@ type ParserRossel(stn: Settings.T) =
         |> ignore
         this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
         driver.FindElementByCssSelector("#form_procedures_search > div.search-form__advancedfilter > div:nth-child(1) > div > span > span.selection > span") .SendKeys(Keys.Space)
-        driver.FindElementByCssSelector("body > span > span > span.select2-search.select2-search--dropdown > input") .SendKeys("Корпоративный интернет-магазин")
         Thread.Sleep(5000)
-        driver.FindElementByXPath("//span[. = 'Корпоративный интернет-магазин']/parent::li").Click()
+        driver.FindElementByXPath("//li[. = 'Корпоративный интернет-магазин']").Click()
         Thread.Sleep(3000)
         this.Clicker driver "//button[contains( . , 'Найти')]"
         pageReloader driver 100
