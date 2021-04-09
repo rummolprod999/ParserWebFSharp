@@ -70,11 +70,11 @@ type ParserNeftNew(stn : Settings.T) =
                 | Error r -> Logging.Log.logger (r, t.ToString())
         ()
         
-        member private this.AddDocs(docs, DocsList, id) =
+        member private this.AddDocs(docs, docsList, id) =
             for d in docs do
                let idDoc = GetIntFromJtoken d "..id"
                let docUrl = sprintf "https://apizakupki.nefteavtomatika.ru/api/purchases/%d/files/%d/download" id idDoc
                let docName = GetStringFromJtoken d "..label"
-               DocsList.Add({ name = docName
+               docsList.Add({ name = docName
                               url = docUrl })
                ()

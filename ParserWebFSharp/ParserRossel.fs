@@ -15,6 +15,7 @@ type ParserRossel(stn: Settings.T) =
     let urlk = "https://www.roseltorg.ru/procedures/search"
     let listTenders = List<TenderRossel>()
     let options = ChromeOptions()
+    
     let pageReloaderOld (driver: ChromeDriver) (x: int) =
                 for i in 1..x do
                     let jse = driver :> IJavaScriptExecutor
@@ -22,13 +23,18 @@ type ParserRossel(stn: Settings.T) =
                     Thread.Sleep(1000)
     let pageReloader (driver: ChromeDriver) (x: int) =
                 let wait = WebDriverWait(driver, timeoutB)
+                let countTry = ref 0
+                let theEnd = ref true
                 for i in 1..x do
-                    try
-                        wait.Until(fun dr -> dr.FindElement(By.XPath("//button[contains(@class, 'pagination__more-link')]")).Displayed) |> ignore
-                        let jse = driver :> IJavaScriptExecutor
-                        jse.ExecuteScript("document.querySelector('button.pagination__more-link').click()", "") |> ignore
-                        Thread.Sleep(1000)
-                    with ex -> Logging.Log.logger ex
+                    if !theEnd then
+                        try
+                            if !countTry > 5 then theEnd := false
+                            wait.Until(fun dr -> dr.FindElement(By.XPath("//button[contains(@class, 'pagination__more-link')]")).Displayed) |> ignore
+                            let jse = driver :> IJavaScriptExecutor
+                            jse.ExecuteScript("document.querySelector('button.pagination__more-link').click()", "") |> ignore
+                            Thread.Sleep(1000)
+                        with ex -> Logging.Log.logger ex
+                                   incr countTry
     do
         //options.AddArguments("headless")
         options.AddArguments("disable-gpu")
