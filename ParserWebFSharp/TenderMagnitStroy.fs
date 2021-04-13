@@ -10,7 +10,7 @@ open OpenQA.Selenium.Chrome
 open OpenQA.Selenium.Support.UI
 open TypeE
 
-type TenderMagnitStroy(stn: Settings.T, tn: ForumGdRec, typeFz: int, etpName: string, etpUrl: string, driver : ChromeDriver) =
+type TenderMagnitStroy(stn: Settings.T, tn: MagnitStroyRec, typeFz: int, etpName: string, etpUrl: string, driver : ChromeDriver) =
     inherit Tender(etpName, etpUrl)
     let settings = stn
     static member val tenderCount = ref 0
@@ -22,6 +22,7 @@ type TenderMagnitStroy(stn: Settings.T, tn: ForumGdRec, typeFz: int, etpName: st
         use con = new MySqlConnection(stn.ConStr)
         let res =
                    builder {
+                       printfn "%A" tn
                        return ""
                    }
         match res with

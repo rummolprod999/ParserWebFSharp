@@ -80,6 +80,7 @@ type Arguments =
     | EtpRt
     | Comitazmo
     | Estp
+    | Magnitstroy
 
 type SlavNeft =
     | MEGION
@@ -754,3 +755,13 @@ type EstpRec =
       Price: string
       Currency: string
       PlacingWay: string}
+    
+type MagnitStroyRec =
+    { Href: string
+      PurName: string
+      PurNum: string
+      ContactPerson: string
+      Status: string
+      Nmck: string
+      DatePub: DateTime
+      DateEnd: DateTime}
