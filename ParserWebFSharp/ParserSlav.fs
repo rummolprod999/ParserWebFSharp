@@ -20,7 +20,7 @@ type ParserSlav(stn : Settings.T) =
             this.ParserYanos url
         with ex -> Logging.Log.logger ex
         try 
-            let url = "http://www.slavneft.ru/supplier/procurement/"
+            let url = "https://www.slavneft.ru/supplier/procurement/"
             this.ParserNgre url
         with ex -> Logging.Log.logger ex
     
@@ -242,7 +242,7 @@ type ParserSlav(stn : Settings.T) =
         match HrefDocT with
         | "" | null -> raise <| NullReferenceException(sprintf "HrefDocT not found in %s %s" url t.TextContent)
         | _ -> ()
-        let HrefDoc = sprintf "http://www.slavneft.ru%s" HrefDocT
+        let HrefDoc = sprintf "https://www.slavneft.ru%s" HrefDocT
         
         let NameDoc =
             match t.QuerySelector("td:nth-child(1) a") with
