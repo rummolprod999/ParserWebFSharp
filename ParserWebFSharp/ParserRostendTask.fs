@@ -13,7 +13,7 @@ type ParserRostendTask(stn : Settings.T) =
     inherit Parser()
     let set = stn
     let count = 600
-    let strtPg = "http://rostender.info/tender?pg="
+    let strtPg = "https://rostender.info/tender?pg="
     member val locker = Object()
     member val listTenders = Queue<RosTendRecNew>()
 
@@ -70,10 +70,10 @@ type ParserRostendTask(stn : Settings.T) =
             | null -> ""
             | ur -> ur.GetAttribute("href").Trim()
 
-        let Href = sprintf "http://rostender.info%s" HrefT
+        let Href = sprintf "https://rostender.info%s" HrefT
 
         let PurNumT =
-            match t.QuerySelector("span.tender-number") with
+            match t.QuerySelector("span.tender__number") with
             | null -> ""
             | ur -> ur.TextContent.Trim()
 
@@ -83,7 +83,7 @@ type ParserRostendTask(stn : Settings.T) =
             | None -> ""
 
         let mutable PubDateT =
-            match t.QuerySelector("span.tender-date-info") with
+            match t.QuerySelector("span.tender__date-start") with
             | null -> ""
             | ur -> ur.TextContent.Trim().RegexCutWhitespace()
 
@@ -96,7 +96,7 @@ type ParserRostendTask(stn : Settings.T) =
             | None -> DateTime.MinValue
             
         let mutable EndDateT =
-            match t.QuerySelector("div.tender-date-info:contains('Дата окончания:')") with
+            match t.QuerySelector("div.tender-date-info:contains('Окончание')") with
             | null -> ""
             | ur -> ur.TextContent.Trim().RegexCutWhitespace()
 
@@ -132,19 +132,16 @@ type ParserRostendTask(stn : Settings.T) =
             | ur -> ur.TextContent.Trim().RegexCutWhitespace()
 
         let NmckT =
-            match t.QuerySelector("div.starting-price span") with
+            match t.QuerySelector("div.starting-price__price") with
             | null -> ""
-            | ur -> ur.TextContent.Trim()
+            | ur -> ur.TextContent.HtmlDecode().Trim()
 
         let Nmck =
             match NmckT.Get1FromRegexp @"([\d\s,\.]+)" with
             | Some x -> x.Trim().RegexDeleteWhitespace()
             | None -> ""
 
-        let Currency =
-            match t.QuerySelector("div.starting-price text") with
-            | null -> ""
-            | ur -> ur.TextContent.Trim()
+        let Currency = "₽"
 
         let Page = "" //Download.DownloadString1251Bot Href
 
