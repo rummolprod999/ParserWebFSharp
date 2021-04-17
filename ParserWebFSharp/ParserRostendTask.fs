@@ -106,7 +106,7 @@ type ParserRostendTask(stn : Settings.T) =
         let dateEnd =
             match EndDateT.DateFromString("dd.MM.yyyy") with
             | Some d -> d
-            | None -> DateTime.MinValue
+            | None -> datePub.AddDays(2.)
         
         let mutable UpdDateT =
             match t.QuerySelector("div.tender-date-info:contains('Дата изменения:')") with
@@ -184,10 +184,6 @@ type ParserRostendTask(stn : Settings.T) =
         match tn.DatePub with
         | a when a = DateTime.MinValue ->
             raise <| NullReferenceException(sprintf "PubDate not found in %s" tn.Href)
-        | _ -> ()
-        match tn.DateEnd with
-        | a when a = DateTime.MinValue ->
-            raise <| NullReferenceException(sprintf "DateEnd not found in %s" tn.Href)
         | _ -> ()
         match tn.PurName with
         | "" -> raise <| NullReferenceException(sprintf "PurName not found in %s" tn.Href)
