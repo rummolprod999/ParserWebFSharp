@@ -15,7 +15,7 @@ type TenderRosTendNew(stn : Settings.T, tn : RosTendRecNew, typeFz : int, etpNam
         let href = tn.Href
         let selectTend =
             sprintf 
-                "SELECT id_tender FROM %stender WHERE purchase_number = @purchase_number AND type_fz = @type_fz AND end_date = @end_date AND doc_publish_date = @doc_publish_date AND date_version = @date_version" 
+                "SELECT id_tender FROM %stender WHERE purchase_number = @purchase_number AND type_fz = @type_fz AND end_date = @end_date AND doc_publish_date = @doc_publish_date" 
                 stn.Prefix
         let cmd : MySqlCommand = new MySqlCommand(selectTend, con)
         cmd.Prepare()
@@ -23,7 +23,6 @@ type TenderRosTendNew(stn : Settings.T, tn : RosTendRecNew, typeFz : int, etpNam
         cmd.Parameters.AddWithValue("@type_fz", typeFz) |> ignore
         cmd.Parameters.AddWithValue("@end_date", tn.DateEnd) |> ignore
         cmd.Parameters.AddWithValue("@doc_publish_date", tn.DatePub) |> ignore
-        cmd.Parameters.AddWithValue("@date_version", tn.DateUpd) |> ignore
         let reader : MySqlDataReader = cmd.ExecuteReader()
         if reader.HasRows then reader.Close()
         else 
