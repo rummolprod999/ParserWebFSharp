@@ -13,7 +13,7 @@ type ParserRostendTask(stn : Settings.T) =
     inherit Parser()
     let set = stn
     let count = 600
-    let strtPg = "https://rostender.info/tender?pg="
+    let strtPg = "https://rostender.info/tender?page="
     member val locker = Object()
     member val listTenders = Queue<RosTendRecNew>()
 
