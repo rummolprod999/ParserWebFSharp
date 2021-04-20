@@ -17,10 +17,11 @@ type ParserSamolet(stn : Settings.T) =
     let options = ChromeOptions()
     
     do 
-        //options.AddArguments("headless")
+        options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
         options.AddArguments("disable-dev-shm-usage")
+        options.AddArguments("ignore-certificate-errors")
     
     override this.Parsing() =
         let driver = new ChromeDriver("/usr/local/bin", options)
@@ -41,7 +42,7 @@ type ParserSamolet(stn : Settings.T) =
         driver.SwitchTo().DefaultContent() |> ignore
         wait.Until
             (fun dr -> 
-            dr.FindElement(By.XPath("//div[@id = 'trades']//um-trade-list-item")).Displayed) 
+            dr.FindElement(By.XPath("//um-trade-search-card/um-card")).Displayed) 
         |> ignore
         this.ParserListTenders driver
         for t in listTenders do
@@ -58,7 +59,7 @@ type ParserSamolet(stn : Settings.T) =
     
     member private this.ParserListTenders(driver : ChromeDriver) =
         let tenders =
-            driver.FindElementsByXPath("//div[@id = 'trades']//um-trade-list-item")
+            driver.FindElementsByXPath("//um-trade-search-card/um-card")
         for t in tenders do
             this.ParserTenders driver t
         ()
@@ -69,11 +70,11 @@ type ParserSamolet(stn : Settings.T) =
         let result =
             builder { 
                 let! hrefT = i.findWElementWithoutException 
-                                   (".//a", sprintf "hrefT not found %s" i.Text)
+                                   (".//a[contains(@class, 'trade-title')]", sprintf "hrefT not found %s" i.Text)
                 let! href = hrefT.findAttributeWithoutException ("href", "hrefT not found")
                 let! purName = i.findElementWithoutException 
-                                   (".//a/span", sprintf "purName not found %s" i.Text)
-                let! purNum =  i.findElementWithoutException(".//div[@class = 'header-row']/span[contains(@class, 'registered-number')]", sprintf "purName not found %s" i.Text)
+                                   (".//a[contains(@class, 'trade-title')]", sprintf "purName not found %s" i.Text)
+                let! purNum =  i.findElementWithoutException(".//div[contains(@class, 'trade-number')]", sprintf "purName not found %s" i.Text)
                 let delivPlace = ""
                 let dateEnd = DateTime.Now
                 let datePub = DateTime.Now
