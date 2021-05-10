@@ -48,8 +48,8 @@ type TenderVtbConnect(stn: Settings.T, tn: VtbConnectRec, typeFz: int, etpName: 
                         let pubDateT = pubDateT.Replace("Дата публикации", "").Replace(":", "").Trim()
                         let! datePub = pubDateT.DateFromString("dd.MM.yyyy HHmm", sprintf "datePub not parse %s" pubDateT)
                         tn.DatePub <- datePub
-                        let! dateEndT = body.findElementWithoutException("//li[contains(., 'Дата окончания приёма заявок')]", sprintf "dateEndT not found %s" tn.Href)
-                        let dateEndT = dateEndT.Replace("Дата окончания приёма заявок", "").Replace(":", "").Trim()
+                        let! dateEndT = body.findElementWithoutException("//li[contains(., 'Дата окончания приёма предложений')]", sprintf "dateEndT not found %s" tn.Href)
+                        let dateEndT = dateEndT.Replace("Дата окончания приёма предложений", "").Replace(":", "").Trim()
                         let! dateEnd = dateEndT.DateFromString("dd.MM.yyyy HHmm", sprintf "endDate not parse %s" dateEndT)
                         tn.DateEnd <- dateEnd
                         let dateUpd = DateTime.Now
