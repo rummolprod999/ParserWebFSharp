@@ -40,11 +40,9 @@ type TenderBidMartNew(stn: Settings.T, tn: BidMartNewRec, typeFz: int, etpName: 
                         driver.Navigate().GoToUrl(tn.Href)
                         Thread.Sleep(1000)
                         driver.SwitchTo().DefaultContent() |> ignore
-                        wait.Until (fun dr -> dr.FindElement(By.XPath("//div[@class = 'header']")).Displayed) |> ignore
+                        wait.Until (fun dr -> dr.FindElement(By.XPath("//h2")).Displayed) |> ignore
                         let body = driver.FindElement(By.XPath("//body"))
-                        let!  pubDateT = body.findElementWithoutException("//label[. = 'Дата создания закупки']/following-sibling::span", sprintf <|"pubDateT not found %s" <| tn.Href)
-                        let pubDate = DateTime.Parse(pubDateT,  CultureInfo.CreateSpecificCulture("ru-RU"))
-                        let!  bidDateT = body.findElementWithoutExceptionOptional("//label[. = 'Дата принятия решения']/following-sibling::span", sprintf <|"bidDateT not found %s" <| tn.Href)
+                        let!  bidDateT = body.findElementWithoutExceptionOptional("//th[. = 'Дата принятия решения']/following-sibling::td", sprintf <|"bidDateT not found %s" <| tn.Href)
                         let mutable biddingDate = DateTime.MinValue
                         if bidDateT <> "" then biddingDate <- DateTime.Parse(bidDateT,  CultureInfo.CreateSpecificCulture("ru-RU"))
                         let dateUpd = DateTime.Now
@@ -85,7 +83,7 @@ type TenderBidMartNew(stn: Settings.T, tn: BidMartNewRec, typeFz: int, etpName: 
                         let idEtp = this.GetEtp con settings
                         let numVersion = 1
                         let idPlacingWay = ref 0
-                        let!  pwName = body.findElementWithoutExceptionOptional("//label[. = 'Процедура']/following-sibling::span", sprintf <|"pwName not found %s" <| tn.Href)
+                        let!  pwName = body.findElementWithoutExceptionOptional("//th[. = 'Тип закупки']/following-sibling::td", sprintf <|"pwName not found %s" <| tn.Href)
                         let mutable pwName = pwName
                         if pwName.Length > 0 && pwName.IndexOf("#") > 0 then pwName <- pwName.Substring(0, pwName.IndexOf("#"))
                         match pwName with
@@ -97,7 +95,7 @@ type TenderBidMartNew(stn: Settings.T, tn: BidMartNewRec, typeFz: int, etpName: 
                         cmd9.Prepare()
                         cmd9.Parameters.AddWithValue("@id_xml", tn.PurNum) |> ignore
                         cmd9.Parameters.AddWithValue("@purchase_number", tn.PurNum) |> ignore
-                        cmd9.Parameters.AddWithValue("@doc_publish_date", pubDate) |> ignore
+                        cmd9.Parameters.AddWithValue("@doc_publish_date", tn.DatePub) |> ignore
                         cmd9.Parameters.AddWithValue("@href", tn.Href) |> ignore
                         cmd9.Parameters.AddWithValue("@purchase_object_info", tn.PurName) |> ignore
                         cmd9.Parameters.AddWithValue("@type_fz", typeFz) |> ignore
@@ -159,10 +157,10 @@ type TenderBidMartNew(stn: Settings.T, tn: BidMartNewRec, typeFz: int, etpName: 
                                 cmd14.Parameters.AddWithValue("@inn", inn) |> ignore
                                 cmd14.ExecuteNonQuery() |> ignore
                                 idCustomer := int cmd14.LastInsertedId
-                        let! delivTerm1 = body.findElementWithoutExceptionOptional("//label[. = 'Дата поставки']/following-sibling::span", sprintf <|"delivPlace not found %s" <| tn.Href)
-                        let! delivTerm2 = body.findElementWithoutExceptionOptional("//label[. = 'Условия поставки']/following-sibling::span", sprintf <|"delivPlace not found %s" <| tn.Href)
-                        let! delivTerm3 = body.findElementWithoutExceptionOptional("//label[. = 'Условия оплаты']/following-sibling::span", sprintf <|"delivPlace not found %s" <| tn.Href)
-                        let delivTerm = sprintf "Дата поставки: %s\n Условия поставки: %s\n Условия оплаты: %s" delivTerm1 delivTerm2 delivTerm3
+                        let! delivTerm1 = body.findElementWithoutExceptionOptional("//th[. = 'Дата поставки']/following-sibling::td", sprintf <|"delivPlace not found %s" <| tn.Href)
+                        let! delivTerm2 = body.findElementWithoutExceptionOptional("//th[. = 'Условия поставки']/following-sibling::td", sprintf <|"delivPlace not found %s" <| tn.Href)
+                        let! delivTerm3 = body.findElementWithoutExceptionOptional("//th[. = 'Отсрочка платежа']/following-sibling::td", sprintf <|"delivPlace not found %s" <| tn.Href)
+                        let delivTerm = sprintf "Дата поставки: %s\n Условия поставки: %s\n Отсрочка платежа: %s" delivTerm1 delivTerm2 delivTerm3
                         if tn.DelivPlace <> ""  || delivTerm <> "" then
                             let insertCustomerRequirement =
                                 sprintf
@@ -175,7 +173,7 @@ type TenderBidMartNew(stn: Settings.T, tn: BidMartNewRec, typeFz: int, etpName: 
                             cmd16.Parameters.AddWithValue("@delivery_place", tn.DelivPlace) |> ignore
                             cmd16.Parameters.AddWithValue("@delivery_term", delivTerm.Trim()) |> ignore
                             cmd16.ExecuteNonQuery() |> ignore
-                        let purObjects = body.findElementsWithoutException("//tr[@ng-repeat = 'lot in $ctrl.sortLots($ctrl.tender.lots) track by lot.id']")
+                        let purObjects = body.findElementsWithoutException("//app-tender-lot-items//app-accordion-panel/div")
                         this.GetPurObjs(con, !idTender, purObjects, !idLot, !idCustomer)
                         this.AddVerNumber con tn.PurNum stn typeFz
                         this.TenderKwords con (!idTender) stn
@@ -189,22 +187,16 @@ type TenderBidMartNew(stn: Settings.T, tn: BidMartNewRec, typeFz: int, etpName: 
     
     member private this.GetPurObjs(con: MySqlConnection, _: int, pos: ReadOnlyCollection<IWebElement>, idLot: int, idCustomer: int) =
         for p in pos do
-            let name = p.findElementWithoutException("./td/a")
-            let QuantT = p.findElementWithoutException("./td[3]")
+            let name = p.findElementWithoutException("./span[2]")
+            let QuantT = p.findElementWithoutException("./span[4]")
             let mutable Quantity =
                         match QuantT.Get1FromRegexp @"([\d,| ]+)" with
                         | Some x -> x.Trim()
                         | None -> ""
             Quantity <- Regex.Replace(Quantity.ToString(), @"\s+", "").Replace(",", "")
-            let okei =
-                        match QuantT.Get1FromRegexp @"\s+(.+)$" with
-                        | Some x -> x.Trim()
-                        | None -> ""
+            let okei = p.findElementWithoutException("./span[3]")
             let PriceT = p.findElementWithoutException("./td[4]")
-            let mutable Price =
-                        match PriceT.Get1FromRegexp @"([\d,| ]+)" with
-                        | Some x -> x.Trim()
-                        | None -> ""
+            let mutable Price = p.findElementWithoutException("./span[5]/b")
             Price <- Regex.Replace(Price.ToString(), @"\s+", "").Replace(",", "")
             let insertLotitem =
                         sprintf 

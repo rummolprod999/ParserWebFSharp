@@ -18,7 +18,7 @@ type ParserBidMartNew(stn: Settings.T) =
     let pageReloader (driver: ChromeDriver) (x: int) =
                 for i in 1..x do
                     let jse = driver :> IJavaScriptExecutor
-                    jse.ExecuteScript("document.getElementsByClassName('list alt1-scroll')[0].scrollBy(0, 500)", "") |> ignore
+                    jse.ExecuteScript("document.querySelectorAll('app-section-list')[0].scrollBy(0, 500)", "") |> ignore
                     Thread.Sleep(100)
     do 
         //options.AddArguments("headless")
@@ -39,10 +39,10 @@ type ParserBidMartNew(stn: Settings.T) =
         ()
     
     member private __.Auth(driver : ChromeDriver) =
-        driver.FindElement(By.XPath("//input[@type = 'email']")).SendKeys(Settings.UserBidMart)
+        driver.FindElement(By.XPath("//input[@formcontrolname = 'login']")).SendKeys(Settings.UserBidMart)
         driver.FindElement(By.XPath("//input[@type = 'password']")).SendKeys(Settings.PassBidMart)
         Thread.Sleep(3000)
-        driver.FindElement(By.XPath("//button[. = 'Войти']")).Click()
+        driver.FindElement(By.XPath("//a[. = 'Войти']")).Click()
         Thread.Sleep(3000)
         
         ()
@@ -53,13 +53,13 @@ type ParserBidMartNew(stn: Settings.T) =
         driver.SwitchTo().DefaultContent() |> ignore
         wait.Until
             (fun dr -> 
-            dr.FindElement(By.XPath("//input[@type = 'email']")).Displayed) |> ignore
+            dr.FindElement(By.XPath("//input[@formcontrolname = 'login']")).Displayed) |> ignore
         __.Auth(driver)
         driver.SwitchTo().DefaultContent() |> ignore
         Thread.Sleep(3000)
         wait.Until
             (fun dr -> 
-            dr.FindElement(By.XPath("//tr[contains(@class, 'first radius-top radius-bottom')]")).Displayed) |> ignore
+            dr.FindElement(By.XPath("//tbody/tr[not(@class)]")).Displayed) |> ignore
         __.GetListTenders(driver)
         __.ParserListTenders(driver)
         for t in listTenders do
@@ -82,7 +82,7 @@ type ParserBidMartNew(stn: Settings.T) =
     member private this.ParserListTenders(driver : ChromeDriver) =
         driver.SwitchTo().DefaultContent() |> ignore
         let tenders =
-            driver.FindElementsByXPath("//tr[contains(@class, 'first radius-top radius-bottom')]")
+            driver.FindElementsByXPath("//tbody/tr[not(@class)]")
         for t in tenders do
             this.ParserTenders t
         ()
@@ -90,22 +90,26 @@ type ParserBidMartNew(stn: Settings.T) =
     member private this.ParserTenders (i : IWebElement) =
         let builder = TenderBuilder()
         let res = builder {
-            let! hrefT = i.findWElementWithoutException(".//a[contains(@class, 'link-color')]", sprintf "hrefT not found, text the element - %s" i.Text)
+            let! hrefT = i.findWElementWithoutException(".//td/a", sprintf "hrefT not found, text the element - %s" i.Text)
             let! href = hrefT.findAttributeWithoutException ("href", "href not found")
-            let! purNum = href.Get1 ("/(\d+)$", sprintf "purNum not found %s" href )
-            let! purName = i.findElementWithoutException(".//a[contains(@class, 'link-color')]", sprintf "purName not found %s" i.Text)
-            let! delivPlace = i.findElementWithoutException("./td[6]", sprintf "delivPlace not found %s" i.Text)
-            let! status = i.findElementWithoutException("./td[3]", sprintf "status not found %s" i.Text)
-            let! cusName = i.findElementWithoutException("./td[4]", sprintf "cusName not found %s" i.Text)
+            let! purNum = href.Get1 ("supplier/(\w+)$", sprintf "purNum not found %s" href )
+            let! purName = i.findElementWithoutException(".//td/a", sprintf "purName not found %s" i.Text)
+            let! delivPlace = i.findElementWithoutException("./td[6]/span", sprintf "delivPlace not found %s" i.Text)
+            let! status = i.findElementWithoutException("./td[7]//span[@class = 'additional']", sprintf "status not found %s" i.Text)
+            let! cusName = i.findElementWithoutException("./td[3]", sprintf "cusName not found %s" i.Text)
             let! endDateT = i.findElementWithoutException("./td[5]", sprintf "endDateT not found %s" i.Text)
-            let endDateT = sprintf "%s.%s" <| DateTime.Now.Year.ToString() <| endDateT
+            let endDateT = sprintf "%s.%s" <| DateTime.Now.Year.ToString() <| endDateT.ReplaceDateBidMart().RegexCutWhitespace()
             let! dateEnd = endDateT.DateFromString("yyyy.dd.MM HH:mm", sprintf "endDate not parse %s" endDateT)
-            let! price = i.findElementWithoutException("./td[7]", sprintf "price not found %s" i.Text)
+            
+            let! pubDateT = i.findElementWithoutException("./td[4]", sprintf "endDateT not found %s" i.Text)
+            let pubDateT = sprintf "%s.%s" <| DateTime.Now.Year.ToString() <| pubDateT.ReplaceDateBidMart().RegexCutWhitespace()
+            let! datePub = pubDateT.DateFromString("yyyy.dd.MM HH:mm", sprintf "datePub not parse %s" pubDateT)
+            let! price = i.findElementWithoutException("./td[8]/b", sprintf "price not found %s" i.Text)
             let! nmck = price.Get1 ("^([\s\d,]+)", sprintf "nmck not found %s" href )
             let nmck = nmck.GetPriceFromString()
-            let! currency = price.Get1 ("(\w+)$", sprintf "currency not found %s" href )
+            let! currency = i.findElementWithoutException("./td[8]", sprintf "price not found %s" i.Text)
+            let! currency = currency.Get1 ("([aA-Z]+)", sprintf "currency not found %s" href )
             let currency = currency.Trim()
-            let datePub = DateTime.MinValue
             let ten =
                     { Href = href
                       PurName = purName
