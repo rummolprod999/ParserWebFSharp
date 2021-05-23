@@ -188,6 +188,8 @@ module Settings =
         let mutable LogPathTendersEstp = ""
         let mutable TempPathTenderMagnitStroy = ""
         let mutable LogPathTendersMagnitStroy = ""
+        let mutable TempPathTenderNeftisa = ""
+        let mutable LogPathTendersNeftisa = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -643,6 +645,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_magnitstroy" then
                     LogPathTendersMagnitStroy <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                 (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_neftisa" then
+                    TempPathTenderNeftisa <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                 (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_neftisa" then
+                    LogPathTendersNeftisa <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -744,6 +752,7 @@ module Settings =
                 | Comitazmo -> TempPathTendersComitaZmo
                 | Estp -> TempPathTendersEstp
                 | Magnitstroy -> TempPathTenderMagnitStroy
+                | Neftisa -> TempPathTenderNeftisa
 
             let LogPathTenders =
                 match arg with
@@ -821,6 +830,7 @@ module Settings =
                 | Comitazmo -> LogPathTendersComitaZmo
                 | Estp -> LogPathTendersEstp
                 | Magnitstroy -> LogPathTendersMagnitStroy
+                | Neftisa -> LogPathTendersNeftisa
 
             { Database = Database
               TempPathTenders = TempPathTenders

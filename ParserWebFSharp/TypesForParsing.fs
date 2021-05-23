@@ -81,6 +81,7 @@ type Arguments =
     | Comitazmo
     | Estp
     | Magnitstroy
+    | Neftisa
 
 type SlavNeft =
     | MEGION
@@ -765,3 +766,12 @@ type MagnitStroyRec =
       Nmck: string
       DatePub: DateTime
       DateEnd: DateTime}
+
+type NeftisaRec =
+    { Href: string
+      PurName: string
+      PurNum: string
+      Region: string
+      OrgName: string
+      DatePub: DateTime
+      mutable DateEnd: DateTime}

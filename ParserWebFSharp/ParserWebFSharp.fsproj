@@ -176,6 +176,8 @@
     <Compile Include="ParserEstp.fs" />
     <Compile Include="TenderMagnitStroy.fs" />
     <Compile Include="ParserMagnitStroy.fs" />
+    <Compile Include="TenderNeftisa.fs" />
+    <Compile Include="ParserNeftisa.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
