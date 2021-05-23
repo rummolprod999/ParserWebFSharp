@@ -92,6 +92,11 @@ type Exist =
     | Exist
     | NoExist
 
+type ProxyB =
+    { Ip: string
+      Port: int
+      User: string
+      Pass: string}
 type RosSelRec =
     { Href: string
       PurNum: string

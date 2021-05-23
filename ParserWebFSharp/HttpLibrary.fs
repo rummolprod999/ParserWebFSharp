@@ -338,3 +338,32 @@ module Download =
                 else incr count
                 Thread.Sleep(5000)
         ret
+        
+    let DownloadUseProxy (useProxy: bool, url: string) : string =
+        let mutable ret = null
+        let count = ref 0
+        let mutable cc = true
+        while cc do
+            try
+                let httpClientHandler = HttpClientHandler()
+                httpClientHandler.AllowAutoRedirect <- true
+                if useProxy then
+                    let prixyEntity = ProxyLoader.GetRandomProxy
+                    let proxy = WebProxy()
+                    proxy.Address <- Uri(sprintf "http://%s:%d" prixyEntity.Ip prixyEntity.Port)
+                    proxy.BypassProxyOnLocal <- false
+                    proxy.UseDefaultCredentials <- false
+                    proxy.Credentials <- NetworkCredential(prixyEntity.User, prixyEntity.Pass)
+                    httpClientHandler.Proxy <- proxy
+                use client = new HttpClient(httpClientHandler)
+                let response: Task<HttpResponseMessage> = client.GetAsync(url);
+                ret <- response.Result.Content.ReadAsStringAsync().Result
+                cc <- false
+            with ex ->
+                Logging.Log.logger(ex)
+                if !count >= 3 then
+                    Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток" url !count)
+                    cc <- false
+                else incr count
+                Thread.Sleep(5000)
+        ret

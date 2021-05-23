@@ -27,6 +27,8 @@ module Settings =
     let mutable internal PassForumGd = ""
     let mutable internal UserMagnit = ""
     let mutable internal PassMagnit = ""
+    let mutable internal ProxyPath = ""
+    let mutable internal UseProxy = false
     type T =
         { Database: string
           TempPathTenders: string
@@ -195,6 +197,8 @@ module Settings =
         let mutable PassDb = ""
         let mutable Server = ""
         let mutable Port = 3306
+        let mutable ProxyPath = "proxy.txt"
+        let mutable UseProxy = false
         let xDoc = XmlDocument()
         xDoc.Load(sprintf "%s%csetting_tenders.xml" PathProgram Path.DirectorySeparatorChar)
         let xRoot = xDoc.DocumentElement
@@ -671,6 +675,10 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "usermagnit" then UserMagnit <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passmagnit" then PassMagnit <- (xnode :?> XmlNode).InnerText
                 else if (xnode :?> XmlNode).Name = "port" then Port <- Int32.Parse((xnode :?> XmlNode).InnerText)
+                else if (xnode :?> XmlNode).Name = "use_proxy" then UseProxy <- Boolean.Parse((xnode :?> XmlNode).InnerText)
+                elif (xnode :?> XmlNode).Name = "proxy_file" then
+                    ProxyPath <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                (xnode :?> XmlNode).InnerText
             let connectstring =
                 sprintf
                     "Server=%s;port=%d;Database=%s;User Id=%s;password=%s;CharSet=utf8;Convert Zero Datetime=True;default command timeout=3600;Connection Timeout=3600;SslMode=none"

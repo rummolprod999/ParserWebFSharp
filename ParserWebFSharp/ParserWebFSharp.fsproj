@@ -12,6 +12,7 @@
     <Compile Include="NewtonExt.fs" />
     <Compile Include="TypesForParsing.fs" />
     <Compile Include="Settings.fs" />
+    <Compile Include="ProxyLoader.fs" />
     <Compile Include="Logging.fs" />
     <Compile Include="HttpLibrary.fs" />
     <Compile Include="AbstractParser.fs" />

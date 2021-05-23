@@ -34,7 +34,7 @@ type TenderEnergyBase(stn: Settings.T, tn: EnergyBaseRec, typeFz: int, etpName: 
                         if reader.HasRows then reader.Close()
                                                return! Err ""
                         reader.Close()
-                        let Page = Download.DownloadString tn.Href
+                        let Page = Download.DownloadUseProxy (Settings.UseProxy, tn.Href)
                         if Page = "" || Page = null then return! Err(sprintf "%s" tn.Href)
                         let htmlDoc = HtmlDocument()
                         htmlDoc.LoadHtml(Page)

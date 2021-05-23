@@ -19,7 +19,7 @@ type ParserEnergyBase(stn: Settings.T) =
 
 
     member private __.ParsingPage(url: string) =
-        let Page = Download.DownloadString url
+        let Page = Download.DownloadUseProxy (Settings.UseProxy, url)
         match Page with
         | null | "" -> Logging.Log.logger ("Dont get page", url)
         | s ->
