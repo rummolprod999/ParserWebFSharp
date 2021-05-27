@@ -94,29 +94,32 @@ type ParserKg(stn : Settings.T) =
         let builder = TenderBuilder()
         let result =
             builder {
+                let! hrefT = i.findWElementWithoutException(".//td[5]/a", sprintf "hrefT not found, text the element - %s" i.Text)
+                let! href = hrefT.findAttributeWithoutException ("href", "href not found")
                 let! purNum = i.findElementWithoutException (".//td[1]", sprintf "purNum not found, inner text - %s" i.Text)
                 let purNum = purNum.Replace("№", "").Trim()
                 let! orgName = i.findElementWithoutException
-                                   (".//td[2]/a", sprintf "orgName not found %s" i.Text)
+                                   (".//td[2]", sprintf "orgName not found %s" i.Text)
+                let orgName = orgName.Replace("НАИМЕНОВАНИЕ ОРГАНИЗАЦИИ", "").Trim()
                 let! purName = i.findElementWithoutException
                                    (".//td[4]/span[@class='nameTender']", sprintf "purName not found %s" i.Text)
                 let! pwName = i.findElementWithoutException
-                                   (".//td[5]", sprintf "purName not found %s" i.Text)
+                                   (".//td[6]", sprintf "purName not found %s" i.Text)
                 let pwName = pwName.Replace("МЕТОД ЗАКУПОК", "").Trim()
-                let nmck = Tools.InlineFEWE i ".//td[6]"
+                let nmck = Tools.InlineFEWE i ".//td[7]"
                 let nmck = nmck.Replace("ПЛАНИРУЕМАЯ СУММА", "").Trim()
                 let nmck = nmck.GetNmck()
                 let! pubDateT = i.findElementWithoutException
-                                   (".//td[7]", sprintf "pubDateT not found %s" i.Text)
+                                   (".//td[8]", sprintf "pubDateT not found %s" i.Text)
                 let pubDateT = pubDateT.Replace("ДАТА ОПУБЛИКОВАНИЯ", "").Trim()
                 let! datePub = pubDateT.DateFromString("dd.MM.yyyy HH:mm", sprintf "datePub not parse %s" pubDateT)
                 let! endDateT = i.findElementWithoutException
-                                   (".//td[8]", sprintf "endDateT not found %s" i.Text)
+                                   (".//td[9]", sprintf "endDateT not found %s" i.Text)
                 let endDateT = endDateT.Replace("СРОК ПОДАЧИ КОНКУРСНЫХ ЗАЯВОК", "").Trim()
                 let! dateEnd = endDateT.DateFromString("dd.MM.yyyy HH:mm", sprintf "endDateT not parse %s" endDateT)
                 let ten =
                     { KgRec.PwName = pwName
-                      Href = "http://zakupki.gov.kg/popp/view/order/list.xhtml"
+                      Href = href
                       PurNum = purNum
                       PurName = purName
                       OrgName = orgName

@@ -12,7 +12,7 @@ type ParserSibGenco(stn: Settings.T) =
     let url ="https://sibgenco.ru/tenders/?PAGEN_1="
 
     override __.Parsing() =
-            for i in 5..-1..1 do
+            for i in 10..-1..1 do
             try
                 __.ParsingPage(sprintf "%s%d" url i)
             with ex -> Logging.Log.logger ex
@@ -45,11 +45,11 @@ type ParserSibGenco(stn: Settings.T) =
             let! status = t.GsnDocWithError "./td[4]" <| sprintf "status not found %s %s " url (t.InnerText)
             let! pwName = t.GsnDocWithError "./td[1]" <| sprintf "pwName not found %s %s " url (t.InnerText)
             let! datePubT = t.GsnDocWithError ".//div[@class = 'date-list']/div[@class = 'date-list__item'][1]//div[@class = 'date-list__text h5']" <| sprintf "datePubT not found %s %s " url (t.InnerText)
-            let! datePubT = datePubT.ReplaceDateAriba().Get1Doc "(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2})" <| sprintf "datePubT not found %s %s " url (datePubT)
+            let! datePubT = datePubT.ReplaceDateSib().Replace("По Мск", "").Get1Doc "(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2})" <| sprintf "datePubT not found %s %s " url (datePubT)
             let datePub = datePubT.DateFromStringOrMin("dd.MM.yyyy HH:mm")
             
             let! dateEndT = t.GsnDocWithError ".//div[@class = 'date-list']/div[@class = 'date-list__item'][2]//div[@class = 'date-list__text h5']" <| sprintf "dateEndT not found %s %s " url (t.InnerText)
-            let! dateEndT = dateEndT.ReplaceDateAriba().Get1Doc "(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2})" <| sprintf "dateEndT not found %s %s " url (datePubT)
+            let! dateEndT = dateEndT.ReplaceDateSib().Replace("По Мск", "").Get1Doc "(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2})" <| sprintf "dateEndT not found %s %s " url (datePubT)
             let dateEnd = dateEndT.DateFromStringOrMin("dd.MM.yyyy HH:mm")
             let tend = {  Href = href
                           PurName = HttpUtility.HtmlDecode(purName)
