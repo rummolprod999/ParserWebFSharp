@@ -27,7 +27,7 @@ module Settings =
     let mutable internal PassForumGd = ""
     let mutable internal UserMagnit = ""
     let mutable internal PassMagnit = ""
-    let mutable internal ProxyPath = ""
+    let mutable internal ProxyPath = "proxy.txt"
     let mutable internal UseProxy = false
     type T =
         { Database: string
@@ -197,8 +197,6 @@ module Settings =
         let mutable PassDb = ""
         let mutable Server = ""
         let mutable Port = 3306
-        let mutable ProxyPath = "proxy.txt"
-        let mutable UseProxy = false
         let xDoc = XmlDocument()
         xDoc.Load(sprintf "%s%csetting_tenders.xml" PathProgram Path.DirectorySeparatorChar)
         let xRoot = xDoc.DocumentElement
