@@ -20,6 +20,7 @@ type ParserYarRegion(stn : Settings.T) =
         options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
+        options.AddArguments("disable-dev-shm-usage")
     
     override this.Parsing() =
         let driver = new ChromeDriver("/usr/local/bin", options)
