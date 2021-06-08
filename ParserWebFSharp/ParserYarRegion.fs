@@ -20,7 +20,7 @@ type ParserYarRegion(stn : Settings.T) =
         options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
-        options.AddArguments("disable-dev-shm-usage")
+        //options.AddArguments("disable-dev-shm-usage")
     
     override this.Parsing() =
         let driver = new ChromeDriver("/usr/local/bin", options)
@@ -38,7 +38,7 @@ type ParserYarRegion(stn : Settings.T) =
     member private this.ParserSelen(driver : ChromeDriver) =
         let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
-        Thread.Sleep(15000)
+        Thread.Sleep(10000)
         driver.SwitchTo().DefaultContent() |> ignore
         (*let num = driver.FindElements(By.TagName("iframe")).Count
         printfn "%d" num*)
@@ -48,7 +48,7 @@ type ParserYarRegion(stn : Settings.T) =
             dr.FindElement(By.XPath("//a//span[. = 'Таблица']")).Displayed) 
         |> ignore
         driver.FindElement(By.XPath("//a//span[. = 'Таблица']")).Click()
-        Thread.Sleep(15000)
+        Thread.Sleep(10000)
         wait.Until
             (fun dr -> 
             dr.FindElement(By.XPath("//table[@class = 'x-grid-item']")).Displayed) 
@@ -90,7 +90,7 @@ type ParserYarRegion(stn : Settings.T) =
                 driver.SwitchTo().DefaultContent() |> ignore
                 driver.SwitchTo().Frame(driver.FindElements(By.TagName("iframe")).[0]) |> ignore
                 this.Clicker driver <| "//td[contains(@title, 'Следующая страница')]"
-                Thread.Sleep(5000)
+                Thread.Sleep(3000)
                 driver.SwitchTo().DefaultContent() |> ignore
                 driver.SwitchTo().Frame(driver.FindElements(By.TagName("iframe")).[0]) |> ignore
                 wait.Until
