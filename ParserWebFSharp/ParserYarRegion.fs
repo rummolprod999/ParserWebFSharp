@@ -17,11 +17,10 @@ type ParserYarRegion(stn : Settings.T) =
     let options = ChromeOptions()
     
     do 
-        //options.AddArguments("headless")
+        options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
         options.AddArguments("disable-dev-shm-usage")
-        options.AddArguments("ignore-certificate-errors")
     
     override this.Parsing() =
         let driver = new ChromeDriver("/usr/local/bin", options)
@@ -50,12 +49,10 @@ type ParserYarRegion(stn : Settings.T) =
         |> ignore
         driver.FindElement(By.XPath("//a//span[. = 'Таблица']")).Click()
         Thread.Sleep(15000)
-        driver.SwitchTo().DefaultContent() |> ignore
         wait.Until
             (fun dr -> 
             dr.FindElement(By.XPath("//table[@class = 'x-grid-item']")).Displayed) 
         |> ignore
-        driver.SwitchTo().DefaultContent() |> ignore
         this.ParserListTenders driver
         //this.GetNextPage driver wait
         let handlers = driver.WindowHandles
@@ -79,7 +76,6 @@ type ParserYarRegion(stn : Settings.T) =
         ()
     
     member private this.ParserListTenders(driver : ChromeDriver) =
-        driver.SwitchTo().DefaultContent() |> ignore
         //driver.SwitchTo().Frame(driver.FindElements(By.TagName("iframe")).[0]) |> ignore
         let tenders = driver.FindElementsByXPath("//table[@class = 'x-grid-item']")
         for t in 0..tenders.Count-1 do
@@ -117,7 +113,7 @@ type ParserYarRegion(stn : Settings.T) =
                 driver.SwitchTo().DefaultContent() |> ignore
                 let jse = driver :> IJavaScriptExecutor
                 jse.ExecuteScript(el, "") |> ignore
-                Thread.Sleep(500)
+                Thread.Sleep(1000)
                 driver.SwitchTo().Window(driver.WindowHandles.[0]) |> ignore
                 let ten =
                     { EmptyField = "" }
