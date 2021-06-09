@@ -20,7 +20,7 @@ type ParserYarRegion(stn : Settings.T) =
         options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
-        //options.AddArguments("disable-dev-shm-usage")
+        options.AddArguments("disable-dev-shm-usage")
     
     override this.Parsing() =
         let driver = new ChromeDriver("/usr/local/bin", options)
@@ -38,7 +38,7 @@ type ParserYarRegion(stn : Settings.T) =
     member private this.ParserSelen(driver : ChromeDriver) =
         let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
-        Thread.Sleep(10000)
+        Thread.Sleep(8000)
         driver.SwitchTo().DefaultContent() |> ignore
         (*let num = driver.FindElements(By.TagName("iframe")).Count
         printfn "%d" num*)
@@ -47,8 +47,14 @@ type ParserYarRegion(stn : Settings.T) =
             (fun dr -> 
             dr.FindElement(By.XPath("//a//span[. = 'Таблица']")).Displayed) 
         |> ignore
+        try
+            driver.FindElement(By.XPath("//label[. = 'Завершен']/preceding-sibling::span/input")).Click()
+            Thread.Sleep(1000)
+            driver.FindElement(By.XPath("//label[. = 'Отменен']/preceding-sibling::span/input")).Click()
+        with ex -> Logging.Log.logger (ex)
         driver.FindElement(By.XPath("//a//span[. = 'Таблица']")).Click()
         Thread.Sleep(10000)
+        driver.SwitchTo().DefaultContent() |> ignore
         wait.Until
             (fun dr -> 
             dr.FindElement(By.XPath("//table[@class = 'x-grid-item']")).Displayed) 
@@ -81,9 +87,12 @@ type ParserYarRegion(stn : Settings.T) =
     member private this.ParserListTenders(driver : ChromeDriver) =
         //driver.SwitchTo().Frame(driver.FindElements(By.TagName("iframe")).[0]) |> ignore
         let tenders = driver.FindElementsByXPath("//table[@class = 'x-grid-item']")
-        for t in 0..tenders.Count-1 do
-            try 
-                this.ParserTenders driver t
+        let c = ref 0
+        for t in tenders.Count-1 .. -1 .. 0 do
+            try
+                if true then
+                    this.ParserTenders driver t
+                incr c
             with ex -> Logging.Log.logger (ex)
         ()
     
@@ -116,7 +125,7 @@ type ParserYarRegion(stn : Settings.T) =
                 driver.SwitchTo().DefaultContent() |> ignore
                 let jse = driver :> IJavaScriptExecutor
                 jse.ExecuteScript(el, "") |> ignore
-                Thread.Sleep(1000)
+                Thread.Sleep(100)
                 driver.SwitchTo().Window(driver.WindowHandles.[0]) |> ignore
                 let ten =
                     { EmptyField = "" }
