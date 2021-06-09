@@ -61,7 +61,10 @@ type ParserYarRegion(stn : Settings.T) =
                 driver.SwitchTo().Window(t) |> ignore
                 this.ParserTendersList driver listTenders.[0]
                 driver.Close()
-            with ex -> Logging.Log.logger (ex)
+            with
+            | :? NoSuchElementException as ex -> Logging.Log.logger (ex, driver.Url)
+                                                 driver.Close()
+            | ex -> Logging.Log.logger (ex, driver.Url)
         printfn ""
         ()
     
