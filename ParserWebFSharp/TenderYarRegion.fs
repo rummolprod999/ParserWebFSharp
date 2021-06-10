@@ -21,7 +21,7 @@ type TenderYarRegion(stn : Settings.T, tn : YarRegionRec, typeFz : int, etpName 
                 dr.FindElement(By.XPath("//div[@class = 'text-control']//strong[contains(., '№')]")).Displayed) 
             |> ignore
         if driver.Url = "https://zakupki.yarregion.ru/purchasesoflowvolume-asp/" then failwith "start page"
-        let PurNum = (driver.findElementWithoutException ("//div[@class = 'text-control']//strong[contains(., '№')]")).Replace("№", "").RegexDeleteWhitespace()
+        let PurNum = (driver.findElementWithoutException ("//div[@class = 'text-control']//strong[contains(., '№')]")).Replace("№", "").Replace(".", "").RegexDeleteWhitespace()
         let dateEndTT = driver.findElementWithoutException ("//div[. = 'Окончание подачи заявок']/following-sibling::div")
         let dateEndT = dateEndTT.Get1FromRegexpOrDefaul(@"(\d{2}\.\d{2}\.\d{4}\s+\d{2}:\d{2})")
         let DateEnd = dateEndT.DateFromStringOrMin("dd.MM.yyyy HH:mm")

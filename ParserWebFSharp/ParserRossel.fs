@@ -311,7 +311,7 @@ type ParserRossel(stn: Settings.T) =
         driver.FindElementByXPath("//li[. = 'ПАО «Россети»']").Click()
         Thread.Sleep(3000)
         this.Clicker driver "//button[contains( . , 'Найти')]"
-        pageReloader driver 100
+        pageReloader driver 500
         this.ParserListTenders driver
 
     member private this.ParserSelenRosgeo(driver: ChromeDriver) =
