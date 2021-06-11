@@ -403,4 +403,5 @@ type ParserRossel(stn: Settings.T) =
         let T = TenderRossel(set, ten, tFz)
         if  not <| listTenders.Exists(fun t -> t.PurNum = purNum) then
             listTenders.Add(T)
+            Logging.Log.logger (sprintf "purNum is %s" purNum)
 
