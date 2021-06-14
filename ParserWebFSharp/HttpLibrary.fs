@@ -8,6 +8,7 @@ open System.Text
 open System.Threading
 open System.Threading.Tasks
 open System.Net.Http
+open RandomUserAgent
 
 module Download =
     type TimedWebClient() =
@@ -345,7 +346,7 @@ module Download =
         let mutable cc = true
         while cc do
             try
-                let httpClientHandler = HttpClientHandler()
+                let httpClientHandler = new HttpClientHandler()
                 httpClientHandler.AllowAutoRedirect <- true
                 if useProxy then
                     let prixyEntity = ProxyLoader.GetRandomProxy
@@ -356,6 +357,7 @@ module Download =
                     proxy.Credentials <- NetworkCredential(prixyEntity.User, prixyEntity.Pass)
                     httpClientHandler.Proxy <- proxy
                 use client = new HttpClient(httpClientHandler)
+                client.DefaultRequestHeaders.Add("User-Agent", RandomUa.RandomUserAgent);
                 let response: Task<HttpResponseMessage> = client.GetAsync(url);
                 ret <- response.Result.Content.ReadAsStringAsync().Result
                 cc <- false
@@ -365,5 +367,5 @@ module Download =
                     Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток" url !count)
                     cc <- false
                 else incr count
-                Thread.Sleep(5000)
+                Thread.Sleep(10000)
         ret
