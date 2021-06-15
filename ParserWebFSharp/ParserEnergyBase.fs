@@ -1,5 +1,6 @@
 namespace ParserWeb
 
+open System.Threading
 open System.Web
 open TypeE
 open HtmlAgilityPack
@@ -15,6 +16,7 @@ type ParserEnergyBase(stn: Settings.T) =
             for i in 100..-1..1 do
             try
                 __.ParsingPage(sprintf "%s%d" url i)
+                Thread.Sleep(10000)
             with ex -> Logging.Log.logger ex
 
 

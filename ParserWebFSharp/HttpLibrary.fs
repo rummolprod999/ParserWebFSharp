@@ -362,10 +362,9 @@ module Download =
                 ret <- response.Result.Content.ReadAsStringAsync().Result
                 cc <- false
             with ex ->
-                Logging.Log.logger(ex)
+                //Logging.Log.logger(ex)
                 if !count >= 3 then
                     Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток" url !count)
                     cc <- false
                 else incr count
-                Thread.Sleep(10000)
         ret

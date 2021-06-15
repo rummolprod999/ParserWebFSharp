@@ -1,5 +1,6 @@
 namespace ParserWeb
 
+open System.Threading
 open MySql.Data.MySqlClient
 open System
 open System.Data
@@ -34,6 +35,7 @@ type TenderEnergyBase(stn: Settings.T, tn: EnergyBaseRec, typeFz: int, etpName: 
                         if reader.HasRows then reader.Close()
                                                return! Err ""
                         reader.Close()
+                        Thread.Sleep(10000)
                         let Page = Download.DownloadUseProxy (Settings.UseProxy, tn.Href)
                         if Page = "" || Page = null then return! Err(sprintf "%s" tn.Href)
                         let htmlDoc = HtmlDocument()
