@@ -181,6 +181,8 @@
     <Compile Include="ParserNeftisa.fs" />
     <Compile Include="TenderBelorusNeft.fs" />
     <Compile Include="ParserBelorusNeft.fs" />
+    <Compile Include="TenderIshim.fs" />
+    <Compile Include="ParserIshim.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

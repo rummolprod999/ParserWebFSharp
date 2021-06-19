@@ -83,6 +83,7 @@ type Arguments =
     | Magnitstroy
     | Neftisa
     | Belorusneft
+    | Ishim
 
 type SlavNeft =
     | MEGION

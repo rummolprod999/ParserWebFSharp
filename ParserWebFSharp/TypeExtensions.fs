@@ -20,6 +20,11 @@ module TypeE =
             try
                 DateTime.ParseExact(this, pat, CultureInfo.InvariantCulture)
             with ex -> DateTime.MinValue
+        
+        member this.DateFromStringOrPubPlus2(pat: string, datePub: DateTime) =
+            try
+                DateTime.ParseExact(this, pat, CultureInfo.InvariantCulture)
+            with ex -> datePub.AddDays(2.)
         member this.DateFromString(pat: string, exc: string) =
             match this.DateFromString(pat) with
             | None -> Error(exc)

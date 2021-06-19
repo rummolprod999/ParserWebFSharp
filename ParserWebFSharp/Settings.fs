@@ -27,6 +27,8 @@ module Settings =
     let mutable internal PassForumGd = ""
     let mutable internal UserMagnit = ""
     let mutable internal PassMagnit = ""
+    let mutable internal UserIshim = ""
+    let mutable internal PassIshim = ""
     let mutable internal ProxyPath = "proxy.txt"
     let mutable internal UseProxy = false
     type T =
@@ -194,6 +196,8 @@ module Settings =
         let mutable LogPathTendersNeftisa = ""
         let mutable TempPathTenderBelorusNeft = ""
         let mutable LogPathTendersBelorusNeft = ""
+        let mutable TempPathTenderIshim = ""
+        let mutable LogPathTendersIshim = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -661,6 +665,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_belorusneft" then
                     LogPathTendersBelorusNeft <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                 (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_ishim" then
+                    TempPathTenderIshim <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                 (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_ishim" then
+                    LogPathTendersIshim <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -680,6 +690,8 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "passforumgd" then PassForumGd <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "usermagnit" then UserMagnit <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passmagnit" then PassMagnit <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "userishim" then UserIshim <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "passishim" then PassIshim <- (xnode :?> XmlNode).InnerText
                 else if (xnode :?> XmlNode).Name = "port" then Port <- Int32.Parse((xnode :?> XmlNode).InnerText)
                 else if (xnode :?> XmlNode).Name = "use_proxy" then UseProxy <- Boolean.Parse((xnode :?> XmlNode).InnerText)
                 elif (xnode :?> XmlNode).Name = "proxy_file" then
@@ -768,6 +780,7 @@ module Settings =
                 | Magnitstroy -> TempPathTenderMagnitStroy
                 | Neftisa -> TempPathTenderNeftisa
                 | Belorusneft -> TempPathTenderBelorusNeft
+                | Ishim -> TempPathTenderIshim
 
             let LogPathTenders =
                 match arg with
@@ -847,6 +860,7 @@ module Settings =
                 | Magnitstroy -> LogPathTendersMagnitStroy
                 | Neftisa -> LogPathTendersNeftisa
                 | Belorusneft -> LogPathTendersBelorusNeft
+                | Ishim -> LogPathTendersIshim
 
             { Database = Database
               TempPathTenders = TempPathTenders

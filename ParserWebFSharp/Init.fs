@@ -103,6 +103,7 @@ type Init(s: Settings.T, arg: Arguments) =
         | Magnitstroy -> this.ParsingMagnitStroy()
         | Neftisa -> this.ParsingNeftisa()
         | Belorusneft -> this.ParsingBelorusNeft()
+        | Ishim -> this.ParsingIshim()
 
     member private this.ParsingIrkutsk() =
         Logging.Log.logger "Начало парсинга"
@@ -817,4 +818,13 @@ type Init(s: Settings.T, arg: Arguments) =
             Logging.Log.logger "Конец парсинга"
             Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderBelorusNeft.tenderCount)
             Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderBelorusNeft.tenderUpCount)
+    
+    member private this.ParsingIshim() =
+            Logging.Log.logger "Начало парсинга"
+            try
+                this.GetParser(ParserIshim(s))
+            with ex -> Logging.Log.logger ex
+            Logging.Log.logger "Конец парсинга"
+            Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderIshim.tenderCount)
+            Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderIshim.tenderUpCount)
     member private this.GetParser(p: Parser) = p.Parsing()
