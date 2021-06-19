@@ -82,6 +82,7 @@ type Arguments =
     | Estp
     | Magnitstroy
     | Neftisa
+    | Belorusneft
 
 type SlavNeft =
     | MEGION

@@ -192,6 +192,8 @@ module Settings =
         let mutable LogPathTendersMagnitStroy = ""
         let mutable TempPathTenderNeftisa = ""
         let mutable LogPathTendersNeftisa = ""
+        let mutable TempPathTenderBelorusNeft = ""
+        let mutable LogPathTendersBelorusNeft = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -653,6 +655,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_neftisa" then
                     LogPathTendersNeftisa <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                 (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_belorusneft" then
+                    TempPathTenderBelorusNeft <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                 (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_belorusneft" then
+                    LogPathTendersBelorusNeft <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -759,6 +767,7 @@ module Settings =
                 | Estp -> TempPathTendersEstp
                 | Magnitstroy -> TempPathTenderMagnitStroy
                 | Neftisa -> TempPathTenderNeftisa
+                | Belorusneft -> TempPathTenderBelorusNeft
 
             let LogPathTenders =
                 match arg with
@@ -837,6 +846,7 @@ module Settings =
                 | Estp -> LogPathTendersEstp
                 | Magnitstroy -> LogPathTendersMagnitStroy
                 | Neftisa -> LogPathTendersNeftisa
+                | Belorusneft -> LogPathTendersBelorusNeft
 
             { Database = Database
               TempPathTenders = TempPathTenders
