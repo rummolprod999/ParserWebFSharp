@@ -1,6 +1,7 @@
 namespace ParserWeb
 
 open System.Collections.ObjectModel
+open System.Text.RegularExpressions
 open System.Threading
 open MySql.Data.MySqlClient
 open System
@@ -26,11 +27,20 @@ type TenderBarnaulTm(stn: Settings.T, tn: RosSelRec, typeFz: int, etpName: strin
                         driver.Navigate().GoToUrl(tn.Href)
                         Thread.Sleep(1000)
                         driver.SwitchTo().DefaultContent() |> ignore
-                        wait.Until (fun dr -> dr.FindElement(By.XPath("//section[contains(., 'Дата начала приема заявок:')]")).Displayed) |> ignore
-                        let body = driver.FindElement(By.XPath("//section[contains(., 'Дата начала приема заявок:')]"))
-                        let! datePubT = body.Text.Get1("Дата начала приема заявок:\s+(\d{2}\.\d{2}\.\d{4})", sprintf "datePubT not found %s" tn.Href)
+                        wait.Until (fun dr -> dr.FindElement(By.XPath("//section[contains(., 'Дата начала')]")).Displayed) |> ignore
+                        let body = driver.FindElement(By.XPath("//section[contains(., 'Дата начала')]"))
+                        let! datePubT = body.Text.Get1Optional("Дата начала приема заявок:\s+(\d{2}\.\d{2}\.\d{4})")
+                        let! datePubT1 = body.Text.Get1Optional("Дата начала приема тендерных заявок:\s+(\d{2}\.\d{2}\.\d{4})")
+                        let datePubT = match datePubT with
+                                       |"" -> datePubT1
+                                       | x -> x
+                                       
                         let! datePub = datePubT.DateFromString("dd.MM.yyyy", sprintf "datePub not parse %s" datePubT)
                         let! dateEndT = body.Text.Get1Optional( "Дата окончания приема заявок:\s+(\d{2}\.\d{2}\.\d{4})")
+                        let! dateEndT1 = body.Text.Get1Optional( "Дата окончание приема тендерных заявок:\s+(\d{2}\.\d{2}\.\d{4})")
+                        let dateEndT = match dateEndT with
+                                       |"" -> dateEndT1
+                                       | x -> x
                         let dateEnd = dateEndT.DateFromStringOrPubPlus2("dd.MM.yyyy", datePub)
                         con.Open()
                         let selectTend =
@@ -164,7 +174,9 @@ type TenderBarnaulTm(stn: Settings.T, tn: RosSelRec, typeFz: int, etpName: strin
                         cmd19.Parameters.AddWithValue("@okei", "") |> ignore
                         cmd19.Parameters.AddWithValue("@sum", "") |> ignore
                         cmd19.ExecuteNonQuery() |> ignore
-                        
+                        let restricts = body.Text.Trim()
+                        let regex = new Regex(@"-\s+(.+)[\n\r]+")
+                        let matches = regex.Matches(restricts);
                         this.AddVerNumber con tn.PurNum stn typeFz
                         this.TenderKwords con (!idTender) stn
                         return ""
