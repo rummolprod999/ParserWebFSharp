@@ -198,6 +198,8 @@ module Settings =
         let mutable LogPathTendersBelorusNeft = ""
         let mutable TempPathTenderIshim = ""
         let mutable LogPathTendersIshim = ""
+        let mutable TempPathTendersBarnaulTm = ""
+        let mutable LogPathTendersBarnaulTm = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -671,6 +673,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_ishim" then
                     LogPathTendersIshim <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                 (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_barnaultm" then
+                    TempPathTendersBarnaulTm <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                 (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_barnaultm" then
+                    LogPathTendersBarnaulTm <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -781,6 +789,7 @@ module Settings =
                 | Neftisa -> TempPathTenderNeftisa
                 | Belorusneft -> TempPathTenderBelorusNeft
                 | Ishim -> TempPathTenderIshim
+                | Barnaultm -> TempPathTendersBarnaulTm
 
             let LogPathTenders =
                 match arg with
@@ -861,6 +870,7 @@ module Settings =
                 | Neftisa -> LogPathTendersNeftisa
                 | Belorusneft -> LogPathTendersBelorusNeft
                 | Ishim -> LogPathTendersIshim
+                | Barnaultm -> LogPathTendersBarnaulTm
 
             { Database = Database
               TempPathTenders = TempPathTenders

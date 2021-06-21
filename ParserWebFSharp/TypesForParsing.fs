@@ -84,6 +84,7 @@ type Arguments =
     | Neftisa
     | Belorusneft
     | Ishim
+    | Barnaultm
 
 type SlavNeft =
     | MEGION

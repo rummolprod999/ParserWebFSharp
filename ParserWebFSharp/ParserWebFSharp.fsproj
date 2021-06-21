@@ -183,6 +183,8 @@
     <Compile Include="ParserBelorusNeft.fs" />
     <Compile Include="TenderIshim.fs" />
     <Compile Include="ParserIshim.fs" />
+    <Compile Include="TenderBarnaulTm.fs" />
+    <Compile Include="ParserBarnaulTm.fs" />
     <Compile Include="Init.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
