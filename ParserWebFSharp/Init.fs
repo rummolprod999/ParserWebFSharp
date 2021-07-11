@@ -744,6 +744,9 @@ type Init(s: Settings.T, arg: Arguments) =
         try
             this.GetParser(ParserRtCi(s))
         with ex -> Logging.Log.logger ex
+        try
+            this.GetParser(ParserRtCi2(s))
+        with ex -> Logging.Log.logger ex
         Logging.Log.logger "Конец парсинга"
         Logging.Log.logger (sprintf "Добавили тендеров %d" !TenderRtCi.tenderCount)
         Logging.Log.logger (sprintf "Обновили тендеров %d" !TenderRtCi.tenderUpCount)

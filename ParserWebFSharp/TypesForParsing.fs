@@ -783,3 +783,11 @@ type NeftisaRec =
       OrgName: string
       DatePub: DateTime
       mutable DateEnd: DateTime}
+
+type RtCi2Rec =
+    { Href: string
+      PurName: string
+      PurNum: string
+      CusName: string
+      DatePub: DateTime
+      DateEnd: DateTime}
