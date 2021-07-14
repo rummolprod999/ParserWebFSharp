@@ -9,7 +9,7 @@ open OpenQA.Selenium
 open OpenQA.Selenium.Chrome
 open OpenQA.Selenium.Support.UI
 
-type TenderYarRegion(stn : Settings.T, tn : YarRegionRec, typeFz : int, etpName : string, etpUrl : string, driver : ChromeDriver) =
+type TenderTulaRegion(stn : Settings.T, tn : YarRegionRec, typeFz : int, etpName : string, etpUrl : string, driver : ChromeDriver) =
     inherit Tender(etpName, etpUrl)
     let settings = stn
     static member val tenderCount = ref 0
@@ -22,6 +22,7 @@ type TenderYarRegion(stn : Settings.T, tn : YarRegionRec, typeFz : int, etpName 
             |> ignore
         if driver.Url = "https://zakupki.yarregion.ru/purchasesoflowvolume-asp/" then failwith "start page"
         let PurNum = (driver.findElementWithoutException ("//div[@class = 'text-control']//strong[contains(., '№')]")).Replace("№", "").Replace(".", "").RegexDeleteWhitespace()
+        if PurNum = "" then failwith "empty purnum"
         let dateEndTT = driver.findElementWithoutException ("//div[. = 'Окончание подачи заявок']/following-sibling::div")
         let dateEndT = dateEndTT.Get1FromRegexpOrDefaul(@"(\d{2}\.\d{2}\.\d{4}\s+\d{2}:\d{2})")
         let DateEnd = dateEndT.DateFromStringOrMin("dd.MM.yyyy HH:mm")
@@ -29,7 +30,7 @@ type TenderYarRegion(stn : Settings.T, tn : YarRegionRec, typeFz : int, etpName 
         let datePubTT = driver.findElementWithoutException ("//div[. = 'Опубликовано']/following-sibling::div/p")
         let datePubT = datePubTT.Get1FromRegexpOrDefaul(@"(\d{2}\.\d{2}\.\d{4})")
         let DatePub = datePubT.DateFromStringOrMin("dd.MM.yyyy")
-        
+        if DatePub = DateTime.MinValue then failwith "empty date pub"
         let Status = driver.findElementWithoutException ("//div[. = 'Состояние']/following-sibling::div/span")
         
         use con = new MySqlConnection(stn.ConStr)
@@ -124,7 +125,7 @@ type TenderYarRegion(stn : Settings.T, tn : YarRegionRec, typeFz : int, etpName 
             let idEtp = this.GetEtp con settings
             let numVersion = 1
             let mutable idRegion = 0
-            let regionS = Tools.GetRegionString("ярослав")
+            let regionS = Tools.GetRegionString("тула")
             if regionS <> "" then 
                 let selectReg = sprintf "SELECT id FROM %sregion WHERE name LIKE @name" stn.Prefix
                 let cmd46 = new MySqlCommand(selectReg, con)
@@ -166,8 +167,8 @@ type TenderYarRegion(stn : Settings.T, tn : YarRegionRec, typeFz : int, etpName 
             cmd9.ExecuteNonQuery() |> ignore
             idTender := int cmd9.LastInsertedId
             match updated with
-            | true -> incr TenderYarRegion.tenderUpCount
-            | false -> incr TenderYarRegion.tenderCount
+            | true -> incr TenderTulaRegion.tenderUpCount
+            | false -> incr TenderTulaRegion.tenderCount
             let idCustomer = ref 0
             if CusName <> "" then 
                 let selectCustomer =

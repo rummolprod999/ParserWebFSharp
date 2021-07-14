@@ -85,6 +85,7 @@ type Arguments =
     | Belorusneft
     | Ishim
     | Barnaultm
+    | Tularegion
 
 type SlavNeft =
     | MEGION
