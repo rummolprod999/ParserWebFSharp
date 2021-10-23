@@ -85,13 +85,13 @@ type ParserRostendTask(stn : Settings.T) =
         let mutable PubDateT =
             match t.QuerySelector("span.tender__date-start") with
             | null -> ""
-            | ur -> ur.TextContent.Trim().RegexCutWhitespace()
+            | ur -> ur.TextContent.Trim().Replace("от", "").RegexDeleteWhitespace()
 
-        PubDateT <- match PubDateT.Get1FromRegexp @"(\d{2}\.\d{2}\.\d{4})" with
+        PubDateT <- match PubDateT.Get1FromRegexp @"(\d{2}\.\d{2}\.\d{2})" with
                     | Some x -> x.Trim()
                     | None -> ""
         let datePub =
-            match PubDateT.DateFromString("dd.MM.yyyy") with
+            match PubDateT.DateFromString("dd.MM.yy") with
             | Some d -> d
             | None -> DateTime.MinValue
             
@@ -99,12 +99,16 @@ type ParserRostendTask(stn : Settings.T) =
             match t.QuerySelector("div.tender-date-info:contains('Окончание')") with
             | null -> ""
             | ur -> ur.TextContent.Trim().RegexCutWhitespace()
-
+        let timeEnd =
+            match t.QuerySelector("span.tender__countdown-container") with
+            | null -> "00:00"
+            | ur -> ur.TextContent.Trim().RegexCutWhitespace()
         EndDateT <- match EndDateT.Get1FromRegexp @"(\d{2}\.\d{2}\.\d{4})" with
                     | Some x -> x.Trim()
                     | None -> ""
+        if timeEnd <> "" then EndDateT <- sprintf "%s %s" EndDateT timeEnd
         let dateEnd =
-            match EndDateT.DateFromString("dd.MM.yyyy") with
+            match EndDateT.DateFromString("dd.MM.yyyy HH:mm") with
             | Some d -> d
             | None -> datePub.AddDays(2.)
         
