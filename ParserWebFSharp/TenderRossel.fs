@@ -21,6 +21,8 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
     static member val tenderCountRosgeo = ref 0
     static member val tenderCountRosseti = ref 0
     static member val tenderCountKim = ref 0
+    
+    static member val tenderAllCount = ref 0
     static member val tenderUpCount = ref 0
     static member val tenderUpCountAtom = ref 0
     static member val tenderUpCountRt = ref 0
@@ -30,6 +32,8 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
     static member val tenderUpCountRosgeo = ref 0
     static member val tenderUpCountRosseti = ref 0
     static member val tenderUpCountKim = ref 0
+    
+    static member val tenderUpAllCount = ref 0
     
     member public this.PurNum =
         tn.PurNum
@@ -176,7 +180,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
             for row in dt.Rows do
                 updated <- true
                 //printfn "%A" <| (row.["date_version"])
-                match dateUpd >= ((row.["date_version"]) :?> DateTime) with
+                match dateUpd >= (row.["date_version"] :?> DateTime) with
                 | true -> row.["cancel"] <- 1
                 | false -> cancelStatus <- 1
             let commandBuilder = new MySqlCommandBuilder(adapter)
@@ -280,7 +284,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
                 | 49 -> incr TenderRossel.tenderUpCountRosgeo
                 | 50 -> incr TenderRossel.tenderUpCountRosseti
                 | 260 -> incr TenderRossel.tenderUpCountKim
-                | _ -> ()
+                | _ -> incr TenderRossel.tenderUpAllCount
             | false -> 
                 match typeFz with
                 | 42 -> incr TenderRossel.tenderCount
@@ -292,7 +296,7 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
                 | 49 -> incr TenderRossel.tenderCountRosgeo
                 | 50 -> incr TenderRossel.tenderCountRosseti
                 | 260 -> incr TenderRossel.tenderCountKim
-                | _ -> ()
+                | _ -> incr TenderRossel.tenderAllCount
             let documents = doc.QuerySelectorAll("ul.documents__list > li > a")
             documents |> Seq.iter (this.ParsingDocs con !idTender)
             let lotNumber = ref 1

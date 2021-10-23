@@ -181,6 +181,8 @@ type Init(s: Settings.T, arg: Arguments) =
             (sprintf "Добавили Корпоративный интернет-магазин тендеров %d" !TenderRossel.tenderCountKim)
         Logging.Log.logger
             (sprintf "Обновили Корпоративный интернет-магазин тендеров %d" !TenderRossel.tenderUpCountKim)
+        Logging.Log.logger (sprintf "Добавили не попавшие в категории тендеров %d" !TenderRossel.tenderAllCount)
+        Logging.Log.logger (sprintf "Обновили не попавшие в категории тендеров %d" !TenderRossel.tenderUpAllCount)
 
     member private this.ParsingNeft() =
         Logging.Log.logger "Начало парсинга"
