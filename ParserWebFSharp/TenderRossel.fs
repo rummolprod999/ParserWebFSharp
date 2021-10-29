@@ -105,17 +105,15 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
             endDateT <- doc.QuerySelector("td:contains('Прием заявок') + td > p")
         if endDateT = null then
             endDateT <- doc.QuerySelector("td:contains('окончания приёма заявок') + td > p")
-        match endDateT with
-        | null -> raise <| NullReferenceException(sprintf "endDate not found in %s" tn.Href)
-        | _ -> ()
-        let mutable endDateS = endDateT.TextContent.Trim()
+        let mutable endDateS = ""
+        if endDateT = null then endDateS <- "" else endDateS <- endDateT.TextContent.Trim()
         match this.GetDateS(endDateS) with
         | Some dtP -> endDateS <- dtP
-        | None -> endDateS <- ""
+        | None -> ()
         let endDate =
             match endDateS.DateFromString("dd.MM.yy HH:mm:ss") with
             | Some d -> d
-            | None -> datePub
+            | None -> datePub.AddDays(2.)
         
         let dateUpd = DateTime.Now
         let biddingDateT = doc.QuerySelector("td:contains('Проведение торгов') + td > p")
