@@ -28,7 +28,7 @@ type ParserRossel(stn: Settings.T) =
                 for i in 1..x do
                     if !theEnd then
                         try
-                            if !countTry > 5 then theEnd := false
+                            if !countTry > 2 then theEnd := false
                             wait.Until(fun dr -> dr.FindElement(By.XPath("//button[contains(@class, 'pagination__more-link')]")).Displayed) |> ignore
                             let jse = driver :> IJavaScriptExecutor
                             jse.ExecuteScript("document.querySelector('button.pagination__more-link').click()", "") |> ignore

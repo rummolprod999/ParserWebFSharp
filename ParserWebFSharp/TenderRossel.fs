@@ -103,6 +103,8 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
         let mutable endDateT = doc.QuerySelector("td:contains('Приём заявок') + td > p")
         if endDateT = null then
             endDateT <- doc.QuerySelector("td:contains('Прием заявок') + td > p")
+        if endDateT = null then
+            endDateT <- doc.QuerySelector("td:contains('окончания приёма заявок') + td > p")
         match endDateT with
         | null -> raise <| NullReferenceException(sprintf "endDate not found in %s" tn.Href)
         | _ -> ()
