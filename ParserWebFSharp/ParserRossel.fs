@@ -36,9 +36,10 @@ type ParserRossel(stn: Settings.T) =
                         with ex -> Logging.Log.logger ex
                                    incr countTry
     do
-        //options.AddArguments("headless")
+        options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
+        options.AddArguments("disable-dev-shm-usage")
 
     member private this.GetPurNum(input: string): string option =
         match input with
