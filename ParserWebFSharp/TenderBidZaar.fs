@@ -105,7 +105,7 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
                         match updated with
                         | true -> incr TenderBidZaar.tenderUpCount
                         | false -> incr TenderBidZaar.tenderCount
-                        let attachments = body.findElementsWithoutException("//a[starts-with(@href, '/api/filestorage/Files/download/')]")
+                        let attachments = body.findElementsWithoutException("//a[contains(@href, '/api/filestorage/files/download/')]")
                         this.GetAttachments(con, !idTender, attachments)
                         let idLot = ref 0
                         let currency = ""
@@ -206,7 +206,7 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
         for doc in att do
             let urlDoc = doc.GetAttribute("href").Trim()
             let url = urlDoc
-            let name = doc.FindElement(By.XPath(".//div[@ui = 'file-name']")).Text.Trim()
+            let name = doc.FindElement(By.XPath(".//div[@class = 'title']")).Text.Trim()
             let addAttach =
                     sprintf 
                         "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url, description = @description" 

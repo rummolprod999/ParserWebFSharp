@@ -50,7 +50,7 @@ type ParserBidZaar(stn: Settings.T) =
         driver.SwitchTo().DefaultContent() |> ignore
         wait.Until
             (fun dr -> 
-            dr.FindElement(By.XPath("//div[@class= 'list-item-wrapper ng-star-inserted']/div[@class = 'item'][position() = 1]")).Displayed) |> ignore
+            dr.FindElement(By.XPath("//div[@class= 'list-item-wrapper ng-star-inserted']/div[contains(@class, 'item')][position() = 1]")).Displayed) |> ignore
         Thread.Sleep(3000)
         __.Scroll(driver)
         driver.SwitchTo().DefaultContent() |> ignore
@@ -69,7 +69,7 @@ type ParserBidZaar(stn: Settings.T) =
         ()
     member private __.Scroll(driver : ChromeDriver) =
         try
-            for i in 1..5 do
+            for i in 1..20 do
                 let jse = driver :> IJavaScriptExecutor
                 jse.ExecuteScript("document.getElementsByClassName('cdk-virtual-scroll-viewport scroll-container cdk-virtual-scroll-orientation-vertical')[0].scrollBy(0, 500)", "") |> ignore
                 Thread.Sleep(100)
@@ -92,7 +92,7 @@ type ParserBidZaar(stn: Settings.T) =
     member private this.ParserListTenders(driver : ChromeDriver) =
         driver.SwitchTo().DefaultContent() |> ignore
         let tenders =
-            driver.FindElementsByXPath("//div[@class= 'list-item-wrapper ng-star-inserted']/div[@class = 'item']")
+            driver.FindElementsByXPath("//div[@class= 'list-item-wrapper ng-star-inserted']/div[contains(@class, 'item')]")
         for t in tenders do
             this.ParserTenders t
         ()
@@ -100,15 +100,14 @@ type ParserBidZaar(stn: Settings.T) =
     member private this.ParserTenders (i : IWebElement) =
         let builder = TenderBuilder()
         let res = builder {
-            let! hrefT = i.findWElementWithoutException(".//a[contains(@class, 'item ng-star-inserted')]", sprintf "hrefT not found, text the element - %s" i.Text)
+            let! hrefT = i.findWElementWithoutException(".//a[contains(@class, 'link')]", sprintf "hrefT not found, text the element - %s" i.Text)
             let! href = hrefT.findAttributeWithoutException ("href", "href not found")
-            let! purNum = i.findElementWithoutException(".//div[contains(@class, 'number')]", sprintf "purNum not found %s" i.Text)
+            let! purNum = href.Get1("light/([a-z\d-]+)(?:/request)?", sprintf "purNum not found %s" i.Text)
             let! purName = i.findElementWithoutException(".//div[@class = 'body']/div[@class = 'name']", sprintf "purName not found %s" i.Text)
-            let! pwName = i.findElementWithoutException(".//cgn-prs-status[@class = 'status proposal']", sprintf "pwName not found %s" i.Text)
-            let! cusName = i.findElementWithoutException(".//cgn-company-name", sprintf "cusName not found %s" i.Text)
-            let! pubDateT = i.findElementWithoutException(".//div[@class='title' and . = 'Опубликован']/following-sibling::div", sprintf "pubDateT not found %s" i.Text)
-            let! datePub = pubDateT.DateFromString("dd.MM.yyyy • HH:mm", sprintf "datePub not parse %s" pubDateT)
-            let! endDateT = i.findElementWithoutException(".//div[@class='title' and . = 'Прием предложений до']/following-sibling::div", sprintf "endDateT not found %s" i.Text)
+            let pwName = ""
+            let! cusName = i.findElementWithoutException(".//cgn-cmp-name//div[@class = 'name ng-star-inserted']", sprintf "cusName not found %s" i.Text)
+            let datePub = DateTime.Now
+            let! endDateT = i.findElementWithoutException(".//div[contains(@class, 'date ng-star-inserted')]", sprintf "endDateT not found %s" i.Text)
             let! dateEnd1 = endDateT.Get1("(\d{2}\.\d{2}\.\d{4}.+\d{2}:\d{2})", sprintf "dateEnd1 not found %s" endDateT)
             let! dateEnd = dateEnd1.DateFromString("dd.MM.yyyy • HH:mm", sprintf "endDate not parse %s" dateEnd1)
             let ten =
