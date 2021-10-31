@@ -69,10 +69,10 @@ type ParserBidZaar(stn: Settings.T) =
         ()
     member private __.Scroll(driver : ChromeDriver) =
         try
-            for i in 1..20 do
+            for i in 1..200 do
                 let jse = driver :> IJavaScriptExecutor
                 jse.ExecuteScript("document.getElementsByClassName('cdk-virtual-scroll-viewport scroll-container cdk-virtual-scroll-orientation-vertical')[0].scrollBy(0, 500)", "") |> ignore
-                Thread.Sleep(100)
+                Thread.Sleep(500)
         with ex -> Logging.Log.logger ex
         ()
     member private __.Auth(driver : ChromeDriver) =
