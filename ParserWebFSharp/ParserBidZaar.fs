@@ -50,9 +50,10 @@ type ParserBidZaar(stn: Settings.T) =
         driver.SwitchTo().DefaultContent() |> ignore
         wait.Until
             (fun dr -> 
-            dr.FindElement(By.XPath("//div[@class= 'list-item-wrapper ng-star-inserted']/div[contains(@class, 'item')][position() = 1]")).Displayed) |> ignore
+            dr.FindElement(By.XPath("//div[contains(@class, 'ng-star-inserted')]/div[@class = 'item-content'][position() = 1]")).Displayed) |> ignore
         Thread.Sleep(3000)
         __.Scroll(driver)
+        Thread.Sleep(3000)
         driver.SwitchTo().DefaultContent() |> ignore
         __.ParserListTenders(driver)
         for t in listTenders do
@@ -93,7 +94,7 @@ type ParserBidZaar(stn: Settings.T) =
     member private this.ParserListTenders(driver : ChromeDriver) =
         driver.SwitchTo().DefaultContent() |> ignore
         let tenders =
-            driver.FindElementsByXPath("//div[@class= 'list-item-wrapper ng-star-inserted']/div[contains(@class, 'item')]")
+            driver.FindElementsByXPath("//div[contains(@class, 'ng-star-inserted')]/div[@class = 'item-content']")
         for t in tenders do
             this.ParserTenders t
         ()
