@@ -53,9 +53,6 @@ type ParserBidZaar(stn: Settings.T) =
             dr.FindElement(By.XPath("//div[contains(@class, 'ng-star-inserted')]/div[@class = 'item-content'][position() = 1]")).Displayed) |> ignore
         Thread.Sleep(3000)
         __.Scroll(driver)
-        Thread.Sleep(3000)
-        driver.SwitchTo().DefaultContent() |> ignore
-        __.ParserListTenders(driver)
         for t in listTenders do
             try 
                 __.ParserTendersList driver t
@@ -70,10 +67,13 @@ type ParserBidZaar(stn: Settings.T) =
         ()
     member private __.Scroll(driver : ChromeDriver) =
         
-            for i in 1..200 do
+            for i in 1..20 do
                 try
+                    driver.SwitchTo().DefaultContent() |> ignore
+                    __.ParserListTenders(driver)
+                    driver.SwitchTo().DefaultContent() |> ignore
                     let jse = driver :> IJavaScriptExecutor
-                    jse.ExecuteScript("document.getElementsByClassName('cdk-virtual-scroll-viewport scroll-container cdk-virtual-scroll-orientation-vertical')[0].scrollBy(0, 5000)", "") |> ignore
+                    jse.ExecuteScript("document.getElementsByClassName('cdk-virtual-scroll-viewport scroll-container cdk-virtual-scroll-orientation-vertical')[0].scrollBy(0, 1000)", "") |> ignore
                     Thread.Sleep(1000)
                 with ex -> Logging.Log.logger ex
             ()
