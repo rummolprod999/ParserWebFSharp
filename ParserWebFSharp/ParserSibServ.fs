@@ -54,7 +54,7 @@ type ParserSibServ(stn : Settings.T) =
             | x -> x.Replace("Лот №", "")
         
         let purName =
-            match t.findElementWithoutException ("./following-sibling::p[2]") with
+            match t.findElementWithoutException ("./following-sibling::h2[1]") with
             | "" -> raise <| NullReferenceException(sprintf "purNume not found in %s" url)
             | x -> x
         
@@ -73,7 +73,7 @@ type ParserSibServ(stn : Settings.T) =
         let listDoc = List<DocSibServ>()
         listDoc.Add({ name = requesttext
                       url = hrefrequest })
-        let dateT = this.GetDefaultFromNull <| t.FindElement(By.XPath("./following-sibling::p[4]"))
+        let dateT = this.GetDefaultFromNull <| t.FindElement(By.XPath("./following-sibling::p[3]"))
         
         let datePubT =
             match dateT.RegexCutWhitespace().Get1FromRegexp @"Дата публикации лота:\s(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2})" with
