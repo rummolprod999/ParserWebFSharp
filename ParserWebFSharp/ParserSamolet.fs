@@ -12,7 +12,7 @@ type ParserSamolet(stn : Settings.T) =
     inherit Parser()
     let set = stn
     let timeoutB = TimeSpan.FromSeconds(30.)
-    let url = "https://tender.samoletgroup.ru/trades"
+    let url = "https://tender.samolet.ru/trades"
     let listTenders = List<SamoletRec>()
     let options = ChromeOptions()
     

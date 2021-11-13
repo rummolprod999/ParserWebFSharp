@@ -35,7 +35,7 @@ type TenderSamolet(stn : Settings.T, tn : SamoletRec, typeFz : int, etpName : st
             | Some d -> d
             | None -> raise <| Exception(sprintf "cannot parse dateEndT %s, %s" dateEndT tn.Href)
         
-        let datePubT = driver.findElementWithoutException ("//div[contains(., 'Начало представления предложений ')]/following-sibling::div")
+        let datePubT = driver.findElementWithoutException ("//div[contains(., 'Начало подтверждения участия')]/following-sibling::div")
         let datePubT = match datePubT with
                        | x when datePubT.Contains("Завтра в") -> datePubT.Replace("Завтра в", DateTime.Now.AddDays(1.).ToString("dd.MM.yyyy"))
                        | x when datePubT.Contains("Сегодня в") -> datePubT.Replace("Сегодня в", DateTime.Now.ToString("dd.MM.yyyy"))
@@ -52,7 +52,7 @@ type TenderSamolet(stn : Settings.T, tn : SamoletRec, typeFz : int, etpName : st
             match dateScoringT.DateFromString("dd.MM.yyyy HH:mm") with
             | Some d -> d
             | None -> DateTime.MinValue
-        let status = driver.findElementWithoutException ("//div[. = 'Наименование лота']/following-sibling::div/div/span")
+        let status = driver.findElementWithoutException ("//div[contains(@class,'-status-button-title')]")
         let dateUpd = DateTime.Now
         use con = new MySqlConnection(stn.ConStr)
         con.Open()
