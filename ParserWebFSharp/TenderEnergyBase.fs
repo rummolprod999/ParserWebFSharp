@@ -116,7 +116,8 @@ type TenderEnergyBase(stn: Settings.T, tn: EnergyBaseRec, typeFz: int, etpName: 
                         | true -> incr TenderEnergyBase.tenderUpCount
                         | false -> incr TenderEnergyBase.tenderCount
                         let idCustomer = ref 0
-                        let cusInn = InlineHtmlNavigator nav "//div[. = 'ИНН / КПП']//following-sibling::div"
+                        let cusInn = InlineHtmlNavigator nav "//span[. = 'ИНН/КПП']/.."
+                        let cusInn = cusInn.Replace("ИНН/КПП", "").Trim()
                         if tn.CusName <> "" then
                             let selectCustomer =
                                 sprintf "SELECT id_customer FROM %scustomer WHERE full_name = @full_name" stn.Prefix
@@ -243,7 +244,7 @@ type TenderEnergyBase(stn: Settings.T, tn: EnergyBaseRec, typeFz: int, etpName: 
                     cmd16.ExecuteNonQuery() |> ignore
                 ()
     member private this.GetAttachments(con: MySqlConnection, idTender: int, doc: HtmlDocument) =
-        let documents = doc.DocumentNode.SelectNodes("//div[@class = 'tender-attachment__filename']/a")
+        let documents = doc.DocumentNode.SelectNodes("//div[@class = 'tender-attachments']//a")
         if documents <> null then
             for d in documents do
                 let docName = d.Gsn(".")

@@ -28,7 +28,7 @@ type ParserEnergyBase(stn: Settings.T) =
             let htmlDoc = HtmlDocument()
             htmlDoc.LoadHtml(s)
             let nav = (htmlDoc.CreateNavigator()) :?> HtmlNodeNavigator
-            let tens = nav.CurrentDocument.DocumentNode.SelectNodesOrEmpty("//div[@class = 'tender-item']").ToList()
+            let tens = nav.CurrentDocument.DocumentNode.SelectNodesOrEmpty("//div[@class = 'tender-card']").ToList()
             tens.Reverse()
             for t in tens do
                     try
@@ -40,23 +40,25 @@ type ParserEnergyBase(stn: Settings.T) =
     member private __.ParsingTender (t: HtmlNode) (_: string) =
         let builder = DocumentBuilder()
         let res = builder {
-            let! purName = t.GsnDocWithError ".//a[contains(@class, 'tender-item__name')]" <| sprintf "purName not found %s %s " url (t.InnerText)
-            let! hrefT = t.GsnAtrDocWithError ".//a[contains(@class, 'tender-item__name')]" <| "href" <| sprintf "hrefT not found %s %s " url (t.InnerText)
+            let! purName = t.GsnDocWithError ".//div[contains(@class, 'tender-card__title')]" <| sprintf "purName not found %s %s " url (t.InnerText)
+            let! hrefT = t.GsnAtrDocWithError ".//div[contains(@class, 'tender-card__title')]/a" <| "href" <| sprintf "hrefT not found %s %s " url (t.InnerText)
             let href = sprintf "https://energybase.ru%s" hrefT
             let! pwName = t.GsnDoc ".//div[contains(@class, 'tender-item__purchase-code-name')]"
             let! purNum = t.GsnDocWithError ".//div[span[contains(., 'Регистрационный номер')]]" <| sprintf "purNum not found %s %s " url (t.InnerText)
             let purNum = purNum.Replace("Регистрационный номер", "").Trim()
-            let! datePubT = t.GsnDocWithError ".//span[contains(., 'Дата объявления тендера / закупочной процедуры')]/following-sibling::span" <| sprintf "datePubT not found %s %s " href (t.InnerText)
+            let! datePubT = t.GsnDocWithError ".//span[contains(., 'Дата объявления тендера / закупочной процедуры')]/.." <| sprintf "datePubT not found %s %s " href (t.InnerText)
             let datePubT = datePubT.ReplaceDate()
+            let! datePubT = datePubT.Get1OptionalDoc(@"\d{2}\.\d{2}\.\d{4} г\., \d{2}:\d{2}")
             let! datePub = datePubT.DateFromStringDoc("dd.MM.yyyy г., HH:mm", sprintf "datePub not found %s %s " href (datePubT))
-            let! dateEndT = t.GsnDoc ".//span[contains(., 'Дата и время окончания подачи заявок')]/following-sibling::span"
+            let! dateEndT = t.GsnDoc ".//span[contains(., 'Дата и время окончания подачи заявок')]/.."
             let dateEndT = dateEndT.ReplaceDate()
+            let! dateEndT = dateEndT.Get1OptionalDoc(@"\d{2}\.\d{2}\.\d{4} г\., \d{2}:\d{2}")
             let! dateEnd = dateEndT.DateFromStringDocMin("dd.MM.yyyy г., HH:mm")
             let! dateScoringT = t.GsnDoc ".//span[contains(., 'Дата и время рассмотрения заявок')]/following-sibling::span"
             let dateScoringT = dateScoringT.ReplaceDate()
             let! dateScoring = dateScoringT.DateFromStringDocMin("dd.MM.yyyy г., HH:mm")
-            let! cusName = t.GsnDoc ".//div[@class = 'tender-item__label' and contains(., 'Заказчик')]/following-sibling::a"
-            let! nmckT = t.GsnDoc ".//div[@class = 'tender-item__sum']"
+            let! cusName = t.GsnDoc ".//span[@class = 'property-label' and contains(., 'Заказчик')]/following-sibling::a"
+            let! nmckT = t.GsnDoc ".//div[@class = 'tender-card__sum']"
             let nmck = nmckT.GetPriceFromString()
             let! currency = nmckT.Get1OptionalDoc("\s+(.{1})$")
             let tend = {  Href = href
