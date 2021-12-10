@@ -107,7 +107,7 @@ type ParserBidZaar(stn: Settings.T) =
             let! purNum = href.Get1("light/([a-z\d-]+)(?:/request)?", sprintf "purNum not found %s" i.Text)
             let! purName = i.findElementWithoutException(".//div[@class = 'body']/div[@class = 'name']", sprintf "purName not found %s" i.Text)
             let pwName = ""
-            let! cusName = i.findElementWithoutException(".//cgn-cmp-name//div[@class = 'name ng-star-inserted']", sprintf "cusName not found %s" i.Text)
+            let! cusName = i.findElementWithoutException(".//bdz-cmp-name//div[@class = 'name ng-star-inserted']", sprintf "cusName not found %s" i.Text)
             let datePub = DateTime.Now
             let! endDateT = i.findElementWithoutException(".//div[contains(@class, 'date ng-star-inserted')]", sprintf "endDateT not found %s" i.Text)
             let! dateEnd1 = endDateT.Get1("(\d{2}\.\d{2}\.\d{4}.+\d{2}:\d{2})", sprintf "dateEnd1 not found %s" endDateT)
