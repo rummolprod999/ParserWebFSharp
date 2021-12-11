@@ -30,7 +30,7 @@ type ParserRostendTask(stn : Settings.T) =
         | s ->
             let parser = HtmlParser()
             let documents = parser.Parse(s)
-            let mutable tens = documents.QuerySelectorAll("div.table-constructor > div.tender-row")
+            let mutable tens = documents.QuerySelectorAll("div.table-constructor div.tender-row__wrapper")
             if tens.Length > 0 then
                 let tensN = tens //.Skip(1)
                 this.ThreadWorker tensN
