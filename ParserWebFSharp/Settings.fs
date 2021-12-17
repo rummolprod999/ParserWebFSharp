@@ -202,6 +202,8 @@ module Settings =
         let mutable LogPathTendersBarnaulTm = ""
         let mutable TempPathTendersTulaRegion = ""
         let mutable LogPathTendersTulaRegion = ""
+        let mutable TempPathTendersSngb = ""
+        let mutable LogPathTendersSngb = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -687,6 +689,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_tularegion" then
                     LogPathTendersTulaRegion <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
                                                 (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_sngb" then
+                    TempPathTendersSngb <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                 (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_sngb" then
+                    LogPathTendersSngb <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
+                                                (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
@@ -799,6 +807,7 @@ module Settings =
                 | Ishim -> TempPathTenderIshim
                 | Barnaultm -> TempPathTendersBarnaulTm
                 | Tularegion -> TempPathTendersTulaRegion
+                | Sngb -> TempPathTendersSngb
 
             let LogPathTenders =
                 match arg with
@@ -881,6 +890,7 @@ module Settings =
                 | Ishim -> LogPathTendersIshim
                 | Barnaultm -> LogPathTendersBarnaulTm
                 | Tularegion -> LogPathTendersTulaRegion
+                | Sngb -> LogPathTendersSngb
 
             { Database = Database
               TempPathTenders = TempPathTenders

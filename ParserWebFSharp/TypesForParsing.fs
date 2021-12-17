@@ -86,6 +86,7 @@ type Arguments =
     | Ishim
     | Barnaultm
     | Tularegion
+    | Sngb
 
 type SlavNeft =
     | MEGION
@@ -790,5 +791,15 @@ type RtCi2Rec =
       PurName: string
       PurNum: string
       CusName: string
+      DatePub: DateTime
+      DateEnd: DateTime}
+ 
+type SngbRec =
+    { Href: string
+      PurName: string
+      PurNum: string
+      DelivTerm: string
+      DocList: List<DocSibServ>
+      DelivPlace: string
       DatePub: DateTime
       DateEnd: DateTime}
