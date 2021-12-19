@@ -51,6 +51,7 @@ type ParserBelorusNeft(stn: Settings.T) =
             let tend = {  Href = href
                           PurName = purName
                           PurNum = purNum
+                          Status = ""
                           DatePub = datePub
                           DateEnd = dateEnd}          
             let T = TenderBelorusNeft(set, tend, 330, "ООО «Белоруснефть-Сибирь»", "http://www.belorusneft-siberia.ru/")

@@ -47,9 +47,11 @@ type ParserOsnova(stn: Settings.T) =
             let dateEnd = dateEndT.DateFromStringOrMin("dd.MM.yyyy HH:mm")
             let! datePubT = dates1.RegexCutWhitespace().Trim().Get1Doc "(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2})" <| sprintf "datePubT not found %s %s " url (dates1.RegexCutWhitespace().Trim())
             let datePub = datePubT.DateFromStringOrMin("dd.MM.yyyy HH:mm")
+            let! status = t.GsnDoc ".//span[contains(@class, 'status-badge')]"
             let tend = {  OsnovaRec.Href = href
                           PurName = purName
                           PurNum = purNum
+                          Status = status
                           DateEnd = dateEnd
                           DatePub = datePub}          
             let T = TenderOsnova(set, tend, 287, "ГК \"ОСНОВА\"", "https://tender.gk-osnova.ru/")

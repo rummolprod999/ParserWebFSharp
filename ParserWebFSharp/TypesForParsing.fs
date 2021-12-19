@@ -685,6 +685,7 @@ type OsnovaRec =
     { Href: string
       PurName: string
       PurNum: string
+      Status: string
       DatePub: DateTime
       DateEnd: DateTime}
 

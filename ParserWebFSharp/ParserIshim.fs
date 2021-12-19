@@ -104,6 +104,7 @@ type ParserIshim(stn: Settings.T) =
                     { Href = href
                       PurName = purName.Trim()
                       PurNum = purNum
+                      Status = ""
                       DateEnd = dateEnd
                       DatePub = datePub }
             listTenders.Add(ten)

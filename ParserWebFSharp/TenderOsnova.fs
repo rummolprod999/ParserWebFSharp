@@ -22,7 +22,7 @@ type TenderOsnova(stn: Settings.T, tn: OsnovaRec, typeFz: int, etpName: string, 
                         con.Open()
                         let selectTend =
                             sprintf 
-                                "SELECT id_tender FROM %stender WHERE purchase_number = @purchase_number AND  doc_publish_date = @doc_publish_date AND type_fz = @type_fz AND end_date = @end_date" 
+                                "SELECT id_tender FROM %stender WHERE purchase_number = @purchase_number AND  doc_publish_date = @doc_publish_date AND type_fz = @type_fz AND end_date = @end_date AND notice_version = @notice_version" 
                                 stn.Prefix
                         let cmd : MySqlCommand = new MySqlCommand(selectTend, con)
                         cmd.Prepare()
@@ -30,6 +30,7 @@ type TenderOsnova(stn: Settings.T, tn: OsnovaRec, typeFz: int, etpName: string, 
                         cmd.Parameters.AddWithValue("@doc_publish_date", tn.DatePub) |> ignore
                         cmd.Parameters.AddWithValue("@type_fz", typeFz) |> ignore
                         cmd.Parameters.AddWithValue("@end_date", tn.DateEnd) |> ignore
+                        cmd.Parameters.AddWithValue("@notice_version", tn.Status) |> ignore
                         let reader : MySqlDataReader = cmd.ExecuteReader()
                         if reader.HasRows then reader.Close()
                                                return! Err ""
@@ -79,7 +80,6 @@ type TenderOsnova(stn: Settings.T, tn: OsnovaRec, typeFz: int, etpName: string, 
                         let idPlacingWay = ref 0
                         let numVersion = 1
                         let idTender = ref 0
-                        let status = InlineHtmlNavigator nav "//th[. = 'Текущий статус']/following-sibling::td/span"
                         let insertTender = String.Format ("INSERT INTO {0}tender SET id_xml = @id_xml, purchase_number = @purchase_number, doc_publish_date = @doc_publish_date, href = @href, purchase_object_info = @purchase_object_info, type_fz = @type_fz, id_organizer = @id_organizer, id_placing_way = @id_placing_way, id_etp = @id_etp, end_date = @end_date, scoring_date = @scoring_date, bidding_date = @bidding_date, cancel = @cancel, date_version = @date_version, num_version = @num_version, notice_version = @notice_version, xml = @xml, print_form = @print_form, id_region = @id_region", stn.Prefix)
                         let cmd9 = new MySqlCommand(insertTender, con)
                         cmd9.Prepare()
@@ -98,7 +98,7 @@ type TenderOsnova(stn: Settings.T, tn: OsnovaRec, typeFz: int, etpName: string, 
                         cmd9.Parameters.AddWithValue("@cancel", cancelStatus) |> ignore
                         cmd9.Parameters.AddWithValue("@date_version", dateUpd) |> ignore
                         cmd9.Parameters.AddWithValue("@num_version", numVersion) |> ignore
-                        cmd9.Parameters.AddWithValue("@notice_version", status) |> ignore
+                        cmd9.Parameters.AddWithValue("@notice_version", tn.Status) |> ignore
                         cmd9.Parameters.AddWithValue("@xml", tn.Href) |> ignore
                         cmd9.Parameters.AddWithValue("@print_form", Printform) |> ignore
                         cmd9.Parameters.AddWithValue("@id_region", 0) |> ignore
@@ -157,7 +157,7 @@ type TenderOsnova(stn: Settings.T, tn: OsnovaRec, typeFz: int, etpName: string, 
         cmd12.ExecuteNonQuery() |> ignore
         idLot := int cmd12.LastInsertedId
         let nav = (doc.CreateNavigator()) :?> HtmlNodeNavigator
-        let delivTerm = InlineHtmlNavigator nav "//th[. = 'Дополнительные сведения']/following-sibling::td"
+        let delivTerm = InlineHtmlNavigator nav "//td[. = 'Описание полное']/following-sibling::td"
         let delivPlace = InlineHtmlNavigator nav "//th[. = 'Объект']/following-sibling::td"
         if delivTerm <> "" || delivPlace <> "" then
             let insertCustomerRequirement =
@@ -176,8 +176,31 @@ type TenderOsnova(stn: Settings.T, tn: OsnovaRec, typeFz: int, etpName: string, 
             try
                 this.GetPurchaseObjects(con, idCustomer, !idLot)
             with ex -> Logging.Log.logger ex
+            try
+                this.GetDocs(con, idTender)
+            with ex -> Logging.Log.logger ex
         ()
     
+    member private this.GetDocs(con: MySqlConnection, idTender) =
+        let urlPurObj = tn.Href.Replace("view-tender", "view-tender-files")
+        let Page = Download.DownloadStringRts urlPurObj
+        if Page = "" || Page = null then failwith <| sprintf "docs page was not downloaded on href %s" urlPurObj
+        let htmlDoc = HtmlDocument()
+        htmlDoc.LoadHtml(Page)
+        let nav = (htmlDoc.CreateNavigator()) :?> HtmlNodeNavigator
+        let docs = nav.CurrentDocument.DocumentNode.SelectNodesOrEmpty("//p/a[contains(@href, '/file/')]")
+        for d in docs do
+                let docName = d.Gsn(".")
+                let docUrl = d.GsnAtr "." "href"
+                let url = sprintf "%s%s" "https://tender.gk-osnova.ru" docUrl
+                if docUrl <> "" then
+                    let addAttach = sprintf "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url" stn.Prefix
+                    let cmd5 = new MySqlCommand(addAttach, con)
+                    cmd5.Parameters.AddWithValue("@id_tender", idTender) |> ignore
+                    cmd5.Parameters.AddWithValue("@file_name", docName) |> ignore
+                    cmd5.Parameters.AddWithValue("@url", url) |> ignore
+                    cmd5.ExecuteNonQuery() |> ignore
+        ()
     member private this.GetPurchaseObjects(con: MySqlConnection, idCustomer, idLot) =
         let urlPurObj = tn.Href.Replace("view-tender", "view-tender-items")
         let Page = Download.DownloadStringRts urlPurObj
