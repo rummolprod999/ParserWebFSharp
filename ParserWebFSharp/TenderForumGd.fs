@@ -1,14 +1,9 @@
 namespace ParserWeb
 
-open System.Collections.ObjectModel
-open System.Threading
 open MySql.Data.MySqlClient
 open System
 open System.Data
-open OpenQA.Selenium
 open OpenQA.Selenium.Chrome
-open OpenQA.Selenium.Support.UI
-open TypeE
 
 type TenderForumGd(stn: Settings.T, tn: ForumGdRec, typeFz: int, etpName: string, etpUrl: string, driver : ChromeDriver) =
     inherit Tender(etpName, etpUrl)

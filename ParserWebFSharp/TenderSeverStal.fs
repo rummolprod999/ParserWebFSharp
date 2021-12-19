@@ -86,7 +86,7 @@ type TenderSeverStal(stn: Settings.T, tn: SeverStalRec, typeFz: int, etpName: st
                         cmd9.Parameters.AddWithValue("@cancel", cancelStatus) |> ignore
                         cmd9.Parameters.AddWithValue("@date_version", dateUpd) |> ignore
                         cmd9.Parameters.AddWithValue("@num_version", numVersion) |> ignore
-                        cmd9.Parameters.AddWithValue("@notice_version", tn.AddInfo.RegexCutWhitespace()) |> ignore
+                        cmd9.Parameters.AddWithValue("@notice_version", "") |> ignore
                         cmd9.Parameters.AddWithValue("@xml", tn.Href) |> ignore
                         cmd9.Parameters.AddWithValue("@print_form", Printform) |> ignore
                         cmd9.Parameters.AddWithValue("@id_region", 0) |> ignore
@@ -148,6 +148,20 @@ type TenderSeverStal(stn: Settings.T, tn: SeverStalRec, typeFz: int, etpName: st
                         cmd19.Parameters.AddWithValue("@okei", "") |> ignore
                         cmd19.Parameters.AddWithValue("@okpd2_code", "") |> ignore
                         cmd19.ExecuteNonQuery() |> ignore
+                        if tn.AddInfo <> "" then
+                            let insertCustomerRequirement =
+                                sprintf
+                                    "INSERT INTO %scustomer_requirement SET id_lot = @id_lot, id_customer = @id_customer, delivery_place = @delivery_place, application_guarantee_amount = @application_guarantee_amount, contract_guarantee_amount = @contract_guarantee_amount, delivery_term = @delivery_term"
+                                    stn.Prefix
+                            let cmd16 = new MySqlCommand(insertCustomerRequirement, con)
+                            cmd16.Prepare()
+                            cmd16.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+                            cmd16.Parameters.AddWithValue("@id_customer", idCustomer) |> ignore
+                            cmd16.Parameters.AddWithValue("@delivery_place", "") |> ignore
+                            cmd16.Parameters.AddWithValue("@application_guarantee_amount", "") |> ignore
+                            cmd16.Parameters.AddWithValue("@contract_guarantee_amount", "") |> ignore
+                            cmd16.Parameters.AddWithValue("@delivery_term", tn.AddInfo) |> ignore
+                            cmd16.ExecuteNonQuery() |> ignore
                         this.AddVerNumber con tn.PurNum stn typeFz
                         this.TenderKwords con (!idTender) stn
                         return ""

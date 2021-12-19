@@ -1,6 +1,5 @@
 namespace ParserWeb
 
-open System.Collections.ObjectModel
 open System.Text.RegularExpressions
 open System.Threading
 open MySql.Data.MySqlClient

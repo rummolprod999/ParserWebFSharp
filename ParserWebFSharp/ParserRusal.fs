@@ -1,6 +1,5 @@
 namespace ParserWeb
 
-open HtmlAgilityPack
 open TypeE
 open AngleSharp.Dom
 open AngleSharp.Parser.Html

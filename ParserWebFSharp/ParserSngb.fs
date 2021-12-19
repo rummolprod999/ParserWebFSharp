@@ -3,7 +3,6 @@ namespace ParserWeb
 open System
 open System.Collections.Generic
 open System.Text
-open System.Web
 open TypeE
 open HtmlAgilityPack
 open System.Linq
