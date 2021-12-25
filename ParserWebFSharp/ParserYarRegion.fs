@@ -25,7 +25,6 @@ type ParserYarRegion(stn : Settings.T) =
     override this.Parsing() =
         let driver = new ChromeDriver("/usr/local/bin", options)
         driver.Manage().Timeouts().PageLoad <- timeoutB
-        driver.Manage().Window.Maximize()
         try 
             try 
                 this.ParserSelen driver
@@ -48,12 +47,16 @@ type ParserYarRegion(stn : Settings.T) =
             dr.FindElement(By.XPath("//a//span[. = 'Таблица']")).Displayed) 
         |> ignore
         try
-            driver.FindElement(By.XPath("//label[. = 'Завершен']/preceding-sibling::span/input")).Click()
+            //driver.FindElement(By.XPath("//label[. = 'Завершен']/preceding-sibling::span/input")).Click()
+            let jse = driver :> IJavaScriptExecutor
+            jse.ExecuteScript("document.querySelectorAll('#checkbox-1045-boxLabelEl')[0].click()", "") |> ignore
             Thread.Sleep(1000)
-            driver.FindElement(By.XPath("//label[. = 'Отменен']/preceding-sibling::span/input")).Click()
+            jse.ExecuteScript("document.querySelectorAll('#checkbox-1046-boxLabelEl')[0].click()", "") |> ignore
+            Thread.Sleep(1000)
+            //driver.FindElement(By.XPath("//label[. = 'Отменен']/preceding-sibling::span/input")).Click()
         with ex -> Logging.Log.logger (ex)
         driver.FindElement(By.XPath("//a//span[. = 'Таблица']")).Click()
-        Thread.Sleep(10000)
+        Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
         wait.Until
             (fun dr -> 
@@ -91,7 +94,7 @@ type ParserYarRegion(stn : Settings.T) =
         let c = ref 0
         for t in tenders.Count-1 .. -1 .. 0 do
             try
-                if listTenders.Count < 150 then
+                if listTenders.Count < 120 then
                     this.ParserTenders driver t
                 incr c
             with ex -> Logging.Log.logger (ex)
@@ -126,7 +129,7 @@ type ParserYarRegion(stn : Settings.T) =
                 driver.SwitchTo().DefaultContent() |> ignore
                 let jse = driver :> IJavaScriptExecutor
                 jse.ExecuteScript(el, "") |> ignore
-                Thread.Sleep(100)
+                Thread.Sleep(50)
                 driver.SwitchTo().Window(driver.WindowHandles.[0]) |> ignore
                 let ten =
                     { EmptyField = "" }
