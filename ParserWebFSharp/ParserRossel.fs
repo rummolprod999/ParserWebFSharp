@@ -101,6 +101,10 @@ type ParserRossel(stn: Settings.T) =
                             driver.Manage().Cookies.DeleteAllCookies()
                             this.ParserSelenBussines driver
                           with ex -> Logging.Log.logger ex
+                | "12" -> try
+                            driver.Manage().Cookies.DeleteAllCookies()
+                            this.ParserSelenAll driver
+                          with ex -> Logging.Log.logger ex
                  | _ -> ()
                 driver.Manage().Cookies.DeleteAllCookies()
             with ex -> Logging.Log.logger ex
@@ -239,6 +243,19 @@ type ParserRossel(stn: Settings.T) =
             this.Clicker driver "//li/span[. = 'Работа коммиссии']"*)
             //this.Clicker driver "//button[contains( . , 'Найти')]"
             pageReloader driver 50
+            this.ParserListTenders driver
+    
+    member private this.ParserSelenAll(driver: ChromeDriver) =
+            let wait = WebDriverWait(driver, timeoutB)
+            driver.Navigate().GoToUrl("https://www.roseltorg.ru/procedures/search?sale=0&source%5B%5D=all&status%5B%5D=0&status%5B%5D=1&currency=all")
+            Thread.Sleep(5000)
+            wait.Until(fun dr -> dr.FindElement(By.XPath("//a[contains(@class, 'btn-advanced-search')]")).Displayed)
+            |> ignore
+            (*this.Clicker driver "//a[contains(@class, 'btn-advanced-search')]"
+            this.Clicker driver "//li[span[contains(., 'Прием заявок')]]"
+            this.Clicker driver "//li/span[. = 'Работа коммиссии']"*)
+            //this.Clicker driver "//button[contains( . , 'Найти')]"
+            pageReloader driver 5000
             this.ParserListTenders driver
     member private this.ParserSelenAtom(driver: ChromeDriver) =
         let wait = WebDriverWait(driver, timeoutB)
