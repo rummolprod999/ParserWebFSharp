@@ -13,7 +13,7 @@ type ParserRostendTask(stn : Settings.T) =
     inherit Parser()
     let set = stn
     let count = 600
-    let countRegion = 100
+    let countRegion = 30
     let strtPg = "https://rostender.info/tender?page="
     let strtPgRegion = "https://rostender.info/region/"
     member val locker = Object()
