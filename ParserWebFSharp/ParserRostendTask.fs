@@ -13,7 +13,9 @@ type ParserRostendTask(stn : Settings.T) =
     inherit Parser()
     let set = stn
     let count = 600
+    let countRegion = 100
     let strtPg = "https://rostender.info/tender?page="
+    let strtPgRegion = "https://rostender.info/region/"
     member val locker = Object()
     member val listTenders = Queue<RosTendRecNew>()
 
@@ -22,7 +24,32 @@ type ParserRostendTask(stn : Settings.T) =
             try
                 this.ParserPage <| sprintf "%s%d" strtPg i
             with ex -> Logging.Log.logger ex
+        try
+            this.ParserPageRegion <| sprintf "%s" strtPgRegion
+        with ex -> Logging.Log.logger ex
 
+    member private this.ParserPageRegion(url : string) =
+        let Page = Download.DownloadStringUtf8Bot url
+        match Page with
+        | null | "" -> Logging.Log.logger ("Dont get page", url)
+        | s ->
+            let parser = HtmlParser()
+            let documents = parser.Parse(s)
+            let mutable tens = documents.QuerySelectorAll("ul.sections-table-subs li a")
+            for p in tens do
+                let HrefT = p.GetAttribute("href").Trim()
+                if HrefT <> null then
+                    let Href = sprintf "https://rostender.info%s" HrefT
+                    for i in 1..countRegion do
+                            try
+                                this.ParserPage <| sprintf "%s?page=%d" Href i
+                            with ex -> Logging.Log.logger ex
+                ()
+
+        
+            
+        ()
+        
     member private this.ParserPage(url : string) =
         let Page = Download.DownloadStringUtf8Bot url
         match Page with
