@@ -362,7 +362,8 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
                         idCustomer := int cmd14.LastInsertedId
                 let purObjectsTr = doc.QuerySelectorAll("table.lot-item__data-table.data-table tr.data-table__item--underline")
                 let purObjects = doc.QuerySelector("h4:contains('Информация о товаре, работе, услуге') + table.lot-item__data-table.data-table tbody")
-                if purObjectsTr.Length < 1 then
+                let okpd2Test =  purObjects.QuerySelectorAll("td:contains('Цифровой код по классификатору ОКПД2:') + td p").ToList()
+                if okpd2Test.Count < 1 then
                     let insertLotitem =
                         sprintf 
                             "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name" 
@@ -374,27 +375,31 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
                     cmd19.Parameters.AddWithValue("@name", purName) |> ignore
                     cmd19.ExecuteNonQuery() |> ignore
                 else
-                    for p in 0..purObjectsTr.Length do
-                        let name =  purObjects.QuerySelectorAll("td:contains('Наименование:') + td p").ToList().[p].TextContent
-                        let okpd2 =  purObjects.QuerySelectorAll("td:contains('Цифровой код по классификатору ОКПД2:') + td p").ToList().[p].TextContent
-                        let quant =  purObjects.QuerySelectorAll("td:contains('Количество:') + td p").ToList().[p].TextContent
-                        let okei =  purObjects.QuerySelectorAll("td:contains('Ед. измерения:') + td p").ToList().[p].TextContent
-                        let insertLotitem =
-                            sprintf 
-                                "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, okpd_name = @okpd_name, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, okpd2_code = @okpd2_code" 
-                                stn.Prefix
-                        let cmd19 = new MySqlCommand(insertLotitem, con)
-                        cmd19.Prepare()
-                        cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
-                        cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
-                        cmd19.Parameters.AddWithValue("@name", name) |> ignore
-                        cmd19.Parameters.AddWithValue("@okpd_name", "") |> ignore
-                        cmd19.Parameters.AddWithValue("@quantity_value", quant) |> ignore
-                        cmd19.Parameters.AddWithValue("@customer_quantity_value", quant) |> ignore
-                        cmd19.Parameters.AddWithValue("@okei", okei) |> ignore
-                        cmd19.Parameters.AddWithValue("@okpd2_code", okpd2) |> ignore
-                        cmd19.ExecuteNonQuery() |> ignore
-                        ()
+                    try
+                        for p in 0..purObjectsTr.Length + 1 do
+                          
+                            let name =  try purObjects.QuerySelectorAll("td:contains('Наименование:') + td p").ToList().[p].TextContent with e -> ""
+                            let okpd2 =  purObjects.QuerySelectorAll("td:contains('Цифровой код по классификатору ОКПД2:') + td p").ToList().[p].TextContent
+                            let quant =  purObjects.QuerySelectorAll("td:contains('Количество:') + td p").ToList().[p].TextContent
+                            let okei =  purObjects.QuerySelectorAll("td:contains('Ед. измерения:') + td p").ToList().[p].TextContent
+                            if not <| String.IsNullOrEmpty(okpd2) then
+                                let insertLotitem =
+                                    sprintf 
+                                        "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, okpd_name = @okpd_name, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, okpd2_code = @okpd2_code" 
+                                        stn.Prefix
+                                let cmd19 = new MySqlCommand(insertLotitem, con)
+                                cmd19.Prepare()
+                                cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+                                cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
+                                cmd19.Parameters.AddWithValue("@name", name) |> ignore
+                                cmd19.Parameters.AddWithValue("@okpd_name", "") |> ignore
+                                cmd19.Parameters.AddWithValue("@quantity_value", quant) |> ignore
+                                cmd19.Parameters.AddWithValue("@customer_quantity_value", quant) |> ignore
+                                cmd19.Parameters.AddWithValue("@okei", okei) |> ignore
+                                cmd19.Parameters.AddWithValue("@okpd2_code", okpd2) |> ignore
+                                cmd19.ExecuteNonQuery() |> ignore
+                                ()
+                    with ex -> ()
                     
                 let delivPlace = this.GetDefaultFromNull <| l.QuerySelector("td:contains('Место поставки') + td > p")
                 let applGuarAmountT =
