@@ -45,6 +45,11 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
         | Tools.RegexMatch1 @"(\d{2}\.\d{2}\.\d{2} \d{2}:\d{2}:\d{2})" gr1 -> Some(gr1)
         | _ -> None
     
+     member private this.GetDateS1(input : string) : string option =
+        match input with
+        | Tools.RegexMatch1 @"(\d{2}\.\d{2}\.\d{2})" gr1 -> Some(gr1)
+        | _ -> None
+    
     member private this.GetPriceClear(s : string) : string =
         let p = s.Replace(",", ".")
         let b = Regex.Replace(p, @"\s+", "")
@@ -95,11 +100,15 @@ type TenderRossel(stn : Settings.T, tn : RosSelRec, TypeFz : int) =
         let mutable pubDateS = pubDateT.TextContent.Trim()
         match this.GetDateS(pubDateS) with
         | Some dtP -> pubDateS <- dtP
-        | None -> raise <| Exception(sprintf "cannot apply regex to datePub %s" tn.Href)
+        | None -> match this.GetDateS1(pubDateS) with
+                    | Some dtP -> pubDateS <- dtP
+                    | None -> raise <| Exception(sprintf "cannot apply regex to datePub %s" tn.Href)
         let datePub =
             match pubDateS.DateFromString("dd.MM.yy HH:mm:ss") with
             | Some d -> d
-            | None -> raise <| Exception(sprintf "cannot parse datePub %s" pubDateS)
+            | None -> match pubDateS.DateFromString("dd.MM.yy") with
+                        | Some d -> d
+                        | None -> raise <| Exception(sprintf "cannot parse datePub %s" pubDateS)
         
         let mutable endDateT = doc.QuerySelector("td:contains('Приём заявок') + td > p")
         if endDateT = null then
