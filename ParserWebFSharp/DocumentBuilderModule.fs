@@ -23,12 +23,13 @@ module DocumentBuilderNewton =
 
         member this.Combine(a, b) =
             match a with
-            | Success _ -> b()
+            | Success _ -> b ()
             | Error e -> Error e
 
-        member this.Run(f) = f()
-        
+        member this.Run(f) = f ()
+
         member this.TryWith(body, handler) =
             try
-                body()
-            with e -> handler e
+                body ()
+            with
+                | e -> handler e

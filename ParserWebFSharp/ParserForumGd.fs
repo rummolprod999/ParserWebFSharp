@@ -11,105 +11,173 @@ open OpenQA.Selenium.Support.UI
 type ParserForumGd(stn: Settings.T) =
     inherit Parser()
     let set = stn
-    let url ="https://tender.forum-gd.ru/tender/list"
+
+    let url =
+        "https://tender.forum-gd.ru/tender/list"
+
     let timeoutB = TimeSpan.FromSeconds(60.)
     let listTenders = List<ForumGdRec>()
     let options = ChromeOptions()
 
-    do 
+    do
         options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
         options.AddArguments("disable-dev-shm-usage")
         options.AddArguments("window-size=1920,1080")
+
     override __.Parsing() =
-        let driver = new ChromeDriver("/usr/local/bin", options)
+        let driver =
+            new ChromeDriver("/usr/local/bin", options)
+
         driver.Manage().Timeouts().PageLoad <- timeoutB
         //driver.Manage().Window.Maximize()
-        try 
-            try 
+        try
+            try
                 __.ParserSelen driver
                 driver.Manage().Cookies.DeleteAllCookies()
-            with ex -> Logging.Log.logger ex
+            with
+                | ex -> Logging.Log.logger ex
         finally
             driver.Quit()
+
         ()
-    
-    member private __.ParserSelen(driver : ChromeDriver) =
+
+    member private __.ParserSelen(driver: ChromeDriver) =
         let wait = WebDriverWait(driver, timeoutB)
-        driver.Navigate().GoToUrl("https://tender.forum-gd.ru/tender/login/")
+
+        driver
+            .Navigate()
+            .GoToUrl("https://tender.forum-gd.ru/tender/login/")
+
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
-        wait.Until
-            (fun dr -> 
-            dr.FindElement(By.XPath("//input[@id = 'username']")).Displayed) |> ignore
+
+        wait.Until (fun dr ->
+            dr
+                .FindElement(
+                    By.XPath("//input[@id = 'username']")
+                )
+                .Displayed)
+        |> ignore
+
         __.Auth(driver)
         driver.SwitchTo().DefaultContent() |> ignore
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(3000)
         driver.SwitchTo().DefaultContent() |> ignore
-        wait.Until
-            (fun dr -> 
-            dr.FindElement(By.XPath("//table[@class = 'table table-striped table-hover']/tbody/tr")).Displayed) |> ignore
+
+        wait.Until (fun dr ->
+            dr
+                .FindElement(
+                    By.XPath("//table[@class = 'table table-striped table-hover']/tbody/tr")
+                )
+                .Displayed)
+        |> ignore
+
         driver.SwitchTo().DefaultContent() |> ignore
         __.ParserListTenders(driver)
+
         for t in listTenders do
-            try 
+            try
                 __.ParserTendersList driver t
-            with ex -> Logging.Log.logger (ex)
+            with
+                | ex -> Logging.Log.logger (ex)
+
         ()
-    
-    member private __.Auth(driver : ChromeDriver) =
+
+    member private __.Auth(driver: ChromeDriver) =
         let wait = WebDriverWait(driver, timeoutB)
         driver.SwitchTo().DefaultContent() |> ignore
-        wait.Until
-            (fun dr -> 
-            dr.FindElement(By.XPath("//input[@id = 'username']")).Displayed) |> ignore
-        driver.FindElement(By.XPath("//input[@id = 'username']")).SendKeys(Settings.UserForumGd)
-        driver.FindElement(By.XPath("//input[@id = 'password']")).SendKeys(Settings.PassForumGd)
-        driver.FindElement(By.XPath("//button[@type = 'submit']")).Click()
+
+        wait.Until (fun dr ->
+            dr
+                .FindElement(
+                    By.XPath("//input[@id = 'username']")
+                )
+                .Displayed)
+        |> ignore
+
+        driver
+            .FindElement(By.XPath("//input[@id = 'username']"))
+            .SendKeys(Settings.UserForumGd)
+
+        driver
+            .FindElement(By.XPath("//input[@id = 'password']"))
+            .SendKeys(Settings.PassForumGd)
+
+        driver
+            .FindElement(By.XPath("//button[@type = 'submit']"))
+            .Click()
+
         Thread.Sleep(3000)
         ()
-    member private this.ParserTendersList (driver : ChromeDriver) (t : ForumGdRec) =
-        try 
-            let T = TenderForumGd(set, t, 296, "АО «Форум-групп»", "https://tender.forum-gd.ru/", driver)
+
+    member private this.ParserTendersList (driver: ChromeDriver) (t: ForumGdRec) =
+        try
+            let T =
+                TenderForumGd(set, t, 296, "АО «Форум-групп»", "https://tender.forum-gd.ru/", driver)
+
             T.Parsing()
-        with ex -> Logging.Log.logger (ex, t.Href)
+        with
+            | ex -> Logging.Log.logger (ex, t.Href)
+
         ()
-    
-    member private this.ParserListTenders(driver : ChromeDriver) =
+
+    member private this.ParserListTenders(driver: ChromeDriver) =
         driver.SwitchTo().DefaultContent() |> ignore
+
         let tenders =
             driver.FindElementsByXPath("//table[@class = 'table table-striped table-hover']/tbody/tr")
+
         for t in tenders do
             this.ParserTenders t
+
         ()
-    
-    member private this.ParserTenders (i : IWebElement) =
+
+    member private this.ParserTenders(i: IWebElement) =
         let builder = TenderBuilder()
-        let res = builder {
-            let! hrefT = i.findAttributeOrEmpty("onclick")
-            let href = match hrefT with
-                        | "" | null -> url
-                        | u -> let urlNum = u.Get1FromRegexpOrDefaul(@"tender/list/(\d+)/',")
-                               match urlNum with
-                               | "" -> url
-                               | x -> sprintf "https://tender.forum-gd.ru/tender/list/%s/" x
-            let! purName = i.findElementWithoutException("./td[2]", sprintf "purName not found %s" i.Text)
-            let! purNum = i.findElementWithoutException("./td[1]", sprintf "purNum not found %s" i.Text)
-            let! purName1 = i.findElementWithoutException("./td[4]", sprintf "purName1 not found %s" i.Text)
-            let purName = sprintf "%s %s" purName purName1
-            let! pwName = i.findElementWithoutException("./td[3]", sprintf "pwName not found %s" i.Text)
-            let! delivPlace = i.findElementWithoutException("./td[5]", sprintf "delivPlace not found %s" i.Text)
-            let! period = i.findElementWithoutException("./td[7]", sprintf "period not found %s" i.Text)
-            let! status = i.findElementWithoutException("./td[10]", sprintf "status not found %s" i.Text)
-            let! pubDateT = i.findElementWithoutException("./td[6]", sprintf "pubDateT not found %s" i.Text)
-            let! datePubT = pubDateT.Get1( "(\d{2}\.\d{2}\.\d{4})", sprintf "datePubT not found %s %s " url (pubDateT))
-            let! datePub = datePubT.DateFromString("dd.MM.yyyy", sprintf "datePub not parse %s" pubDateT)
-            let! endDateT = i.findElementWithoutException("./td[8]", sprintf "endDateT not found %s" i.Text)
-            let! dateEndT = endDateT.Get1Optional( "(\d{2}\.\d{2}\.\d{4})")
-            let dateEnd = dateEndT.DateFromStringOrMin("dd.MM.yyyy")
-            let ten =
+
+        let res =
+            builder {
+                let! hrefT = i.findAttributeOrEmpty ("onclick")
+
+                let href =
+                    match hrefT with
+                    | ""
+                    | null -> url
+                    | u ->
+                        let urlNum =
+                            u.Get1FromRegexpOrDefaul(@"tender/list/(\d+)/',")
+
+                        match urlNum with
+                        | "" -> url
+                        | x -> sprintf "https://tender.forum-gd.ru/tender/list/%s/" x
+
+                let! purName = i.findElementWithoutException ("./td[2]", sprintf "purName not found %s" i.Text)
+                let! purNum = i.findElementWithoutException ("./td[1]", sprintf "purNum not found %s" i.Text)
+                let! purName1 = i.findElementWithoutException ("./td[4]", sprintf "purName1 not found %s" i.Text)
+
+                let purName =
+                    sprintf "%s %s" purName purName1
+
+                let! pwName = i.findElementWithoutException ("./td[3]", sprintf "pwName not found %s" i.Text)
+                let! delivPlace = i.findElementWithoutException ("./td[5]", sprintf "delivPlace not found %s" i.Text)
+                let! period = i.findElementWithoutException ("./td[7]", sprintf "period not found %s" i.Text)
+                let! status = i.findElementWithoutException ("./td[10]", sprintf "status not found %s" i.Text)
+                let! pubDateT = i.findElementWithoutException ("./td[6]", sprintf "pubDateT not found %s" i.Text)
+
+                let! datePubT =
+                    pubDateT.Get1("(\d{2}\.\d{2}\.\d{4})", sprintf "datePubT not found %s %s " url (pubDateT))
+
+                let! datePub = datePubT.DateFromString("dd.MM.yyyy", sprintf "datePub not parse %s" pubDateT)
+                let! endDateT = i.findElementWithoutException ("./td[8]", sprintf "endDateT not found %s" i.Text)
+                let! dateEndT = endDateT.Get1Optional("(\d{2}\.\d{2}\.\d{4})")
+
+                let dateEnd =
+                    dateEndT.DateFromStringOrMin("dd.MM.yyyy")
+
+                let ten =
                     { Href = href
                       PurName = purName.Trim()
                       PurNum = purNum
@@ -119,12 +187,14 @@ type ParserForumGd(stn: Settings.T) =
                       DelivPlace = delivPlace
                       DateEnd = dateEnd
                       DatePub = datePub }
-            listTenders.Add(ten)
-            return ""
-        }
+
+                listTenders.Add(ten)
+                return ""
+            }
+
         match res with
-                | Success _ -> ()
-                | Error e when e = "" -> ()
-                | Error r -> Logging.Log.logger r
-        
+        | Success _ -> ()
+        | Error e when e = "" -> ()
+        | Error r -> Logging.Log.logger r
+
         ()

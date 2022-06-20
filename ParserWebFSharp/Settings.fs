@@ -7,9 +7,13 @@ open System.Xml
 
 module Settings =
     let PathProgram: string =
-        let path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase)
-        if path <> null then path.Substring(5)
-        else ""
+        let path =
+            Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase)
+
+        if path <> null then
+            path.Substring(5)
+        else
+            ""
 
     let mutable internal RosselNum = ""
     let mutable internal UserTenderer = ""
@@ -31,6 +35,7 @@ module Settings =
     let mutable internal PassIshim = ""
     let mutable internal ProxyPath = "proxy.txt"
     let mutable internal UseProxy = false
+
     type T =
         { Database: string
           TempPathTenders: string
@@ -42,7 +47,7 @@ module Settings =
           Port: int
           ConStr: string }
 
-    let getSettings (arg: Arguments): T =
+    let getSettings (arg: Arguments) : T =
         let mutable Database = ""
         let mutable TempPathTendersIrkutskOil = ""
         let mutable LogPathTendersIrkutskOil = ""
@@ -157,35 +162,35 @@ module Settings =
         let mutable TempPathTendersBidzaar = ""
         let mutable LogPathTendersBidzaar = ""
         let mutable TempPathTendersMetodholding = ""
-        let mutable LogPathTendersMetodholding  = ""
+        let mutable LogPathTendersMetodholding = ""
         let mutable TempPathTendersBhm = ""
-        let mutable LogPathTendersBhm  = ""
+        let mutable LogPathTendersBhm = ""
         let mutable TempPathTendersDomru = ""
-        let mutable LogPathTendersDomru  = ""
+        let mutable LogPathTendersDomru = ""
         let mutable TempPathTendersSamaraGips = ""
-        let mutable LogPathTendersSamaraGips  = ""
+        let mutable LogPathTendersSamaraGips = ""
         let mutable TempPathTendersGoldenSeed = ""
-        let mutable LogPathTendersGoldenSeed  = ""
+        let mutable LogPathTendersGoldenSeed = ""
         let mutable TempPathTendersKaustik = ""
-        let mutable LogPathTendersKaustik  = ""
+        let mutable LogPathTendersKaustik = ""
         let mutable TempPathTendersDme = ""
-        let mutable LogPathTendersDme  = ""
+        let mutable LogPathTendersDme = ""
         let mutable TempPathTendersTele2 = ""
-        let mutable LogPathTendersTele2  = ""
+        let mutable LogPathTendersTele2 = ""
         let mutable TempPathTendersOsnova = ""
-        let mutable LogPathTendersOsnova  = ""
+        let mutable LogPathTendersOsnova = ""
         let mutable TempPathTendersSibGenco = ""
-        let mutable LogPathTendersSibGenco  = ""
+        let mutable LogPathTendersSibGenco = ""
         let mutable TempPathTendersVtbConnect = ""
-        let mutable LogPathTendersVtbConnect  = ""
+        let mutable LogPathTendersVtbConnect = ""
         let mutable TempPathTendersRtCi = ""
-        let mutable LogPathTendersRtCi  = ""
+        let mutable LogPathTendersRtCi = ""
         let mutable TempPathTendersForumGd = ""
-        let mutable LogPathTendersForumGd  = ""
+        let mutable LogPathTendersForumGd = ""
         let mutable TempPathTendersEnergyBase = ""
-        let mutable LogPathTendersEnergyBase  = ""
+        let mutable LogPathTendersEnergyBase = ""
         let mutable TempPathTendersEtpRt = ""
-        let mutable LogPathTendersEtpRt  = ""
+        let mutable LogPathTendersEtpRt = ""
         let mutable TempPathTendersComitaZmo = ""
         let mutable LogPathTendersComitaZmo = ""
         let mutable TempPathTendersEstp = ""
@@ -212,519 +217,548 @@ module Settings =
         let xDoc = XmlDocument()
         xDoc.Load(sprintf "%s%csetting_tenders.xml" PathProgram Path.DirectorySeparatorChar)
         let xRoot = xDoc.DocumentElement
+
         if xRoot <> null then
             for xnode in xRoot do
-                if (xnode :?> XmlNode).Name = "database" then Database <- (xnode :?> XmlNode).InnerText
+                if (xnode :?> XmlNode).Name = "database" then
+                    Database <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_irkutskoil" then
-                    TempPathTendersIrkutskOil <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                     (xnode :?> XmlNode).InnerText
+                    TempPathTendersIrkutskOil <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_irkutskoil" then
-                    LogPathTendersIrkutskOil <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                    (xnode :?> XmlNode).InnerText
+                    LogPathTendersIrkutskOil <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_akd" then
-                    TempPathTendersAkd <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                              (xnode :?> XmlNode).InnerText
+                    TempPathTendersAkd <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_akd" then
-                    LogPathTendersAkd <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                             (xnode :?> XmlNode).InnerText
+                    LogPathTendersAkd <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_lsrgroup" then
-                    TempPathTendersLsr <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                              (xnode :?> XmlNode).InnerText
+                    TempPathTendersLsr <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_lsrgroup" then
-                    LogPathTendersLsr <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                             (xnode :?> XmlNode).InnerText
+                    LogPathTendersLsr <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_butb" then
-                    TempPathTendersButb <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                               (xnode :?> XmlNode).InnerText
+                    TempPathTendersButb <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_butb" then
-                    LogPathTendersButb <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                              (xnode :?> XmlNode).InnerText
+                    LogPathTendersButb <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_rossel" then
-                    TempPathTendersRossel <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    TempPathTendersRossel <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_rossel" then
-                    LogPathTendersRossel <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                (xnode :?> XmlNode).InnerText
+                    LogPathTendersRossel <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_neft" then
-                    TempPathTendersNeft <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                               (xnode :?> XmlNode).InnerText
+                    TempPathTendersNeft <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_neft" then
-                    LogPathTendersNeft <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                              (xnode :?> XmlNode).InnerText
+                    LogPathTendersNeft <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_slav" then
-                    TempPathTendersSlav <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                               (xnode :?> XmlNode).InnerText
+                    TempPathTendersSlav <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_slav" then
-                    LogPathTendersSlav <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                              (xnode :?> XmlNode).InnerText
+                    LogPathTendersSlav <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_aero" then
-                    TempPathTendersAero <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                               (xnode :?> XmlNode).InnerText
+                    TempPathTendersAero <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_aero" then
-                    LogPathTendersAero <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                              (xnode :?> XmlNode).InnerText
+                    LogPathTendersAero <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_stroytorgi" then
-                    TempPathTendersStroyTorgi <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                     (xnode :?> XmlNode).InnerText
+                    TempPathTendersStroyTorgi <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_stroytorgi" then
-                    LogPathTendersStroyTorgi <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                    (xnode :?> XmlNode).InnerText
+                    LogPathTendersStroyTorgi <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_asgor" then
-                    TempPathTendersAsgor <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                (xnode :?> XmlNode).InnerText
+                    TempPathTendersAsgor <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_asgor" then
-                    LogPathTendersAsgor <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                               (xnode :?> XmlNode).InnerText
+                    LogPathTendersAsgor <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_gosyakut" then
-                    TempPathTendersGosYakut <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                   (xnode :?> XmlNode).InnerText
+                    TempPathTendersGosYakut <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_gosyakut" then
-                    LogPathTendersGosYakut <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                  (xnode :?> XmlNode).InnerText
+                    LogPathTendersGosYakut <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_rostend" then
-                    TempPathTendersRosTend <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersRosTend <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_rostend" then
-                    LogPathTendersRosTend <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersRosTend <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_chpt" then
-                    TempPathTendersChPt <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                               (xnode :?> XmlNode).InnerText
+                    TempPathTendersChPt <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_chpt" then
-                    LogPathTendersChPt <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                              (xnode :?> XmlNode).InnerText
+                    LogPathTendersChPt <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_tplus" then
-                    TempPathTendersTplus <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                (xnode :?> XmlNode).InnerText
+                    TempPathTendersTplus <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_tplus" then
-                    LogPathTendersTplus <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                               (xnode :?> XmlNode).InnerText
+                    LogPathTendersTplus <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_sibserv" then
-                    TempPathTendersSibServ <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersSibServ <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_sibserv" then
-                    LogPathTendersSibServ <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersSibServ <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_tguru" then
-                    TempPathTendersTGuru <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                (xnode :?> XmlNode).InnerText
+                    TempPathTendersTGuru <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_tguru" then
-                    LogPathTendersTGuru <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                               (xnode :?> XmlNode).InnerText
+                    LogPathTendersTGuru <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_bidmart" then
-                    TempPathTendersBidMart <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersBidMart <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_bidmart" then
-                    LogPathTendersBidMart <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersBidMart <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_comita" then
-                    TempPathTendersComita <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    TempPathTendersComita <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_comita" then
-                    LogPathTendersComita <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                (xnode :?> XmlNode).InnerText
+                    LogPathTendersComita <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_eshoprzd" then
-                    TempPathTendersEshopRzd <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                   (xnode :?> XmlNode).InnerText
+                    TempPathTendersEshopRzd <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_eshoprzd" then
-                    LogPathTendersEshopRzd <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                  (xnode :?> XmlNode).InnerText
+                    LogPathTendersEshopRzd <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_yarregion" then
-                    TempPathTendersYarRegion <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                    (xnode :?> XmlNode).InnerText
+                    TempPathTendersYarRegion <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_yarregion" then
-                    LogPathTendersYarRegion <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                   (xnode :?> XmlNode).InnerText
+                    LogPathTendersYarRegion <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_btg" then
-                    TempPathTendersBtg <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                              (xnode :?> XmlNode).InnerText
+                    TempPathTendersBtg <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_btg" then
-                    LogPathTendersBtg <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                             (xnode :?> XmlNode).InnerText
+                    LogPathTendersBtg <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_vend" then
-                    TempPathTendersVend <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                               (xnode :?> XmlNode).InnerText
+                    TempPathTendersVend <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_vend" then
-                    LogPathTendersVend <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                              (xnode :?> XmlNode).InnerText
+                    LogPathTendersVend <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_pik" then
-                    TempPathTendersPik <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                              (xnode :?> XmlNode).InnerText
+                    TempPathTendersPik <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_pik" then
-                    LogPathTendersPik <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                             (xnode :?> XmlNode).InnerText
+                    LogPathTendersPik <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_nornic" then
-                    TempPathTendersNorNic <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    TempPathTendersNorNic <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_nornic" then
-                    LogPathTendersNorNic <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                (xnode :?> XmlNode).InnerText
+                    LogPathTendersNorNic <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_tenderer" then
-                    TempPathTendersTenderer <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                   (xnode :?> XmlNode).InnerText
+                    TempPathTendersTenderer <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_tenderer" then
-                    LogPathTendersTenderer <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                  (xnode :?> XmlNode).InnerText
+                    LogPathTendersTenderer <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_samolet" then
-                    TempPathTendersSamolet <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersSamolet <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_samolet" then
-                    LogPathTendersSamolet <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersSamolet <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_ariba" then
-                    TempPathTendersAriba <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersAriba <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_ariba" then
-                    LogPathTendersAriba <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersAriba <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_beeline" then
-                    TempPathTendersBeeline <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersBeeline <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_beeline" then
-                    LogPathTendersBeeline <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersBeeline <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_tsm" then
-                    TempPathTendersTsm <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersTsm <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_tsm" then
-                    LogPathTendersTsm <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersTsm <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_smart" then
-                    TempPathTendersSmart <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersSmart <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_smart" then
-                    LogPathTendersSmart <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersSmart <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_rtsgen" then
-                    TempPathTendersRtsGen <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersRtsGen <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_rtsgen" then
-                    LogPathTendersRtsGen <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersRtsGen <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_tj" then
-                    TempPathTendersTj <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersTj <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_tj" then
-                    LogPathTendersTj <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersTj <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_turk" then
-                    TempPathTendersTurk <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersTurk <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_turk" then
-                    LogPathTendersTurk <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersTurk <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_kg" then
-                                    TempPathTendersKg <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersKg <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_kg" then
-                                    LogPathTendersKg <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersKg <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_eten" then
-                                    TempPathTendersEten <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersEten <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_eten" then
-                                    LogPathTendersEten <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersEten <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_cislink" then
-                                    TempPathTendersCisLink <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersCisLink <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_cislink" then
-                                    LogPathTendersCisLink <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersCisLink <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_petr" then
-                                    TempPathTendersPetr <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersPetr <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_petr" then
-                                    LogPathTendersPetr <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersPetr <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_mpkz" then
-                                    TempPathTendersMpkz <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersMpkz <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_mpkz" then
-                                    LogPathTendersMpkz <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersMpkz <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_estorespb" then
-                                    TempPathTendersEstoreSpb <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersEstoreSpb <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_estorespb" then
-                                    LogPathTendersEstoreSpb <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersEstoreSpb <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_rosagro" then
-                                    TempPathTendersRosAgro <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersRosAgro <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_rosagro" then
-                                    LogPathTendersRosAgro <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersRosAgro <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_neftreg" then
-                                    TempPathTendersNeftReg <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersNeftReg <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_neftreg" then
-                                    LogPathTendersNeftReg <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersNeftReg <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_forscience" then
-                                    TempPathTendersForScience <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersForScience <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_forscience" then
-                                    LogPathTendersForScience <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersForScience <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_volgzmo" then
-                                    TempPathTendersVolgZmo <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersVolgZmo <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_volgzmo" then
-                                    LogPathTendersVolgZmo <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersVolgZmo <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_rusal" then
-                                    TempPathTendersRusal <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersRusal <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_rusal" then
-                                    LogPathTendersRusal <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersRusal <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_moek" then
-                                    TempPathTendersMoek <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersMoek <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_moek" then
-                                    LogPathTendersMoek <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersMoek <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_kamaz" then
-                                    TempPathTendersKamaz <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersKamaz <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_kamaz" then
-                                    LogPathTendersKamaz <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersKamaz <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_unistream" then
-                                    TempPathTendersUni <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersUni <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_unistream" then
-                                    LogPathTendersUni <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersUni <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_ksk" then
-                                    TempPathTendersKsk <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersKsk <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_ksk" then
-                                    LogPathTendersKsk <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersKsk <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_gmt" then
-                                    TempPathTendersGmt <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersGmt <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_gmt" then
-                                    LogPathTendersGmt <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersGmt <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_ymz" then
-                                    TempPathTendersYmz <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersYmz <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_ymz" then
-                                    LogPathTendersYmz <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersYmz <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_unipro" then
-                                    TempPathTendersUnipro <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersUnipro <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_unipro" then
-                                    LogPathTendersUnipro <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersUnipro <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_apps" then
-                                    TempPathTendersApps <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersApps <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_apps" then
-                                    LogPathTendersApps <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersApps <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_rts_corp" then
-                                    TempPathTendersRtsCorp <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersRtsCorp <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_rts_corp" then
-                                    LogPathTendersRtsCorp <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersRtsCorp <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_severstal" then
-                                    TempPathTendersSeverStal <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersSeverStal <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_severstal" then
-                                    LogPathTendersSeverStal <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersSeverStal <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_medic" then
-                                    TempPathTendersMedic <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersMedic <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_medic" then
-                                    LogPathTendersMedic <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersMedic <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_bidzaar" then
-                                    TempPathTendersBidzaar <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersBidzaar <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_bidzaar" then
-                                    LogPathTendersBidzaar <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersBidzaar <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_metodholding" then
-                                    TempPathTendersMetodholding <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersMetodholding <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_metodholding" then
-                                    LogPathTendersMetodholding <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersMetodholding <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_bhm" then
-                                    TempPathTendersBhm <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersBhm <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_bhm" then
-                                    LogPathTendersBhm <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersBhm <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_domru" then
-                                    TempPathTendersDomru <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersDomru <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_domru" then
-                                    LogPathTendersDomru <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersDomru <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_samaragips" then
-                                    TempPathTendersSamaraGips <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersSamaraGips <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_samaragips" then
-                                    LogPathTendersSamaraGips <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersSamaraGips <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_goldenseed" then
-                                    TempPathTendersGoldenSeed <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersGoldenSeed <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_goldenseed" then
-                                    LogPathTendersGoldenSeed <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersGoldenSeed <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_kaustik" then
-                                    TempPathTendersKaustik <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersKaustik <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_kaustik" then
-                                    LogPathTendersKaustik <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersKaustik <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_dme" then
-                                    TempPathTendersDme <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersDme <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_dme" then
-                                    LogPathTendersDme <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersDme <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_tele2" then
-                                    TempPathTendersTele2 <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersTele2 <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_tele2" then
-                                    LogPathTendersTele2 <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersTele2 <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_osnova" then
-                                    TempPathTendersOsnova <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersOsnova <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_osnova" then
-                                    LogPathTendersOsnova <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersOsnova <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_sibgenco" then
-                                    TempPathTendersSibGenco <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersSibGenco <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_sibgenco" then
-                                    LogPathTendersSibGenco <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersSibGenco <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_vtbconnect" then
-                                    TempPathTendersVtbConnect <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersVtbConnect <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_vtbconnect" then
-                                    LogPathTendersVtbConnect <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersVtbConnect <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_rtci" then
-                                    TempPathTendersRtCi <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersRtCi <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_rtci" then
-                                    LogPathTendersRtCi <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersRtCi <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_forumgd" then
-                                    TempPathTendersForumGd <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersForumGd <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_forumgd" then
-                                    LogPathTendersForumGd <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersForumGd <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_energybase" then
-                                    TempPathTendersEnergyBase <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersEnergyBase <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_energybase" then
-                                    LogPathTendersEnergyBase <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersEnergyBase <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_etprt" then
-                                    TempPathTendersEtpRt <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                  (xnode :?> XmlNode).InnerText
+                    TempPathTendersEtpRt <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_etprt" then
-                                    LogPathTendersEtpRt <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                                 (xnode :?> XmlNode).InnerText
+                    LogPathTendersEtpRt <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_comitazmo" then
-                    TempPathTendersComitaZmo <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    TempPathTendersComitaZmo <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_comitazmo" then
-                    LogPathTendersComitaZmo <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                (xnode :?> XmlNode).InnerText
+                    LogPathTendersComitaZmo <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_estp" then
-                    TempPathTendersEstp <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    TempPathTendersEstp <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_estp" then
-                    LogPathTendersEstp <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                (xnode :?> XmlNode).InnerText
+                    LogPathTendersEstp <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_magnitstroy" then
-                    TempPathTenderMagnitStroy <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    TempPathTenderMagnitStroy <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_magnitstroy" then
-                    LogPathTendersMagnitStroy <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                (xnode :?> XmlNode).InnerText
+                    LogPathTendersMagnitStroy <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_neftisa" then
-                    TempPathTenderNeftisa <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    TempPathTenderNeftisa <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_neftisa" then
-                    LogPathTendersNeftisa <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                (xnode :?> XmlNode).InnerText
+                    LogPathTendersNeftisa <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_belorusneft" then
-                    TempPathTenderBelorusNeft <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    TempPathTenderBelorusNeft <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_belorusneft" then
-                    LogPathTendersBelorusNeft <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                (xnode :?> XmlNode).InnerText
+                    LogPathTendersBelorusNeft <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_ishim" then
-                    TempPathTenderIshim <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    TempPathTenderIshim <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_ishim" then
-                    LogPathTendersIshim <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                (xnode :?> XmlNode).InnerText
+                    LogPathTendersIshim <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_barnaultm" then
-                    TempPathTendersBarnaulTm <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    TempPathTendersBarnaulTm <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_barnaultm" then
-                    LogPathTendersBarnaulTm <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                (xnode :?> XmlNode).InnerText
+                    LogPathTendersBarnaulTm <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_tularegion" then
-                    TempPathTendersTulaRegion <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    TempPathTendersTulaRegion <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_tularegion" then
-                    LogPathTendersTulaRegion <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                (xnode :?> XmlNode).InnerText
+                    LogPathTendersTulaRegion <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_sngb" then
-                    TempPathTendersSngb <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                 (xnode :?> XmlNode).InnerText
+                    TempPathTendersSngb <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_sngb" then
-                    LogPathTendersSngb <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "prefix" then Prefix <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "userdb" then UserDb <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "passdb" then PassDb <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "server" then Server <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "usertenderer" then UserTenderer <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "usercislink" then UserCisLink <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "passcislink" then PassCisLink <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "userbidmart" then UserBidMart <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "passbidmart" then PassBidMart <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "usermedic" then UserMedic <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "passmedic" then PassMedic <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "userbidzaar" then UserBidZaar <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "passbidzaar" then PassBidZaar <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "uservtb" then UserVtb <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "passvtb" then PassVtb <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "userforumgd" then UserForumGd <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "passforumgd" then PassForumGd <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "usermagnit" then UserMagnit <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "passmagnit" then PassMagnit <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "userishim" then UserIshim <- (xnode :?> XmlNode).InnerText
-                elif (xnode :?> XmlNode).Name = "passishim" then PassIshim <- (xnode :?> XmlNode).InnerText
-                else if (xnode :?> XmlNode).Name = "port" then Port <- Int32.Parse((xnode :?> XmlNode).InnerText)
-                else if (xnode :?> XmlNode).Name = "use_proxy" then UseProxy <- Boolean.Parse((xnode :?> XmlNode).InnerText)
+                    LogPathTendersSngb <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "prefix" then
+                    Prefix <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "userdb" then
+                    UserDb <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "passdb" then
+                    PassDb <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "server" then
+                    Server <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "usertenderer" then
+                    UserTenderer <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "usercislink" then
+                    UserCisLink <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "passcislink" then
+                    PassCisLink <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "userbidmart" then
+                    UserBidMart <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "passbidmart" then
+                    PassBidMart <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "usermedic" then
+                    UserMedic <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "passmedic" then
+                    PassMedic <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "userbidzaar" then
+                    UserBidZaar <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "passbidzaar" then
+                    PassBidZaar <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "uservtb" then
+                    UserVtb <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "passvtb" then
+                    PassVtb <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "userforumgd" then
+                    UserForumGd <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "passforumgd" then
+                    PassForumGd <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "usermagnit" then
+                    UserMagnit <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "passmagnit" then
+                    PassMagnit <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "userishim" then
+                    UserIshim <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "passishim" then
+                    PassIshim <- (xnode :?> XmlNode).InnerText
+                else if (xnode :?> XmlNode).Name = "port" then
+                    Port <- Int32.Parse((xnode :?> XmlNode).InnerText)
+                else if (xnode :?> XmlNode).Name = "use_proxy" then
+                    UseProxy <- Boolean.Parse((xnode :?> XmlNode).InnerText)
                 elif (xnode :?> XmlNode).Name = "proxy_file" then
-                    ProxyPath <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar
-                                                (xnode :?> XmlNode).InnerText
+                    ProxyPath <- sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
+
             let connectstring =
                 sprintf
                     "Server=%s;port=%d;Database=%s;User Id=%s;password=%s;CharSet=utf8;Convert Zero Datetime=True;default command timeout=3600;Connection Timeout=3600;SslMode=none"
-                    Server Port Database UserDb PassDb
+                    Server
+                    Port
+                    Database
+                    UserDb
+                    PassDb
 
             let TempPathTenders =
                 match arg with
@@ -904,6 +938,7 @@ module Settings =
         else
             printf "Bad file settings, goodbye"
             Environment.Exit(1)
+
             { Database = Database
               TempPathTenders = ""
               LogPathTenders = ""

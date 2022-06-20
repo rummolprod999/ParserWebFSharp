@@ -12,61 +12,73 @@ type ResultParserBidMart =
     | BadArgument of string
 
 type DefinedBuilder() =
-    
-    member this.Bind((x : ResultParserBidMart), (rest : string -> ResultParserBidMart)) =
-        match x with
-        | SuccessResult(x) -> rest x
-        | BadArgument(b) -> BadArgument(b)
-    
-    member this.Return(r : 'T) = r
 
-type ParserBidMart(stn : Settings.T) =
+    member this.Bind((x: ResultParserBidMart), (rest: string -> ResultParserBidMart)) =
+        match x with
+        | SuccessResult (x) -> rest x
+        | BadArgument (b) -> BadArgument(b)
+
+    member this.Return(r: 'T) = r
+
+type ParserBidMart(stn: Settings.T) =
     inherit Parser()
     let set = stn
     let timeoutB = TimeSpan.FromSeconds(30.)
     let url = "https://www.bidmart.by/"
     let options = ChromeOptions()
-    
-    let checker (x : string) (t : IWebElement) (b : string) =
+
+    let checker (x: string) (t: IWebElement) (b: string) =
         match t.findElementWithoutException (x) with
         | "" -> BadArgument(b)
         | r -> SuccessResult(r)
-    
-    do 
+
+    do
         options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
-    
+
     override this.Parsing() =
-        let driver = new ChromeDriver("/usr/local/bin", options)
+        let driver =
+            new ChromeDriver("/usr/local/bin", options)
+
         driver.Manage().Timeouts().PageLoad <- timeoutB
         //driver.Manage().Window.Maximize()
-        try 
-            try 
+        try
+            try
                 this.ParserSelen driver
                 driver.Manage().Cookies.DeleteAllCookies()
-            with ex -> Logging.Log.logger ex
+            with
+                | ex -> Logging.Log.logger ex
         finally
             driver.Quit()
-    
-    member private this.ParserSelen(driver : ChromeDriver) =
+
+    member private this.ParserSelen(driver: ChromeDriver) =
         let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(5000)
-        wait.Until
-            (fun dr -> dr.FindElement(By.XPath("//table[@id = 'wlist']/tbody")).Displayed) 
+
+        wait.Until (fun dr ->
+            dr
+                .FindElement(
+                    By.XPath("//table[@id = 'wlist']/tbody")
+                )
+                .Displayed)
         |> ignore
-        let tenders = driver.FindElementsByXPath("//table[@id = 'wlist']/tbody/tr")
+
+        let tenders =
+            driver.FindElementsByXPath("//table[@id = 'wlist']/tbody/tr")
+
         for t in tenders do
-            try 
+            try
                 this.ParserTenders driver t
-            with ex -> Logging.Log.logger ex
-    
-    member private this.ParserTenders (_ : ChromeDriver) (t : IWebElement) =
+            with
+                | ex -> Logging.Log.logger ex
+
+    member private this.ParserTenders (_: ChromeDriver) (t: IWebElement) =
         let defined = DefinedBuilder()
-        
+
         let res =
-            defined { 
+            defined {
                 let! purNum = checker "./td[1]" t "bad purNum"
                 let purName = purNum
                 let href = "https://www.bidmart.by/"
@@ -76,11 +88,14 @@ type ParserBidMart(stn : Settings.T) =
                 let quant = quantT.GetNmck()
                 let datePub = DateTime.Now
                 let! dateEndT = checker "./td[4]" t "bad dateEndT"
+
                 let dateEnd =
                     match dateEndT.DateFromString("dd.MM.yyyy") with
                     | Some d -> d
-                    | None -> raise <| Exception(sprintf "cannot parse dateEndT %s, %s" dateEndT url)
-                
+                    | None ->
+                        raise
+                        <| Exception(sprintf "cannot parse dateEndT %s, %s" dateEndT url)
+
                 let ten =
                     { Href = href
                       PurNum = purNum
@@ -89,12 +104,16 @@ type ParserBidMart(stn : Settings.T) =
                       DateEnd = dateEnd
                       Nmck = nmck
                       Quant = quant }
-                
-                let T = TenderBidMart(set, ten, 102, "ООО «Бидмартс»", "https://www.bidmart.by/")
+
+                let T =
+                    TenderBidMart(set, ten, 102, "ООО «Бидмартс»", "https://www.bidmart.by/")
+
                 T.Parsing()
                 return SuccessResult("ok")
             }
+
         match res with
         | SuccessResult _ -> ()
         | BadArgument b -> Logging.Log.logger b
+
         ()

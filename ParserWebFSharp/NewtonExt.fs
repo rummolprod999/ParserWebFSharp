@@ -1,4 +1,5 @@
 namespace ParserWeb
+
 open System
 open Newtonsoft.Json
 open Newtonsoft.Json.Linq
@@ -8,35 +9,38 @@ open DocumentBuilderNewton
 module NewtonExt =
 
     let inline GetStringFromJtoken (x: ^a) (s: string) =
-            match (^a: (member SelectToken: string -> JToken) (x, s)) with
-            | null -> ""
-            | r -> ((string) r).Trim()
+        match (^a: (member SelectToken: string -> JToken) (x, s)) with
+        | null -> ""
+        | r -> ((string) r).Trim()
 
     let inline GetIntFromJtoken (x: ^a) (s: string) =
-            match (^a: (member SelectToken: string -> JToken) (x, s)) with
-            | null -> 0
-            | r -> ((int) r)
+        match (^a: (member SelectToken: string -> JToken) (x, s)) with
+        | null -> 0
+        | r -> ((int) r)
 
     let inline GetDecimalFromJtoken (x: ^a) (s: string) =
-            match (^a: (member SelectToken: string -> JToken) (x, s)) with
-            | null -> 0m
-            | r -> try
-                       ((decimal) r)
-                   with _ -> 0m
+        match (^a: (member SelectToken: string -> JToken) (x, s)) with
+        | null -> 0m
+        | r ->
+            try
+                ((decimal) r)
+            with
+                | _ -> 0m
 
     let inline GetDateTimeFromJtoken (x: ^a) (s: string) =
-            match (^a: (member SelectToken: string -> JToken) (x, s)) with
-            | null -> DateTime.MinValue
-            | x when x.Type = JTokenType.Null -> DateTime.MinValue
-            | r -> DateTime.Parse((string) r)
+        match (^a: (member SelectToken: string -> JToken) (x, s)) with
+        | null -> DateTime.MinValue
+        | x when x.Type = JTokenType.Null -> DateTime.MinValue
+        | r -> DateTime.Parse((string) r)
 
     let inline GetDateTimeStringFromJtoken (x: ^a) (s: string) =
-            match (^a: (member SelectToken: string -> JToken) (x, s)) with
+        match (^a: (member SelectToken: string -> JToken) (x, s)) with
+        | null -> ""
+        | rr when (string) rr = "null" -> ""
+        | r ->
+            match JsonConvert.SerializeObject(r) with
             | null -> ""
-            | rr when (string) rr = "null" -> ""
-            | r -> match JsonConvert.SerializeObject(r) with
-                   | null -> ""
-                   | t -> t.Trim('"')
+            | t -> t.Trim('"')
 
     type JToken with
         member this.StDString (path: string) (err: string) =
@@ -67,16 +71,19 @@ module NewtonExt =
         member this.StDDateTimeB(path: string) =
             match this.SelectToken(path) with
             | null -> DateTime.MinValue
-            | x -> try
-                        Convert.ToDateTime(x)
-                   with _ -> DateTime.MinValue
+            | x ->
+                try
+                    Convert.ToDateTime(x)
+                with
+                    | _ -> DateTime.MinValue
 
         member this.GetElements(path: string) =
             let els = List<JToken>()
+
             match this.SelectToken(path) with
             | null -> ()
             | x when x.Type = JTokenType.Object -> els.Add(x)
             | x when x.Type = JTokenType.Array -> els.AddRange(x)
             | _ -> ()
+
             els
-        

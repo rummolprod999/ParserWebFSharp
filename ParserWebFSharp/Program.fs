@@ -7,15 +7,20 @@ module Start =
     let main argv =
         let arguments =
             "irkutskoil, akd, lsr, butb, rossel, neft, slav, aero, stroytorgi, asgor, gosyakut, rostend, chpt, tplus, sibserv, tguru, bidmart, comita, eshoprzd, yarregion, btg, vend, pik, nornic, tenderer, samolet, ariba, beeline, tsm, smart, rtsgen, tj, turk, kg, eten, cislink, petr, mpkz, estorespb, rosagro, neftreg, forscience, volgzmo, rusal, moek, kamaz, uni, ksk, gmt, ymz, unipro, apps, rtscorp, sever, medic, bidzaar, metodholding, bhm, domru, samaragips, goldenseed, kaustik, dme, tele2, osnova, sibgenco, vtbconnect, rtci, forumgd, energybase, etprt, comitazmo, estp, magnitstroy, neftisa, belorusneft, ishim, barnaultm, tularegion, sngb"
+
         if argv.Length = 0 then
             printf "Bad arguments, use %s" arguments
             Environment.Exit(1)
+
         if argv.Length = 2 then
             Settings.RosselNum <- argv.[1]
             ()
+
         match argv.[0] with
         | "irkutskoil" ->
-            let settings = Settings.getSettings (IrkutskOil)
+            let settings =
+                Settings.getSettings (IrkutskOil)
+
             let p = Init(settings, IrkutskOil)
             p.Parsing()
         | "akd" ->
@@ -47,7 +52,9 @@ module Start =
             let p = Init(settings, Aero)
             p.Parsing()
         | "stroytorgi" ->
-            let settings = Settings.getSettings (StroyTorgi)
+            let settings =
+                Settings.getSettings (StroyTorgi)
+
             let p = Init(settings, StroyTorgi)
             p.Parsing()
         | "asgor" ->
@@ -55,11 +62,15 @@ module Start =
             let p = Init(settings, Asgor)
             p.Parsing()
         | "gosyakut" ->
-            let settings = Settings.getSettings (GosYakut)
+            let settings =
+                Settings.getSettings (GosYakut)
+
             let p = Init(settings, GosYakut)
             p.Parsing()
         | "rostend" ->
-            let settings = Settings.getSettings (RosTend)
+            let settings =
+                Settings.getSettings (RosTend)
+
             let p = Init(settings, RosTend)
             p.Parsing()
         | "chpt" ->
@@ -71,7 +82,9 @@ module Start =
             let p = Init(settings, Tplus)
             p.Parsing()
         | "sibserv" ->
-            let settings = Settings.getSettings (SibServ)
+            let settings =
+                Settings.getSettings (SibServ)
+
             let p = Init(settings, SibServ)
             p.Parsing()
         | "tguru" ->
@@ -79,7 +92,9 @@ module Start =
             let p = Init(settings, TGuru)
             p.Parsing()
         | "bidmart" ->
-            let settings = Settings.getSettings (BidMart)
+            let settings =
+                Settings.getSettings (BidMart)
+
             let p = Init(settings, BidMart)
             p.Parsing()
         | "comita" ->
@@ -87,11 +102,15 @@ module Start =
             let p = Init(settings, Comita)
             p.Parsing()
         | "eshoprzd" ->
-            let settings = Settings.getSettings (EshopRzd)
+            let settings =
+                Settings.getSettings (EshopRzd)
+
             let p = Init(settings, EshopRzd)
             p.Parsing()
         | "yarregion" ->
-            let settings = Settings.getSettings (YarRegion)
+            let settings =
+                Settings.getSettings (YarRegion)
+
             let p = Init(settings, YarRegion)
             p.Parsing()
         | "btg" ->
@@ -111,11 +130,15 @@ module Start =
             let p = Init(settings, NorNic)
             p.Parsing()
         | "tenderer" ->
-            let settings = Settings.getSettings (Tenderer)
+            let settings =
+                Settings.getSettings (Tenderer)
+
             let p = Init(settings, Tenderer)
             p.Parsing()
         | "samolet" ->
-            let settings = Settings.getSettings (Samolet)
+            let settings =
+                Settings.getSettings (Samolet)
+
             let p = Init(settings, Samolet)
             p.Parsing()
         | "ariba" ->
@@ -123,7 +146,9 @@ module Start =
             let p = Init(settings, Ariba)
             p.Parsing()
         | "beeline" ->
-            let settings = Settings.getSettings (Beeline)
+            let settings =
+                Settings.getSettings (Beeline)
+
             let p = Init(settings, Beeline)
             p.Parsing()
         | "tsm" ->
@@ -155,7 +180,9 @@ module Start =
             let p = Init(settings, Eten)
             p.Parsing()
         | "cislink" ->
-            let settings = Settings.getSettings (CisLink)
+            let settings =
+                Settings.getSettings (CisLink)
+
             let p = Init(settings, CisLink)
             p.Parsing()
         | "petr" ->
@@ -167,23 +194,33 @@ module Start =
             let p = Init(settings, Mpkz)
             p.Parsing()
         | "estorespb" ->
-            let settings = Settings.getSettings (EstoreSpb)
+            let settings =
+                Settings.getSettings (EstoreSpb)
+
             let p = Init(settings, EstoreSpb)
             p.Parsing()
         | "rosagro" ->
-            let settings = Settings.getSettings (RosAgro)
+            let settings =
+                Settings.getSettings (RosAgro)
+
             let p = Init(settings, RosAgro)
             p.Parsing()
         | "neftreg" ->
-            let settings = Settings.getSettings (NeftReg)
+            let settings =
+                Settings.getSettings (NeftReg)
+
             let p = Init(settings, NeftReg)
             p.Parsing()
         | "forscience" ->
-            let settings = Settings.getSettings (ForScience)
+            let settings =
+                Settings.getSettings (ForScience)
+
             let p = Init(settings, ForScience)
             p.Parsing()
         | "volgzmo" ->
-            let settings = Settings.getSettings (VolgZmo)
+            let settings =
+                Settings.getSettings (VolgZmo)
+
             let p = Init(settings, VolgZmo)
             p.Parsing()
         | "rusal" ->
@@ -223,7 +260,9 @@ module Start =
             let p = Init(settings, Apps)
             p.Parsing()
         | "rtscorp" ->
-            let settings = Settings.getSettings (RtsCorp)
+            let settings =
+                Settings.getSettings (RtsCorp)
+
             let p = Init(settings, RtsCorp)
             p.Parsing()
         | "sever" ->
@@ -235,11 +274,15 @@ module Start =
             let p = Init(settings, Medic)
             p.Parsing()
         | "bidzaar" ->
-            let settings = Settings.getSettings (Bidzaar)
+            let settings =
+                Settings.getSettings (Bidzaar)
+
             let p = Init(settings, Bidzaar)
             p.Parsing()
         | "metodholding" ->
-            let settings = Settings.getSettings (Metodholding)
+            let settings =
+                Settings.getSettings (Metodholding)
+
             let p = Init(settings, Metodholding)
             p.Parsing()
         | "bhm" ->
@@ -251,15 +294,21 @@ module Start =
             let p = Init(settings, Domru)
             p.Parsing()
         | "samaragips" ->
-            let settings = Settings.getSettings (Samaragips)
+            let settings =
+                Settings.getSettings (Samaragips)
+
             let p = Init(settings, Samaragips)
             p.Parsing()
         | "goldenseed" ->
-            let settings = Settings.getSettings (Goldenseed)
+            let settings =
+                Settings.getSettings (Goldenseed)
+
             let p = Init(settings, Goldenseed)
             p.Parsing()
         | "kaustik" ->
-            let settings = Settings.getSettings (Kaustik)
+            let settings =
+                Settings.getSettings (Kaustik)
+
             let p = Init(settings, Kaustik)
             p.Parsing()
         | "dme" ->
@@ -275,11 +324,15 @@ module Start =
             let p = Init(settings, Osnova)
             p.Parsing()
         | "sibgenco" ->
-            let settings = Settings.getSettings (Sibgenco)
+            let settings =
+                Settings.getSettings (Sibgenco)
+
             let p = Init(settings, Sibgenco)
             p.Parsing()
         | "vtbconnect" ->
-            let settings = Settings.getSettings (Vtbconnect)
+            let settings =
+                Settings.getSettings (Vtbconnect)
+
             let p = Init(settings, Vtbconnect)
             p.Parsing()
         | "rtci" ->
@@ -287,11 +340,15 @@ module Start =
             let p = Init(settings, Rtci)
             p.Parsing()
         | "forumgd" ->
-            let settings = Settings.getSettings (Forumgd)
+            let settings =
+                Settings.getSettings (Forumgd)
+
             let p = Init(settings, Forumgd)
             p.Parsing()
         | "energybase" ->
-            let settings = Settings.getSettings (Energybase)
+            let settings =
+                Settings.getSettings (Energybase)
+
             let p = Init(settings, Energybase)
             p.Parsing()
         | "etprt" ->
@@ -299,7 +356,9 @@ module Start =
             let p = Init(settings, EtpRt)
             p.Parsing()
         | "comitazmo" ->
-            let settings = Settings.getSettings (Comitazmo)
+            let settings =
+                Settings.getSettings (Comitazmo)
+
             let p = Init(settings, Comitazmo)
             p.Parsing()
         | "estp" ->
@@ -307,15 +366,21 @@ module Start =
             let p = Init(settings, Estp)
             p.Parsing()
         | "magnitstroy" ->
-            let settings = Settings.getSettings (Magnitstroy)
+            let settings =
+                Settings.getSettings (Magnitstroy)
+
             let p = Init(settings, Magnitstroy)
             p.Parsing()
         | "neftisa" ->
-            let settings = Settings.getSettings (Neftisa)
+            let settings =
+                Settings.getSettings (Neftisa)
+
             let p = Init(settings, Neftisa)
             p.Parsing()
         | "belorusneft" ->
-            let settings = Settings.getSettings (Belorusneft)
+            let settings =
+                Settings.getSettings (Belorusneft)
+
             let p = Init(settings, Belorusneft)
             p.Parsing()
         | "ishim" ->
@@ -323,11 +388,15 @@ module Start =
             let p = Init(settings, Ishim)
             p.Parsing()
         | "barnaultm" ->
-            let settings = Settings.getSettings (Barnaultm)
+            let settings =
+                Settings.getSettings (Barnaultm)
+
             let p = Init(settings, Barnaultm)
             p.Parsing()
         | "tularegion" ->
-            let settings = Settings.getSettings (Tularegion)
+            let settings =
+                Settings.getSettings (Tularegion)
+
             let p = Init(settings, Tularegion)
             p.Parsing()
         | "sngb" ->
@@ -337,4 +406,5 @@ module Start =
         | _ ->
             printf "Bad arguments, use %s" arguments
             Environment.Exit(1)
+
         0 // return an integer exit code

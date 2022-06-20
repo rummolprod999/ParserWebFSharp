@@ -1,214 +1,215 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="ToolsFun.fs" />
-    <Compile Include="DocumentBuilderModule.fs" />
-    <Compile Include="DocumentBuilder.fs" />
-    <Compile Include="TenderBuilder.fs" />
-    <Compile Include="TypeExtensions.fs" />
-    <Compile Include="NewtonExt.fs" />
-    <Compile Include="TypesForParsing.fs" />
-    <Compile Include="Settings.fs" />
-    <Compile Include="ProxyLoader.fs" />
-    <Compile Include="Logging.fs" />
-    <Compile Include="HttpLibrary.fs" />
-    <Compile Include="AbstractParser.fs" />
-    <Compile Include="AbstractTender.fs" />
-    <Compile Include="TenderIrkutskOil.fs" />
-    <Compile Include="ParserIrkutskOil.fs" />
-    <Compile Include="TenderAkd.fs" />
-    <Compile Include="ParserAkd.fs" />
-    <Compile Include="TenderLsr.fs" />
-    <Compile Include="ParserLsr.fs" />
-    <Compile Include="TenderButb.fs" />
-    <Compile Include="ParserButb.fs" />
-    <Compile Include="TenderRossel.fs" />
-    <Compile Include="ParserRossel.fs" />
-    <Compile Include="TenderNeft.fs" />
-    <Compile Include="ParserNeft.fs" />
-    <Compile Include="TenderNeftNew.fs" />
-    <Compile Include="ParserNeftNew.fs" />
-    <Compile Include="TenderSlav.fs" />
-    <Compile Include="ParserSlav.fs" />
-    <Compile Include="TenderAero.fs" />
-    <Compile Include="ParserAero.fs" />
-    <Compile Include="TenderStroyTorgi.fs" />
-    <Compile Include="ParserStroyTorgi.fs" />
-    <Compile Include="TenderAsgor.fs" />
-    <Compile Include="ParserAsgor.fs" />
-    <Compile Include="TenderGosYakut.fs" />
-    <Compile Include="ParserGosYakut.fs" />
-    <Compile Include="TenderRostendNew.fs" />
-    <Compile Include="TenderRosTend.fs" />
-    <Compile Include="TenderRostendParall.fs" />
-    <Compile Include="ParserRostendParall.fs" />
-    <Compile Include="ParserRostendMultyThread.fs" />
-    <Compile Include="ParserRostendTask.fs" />
-    <Compile Include="ParserRosTendXml.fs" />
-    <Compile Include="TenderChPt.fs" />
-    <Compile Include="ParserChPt.fs" />
-    <Compile Include="TenderTPlus.fs" />
-    <Compile Include="ParserTPlusParall.fs" />
-    <Compile Include="TenderSibServ.fs" />
-    <Compile Include="ParserSibServ.fs" />
-    <Compile Include="TenderTGuru.fs" />
-    <Compile Include="ParserTGuru.fs" />
-    <Compile Include="TenderBidMart.fs" />
-    <Compile Include="ParserBidMart.fs" />
-    <Compile Include="TenderComita.fs" />
-    <Compile Include="ParserComita.fs" />
-    <Compile Include="TenderEshopRzd.fs" />
-    <Compile Include="ParserEshopRzd.fs" />
-    <Compile Include="TenderYarRegion.fs" />
-    <Compile Include="ParserYarRegion.fs" />
-    <Compile Include="TenderTulaRegion.fs" />
-    <Compile Include="ParserTulaRegion.fs" />
-    <Compile Include="TenderBtg.fs" />
-    <Compile Include="ParserBtg.fs" />
-    <Compile Include="TenderVend.fs" />
-    <Compile Include="ParserVend.fs" />
-    <Compile Include="TenderPik.fs" />
-    <Compile Include="ParserPik.fs" />
-    <Compile Include="TenderNorNic.fs" />
-    <Compile Include="ParserNorNic.fs" />
-    <Compile Include="TenderTenderer.fs" />
-    <Compile Include="ParserTenderer.fs" />
-    <Compile Include="TenderSamolet.fs" />
-    <Compile Include="ParserSamolet.fs" />
-    <Compile Include="TenderAriba.fs" />
-    <Compile Include="ParserAriba.fs" />
-    <Compile Include="TenderBeeline.fs" />
-    <Compile Include="ParserBeeline.fs" />
-    <Compile Include="TenderTsm.fs" />
-    <Compile Include="ParserTsm.fs" />
-    <Compile Include="TenderSmart.fs" />
-    <Compile Include="ParserSmart.fs" />
-    <Compile Include="TenderRtsGen.fs" />
-    <Compile Include="ParserRtsGen.fs" />
-    <Compile Include="TenderTj.fs" />
-    <Compile Include="ParserTj.fs" />
-    <Compile Include="TenderTurk.fs" />
-    <Compile Include="ParserTurk.fs" />
-    <Compile Include="TenderKg.fs" />
-    <Compile Include="ParserKg.fs" />
-    <Compile Include="TenderEten.fs" />
-    <Compile Include="ParserEten.fs" />
-    <Compile Include="TenderCisLink.fs" />
-    <Compile Include="ParserCisLink.fs" />
-    <Compile Include="TenderPetr.fs" />
-    <Compile Include="ParserPetr.fs" />
-    <Compile Include="TenderMpKz.fs" />
-    <Compile Include="ParserMpKz.fs" />
-    <Compile Include="TenderEstoreSpb.fs" />
-    <Compile Include="ParserEstoreSpb.fs" />
-    <Compile Include="TenderRosAgro.fs" />
-    <Compile Include="ParserRosAgro.fs" />
-    <Compile Include="TenderNeftReg.fs" />
-    <Compile Include="ParserNeftReg.fs" />
-    <Compile Include="TenderForScience.fs" />
-    <Compile Include="ParserForScience.fs" />
-    <Compile Include="TenderVolgZmo.fs" />
-    <Compile Include="ParserVolgZmo.fs" />
-    <Compile Include="TenderMedic.fs" />
-    <Compile Include="ParserMedic.fs" />
-    <Compile Include="TenderBidZaar.fs" />
-    <Compile Include="ParserBidZaar.fs" />
-    <Compile Include="TenderRusal.fs" />
-    <Compile Include="ParserRusal.fs" />
-    <Compile Include="TenderMoek.fs" />
-    <Compile Include="ParserMoek.fs" />
-    <Compile Include="TenderKamaz.fs" />
-    <Compile Include="ParserKamaz.fs" />
-    <Compile Include="TenderUni.fs" />
-    <Compile Include="ParserUni.fs" />
-    <Compile Include="TenderKsk.fs" />
-    <Compile Include="ParserKsk.fs" />
-    <Compile Include="TenderGmt.fs" />
-    <Compile Include="ParserGmt.fs" />
-    <Compile Include="TenderYmz.fs" />
-    <Compile Include="ParserYmz.fs" />
-    <Compile Include="TenderUnipro.fs" />
-    <Compile Include="ParserUnipro.fs" />
-    <Compile Include="TenderApps.fs" />
-    <Compile Include="ParserApps.fs" />
-    <Compile Include="TenderSmartNew.fs" />
-    <Compile Include="ParserSmartNew.fs" />
-    <Compile Include="TenderRtsCorp223.fs" />
-    <Compile Include="TenderRtsCorp.fs" />
-    <Compile Include="ParserRtsCorp.fs" />
-    <Compile Include="TenderSeverStal.fs" />
-    <Compile Include="ParserSeverStal.fs" />
-    <Compile Include="TenderMetodholding.fs" />
-    <Compile Include="ParserMetodholding.fs" />
-    <Compile Include="TenderBidMartNew.fs" />
-    <Compile Include="ParserBidMartNew.fs" />
-    <Compile Include="TenderBhm.fs" />
-    <Compile Include="ParserBhm.fs" />
-    <Compile Include="TenderDomRu.fs" />
-    <Compile Include="ParserDomRu.fs" />
-    <Compile Include="TenderSamaraGips.fs" />
-    <Compile Include="ParserSamaraGips.fs" />
-    <Compile Include="TenderGoldenSeed.fs" />
-    <Compile Include="ParserGoldenSeed.fs" />
-    <Compile Include="TenderKaustik.fs" />
-    <Compile Include="ParserKaustik.fs" />
-    <Compile Include="TenderDme.fs" />
-    <Compile Include="ParserDme.fs" />
-    <Compile Include="TenderTele2.fs" />
-    <Compile Include="ParserTele2.fs" />
-    <Compile Include="TenderOsnova.fs" />
-    <Compile Include="ParserOsnova.fs" />
-    <Compile Include="TenderSibGenco.fs" />
-    <Compile Include="ParserSibGenco.fs" />
-    <Compile Include="TenderVtbConnect.fs" />
-    <Compile Include="ParserVtbConnect.fs" />
-    <Compile Include="TenderRtCi.fs" />
-    <Compile Include="ParserRtCi.fs" />
-    <Compile Include="TenderRtci2.fs" />
-    <Compile Include="ParserRtci2.fs" />
-    <Compile Include="TenderEnergyBase.fs" />
-    <Compile Include="ParserEnergyBase.fs" />
-    <Compile Include="TenderForumGd.fs" />
-    <Compile Include="ParserForumGd.fs" />
-    <Compile Include="TenderEtpRt.fs" />
-    <Compile Include="ParserEtpRt.fs" />
-    <Compile Include="TenderComitaZmo.fs" />
-    <Compile Include="ParserComitaZmo.fs" />
-    <Compile Include="TenderEstp.fs" />
-    <Compile Include="ParserEstp.fs" />
-    <Compile Include="TenderMagnitStroy.fs" />
-    <Compile Include="ParserMagnitStroy.fs" />
-    <Compile Include="TenderNeftisa.fs" />
-    <Compile Include="ParserNeftisa.fs" />
-    <Compile Include="TenderBelorusNeft.fs" />
-    <Compile Include="ParserBelorusNeft.fs" />
-    <Compile Include="TenderIshim.fs" />
-    <Compile Include="ParserIshim.fs" />
-    <Compile Include="TenderBarnaulTm.fs" />
-    <Compile Include="ParserBarnaulTm.fs" />
-    <Compile Include="TenderSngb.fs" />
-    <Compile Include="ParserSngb.fs" />
-    <Compile Include="Init.fs" />
-    <Compile Include="Program.fs" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="AngleSharp" Version="0.9.9.2" />
-    <PackageReference Include="AngleSharp.Scripting.JavaScript" Version="0.5.1" />
-    <PackageReference Include="FSharp.Core" Version="4.3.4" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.8.4" />
-    <PackageReference Include="Microsoft.NETCore.App" Version="2.1.1" />
-    <PackageReference Include="MySql.Data" Version="8.0.11" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="RandomUserAgent" Version="1.1.2" />
-    <PackageReference Include="Selenium.WebDriver" Version="3.13.0" />
-    <PackageReference Update="FSharp.Core" Version="4.5.0" />
-    <PackageReference Include="SharpZipLib" Version="1.0.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="smarttender.json" />
-    <Content Include="test.html" />
-  </ItemGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="ToolsFun.fs"/>
+        <Compile Include="DocumentBuilderModule.fs"/>
+        <Compile Include="DocumentBuilder.fs"/>
+        <Compile Include="TenderBuilder.fs"/>
+        <Compile Include="TypeExtensions.fs"/>
+        <Compile Include="NewtonExt.fs"/>
+        <Compile Include="TypesForParsing.fs"/>
+        <Compile Include="Settings.fs"/>
+        <Compile Include="ProxyLoader.fs"/>
+        <Compile Include="Logging.fs"/>
+        <Compile Include="HttpLibrary.fs"/>
+        <Compile Include="AbstractParser.fs"/>
+        <Compile Include="AbstractTender.fs"/>
+        <Compile Include="TenderIrkutskOil.fs"/>
+        <Compile Include="ParserIrkutskOil.fs"/>
+        <Compile Include="TenderAkd.fs"/>
+        <Compile Include="ParserAkd.fs"/>
+        <Compile Include="TenderLsr.fs"/>
+        <Compile Include="ParserLsr.fs"/>
+        <Compile Include="TenderButb.fs"/>
+        <Compile Include="ParserButb.fs"/>
+        <Compile Include="TenderRossel.fs"/>
+        <Compile Include="ParserRossel.fs"/>
+        <Compile Include="ParserRosselNoSelen.fs"/>
+        <Compile Include="TenderNeft.fs"/>
+        <Compile Include="ParserNeft.fs"/>
+        <Compile Include="TenderNeftNew.fs"/>
+        <Compile Include="ParserNeftNew.fs"/>
+        <Compile Include="TenderSlav.fs"/>
+        <Compile Include="ParserSlav.fs"/>
+        <Compile Include="TenderAero.fs"/>
+        <Compile Include="ParserAero.fs"/>
+        <Compile Include="TenderStroyTorgi.fs"/>
+        <Compile Include="ParserStroyTorgi.fs"/>
+        <Compile Include="TenderAsgor.fs"/>
+        <Compile Include="ParserAsgor.fs"/>
+        <Compile Include="TenderGosYakut.fs"/>
+        <Compile Include="ParserGosYakut.fs"/>
+        <Compile Include="TenderRostendNew.fs"/>
+        <Compile Include="TenderRosTend.fs"/>
+        <Compile Include="TenderRostendParall.fs"/>
+        <Compile Include="ParserRostendParall.fs"/>
+        <Compile Include="ParserRostendMultyThread.fs"/>
+        <Compile Include="ParserRostendTask.fs"/>
+        <Compile Include="ParserRosTendXml.fs"/>
+        <Compile Include="TenderChPt.fs"/>
+        <Compile Include="ParserChPt.fs"/>
+        <Compile Include="TenderTPlus.fs"/>
+        <Compile Include="ParserTPlusParall.fs"/>
+        <Compile Include="TenderSibServ.fs"/>
+        <Compile Include="ParserSibServ.fs"/>
+        <Compile Include="TenderTGuru.fs"/>
+        <Compile Include="ParserTGuru.fs"/>
+        <Compile Include="TenderBidMart.fs"/>
+        <Compile Include="ParserBidMart.fs"/>
+        <Compile Include="TenderComita.fs"/>
+        <Compile Include="ParserComita.fs"/>
+        <Compile Include="TenderEshopRzd.fs"/>
+        <Compile Include="ParserEshopRzd.fs"/>
+        <Compile Include="TenderYarRegion.fs"/>
+        <Compile Include="ParserYarRegion.fs"/>
+        <Compile Include="TenderTulaRegion.fs"/>
+        <Compile Include="ParserTulaRegion.fs"/>
+        <Compile Include="TenderBtg.fs"/>
+        <Compile Include="ParserBtg.fs"/>
+        <Compile Include="TenderVend.fs"/>
+        <Compile Include="ParserVend.fs"/>
+        <Compile Include="TenderPik.fs"/>
+        <Compile Include="ParserPik.fs"/>
+        <Compile Include="TenderNorNic.fs"/>
+        <Compile Include="ParserNorNic.fs"/>
+        <Compile Include="TenderTenderer.fs"/>
+        <Compile Include="ParserTenderer.fs"/>
+        <Compile Include="TenderSamolet.fs"/>
+        <Compile Include="ParserSamolet.fs"/>
+        <Compile Include="TenderAriba.fs"/>
+        <Compile Include="ParserAriba.fs"/>
+        <Compile Include="TenderBeeline.fs"/>
+        <Compile Include="ParserBeeline.fs"/>
+        <Compile Include="TenderTsm.fs"/>
+        <Compile Include="ParserTsm.fs"/>
+        <Compile Include="TenderSmart.fs"/>
+        <Compile Include="ParserSmart.fs"/>
+        <Compile Include="TenderRtsGen.fs"/>
+        <Compile Include="ParserRtsGen.fs"/>
+        <Compile Include="TenderTj.fs"/>
+        <Compile Include="ParserTj.fs"/>
+        <Compile Include="TenderTurk.fs"/>
+        <Compile Include="ParserTurk.fs"/>
+        <Compile Include="TenderKg.fs"/>
+        <Compile Include="ParserKg.fs"/>
+        <Compile Include="TenderEten.fs"/>
+        <Compile Include="ParserEten.fs"/>
+        <Compile Include="TenderCisLink.fs"/>
+        <Compile Include="ParserCisLink.fs"/>
+        <Compile Include="TenderPetr.fs"/>
+        <Compile Include="ParserPetr.fs"/>
+        <Compile Include="TenderMpKz.fs"/>
+        <Compile Include="ParserMpKz.fs"/>
+        <Compile Include="TenderEstoreSpb.fs"/>
+        <Compile Include="ParserEstoreSpb.fs"/>
+        <Compile Include="TenderRosAgro.fs"/>
+        <Compile Include="ParserRosAgro.fs"/>
+        <Compile Include="TenderNeftReg.fs"/>
+        <Compile Include="ParserNeftReg.fs"/>
+        <Compile Include="TenderForScience.fs"/>
+        <Compile Include="ParserForScience.fs"/>
+        <Compile Include="TenderVolgZmo.fs"/>
+        <Compile Include="ParserVolgZmo.fs"/>
+        <Compile Include="TenderMedic.fs"/>
+        <Compile Include="ParserMedic.fs"/>
+        <Compile Include="TenderBidZaar.fs"/>
+        <Compile Include="ParserBidZaar.fs"/>
+        <Compile Include="TenderRusal.fs"/>
+        <Compile Include="ParserRusal.fs"/>
+        <Compile Include="TenderMoek.fs"/>
+        <Compile Include="ParserMoek.fs"/>
+        <Compile Include="TenderKamaz.fs"/>
+        <Compile Include="ParserKamaz.fs"/>
+        <Compile Include="TenderUni.fs"/>
+        <Compile Include="ParserUni.fs"/>
+        <Compile Include="TenderKsk.fs"/>
+        <Compile Include="ParserKsk.fs"/>
+        <Compile Include="TenderGmt.fs"/>
+        <Compile Include="ParserGmt.fs"/>
+        <Compile Include="TenderYmz.fs"/>
+        <Compile Include="ParserYmz.fs"/>
+        <Compile Include="TenderUnipro.fs"/>
+        <Compile Include="ParserUnipro.fs"/>
+        <Compile Include="TenderApps.fs"/>
+        <Compile Include="ParserApps.fs"/>
+        <Compile Include="TenderSmartNew.fs"/>
+        <Compile Include="ParserSmartNew.fs"/>
+        <Compile Include="TenderRtsCorp223.fs"/>
+        <Compile Include="TenderRtsCorp.fs"/>
+        <Compile Include="ParserRtsCorp.fs"/>
+        <Compile Include="TenderSeverStal.fs"/>
+        <Compile Include="ParserSeverStal.fs"/>
+        <Compile Include="TenderMetodholding.fs"/>
+        <Compile Include="ParserMetodholding.fs"/>
+        <Compile Include="TenderBidMartNew.fs"/>
+        <Compile Include="ParserBidMartNew.fs"/>
+        <Compile Include="TenderBhm.fs"/>
+        <Compile Include="ParserBhm.fs"/>
+        <Compile Include="TenderDomRu.fs"/>
+        <Compile Include="ParserDomRu.fs"/>
+        <Compile Include="TenderSamaraGips.fs"/>
+        <Compile Include="ParserSamaraGips.fs"/>
+        <Compile Include="TenderGoldenSeed.fs"/>
+        <Compile Include="ParserGoldenSeed.fs"/>
+        <Compile Include="TenderKaustik.fs"/>
+        <Compile Include="ParserKaustik.fs"/>
+        <Compile Include="TenderDme.fs"/>
+        <Compile Include="ParserDme.fs"/>
+        <Compile Include="TenderTele2.fs"/>
+        <Compile Include="ParserTele2.fs"/>
+        <Compile Include="TenderOsnova.fs"/>
+        <Compile Include="ParserOsnova.fs"/>
+        <Compile Include="TenderSibGenco.fs"/>
+        <Compile Include="ParserSibGenco.fs"/>
+        <Compile Include="TenderVtbConnect.fs"/>
+        <Compile Include="ParserVtbConnect.fs"/>
+        <Compile Include="TenderRtCi.fs"/>
+        <Compile Include="ParserRtCi.fs"/>
+        <Compile Include="TenderRtci2.fs"/>
+        <Compile Include="ParserRtci2.fs"/>
+        <Compile Include="TenderEnergyBase.fs"/>
+        <Compile Include="ParserEnergyBase.fs"/>
+        <Compile Include="TenderForumGd.fs"/>
+        <Compile Include="ParserForumGd.fs"/>
+        <Compile Include="TenderEtpRt.fs"/>
+        <Compile Include="ParserEtpRt.fs"/>
+        <Compile Include="TenderComitaZmo.fs"/>
+        <Compile Include="ParserComitaZmo.fs"/>
+        <Compile Include="TenderEstp.fs"/>
+        <Compile Include="ParserEstp.fs"/>
+        <Compile Include="TenderMagnitStroy.fs"/>
+        <Compile Include="ParserMagnitStroy.fs"/>
+        <Compile Include="TenderNeftisa.fs"/>
+        <Compile Include="ParserNeftisa.fs"/>
+        <Compile Include="TenderBelorusNeft.fs"/>
+        <Compile Include="ParserBelorusNeft.fs"/>
+        <Compile Include="TenderIshim.fs"/>
+        <Compile Include="ParserIshim.fs"/>
+        <Compile Include="TenderBarnaulTm.fs"/>
+        <Compile Include="ParserBarnaulTm.fs"/>
+        <Compile Include="TenderSngb.fs"/>
+        <Compile Include="ParserSngb.fs"/>
+        <Compile Include="Init.fs"/>
+        <Compile Include="Program.fs"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="AngleSharp" Version="0.9.9.2"/>
+        <PackageReference Include="AngleSharp.Scripting.JavaScript" Version="0.5.1"/>
+        <PackageReference Include="FSharp.Core" Version="4.3.4"/>
+        <PackageReference Include="HtmlAgilityPack" Version="1.8.4"/>
+        <PackageReference Include="Microsoft.NETCore.App" Version="2.1.1"/>
+        <PackageReference Include="MySql.Data" Version="8.0.11"/>
+        <PackageReference Include="Newtonsoft.Json" Version="11.0.2"/>
+        <PackageReference Include="RandomUserAgent" Version="1.1.2"/>
+        <PackageReference Include="Selenium.WebDriver" Version="3.13.0"/>
+        <PackageReference Update="FSharp.Core" Version="4.5.0"/>
+        <PackageReference Include="SharpZipLib" Version="1.0.0"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="smarttender.json"/>
+        <Content Include="test.html"/>
+    </ItemGroup>
 </Project>

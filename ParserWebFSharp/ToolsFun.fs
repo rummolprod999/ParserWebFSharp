@@ -12,64 +12,85 @@ open System.Text.RegularExpressions
 module Tools =
     open OpenQA.Selenium
 
-    let (|RegexMatch2|_|) (pattern : string) (input : string) =
+    let (|RegexMatch2|_|) (pattern: string) (input: string) =
         let result = Regex.Match(input, pattern)
+
         if result.Success then
             match (List.tail [ for g in result.Groups -> g.Value ]) with
             | fst :: snd :: [] -> Some(fst, snd)
             | _ -> None
-        else None
-        
-    let (|RegexMatch4|_|) (pattern : string) (input : string) =
+        else
+            None
+
+    let (|RegexMatch4|_|) (pattern: string) (input: string) =
         let result = Regex.Match(input, pattern)
+
         if result.Success then
             match (List.tail [ for g in result.Groups -> g.Value ]) with
             | fst :: snd :: thr :: [ four ] -> Some(fst, snd, thr, four)
             | _ -> None
-        else None
+        else
+            None
 
-    let (|RegexMatch1|_|) (pattern : string) (input : string) =
+    let (|RegexMatch1|_|) (pattern: string) (input: string) =
         let result = Regex.Match(input, pattern)
-        if result.Success then
-            match (List.tail [ for g in result.Groups -> g.Value ]) with
-            | fst :: [] -> Some(fst)
-            | _ -> None
-        else None
-    
-    let (|RegexMatch1DotALL|_|) (pattern : string) (input : string) =
-        let result = Regex.Match(input, pattern, RegexOptions.Singleline)
-        if result.Success then
-            match (List.tail [ for g in result.Groups -> g.Value ]) with
-            | fst :: [] -> Some(fst)
-            | _ -> None
-        else None
 
-    let inline InlineFEWE (x : ^a) (s : string) =
+        if result.Success then
+            match (List.tail [ for g in result.Groups -> g.Value ]) with
+            | fst :: [] -> Some(fst)
+            | _ -> None
+        else
+            None
+
+    let (|RegexMatch1DotALL|_|) (pattern: string) (input: string) =
+        let result =
+            Regex.Match(input, pattern, RegexOptions.Singleline)
+
+        if result.Success then
+            match (List.tail [ for g in result.Groups -> g.Value ]) with
+            | fst :: [] -> Some(fst)
+            | _ -> None
+        else
+            None
+
+    let inline InlineFEWE (x: ^a) (s: string) =
         try
-            let res = (^a : (member FindElement : By -> IWebElement) (x, By.XPath(s)))
+            let res =
+                (^a: (member FindElement: By -> IWebElement) (x, By.XPath(s)))
+
             match res with
             | null -> ""
             | r -> r.Text.Trim()
-        with ex -> ""
-        
-    let inline InlineHtmlNavigator (x : ^a) (s : string) =
+        with
+            | ex -> ""
+
+    let inline InlineHtmlNavigator (x: ^a) (s: string) =
         try
-            let res = (^a : (member SelectSingleNode : string -> Xml.XPath.XPathNavigator) (x, s))
+            let res =
+                (^a: (member SelectSingleNode: string -> Xml.XPath.XPathNavigator) (x, s))
+
             match res with
             | null -> ""
             | r -> r.Value.Trim()
-        with ex -> ""
-        
-    let createMD5 (s : string) : string =
+        with
+            | ex -> ""
+
+    let createMD5 (s: string) : string =
         use md5Hash = MD5.Create()
-        let data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(s))
+
+        let data =
+            md5Hash.ComputeHash(Encoding.UTF8.GetBytes(s))
+
         let sBuilder = StringBuilder()
+
         for i in data do
             sBuilder.Append(i.ToString("x2")) |> ignore
+
         sBuilder.ToString()
 
-    let GetRegionString(s : string) : string =
+    let GetRegionString (s: string) : string =
         let sLower = s.ToLower()
+
         match sLower with
         | s when s.Contains("отсуств") -> ""
         | s when s.Contains("белгор") -> "белгор"
@@ -161,7 +182,7 @@ module Tools =
         | s when s.Contains("байкон") -> "байкон"
         | _ -> ""
 
-    let GetDateFromStringMonth(s : string) =
+    let GetDateFromStringMonth (s: string) =
         match s with
         | s when s.Contains("января") -> s.Replace("января", "01")
         | s when s.Contains("февраля") -> s.Replace("февраля", "02")
@@ -177,30 +198,34 @@ module Tools =
         | s when s.Contains("декабря") -> s.Replace("декабря", "12")
         | _ -> s
 
-    let UnzippedTargz (zipFileName : string) (targetDir : string) =
+    let UnzippedTargz (zipFileName: string) (targetDir: string) =
         let stream = File.OpenRead(zipFileName)
         let gzipStream = new GZipInputStream(stream)
-        let tarArchive = TarArchive.CreateInputTarArchive(gzipStream)
+
+        let tarArchive =
+            TarArchive.CreateInputTarArchive(gzipStream)
+
         tarArchive.ExtractContents(targetDir)
         gzipStream.Close()
         stream.Close()
-        
-    let teststring (t : JToken) : string =
+
+    let teststring (t: JToken) : string =
         match t with
         | null -> ""
         | _ -> ((string) t).Trim()
 
-    let testint (t : JToken) : int =
+    let testint (t: JToken) : int =
         match t with
         | null -> 0
         | _ -> (int) t
 
-    let testfloat (t : JToken) : float =
+    let testfloat (t: JToken) : float =
         match t with
         | null -> 0.
         | _ -> (float) t
 
-    let testdate (t : string) : DateTime =
+    let testdate (t: string) : DateTime =
         match t with
-        | null | "null" -> DateTime.MinValue
+        | null
+        | "null" -> DateTime.MinValue
         | _ -> DateTime.Parse(((string) t).Trim('"'))

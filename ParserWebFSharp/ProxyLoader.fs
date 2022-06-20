@@ -7,7 +7,9 @@ open System
 type ProxyLoader() =
 
     static member val Loader =
-        let reader = File.ReadLines(Settings.ProxyPath)
+        let reader =
+            File.ReadLines(Settings.ProxyPath)
+
         let proxyList = List<ProxyB>()
 
         for p in reader do
@@ -24,5 +26,8 @@ type ProxyLoader() =
 
     static member GetRandomProxy =
         let rand = Random()
-        let index = rand.Next(0, ProxyLoader.Loader.Count)
+
+        let index =
+            rand.Next(0, ProxyLoader.Loader.Count)
+
         ProxyLoader.Loader.[index]

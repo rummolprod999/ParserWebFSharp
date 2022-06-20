@@ -4,7 +4,9 @@ open System
 open System.Collections.Generic
 open AngleSharp.Dom
 
-type TZ = | PST | PDT
+type TZ =
+    | PST
+    | PDT
 
 type Arguments =
     | IrkutskOil
@@ -101,7 +103,8 @@ type ProxyB =
     { Ip: string
       Port: int
       User: string
-      Pass: string}
+      Pass: string }
+
 type RosSelRec =
     { Href: string
       PurNum: string
@@ -215,9 +218,7 @@ type TPlusRec =
       Exist: Exist }
 
 [<Struct>]
-type DocSibServ =
-    { name: string
-      url: string }
+type DocSibServ = { name: string; url: string }
 
 type SibServRec =
     { Href: string
@@ -268,8 +269,7 @@ type EshopRzdRec =
       Currency: string
       RegionName: string }
 
-type YarRegionRec =
-    { EmptyField: string }
+type YarRegionRec = { EmptyField: string }
 
 type BtgRec =
     { Href: string
@@ -360,7 +360,7 @@ type SmartRec =
       DateEnd: DateTime
       status: string
       PwayName: string }
-    
+
 type SmartRecNew =
     { Id: int
       PurNum: string
@@ -413,7 +413,7 @@ type EtenRec =
       PurName: string
       OrgName: string
       Status: string
-      DatePub: DateTime}
+      DatePub: DateTime }
 
 type CisLinkRec =
     { Href: string
@@ -421,7 +421,7 @@ type CisLinkRec =
       DateEnd: DateTime
       PurNum: string
       PurName: string
-      OrgName: string}
+      OrgName: string }
 
 type MpKzRec =
     { Href: string
@@ -429,7 +429,7 @@ type MpKzRec =
       PurNum: string
       PurName: string
       OrgName: string
-      Nmck: string}
+      Nmck: string }
 
 type EstoreSpbRec =
     { Href: string
@@ -439,8 +439,8 @@ type EstoreSpbRec =
       PurName: string
       OrgName: string
       Status: string
-      Nmck: string}
-    
+      Nmck: string }
+
 type RosAgroRec =
     { Href: string
       DateEnd: DateTime
@@ -448,7 +448,7 @@ type RosAgroRec =
       PurNum: string
       PurName: string
       Nmck: string
-      PwName: string}
+      PwName: string }
 
 type NeftRegRec =
     { Href: string
@@ -456,7 +456,7 @@ type NeftRegRec =
       PurName: string
       Nmck: string
       PwName: string
-      Status: string}
+      Status: string }
 
 type ForScienceRec =
     { Href: string
@@ -466,7 +466,7 @@ type ForScienceRec =
       PurName: string
       OrgName: string
       Nmck: string
-      PwName: string}
+      PwName: string }
 
 type VolgZmoRec =
     { Href: string
@@ -476,14 +476,14 @@ type VolgZmoRec =
       PurName: string
       CusName: string
       Nmck: string
-      Status: string}
+      Status: string }
 
 type RusalRec =
     { Href: string
       DateEnd: DateTime
       DatePub: DateTime
       PurNum: string
-      PurName: string}
+      PurName: string }
 
 type MoekRec =
     { Href: string
@@ -492,7 +492,7 @@ type MoekRec =
       PurNum: string
       PurName: string
       OrgName: string
-      CusName: string}
+      CusName: string }
 
 type KamazRec =
     { Href: string
@@ -505,14 +505,14 @@ type KamazRec =
       OrgPhone: string
       OrgEmail: string
       OrgPerson: string
-      Period: string}
+      Period: string }
 
 type UniRec =
     { Href: string
       DateEnd: DateTime
       DatePub: DateTime
       PurNum: string
-      PurName: string}
+      PurName: string }
 
 type KskRec =
     { Href: string
@@ -523,7 +523,7 @@ type KskRec =
       Status: string
       PwName: string
       Nmck: string
-      DocList: List<IElement>}
+      DocList: List<IElement> }
 
 type GmtRec =
     { Href: string
@@ -531,19 +531,19 @@ type GmtRec =
       DatePub: DateTime
       PurNum: string
       PurName: string
-      PwName: string}
+      PwName: string }
 
 type YmzRec =
     { Href: string
       DateEnd: DateTime
       DatePub: DateTime
       PurNum: string
-      PurName: string}
-    
+      PurName: string }
+
 type AppsRec =
     { Href: string
       PurName: string
-      PurNum: string}
+      PurNum: string }
 
 type RtsCorpRec =
     { Href: string
@@ -564,8 +564,8 @@ type SeverStalRec =
       PurNum: string
       AddInfo: string
       DateEnd: DateTime
-      DatePub: DateTime}
-    
+      DatePub: DateTime }
+
 type BidMartNewRec =
     { Href: string
       PurName: string
@@ -576,8 +576,8 @@ type BidMartNewRec =
       Nmck: string
       Currency: string
       DateEnd: DateTime
-      DatePub: DateTime}
-    
+      DatePub: DateTime }
+
 type MedicRec =
     { Href: string
       PurName: string
@@ -586,7 +586,7 @@ type MedicRec =
       CusPerson: string
       CusPhone: string
       DateEnd: DateTime
-      DatePub: DateTime}
+      DatePub: DateTime }
 
 type BidzaarRec =
     { Href: string
@@ -595,7 +595,7 @@ type BidzaarRec =
       CusName: string
       PwName: string
       DateEnd: DateTime
-      DatePub: DateTime}
+      DatePub: DateTime }
 
 type MetodholdingRec =
     { Href: string
@@ -604,15 +604,13 @@ type MetodholdingRec =
       CusName: string
       DateEnd: DateTime
       DatePub: DateTime
-      Attr: string}
+      Attr: string }
 
 type BhmProductRec =
-    {
-        Name: string
-        Okei: string
-        Quantity: string
-    }
-     
+    { Name: string
+      Okei: string
+      Quantity: string }
+
 type BhmRec =
     { Href: string
       PurName: string
@@ -623,7 +621,8 @@ type BhmRec =
       DateEnd: DateTime
       DatePub: DateTime
       Products: List<BhmProductRec>
-      DocList: List<DocSibServ>}
+      DocList: List<DocSibServ> }
+
 type DomRuRec =
     { Href: string
       PurName: string
@@ -631,14 +630,14 @@ type DomRuRec =
       DateEnd: DateTime
       DatePub: DateTime
       PwName: String
-      Nmck: String}
+      Nmck: String }
 
 type SamaraGipsRec =
     { Href: string
       PurName: string
       PurNum: string
       Status: String
-      DatePub: DateTime}
+      DatePub: DateTime }
 
 type SamaraGoldenSeedRec =
     { Href: string
@@ -648,7 +647,7 @@ type SamaraGoldenSeedRec =
       Type: String
       CusName: String
       DatePub: DateTime
-      DateEnd: DateTime}
+      DateEnd: DateTime }
 
 type KaustikRec =
     { Href: string
@@ -658,8 +657,8 @@ type KaustikRec =
       AttachUrl: String
       NoticeVer: String
       DatePub: DateTime
-      DateEnd: DateTime}
-    
+      DateEnd: DateTime }
+
 type DmeRec =
     { Href: string
       PurName: string
@@ -670,7 +669,7 @@ type DmeRec =
       PersonPhone: String
       PersonEmail: String
       DatePub: DateTime
-      DateEnd: DateTime}
+      DateEnd: DateTime }
 
 type Tele2Rec =
     { Href: string
@@ -679,7 +678,7 @@ type Tele2Rec =
       DelivPlace: String
       DelivTerm: String
       DatePub: DateTime
-      DateEnd: DateTime}
+      DateEnd: DateTime }
 
 type OsnovaRec =
     { Href: string
@@ -687,7 +686,7 @@ type OsnovaRec =
       PurNum: string
       Status: string
       DatePub: DateTime
-      DateEnd: DateTime}
+      DateEnd: DateTime }
 
 type SibGencoRec =
     { Href: string
@@ -696,7 +695,7 @@ type SibGencoRec =
       PwName: string
       Status: string
       DatePub: DateTime
-      DateEnd: DateTime}
+      DateEnd: DateTime }
 
 type VtbConnectRec =
     { Href: string
@@ -707,15 +706,15 @@ type VtbConnectRec =
       OrgName: string
       Status: string
       mutable DatePub: DateTime
-      mutable DateEnd: DateTime}
- 
+      mutable DateEnd: DateTime }
+
 type RtCiRec =
     { Href: string
       PurName: string
       PurNum: string
       PwName: string
       DatePub: DateTime
-      DateEnd: DateTime}
+      DateEnd: DateTime }
 
 type ForumGdRec =
     { Href: string
@@ -726,7 +725,7 @@ type ForumGdRec =
       Period: string
       DelivPlace: string
       DatePub: DateTime
-      DateEnd: DateTime}
+      DateEnd: DateTime }
 
 type EnergyBaseRec =
     { Href: string
@@ -738,11 +737,9 @@ type EnergyBaseRec =
       Currency: string
       DatePub: DateTime
       DateScoring: DateTime
-      DateEnd: DateTime}
-    
-type EtpRtRec =
-    { Href: string
-      PurNum: string}
+      DateEnd: DateTime }
+
+type EtpRtRec = { Href: string; PurNum: string }
 
 type NeftNewRec =
     { Href: string
@@ -766,8 +763,8 @@ type EstpRec =
       Status: string
       Price: string
       Currency: string
-      PlacingWay: string}
-    
+      PlacingWay: string }
+
 type MagnitStroyRec =
     { Href: string
       PurName: string
@@ -776,7 +773,7 @@ type MagnitStroyRec =
       Status: string
       Nmck: string
       DatePub: DateTime
-      DateEnd: DateTime}
+      DateEnd: DateTime }
 
 type NeftisaRec =
     { Href: string
@@ -785,7 +782,7 @@ type NeftisaRec =
       Region: string
       OrgName: string
       DatePub: DateTime
-      mutable DateEnd: DateTime}
+      mutable DateEnd: DateTime }
 
 type RtCi2Rec =
     { Href: string
@@ -793,8 +790,8 @@ type RtCi2Rec =
       PurNum: string
       CusName: string
       DatePub: DateTime
-      DateEnd: DateTime}
- 
+      DateEnd: DateTime }
+
 type SngbRec =
     { Href: string
       PurName: string
@@ -803,4 +800,4 @@ type SngbRec =
       DocList: List<DocSibServ>
       DelivPlace: string
       DatePub: DateTime
-      DateEnd: DateTime}
+      DateEnd: DateTime }
