@@ -628,17 +628,17 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
                     try
                         for p in 0 .. purObjectsTr.Length + 1 do
 
-                            let name =
+                            let mutable name =
                                 try
                                     purObjects
                                         .QuerySelectorAll(
                                             "td:contains('Наименование:') + td p"
                                         )
                                         .ToList().[p]
-                                        .TextContent
+                                        .TextContent.Trim()
                                 with
                                     | e -> ""
-
+                            if String.IsNullOrEmpty(name) then name <- purName
                             let okpd2 =
                                 purObjects
                                     .QuerySelectorAll(
