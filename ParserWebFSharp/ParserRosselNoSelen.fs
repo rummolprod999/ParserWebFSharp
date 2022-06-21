@@ -1,5 +1,6 @@
 namespace ParserWeb
 
+open System.Threading
 open AngleSharp.Dom
 open AngleSharp.Parser.Html
 open System
@@ -96,6 +97,7 @@ type ParserRosselNoSelen(stn: Settings.T) =
 
         for ten in listTenders do
             try
+                Thread.Sleep(5000)
                 ten.Parsing()
             with
                 | ex -> Logging.Log.logger ex
@@ -240,7 +242,7 @@ type ParserRosselNoSelen(stn: Settings.T) =
     member private this.ParserListTenders(url: String) =
 
         let Page = Download.DownloadString url
-
+        //Thread.Sleep(5000)
         match Page with
         | null
         | "" -> Logging.Log.logger ("Dont get start page", url)
@@ -300,7 +302,7 @@ type ParserRosselNoSelen(stn: Settings.T) =
             | null ->
                 raise
                 <| NullReferenceException(sprintf "href not found in %s" purNum)
-            | x -> x.GetAttribute("href")
+            | x -> "https://www.roseltorg.ru" + x.GetAttribute("href")
 
         let PurNameT =
             t.QuerySelector("div.search-results__subject > a")
@@ -322,4 +324,4 @@ type ParserRosselNoSelen(stn: Settings.T) =
         if not
            <| listTenders.Exists(fun t -> t.PurNum = purNum) then
             listTenders.Add(T)
-            Logging.Log.logger (sprintf "purNum is %s" purNum)
+            //Logging.Log.logger (sprintf "purNum is %s" purNum)
