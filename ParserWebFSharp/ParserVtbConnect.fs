@@ -34,6 +34,7 @@ type ParserVtbConnect(stn: Settings.T) =
         //driver.Manage().Window.Maximize()
         try
             try
+                driver.Manage().Cookies.DeleteAllCookies()
                 __.ParserSelen driver
                 driver.Manage().Cookies.DeleteAllCookies()
             with

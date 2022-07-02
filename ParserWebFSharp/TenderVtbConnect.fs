@@ -463,7 +463,8 @@ type TenderVtbConnect
                         .Replace("Код позиции по ОКПД2", "")
                         .Replace(":", "")
                         .Trim()
-
+                let okpdCode = okpd2.Get1FromRegexpOrDefaul "([\d|\.]+)"
+                let okpdName = okpd2.Replace(okpdCode, "").Trim()
                 let okei =
                     p
                         .findElementWithoutException(".//li[contains(., 'Единица измерения')]")
@@ -513,7 +514,7 @@ type TenderVtbConnect
                 cmd19.Parameters.AddWithValue("@name", name)
                 |> ignore
 
-                cmd19.Parameters.AddWithValue("@okpd_name", "")
+                cmd19.Parameters.AddWithValue("@okpd_name", okpdName)
                 |> ignore
 
                 cmd19.Parameters.AddWithValue("@quantity_value", quant)
@@ -528,7 +529,7 @@ type TenderVtbConnect
                 cmd19.Parameters.AddWithValue("@sum", sum)
                 |> ignore
 
-                cmd19.Parameters.AddWithValue("@okpd2_code", okpd2)
+                cmd19.Parameters.AddWithValue("@okpd2_code", okpdCode)
                 |> ignore
 
                 cmd19.Parameters.AddWithValue("@price", price)
@@ -537,7 +538,7 @@ type TenderVtbConnect
                 cmd19.ExecuteNonQuery() |> ignore
                 ()
             with
-                | ex -> Logging.Log.logger ex
+                | ex -> ()
 
         ()
 
