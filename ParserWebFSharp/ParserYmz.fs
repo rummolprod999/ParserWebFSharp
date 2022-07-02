@@ -36,7 +36,7 @@ type ParserYmz(stn: Settings.T) =
 
             let tens =
                 documents
-                    .QuerySelectorAll("ol.list_tender li div")
+                    .QuerySelectorAll("ol.list_tender li div.tender-item")
                     .ToList()
 
             for t in tens do
