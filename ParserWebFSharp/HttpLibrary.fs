@@ -51,7 +51,9 @@ module Download =
             wr.Timeout <- 60000
 
             wr.UserAgent <-
-                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.110 Safari/537.36 Vivaldi/2.7.1628.30"
+                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
+            let cookie = "ASP.NET_SessionId=" + Settings.RtsSessionId + "; " + "223_SecurityTokenKey=" + Settings.RtsSecToken + "; " + ".223=" + Settings.Rts223
+            wr.Headers.Add("Cookie", cookie)
 
             wr.AutomaticDecompression <-
                 DecompressionMethods.GZip

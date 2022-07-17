@@ -62,6 +62,8 @@ type ParserRtsGen(stn: Settings.T) =
         | Some w -> w
 
     member private __.ParserSelen(driver: ChromeDriver) =
+        __.Auth(driver)
+        driver.SwitchTo().DefaultContent() |> ignore
         __.PreparePage driver
         __.ParserListTenders driver
 
@@ -74,6 +76,45 @@ type ParserRtsGen(stn: Settings.T) =
 
         ()
 
+    member private __.Auth(driver: ChromeDriver) =
+        let wait = WebDriverWait(driver, timeoutB)
+        driver.Navigate().GoToUrl("https://223.rts-tender.ru/supplier/sso/Login.aspx")
+        Thread.Sleep(3000)
+        driver.SwitchTo().DefaultContent() |> ignore
+
+        driver
+            .FindElement(By.XPath("//input[@value = 'Войти']"))
+            .Click()
+
+        wait.Until (fun dr ->
+            dr
+                .FindElement(
+                    By.XPath("//input[@id = 'MainContent_txtUserName']")
+                )
+                .Displayed)
+        |> ignore
+
+        driver
+            .FindElement(By.XPath("//input[@id = 'MainContent_txtUserName']"))
+            .SendKeys(Settings.UserRts)
+
+        driver
+            .FindElement(By.XPath("//input[@id = 'MainContent_txtUserPassword']"))
+            .SendKeys(Settings.PassRts)
+
+        Thread.Sleep(3000)
+
+        driver
+            .FindElement(By.XPath("//input[@value = 'Войти']"))
+            .Click()
+
+        Thread.Sleep(3000)
+        driver.SwitchTo().DefaultContent() |> ignore
+        Settings.RtsSessionId <- driver.Manage().Cookies.GetCookieNamed("ASP.NET_SessionId").Value
+        Settings.RtsSecToken <- driver.Manage().Cookies.GetCookieNamed("223_SecurityTokenKey").Value
+        Settings.Rts223 <- driver.Manage().Cookies.GetCookieNamed(".223").Value
+        ()
+        
     member __.GetNextpage(driver: ChromeDriver) =
         driver.SwitchTo().DefaultContent() |> ignore
         //__.Clicker driver "//td[@id = 'next_t_BaseMainContent_MainContent_jqgTrade_toppager']/span"

@@ -362,10 +362,10 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
         idLot := int cmd12.LastInsertedId
 
         let lotName =
-            l.Gsn "//td[contains(., 'Наименование')]/following-sibling::td"
+            HttpUtility.HtmlDecode(l.Gsn "//label[contains(., 'Наименование')]/following-sibling::span")
 
         let cusName =
-            l.Gsn "//td[contains(., 'Полное наименование')]/following-sibling::td/a"
+            l.Gsn "//label[contains(., 'Заказчик')]/following-sibling::span/a"
 
         let cusName =
             HttpUtility.HtmlDecode(cusName)
@@ -428,10 +428,10 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
                 idCustomer := int cmd14.LastInsertedId
 
         let delivPlace =
-            l.Gsn "//td[contains(., 'Место поставки')]/following-sibling::td"
+            HttpUtility.HtmlDecode(l.Gsn "//td[contains(., 'Место поставки')]/following-sibling::td")
 
         let delivTerm =
-            l.Gsn "//td[contains(., 'Сроки поставки')]/following-sibling::td"
+            HttpUtility.HtmlDecode(l.Gsn "//td[contains(., 'Сроки поставки')]/following-sibling::td")
 
         let applAmount = ""
 
@@ -475,31 +475,29 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
             cmd16.ExecuteNonQuery() |> ignore
 
         let purObjects =
-            l.SelectNodes(".//table[contains(., 'Код классификатора')]/following-sibling::div//table/tbody/tr")
+            l.SelectNodes(".//table[contains(@id, 'ucTradeLotView')]//tbody/tr[@id]")
 
         if purObjects <> null then
             for po in purObjects do
-                let namePo = po.Gsn("./td[2]")
+                let namePo = po.Gsn("./td[2]/span")
 
                 let namePo =
                     if namePo <> "" then namePo else lotName
 
                 let namePo = (sprintf "%s" namePo).Trim()
-                let okpdName = po.Gsn("./td[3]")
-                let okei = po.Gsn("./td[4]")
+                let okpd2 = po.Gsn("./td[6]/span")
+                let okei = po.Gsn("./td[8]")
 
                 let quantity =
-                    po.Gsn("./td[5]").GetPriceFromString()
+                    po.Gsn("./td[11]/span").GetPriceFromString()
 
-                let price =
-                    po.Gsn("./td[6]").GetPriceFromString()
+                let price = ""
 
-                let sum =
-                    po.Gsn("./td[7]").GetPriceFromString()
+                let sum = ""
 
                 let insertLotitem =
                     sprintf
-                        "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum, price = @price, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, okpd_name = @okpd_name"
+                        "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum, price = @price, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, okpd2_code = @okpd2_code"
                         stn.Prefix
 
                 let cmd19 =
@@ -531,12 +529,31 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
                 cmd19.Parameters.AddWithValue("@okei", okei)
                 |> ignore
 
-                cmd19.Parameters.AddWithValue("@okpd_name", okpdName)
+                cmd19.Parameters.AddWithValue("@okpd2_code", okpd2)
                 |> ignore
 
                 cmd19.ExecuteNonQuery() |> ignore
                 ()
+        if purObjects = null || purObjects.Count < 1
+            then
+                let insertLotitem = sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name" stn.Prefix
 
+                let cmd19 =
+                    new MySqlCommand(insertLotitem, con)
+
+                cmd19.Prepare()
+
+                cmd19.Parameters.AddWithValue("@id_lot", !idLot)
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@id_customer", !idCustomer)
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@name", lotName)
+                |> ignore
+
+                cmd19.ExecuteNonQuery() |> ignore
+                
         let purObjects =
             l.SelectNodes(".//table[contains(., 'ОКВЭД2')]//tbody/tr[position() > 1]")
 

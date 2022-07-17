@@ -33,6 +33,12 @@ module Settings =
     let mutable internal PassMagnit = ""
     let mutable internal UserIshim = ""
     let mutable internal PassIshim = ""
+    let mutable internal UserRts = ""
+    let mutable internal PassRts = ""
+    
+    let mutable internal RtsSessionId = ""
+    let mutable internal RtsSecToken = ""
+    let mutable internal Rts223 = ""
     let mutable internal ProxyPath = "proxy.txt"
     let mutable internal UseProxy = false
 
@@ -744,6 +750,10 @@ module Settings =
                     UserIshim <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passishim" then
                     PassIshim <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "userrts" then
+                    UserRts <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "passrts" then
+                    PassRts <- (xnode :?> XmlNode).InnerText
                 else if (xnode :?> XmlNode).Name = "port" then
                     Port <- Int32.Parse((xnode :?> XmlNode).InnerText)
                 else if (xnode :?> XmlNode).Name = "use_proxy" then
