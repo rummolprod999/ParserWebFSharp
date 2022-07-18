@@ -22,7 +22,7 @@ type ParserRtsGen(stn: Settings.T) =
     let mutable wait = None
 
     do
-        //options.AddArguments("headless")
+        options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
         options.AddArguments("disable-dev-shm-usage")
