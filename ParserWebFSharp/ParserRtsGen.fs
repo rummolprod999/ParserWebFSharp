@@ -22,7 +22,7 @@ type ParserRtsGen(stn: Settings.T) =
     let mutable wait = None
 
     do
-        options.AddArguments("headless")
+        //options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
         options.AddArguments("disable-dev-shm-usage")
@@ -158,6 +158,19 @@ type ParserRtsGen(stn: Settings.T) =
 
         driver.SwitchTo().DefaultContent() |> ignore
         __.Clicker driver "//select[@class = 'ui-pg-selbox' and @role = 'listbox']/option[@value = '100']"
+        let jse = driver :> IJavaScriptExecutor
+
+        try
+            jse.ExecuteScript(
+                "document.querySelector('th[title=\"Опубликовано\"] div').click()",
+                ""
+            )
+            |> ignore
+        with
+            | ex -> Logging.Log.logger ex
+        driver.SwitchTo().DefaultContent() |> ignore
+        Thread.Sleep(3000)
+        driver.SwitchTo().DefaultContent() |> ignore
         ()
 
     member private __.ParserTendersList(t: RtsGenRec) =
