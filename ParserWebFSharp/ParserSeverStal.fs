@@ -15,7 +15,7 @@ type ParserSeverStal(stn: Settings.T) =
     let set = stn
 
     let url =
-        "https://suppliers.severstal.com/procurement/#actual"
+        "https://suppliers.severstal.com/procurement/?order=PROPERTY_DEADLINE_DATE&type=asc&pageSize=30#actual"
 
     let timeoutB = TimeSpan.FromSeconds(60.)
     let listTenders = List<SeverStalRec>()
@@ -71,25 +71,25 @@ type ParserSeverStal(stn: Settings.T) =
         ()
 
     member private this.GetNextPage (driver: ChromeDriver) (wait: WebDriverWait) =
-        for i in 1..20 do
+        for i in 1..10 do
             try
                 driver.SwitchTo().DefaultContent() |> ignore
                 //this.Clicker driver <| "//span[contains(@class, 'slick-next')]"
                 let jse = driver :> IJavaScriptExecutor
 
                 try
-                    jse.ExecuteScript("var s = document.querySelector('span.slick-next'); s.click();", "")
+                    jse.ExecuteScript("var s = document.querySelector('span.arrow.next'); s.click();", "")
                     |> ignore
                 with
                     | ex -> Logging.Log.logger ex
-
+                driver.SwitchTo().DefaultContent() |> ignore
                 Thread.Sleep(3000)
                 driver.SwitchTo().DefaultContent() |> ignore
 
                 wait.Until (fun dr ->
                     dr
                         .FindElement(
-                            By.XPath("//div[@class = 'actual-item']")
+                            By.XPath("//table[@class = 'actual-item-table']")
                         )
                         .Displayed)
                 |> ignore
@@ -104,7 +104,7 @@ type ParserSeverStal(stn: Settings.T) =
         driver.SwitchTo().DefaultContent() |> ignore
 
         let tenders =
-            driver.FindElementsByXPath("//div[@class = 'actual-item']")
+            driver.FindElementsByXPath("//a[@class = 'actual-item']")
 
         for t in tenders do
             this.ParserTenders t
@@ -127,22 +127,19 @@ type ParserSeverStal(stn: Settings.T) =
 
         let res =
             builder {
-                let! purName = i.findElementWithoutException (".//a/span", sprintf "purName not found %s" i.Text)
+                let! purName = i.findElementWithoutException (".//td[contains(@class, 'actual-item-table-name')]", sprintf "purName not found %s" i.Text)
 
-                let! hrefT =
-                    i.findWElementWithoutException (".//a", sprintf "hrefT not found, text the element - %s" i.Text)
-
-                let! href = hrefT.findAttributeWithoutException ("href", "href not found")
+                let! href = i.findAttributeWithoutException ("href", "href not found")
 
                 let! purNum =
                     i.findElementWithoutException (
-                        ".//div[. = 'Номер закупки']/following-sibling::div",
+                        ".//td[contains(@class, 'actual-item-table-number')]",
                         sprintf "purNum not found, text the element - %s" i.Text
                     )
 
                 let! dateEndT =
                     i.findElementWithoutException (
-                        ".//div[. = 'Срок подачи до']/following-sibling::div",
+                        ".//td[contains(@class, 'actual-item-table-deadline')]",
                         sprintf "dateEndT not found %s" i.Text
                     )
 
@@ -157,7 +154,7 @@ type ParserSeverStal(stn: Settings.T) =
 
                 let! addInfo =
                     i.findElementWithoutExceptionOptional (
-                        ".//div[. = 'Предприятие, город поставки']/following-sibling::div",
+                        ".//td[contains(@class, 'actual-item-table-city')]",
                         ""
                     )
 
@@ -177,5 +174,4 @@ type ParserSeverStal(stn: Settings.T) =
         | Success _ -> ()
         | Error e when e = "" -> ()
         | Error r -> Logging.Log.logger r
-
         ()
