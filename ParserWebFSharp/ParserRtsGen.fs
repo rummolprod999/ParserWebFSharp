@@ -11,7 +11,7 @@ open OpenQA.Selenium.Support.UI
 type ParserRtsGen(stn: Settings.T) =
     inherit Parser()
     let set = stn
-    let pageC = 55
+    let pageC = 20
 
     let spage =
         "https://223.rts-tender.ru/supplier/auction/Trade/Search.aspx"
