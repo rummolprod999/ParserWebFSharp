@@ -77,6 +77,7 @@ type ParserForumGd(stn: Settings.T) =
 
         driver.SwitchTo().DefaultContent() |> ignore
         __.ParserListTenders(driver)
+        __.GetNextPage driver wait
 
         for t in listTenders do
             try
@@ -86,6 +87,34 @@ type ParserForumGd(stn: Settings.T) =
 
         ()
 
+    member private this.GetNextPage (driver: ChromeDriver) (wait: WebDriverWait) =
+        for i in 1..5 do
+            try
+                driver.SwitchTo().DefaultContent() |> ignore
+                let jse = driver :> IJavaScriptExecutor
+
+                jse.ExecuteScript(
+                    "var s = document.querySelector('a.blog-page-next'); s.click();",
+                    ""
+                )
+                |> ignore
+                Thread.Sleep(3000)
+                driver.SwitchTo().DefaultContent() |> ignore
+
+                wait.Until (fun dr ->
+                    dr
+                        .FindElement(
+                            By.XPath("//table[@class = 'table table-striped table-hover']/tbody/tr")
+                        )
+                        .Displayed)
+                |> ignore
+
+                this.ParserListTenders driver
+            with
+                | ex -> Logging.Log.logger (ex)
+
+        ()
+        
     member private __.Auth(driver: ChromeDriver) =
         let wait = WebDriverWait(driver, timeoutB)
         driver.SwitchTo().DefaultContent() |> ignore
@@ -162,20 +191,20 @@ type ParserForumGd(stn: Settings.T) =
                     sprintf "%s %s" purName purName1
 
                 let! pwName = i.findElementWithoutException ("./td[3]", sprintf "pwName not found %s" i.Text)
-                let! delivPlace = i.findElementWithoutException ("./td[5]", sprintf "delivPlace not found %s" i.Text)
-                let! period = i.findElementWithoutException ("./td[7]", sprintf "period not found %s" i.Text)
-                let! status = i.findElementWithoutException ("./td[10]", sprintf "status not found %s" i.Text)
-                let! pubDateT = i.findElementWithoutException ("./td[6]", sprintf "pubDateT not found %s" i.Text)
+                let! delivPlace = i.findElementWithoutException ("./td[6]", sprintf "delivPlace not found %s" i.Text)
+                let! period = i.findElementWithoutException ("./td[8]", sprintf "period not found %s" i.Text)
+                let! status = i.findElementWithoutException ("./td[11]", sprintf "status not found %s" i.Text)
+                let! pubDateT = i.findElementWithoutException ("./td[7]", sprintf "pubDateT not found %s" i.Text)
 
                 let! datePubT =
-                    pubDateT.Get1("(\d{2}\.\d{2}\.\d{4})", sprintf "datePubT not found %s %s " url (pubDateT))
+                    pubDateT.Get1Optional("^(\d{2}\.\d{2}\.\d{4})")
 
-                let! datePub = datePubT.DateFromString("dd.MM.yyyy", sprintf "datePub not parse %s" pubDateT)
-                let! endDateT = i.findElementWithoutException ("./td[8]", sprintf "endDateT not found %s" i.Text)
-                let! dateEndT = endDateT.Get1Optional("(\d{2}\.\d{2}\.\d{4})")
+                let datePub = datePubT.DateFromStringOrCurr("dd.MM.yyyy")
+                let! endDateT = i.findElementWithoutException ("./td[9]", sprintf "endDateT not found %s" i.Text)
+                let! dateEndT = endDateT.Get1Optional("(\d{2}\.\d{2}\.\d{4})$")
 
                 let dateEnd =
-                    dateEndT.DateFromStringOrMin("dd.MM.yyyy")
+                    dateEndT.DateFromStringOrPubPlus2("dd.MM.yyyy", datePub)
 
                 let ten =
                     { Href = href

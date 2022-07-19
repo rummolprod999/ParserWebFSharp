@@ -22,7 +22,7 @@ type TenderForumGd(stn: Settings.T, tn: ForumGdRec, typeFz: int, etpName: string
 
                 let selectTend =
                     sprintf
-                        "SELECT id_tender FROM %stender WHERE purchase_number = @purchase_number AND  doc_publish_date = @doc_publish_date AND type_fz = @type_fz AND end_date = @end_date AND notice_version = @notice_version"
+                        "SELECT id_tender FROM %stender WHERE purchase_number = @purchase_number AND type_fz = @type_fz AND notice_version = @notice_version"
                         stn.Prefix
 
                 let cmd: MySqlCommand =
@@ -33,14 +33,9 @@ type TenderForumGd(stn: Settings.T, tn: ForumGdRec, typeFz: int, etpName: string
                 cmd.Parameters.AddWithValue("@purchase_number", tn.PurNum)
                 |> ignore
 
-                cmd.Parameters.AddWithValue("@doc_publish_date", tn.DatePub)
-                |> ignore
-
                 cmd.Parameters.AddWithValue("@type_fz", typeFz)
                 |> ignore
 
-                cmd.Parameters.AddWithValue("@end_date", tn.DateEnd)
-                |> ignore
 
                 cmd.Parameters.AddWithValue("@notice_version", tn.Status)
                 |> ignore

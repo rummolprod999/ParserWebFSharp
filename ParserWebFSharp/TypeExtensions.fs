@@ -22,6 +22,12 @@ module TypeE =
                 DateTime.ParseExact(this, pat, CultureInfo.InvariantCulture)
             with
                 | ex -> DateTime.MinValue
+        
+        member this.DateFromStringOrCurr(pat: string) =
+            try
+                DateTime.ParseExact(this, pat, CultureInfo.InvariantCulture)
+            with
+                | ex -> DateTime.Today
 
         member this.DateFromStringOrPubPlus2(pat: string, datePub: DateTime) =
             try
