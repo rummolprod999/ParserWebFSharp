@@ -8,7 +8,7 @@ type ParserIrkutskOil(stn: Settings.T) =
     let _ = stn
 
     let url =
-        "https://tenders.irkutskoil.ru/tenders.php"
+        "https://lkk.irkutskoil.ru/active-tenders/list"
 
     override this.Parsing() =
         let Page =
@@ -22,7 +22,7 @@ type ParserIrkutskOil(stn: Settings.T) =
             let documents = parser.Parse(s)
 
             let tens =
-                documents.QuerySelectorAll("table.lot_list tr.Info")
+                documents.QuerySelectorAll("div.tender.row")
 
             for t in tens do
                 try
@@ -34,7 +34,7 @@ type ParserIrkutskOil(stn: Settings.T) =
 
     member private this.ParsingTender(t: IElement) =
         let urlT =
-            match t.QuerySelector("td a") with
+            match t.QuerySelector("div a") with
             | null -> ""
             | ur -> ur.GetAttribute("href").Trim()
 
@@ -42,7 +42,8 @@ type ParserIrkutskOil(stn: Settings.T) =
         | "" -> Logging.Log.logger ("cannot find href on page ", url)
         | url ->
             try
-                let T = TenderIrkutskOil(stn, url)
+                let urlN = "https://lkk.irkutskoil.ru" + url
+                let T = TenderIrkutskOil(stn, urlN)
                 T.Parsing()
             with
                 | ex -> Logging.Log.logger (ex, url)

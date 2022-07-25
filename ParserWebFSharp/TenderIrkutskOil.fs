@@ -25,8 +25,8 @@ type TenderIrkutskOil(stn: Settings.T, urlT: string) =
 
     member private this.GetDateS(input: string) : string option =
         match input with
-        | Tools.RegexMatch2 @"(\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}).+(GMT [+|-]\d{2}:\d{2})" (gr1, gr2) ->
-            Some(sprintf "%s %s" gr1 gr2)
+        | Tools.RegexMatch1 @"(\d{2}\.\d{2}\.\d{4} \d{2}:\d{2})" (gr1) ->
+            Some((sprintf "%s" gr1))
         | _ -> None
 
     member private this.ParserPage(p: string) =
@@ -34,7 +34,7 @@ type TenderIrkutskOil(stn: Settings.T, urlT: string) =
         let doc = parser.Parse(p)
 
         let purNumT =
-            doc.QuerySelector("table.lot_list tr.Info td")
+            doc.QuerySelector("div:contains('№ тендера') + div")
 
         match purNumT with
         | null ->
@@ -43,7 +43,7 @@ type TenderIrkutskOil(stn: Settings.T, urlT: string) =
         | _ -> ()
 
         let purNum = purNumT.TextContent.Trim()
-        let purNameT = doc.QuerySelector("h1 > a")
+        let purNameT = doc.QuerySelector("div:contains('Наименование процедуры') + div")
 
         match purNameT with
         | null ->
@@ -54,7 +54,7 @@ type TenderIrkutskOil(stn: Settings.T, urlT: string) =
         let purName = purNameT.TextContent.Trim()
 
         let pubDateT =
-            doc.QuerySelector("table.lot_list tr.Info td:nth-child(2)")
+            doc.QuerySelector("div:contains('Начало приёма заявок') + div")
 
         match pubDateT with
         | null ->
@@ -72,14 +72,14 @@ type TenderIrkutskOil(stn: Settings.T, urlT: string) =
             <| Exception(sprintf "cannot apply regex to datePub %s" urlT)
 
         let datePub =
-            match pubDateS.DateFromString("dd.MM.yyyy HH:mm 'GMT 'K") with
+            match pubDateS.DateFromString("dd.MM.yyyy HH:mm") with
             | Some d -> d
             | None ->
                 raise
                 <| Exception(sprintf "cannot parse datePub %s" pubDateS)
 
         let endDateT =
-            doc.QuerySelector("table.lot_list tr.Info td:nth-child(3)")
+            doc.QuerySelector("div:contains('Окончание приёма заявок') + div")
 
         match endDateT with
         | null ->
@@ -97,7 +97,7 @@ type TenderIrkutskOil(stn: Settings.T, urlT: string) =
             <| Exception(sprintf "cannot apply regex to endDate %s" urlT)
 
         let endDate =
-            match endDateS.DateFromString("dd.MM.yyyy HH:mm 'GMT 'K") with
+            match endDateS.DateFromString("dd.MM.yyyy HH:mm") with
             | Some d -> d
             | None ->
                 raise
@@ -423,16 +423,12 @@ type TenderIrkutskOil(stn: Settings.T, urlT: string) =
             cmd19.ExecuteNonQuery() |> ignore
 
             let documents =
-                doc.QuerySelectorAll("div.defc li")
+                doc.QuerySelectorAll("a.tender-detail-link")
 
             for dc in documents do
-                let mutable nameF = dc.TextContent
-                nameF <- nameF.Replace(": скачать >>>", "")
+                let mutable nameF = "Документация"
 
-                let urlAtt =
-                    match dc.QuerySelector("a") with
-                    | null -> ""
-                    | ur -> ur.GetAttribute("href").Trim()
+                let urlAtt = dc.GetAttribute("href").Trim()
 
                 if urlAtt <> "" then
                     let insertDoc =
@@ -449,7 +445,7 @@ type TenderIrkutskOil(stn: Settings.T, urlT: string) =
                     cmd20.Parameters.AddWithValue("@file_name", nameF)
                     |> ignore
 
-                    cmd20.Parameters.AddWithValue("@url", urlAtt)
+                    cmd20.Parameters.AddWithValue("@url", "https://lkk.irkutskoil.ru" + urlAtt)
                     |> ignore
 
                     cmd20.ExecuteNonQuery() |> ignore
