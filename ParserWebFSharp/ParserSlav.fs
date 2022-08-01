@@ -21,7 +21,7 @@ type ParserSlav(stn: Settings.T) =
 
         try
             let url =
-                "http://www.refinery.yaroslavl.su/procurement/tenders/active/filter/year-is-2021/apply/"
+                "https://www.yanos.slavneft.ru/procurement/tenders/active/filter/year-is-2022/apply/"
 
             this.ParserYanos url
         with
