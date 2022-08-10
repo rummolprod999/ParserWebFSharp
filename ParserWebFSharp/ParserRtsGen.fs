@@ -11,7 +11,7 @@ open OpenQA.Selenium.Support.UI
 type ParserRtsGen(stn: Settings.T) =
     inherit Parser()
     let set = stn
-    let pageC = 20
+    let pageC = 2000
 
     let spage =
         "https://223.rts-tender.ru/supplier/auction/Trade/Search.aspx"
@@ -144,11 +144,22 @@ type ParserRtsGen(stn: Settings.T) =
                 )
                 .Displayed)
         |> ignore
+        let jse = driver :> IJavaScriptExecutor
 
+        try
+            jse.ExecuteScript(
+                "document.querySelector('th[title=\"Опубликовано\"] div').click()",
+                ""
+            )
+            |> ignore
+        with
+            | ex -> Logging.Log.logger ex
         driver.SwitchTo().DefaultContent() |> ignore
-        __.Clicker driver "//select[@class = 'ui-pg-selbox' and @role = 'listbox']"
+        Thread.Sleep(3000)
+        driver.SwitchTo().DefaultContent() |> ignore
+        //__.Clicker driver "//select[@class = 'ui-pg-selbox' and @role = 'listbox']"
 
-        __.Wait.Until (fun dr ->
+        (*__.Wait.Until (fun dr ->
             dr
                 .FindElement(
                     By.XPath("//select[@class = 'ui-pg-selbox' and @role = 'listbox']/option[@value = '100']")
@@ -157,7 +168,7 @@ type ParserRtsGen(stn: Settings.T) =
         |> ignore
 
         driver.SwitchTo().DefaultContent() |> ignore
-        __.Clicker driver "//select[@class = 'ui-pg-selbox' and @role = 'listbox']/option[@value = '100']"
+        __.Clicker driver "//select[@class = 'ui-pg-selbox' and @role = 'listbox']/option[@value = '100']"*)
         let jse = driver :> IJavaScriptExecutor
 
         try
@@ -194,14 +205,14 @@ type ParserRtsGen(stn: Settings.T) =
         __.Wait.Until (fun dr ->
             dr
                 .FindElement(
-                    By.XPath("//table[@class = 'ui-jqgrid-btable']/tbody/tr[@role = 'row'][100]")
+                    By.XPath("//table[@class = 'ui-jqgrid-btable']/tbody/tr[@role = 'row'][10]")
                 )
                 .Displayed)
         |> ignore
 
         driver.SwitchTo().DefaultContent() |> ignore
 
-        for i in 1..100 do
+        for i in 1..10 do
             __.GetContentTender driver i
 
         ()
