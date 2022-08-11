@@ -11,7 +11,7 @@ open OpenQA.Selenium.Support.UI
 type ParserRtsGen(stn: Settings.T) =
     inherit Parser()
     let set = stn
-    let pageC = 2000
+    let pageC = 200
 
     let spage =
         "https://223.rts-tender.ru/supplier/auction/Trade/Search.aspx"
@@ -196,6 +196,7 @@ type ParserRtsGen(stn: Settings.T) =
                 )
 
             T.Parsing()
+            Thread.Sleep(5000)
         with
             | ex -> Logging.Log.logger (ex, t.Href)
 
