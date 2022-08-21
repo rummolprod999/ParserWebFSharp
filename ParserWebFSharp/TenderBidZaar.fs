@@ -301,8 +301,8 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
 
                 let! deviPlace = body.findElementWithoutExceptionOptional ("//div[@class = 'address-column text-column']", "")
                 let rules =
-                    body.findElementsWithoutException ("//cgn-pl-request-participant-rules//div[@class = 'parameter-row' ]")
-                let delivTerm = this.GetDelivTerm(con, attachments)
+                    body.findElementsWithoutException ("//cgn-pl-request-participant-rules//div[@class = 'parameter-row']")
+                let delivTerm = this.GetDelivTerm(con, rules)
                 if deviPlace <> "" || delivTerm <> "" then
                     let insertCustomerRequirement =
                         sprintf
@@ -394,7 +394,7 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
                 driver.FindElement(By.XPath("//body"))
 
             let purObjects =
-                body.findElementsWithoutException ("//cgn-pl-positions-table-dialog//tbody/tr[position()>1]")
+                body.findElementsWithoutException ("//cgn-pl-positions-table-dialog//tbody/tr[position()>0]")
 
             for p in purObjects do
                 let name =
@@ -459,7 +459,7 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
                     .Text.Trim()
              dtList.Add(el)
              ()
-         String.Join("|", dtList.ToArray())
+         String.Join(" | ", dtList.ToArray()).Trim()
     member private this.GetAttachments(con: MySqlConnection, idTender: int, att: ReadOnlyCollection<_>) =
         for doc in att do
             let urlDoc = doc.GetAttribute("href").Trim()
