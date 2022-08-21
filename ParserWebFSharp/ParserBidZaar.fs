@@ -66,6 +66,11 @@ type ParserBidZaar(stn: Settings.T) =
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(3000)
         driver.SwitchTo().DefaultContent() |> ignore
+        driver
+            .FindElement(By.XPath("//button[contains(., ' Дата публикации ')]"))
+            .Click()
+
+        Thread.Sleep(3000)
 
         wait.Until (fun dr ->
             dr
@@ -99,7 +104,7 @@ type ParserBidZaar(stn: Settings.T) =
 
     member private __.Scroll(driver: ChromeDriver) =
 
-        for i in 1..20 do
+        for i in 1..100 do
             try
                 driver.SwitchTo().DefaultContent() |> ignore
                 __.ParserListTenders(driver)
@@ -107,7 +112,7 @@ type ParserBidZaar(stn: Settings.T) =
                 let jse = driver :> IJavaScriptExecutor
 
                 jse.ExecuteScript(
-                    "document.getElementsByClassName('cdk-virtual-scroll-viewport scroll-container cdk-virtual-scroll-orientation-vertical')[0].scrollBy(0, 1000)",
+                    "document.getElementsByClassName('cdk-virtual-scroll-viewport scroll-container cdk-virtual-scroll-orientation-vertical')[0].scrollBy(0, 500)",
                     ""
                 )
                 |> ignore

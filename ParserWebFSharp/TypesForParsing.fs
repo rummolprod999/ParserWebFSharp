@@ -591,7 +591,7 @@ type MedicRec =
 type BidzaarRec =
     { Href: string
       PurName: string
-      PurNum: string
+      mutable PurNum: string
       CusName: string
       PwName: string
       DateEnd: DateTime

@@ -1,5 +1,6 @@
 namespace ParserWeb
 
+open System.Collections.Generic
 open System.Collections.ObjectModel
 open System.Threading
 open MySql.Data.MySqlClient
@@ -23,6 +24,22 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
 
         let res =
             builder {
+                let wait =
+                    WebDriverWait(driver, TimeSpan.FromSeconds(60.))
+
+                driver.Navigate().GoToUrl(tn.Href)
+                Thread.Sleep(1000)
+                driver.SwitchTo().DefaultContent() |> ignore
+
+                wait.Until(fun dr -> dr.FindElement(By.XPath("//body")).Enabled)
+                |> ignore
+
+                let body =
+                    driver.FindElement(By.XPath("//body"))
+                wait.Until(fun dr -> dr.FindElement(By.XPath("//span[contains(., 'Код:')]")).Enabled)
+                |> ignore
+                let! purNum = body.findWElementWithoutException ("//span[contains(., 'Код:')]", "purNum not found")
+                tn.PurNum <- purNum.Text.Replace("Код:", "").Trim()
                 con.Open()
 
                 let selectTend =
@@ -52,19 +69,6 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
                     return! Error ""
 
                 reader.Close()
-
-                let wait =
-                    WebDriverWait(driver, TimeSpan.FromSeconds(60.))
-
-                driver.Navigate().GoToUrl(tn.Href)
-                Thread.Sleep(1000)
-                driver.SwitchTo().DefaultContent() |> ignore
-
-                wait.Until(fun dr -> dr.FindElement(By.XPath("//body")).Enabled)
-                |> ignore
-
-                let body =
-                    driver.FindElement(By.XPath("//body"))
 
                 let dateUpd = DateTime.Now
 
@@ -295,9 +299,11 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
                         cmd14.ExecuteNonQuery() |> ignore
                         idCustomer := int cmd14.LastInsertedId
 
-                let! deviPlace = body.findElementWithoutExceptionOptional ("//cgn-pl-request-delivery//span", "")
-
-                if deviPlace <> "" then
+                let! deviPlace = body.findElementWithoutExceptionOptional ("//div[@class = 'address-column text-column']", "")
+                let rules =
+                    body.findElementsWithoutException ("//cgn-pl-request-participant-rules//div[@class = 'parameter-row' ]")
+                let delivTerm = this.GetDelivTerm(con, attachments)
+                if deviPlace <> "" || delivTerm <> "" then
                     let insertCustomerRequirement =
                         sprintf
                             "INSERT INTO %scustomer_requirement SET id_lot = @id_lot, id_customer = @id_customer, delivery_place = @delivery_place, delivery_term = @delivery_term"
@@ -317,18 +323,53 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
                     cmd16.Parameters.AddWithValue("@delivery_place", deviPlace)
                     |> ignore
 
-                    cmd16.Parameters.AddWithValue("@delivery_term", "")
+                    cmd16.Parameters.AddWithValue("@delivery_term", delivTerm)
                     |> ignore
 
                     cmd16.ExecuteNonQuery() |> ignore
 
                 let por =
                     body.FindElements(
-                        By.XPath("//div[contains(., 'Товары и услуги') and @class = 'title ng-star-inserted']")
+                        By.XPath("//a[contains(@href, '/positions')]")
                     )
 
                 if por.Count > 0 then
                     this.GetPurObjs(con, !idTender, driver, !idLot, !idCustomer)
+                else
+                    let insertLotitem = sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, okpd_name = @okpd_name, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, sum = @sum" stn.Prefix
+
+                    let cmd19 =
+                        new MySqlCommand(insertLotitem, con)
+
+                    cmd19.Prepare()
+
+                    cmd19.Parameters.AddWithValue("@id_lot", !idLot)
+                    |> ignore
+
+                    cmd19.Parameters.AddWithValue("@id_customer", !idCustomer)
+                    |> ignore
+
+                    cmd19.Parameters.AddWithValue("@name", tn.PurName)
+                    |> ignore
+
+                    cmd19.Parameters.AddWithValue("@okpd_name", "")
+                    |> ignore
+
+                    cmd19.Parameters.AddWithValue("@quantity_value", "")
+                    |> ignore
+
+                    cmd19.Parameters.AddWithValue("@customer_quantity_value", "")
+                    |> ignore
+
+                    cmd19.Parameters.AddWithValue("@okei", "")
+                    |> ignore
+
+                    cmd19.Parameters.AddWithValue("@sum", "")
+                    |> ignore
+
+                    cmd19.ExecuteNonQuery() |> ignore
+                    ()
+                    
 
                 this.AddVerNumber con tn.PurNum stn typeFz
                 this.TenderKwords con (!idTender) stn
@@ -353,17 +394,17 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
                 driver.FindElement(By.XPath("//body"))
 
             let purObjects =
-                body.findElementsWithoutException ("//table[@class = 'mat-table cdk-table']/tbody/tr[position()>1]")
+                body.findElementsWithoutException ("//cgn-pl-positions-table-dialog//tbody/tr[position()>1]")
 
             for p in purObjects do
                 let name =
-                    p.findElementWithoutException ("./td[1]")
-
-                let okei =
                     p.findElementWithoutException ("./td[2]")
 
+                let okei =
+                    p.findElementWithoutException ("./td[5]")
+
                 let quant =
-                    p.findElementWithoutException ("./td[3]")
+                    p.findElementWithoutException ("./td[4]")
 
                 let insertLotitem =
                     sprintf
@@ -406,6 +447,19 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
 
         ()
 
+    member private this.GetDelivTerm(con: MySqlConnection, dt: ReadOnlyCollection<_>): String =
+         let dtList =  List<string>()
+         for d in dt do
+             let name =
+                d.FindElement(By.XPath("./div[1]"))
+                    .Text.Trim()
+             dtList.Add(name)
+             let el =
+                d.FindElement(By.XPath("./div[2]"))
+                    .Text.Trim()
+             dtList.Add(el)
+             ()
+         String.Join("|", dtList.ToArray())
     member private this.GetAttachments(con: MySqlConnection, idTender: int, att: ReadOnlyCollection<_>) =
         for doc in att do
             let urlDoc = doc.GetAttribute("href").Trim()
