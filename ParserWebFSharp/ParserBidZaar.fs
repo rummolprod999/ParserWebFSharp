@@ -7,6 +7,7 @@ open System.Threading
 open OpenQA.Selenium
 open OpenQA.Selenium.Chrome
 open OpenQA.Selenium.Support.UI
+open System.Linq
 
 type ParserBidZaar(stn: Settings.T) =
     inherit Parser()
@@ -79,9 +80,8 @@ type ParserBidZaar(stn: Settings.T) =
                 )
                 .Displayed)
         |> ignore
-
-        Thread.Sleep(3000)
-        __.Scroll(driver)
+        driver.SwitchTo().DefaultContent() |> ignore
+        __.Scroll driver wait
 
         for t in listTenders do
             try
@@ -102,7 +102,7 @@ type ParserBidZaar(stn: Settings.T) =
 
         ()
 
-    member private __.Scroll(driver: ChromeDriver) =
+    member private __.Scroll(driver: ChromeDriver) (wait: WebDriverWait) =
 
         for i in 1..100 do
             try
@@ -112,12 +112,14 @@ type ParserBidZaar(stn: Settings.T) =
                 let jse = driver :> IJavaScriptExecutor
 
                 jse.ExecuteScript(
-                    "document.getElementsByClassName('cdk-virtual-scroll-viewport scroll-container cdk-virtual-scroll-orientation-vertical')[0].scrollBy(0, 500)",
+                    "document.getElementsByClassName('cdk-virtual-scroll-viewport scroll-container cdk-virtual-scroll-orientation-vertical')[0].scrollBy(0, 1000)",
                     ""
                 )
                 |> ignore
-
-                Thread.Sleep(1000)
+                driver.SwitchTo().DefaultContent() |> ignore
+                wait.Until (fun driver -> driver.FindElement(By.XPath("//div[contains(@class, 'ng-star-inserted')]/div[@class = 'item-content'][position() = 1]")).Displayed)
+                |> ignore
+                driver.SwitchTo().DefaultContent() |> ignore
             with
                 | ex -> Logging.Log.logger ex
 
@@ -216,8 +218,9 @@ type ParserBidZaar(stn: Settings.T) =
                       PwName = pwName
                       DateEnd = dateEnd
                       DatePub = datePub }
-
-                listTenders.Add(ten)
+                let res = listTenders.Where(fun t -> t.Href = href).ToList()
+                if res.Count < 1 then 
+                    listTenders.Add(ten)
                 return ""
             }
 

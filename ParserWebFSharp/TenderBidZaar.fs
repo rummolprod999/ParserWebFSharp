@@ -28,7 +28,7 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
                     WebDriverWait(driver, TimeSpan.FromSeconds(60.))
 
                 driver.Navigate().GoToUrl(tn.Href)
-                Thread.Sleep(1000)
+                //Thread.Sleep(1000)
                 driver.SwitchTo().DefaultContent() |> ignore
 
                 wait.Until(fun dr -> dr.FindElement(By.XPath("//body")).Enabled)
