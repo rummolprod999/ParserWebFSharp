@@ -87,6 +87,7 @@ type ParserBidZaar(stn: Settings.T) =
             try
                 __.ParserTendersList driver t
             with
+                | :? WebDriverException as e -> raise e
                 | ex -> Logging.Log.logger (ex)
 
         ()
