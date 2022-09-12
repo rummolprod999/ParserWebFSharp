@@ -36,8 +36,10 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
 
                 let body =
                     driver.FindElement(By.XPath("//body"))
+                driver.SwitchTo().DefaultContent() |> ignore
                 wait.Until(fun dr -> dr.FindElement(By.XPath("//span[contains(., 'Код:')]")).Enabled)
                 |> ignore
+                driver.SwitchTo().DefaultContent() |> ignore
                 let! purNum = body.findWElementWithoutException ("//span[contains(., 'Код:')]", "purNum not found")
                 tn.PurNum <- purNum.Text.Replace("Код:", "").Trim()
                 con.Open()
@@ -217,7 +219,7 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
                 match updated with
                 | true -> incr TenderBidZaar.tenderUpCount
                 | false -> incr TenderBidZaar.tenderCount
-
+                driver.SwitchTo().DefaultContent() |> ignore
                 let attachments =
                     body.findElementsWithoutException ("//a[contains(@href, '/api/filestorage/files/download/')]")
 

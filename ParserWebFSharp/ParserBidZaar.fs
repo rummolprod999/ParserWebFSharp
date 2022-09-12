@@ -21,10 +21,10 @@ type ParserBidZaar(stn: Settings.T) =
     let options = ChromeOptions()
 
     do
-        //options.AddArguments("headless")
+        options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
-        options.AddArguments("disable-dev-shm-usage")
+        //options.AddArguments("disable-dev-shm-usage")
         options.AddArguments("window-size=1920,1080")
 
     override __.Parsing() =
