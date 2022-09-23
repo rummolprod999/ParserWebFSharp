@@ -24,7 +24,8 @@ type ParserBidZaar(stn: Settings.T) =
         options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
-        //options.AddArguments("disable-dev-shm-usage")
+        options.AddArguments("disable-dev-shm-usage")
+        options.AddArguments("remote-debugging-port=9222")
         options.AddArguments("window-size=1920,1080")
 
     override __.Parsing() =
@@ -35,8 +36,8 @@ type ParserBidZaar(stn: Settings.T) =
         //driver.Manage().Window.Maximize()
         try
             try
-                __.ParserSelen driver
                 driver.Manage().Cookies.DeleteAllCookies()
+                __.ParserSelen driver
             with
                 | ex -> Logging.Log.logger ex
         finally
@@ -105,7 +106,7 @@ type ParserBidZaar(stn: Settings.T) =
 
     member private __.Scroll(driver: ChromeDriver) (wait: WebDriverWait) =
 
-        for i in 1..100 do
+        for i in 1..50 do
             try
                 driver.SwitchTo().DefaultContent() |> ignore
                 __.ParserListTenders(driver)
