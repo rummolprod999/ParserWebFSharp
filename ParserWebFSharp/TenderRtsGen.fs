@@ -284,7 +284,7 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
             try
                 let page =
                     Download.DownloadStringRtsDoc
-                    <| sprintf "https://223.rts-tender.ru/supplier/auction/api/Document/GetDocumentsForGrid?TradeId=%s&RevisionNumber=&CommonOrganizationId=0&nd=&_search=false&rows=10&page=1&sidx=&sord=asc" purNum <| token
+                    <| sprintf "https://223.rts-tender.ru/supplier/auction/api/Document/GetDocumentsForGrid?TradeId=%s&RevisionNumber=&CommonOrganizationId=792389&nd=&_search=false&rows=10&page=1&sidx=&sord=asc" purNum <| token
 
                 if page <> "" && page <> null then
                     let json = JObject.Parse(page)
