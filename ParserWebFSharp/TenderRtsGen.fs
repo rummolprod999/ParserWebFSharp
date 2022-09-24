@@ -262,7 +262,7 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
                 | true -> incr TenderRtsGen.tenderUpCount
                 | false -> incr TenderRtsGen.tenderCount
 
-                this.GetAttachments(con, !idTender, tn.PurNum)
+                this.GetAttachments(con, !idTender, tn.PurNum, htmlDoc)
                 this.GetLots(con, !idTender, htmlDoc)
                 this.AddVerNumber con tn.PurNum stn typeFz
                 this.TenderKwords con (!idTender) stn
@@ -277,21 +277,22 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
         ()
 
 
-    member private this.GetAttachments(con: MySqlConnection, idTender: int, purNum: string) =
+    member private this.GetAttachments(con: MySqlConnection, idTender: int, purNum: string, doc: HtmlDocument) =
         let b, _ = Int32.TryParse(purNum)
-
+        let token = doc.Text.Get1FromRegexpOrDefaul("X-JwtToken-TradeDocumentsForGrid',\s+'(.+)'\);")
         if b then
             try
                 let page =
-                    Download.DownloadStringRts
-                    <| sprintf "https://zmo-new-webapi.rts-tender.ru/api/Trade/%s/GetTradeDocuments" purNum
+                    Download.DownloadStringRtsDoc
+                    <| sprintf "https://223.rts-tender.ru/supplier/auction/api/Document/GetDocumentsForGrid?TradeId=%s&RevisionNumber=&CommonOrganizationId=0&nd=&_search=false&rows=10&page=1&sidx=&sord=asc" purNum <| token
 
-                if page <> "" then
-                    let json = JArray.Parse(page)
-
-                    for att in json do
-                        if att.SelectToken("FileName") <> null
-                           && att.SelectToken("Url") <> null then
+                if page <> "" && page <> null then
+                    let json = JObject.Parse(page)
+                    let at = json.SelectTokens("$..rows.*")
+                    for att in at do
+                        if att.SelectToken("cell[1]") <> null
+                           && att.SelectToken("cell[0]") <> null then
+                            let url = sprintf "https://223.rts-tender.ru/files/FileDownloadHandler.ashx?FileGuid=%s" <| (string) (att.SelectToken("cell[0]"))
                             let addAttach =
                                 sprintf
                                     "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url"
@@ -302,10 +303,10 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
                             cmd5.Parameters.AddWithValue("@id_tender", idTender)
                             |> ignore
 
-                            cmd5.Parameters.AddWithValue("@file_name", ((string) (att.SelectToken("FileName"))))
+                            cmd5.Parameters.AddWithValue("@file_name", ((string) (att.SelectToken("cell[1]"))))
                             |> ignore
 
-                            cmd5.Parameters.AddWithValue("@url", (string) (att.SelectToken("Url")))
+                            cmd5.Parameters.AddWithValue("@url", url)
                             |> ignore
 
                             cmd5.ExecuteNonQuery() |> ignore

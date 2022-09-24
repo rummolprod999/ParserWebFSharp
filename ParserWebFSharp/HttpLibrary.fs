@@ -61,6 +61,26 @@ module Download =
                 ||| DecompressionMethods.None
 
             wr :> WebRequest
+    
+    type TimedWebClientRtsGenDoc(token: String) =
+        inherit WebClient()
+
+        override this.GetWebRequest(address: Uri) =
+            let wr =
+                ``base``.GetWebRequest(address) :?> HttpWebRequest
+
+            wr.Timeout <- 60000
+
+            wr.UserAgent <-
+                "Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots) Gecko/20100101 Firefox/55.0"
+            wr.Headers.Add("X-JwtToken-TradeDocumentsForGrid", token)
+
+            wr.AutomaticDecompression <-
+                DecompressionMethods.GZip
+                ||| DecompressionMethods.Deflate
+                ||| DecompressionMethods.None
+
+            wr :> WebRequest
 
     type TimedWebClientCookies() =
         inherit WebClient()
@@ -169,7 +189,37 @@ module Download =
                     Thread.Sleep(3000)
 
         s
+    
+    let DownloadStringRtsDoc url token =
+        let mutable s = null
+        let count = ref 0
+        let mutable continueLooping = true
 
+        while continueLooping do
+            try
+                //let t ():string = (new TimedWebClient()).DownloadString(url: Uri)
+                let task =
+                    Task.Run (fun () ->
+                        (new TimedWebClientRtsGenDoc(token))
+                            .DownloadString(url: string))
+
+                if task.Wait(TimeSpan.FromSeconds(30.)) then
+                    s <- task.Result
+                    continueLooping <- false
+                else
+                    raise <| TimeoutException()
+            with
+                | e ->
+                    if !count >= 1 then
+                        Logging.Log.logger (sprintf "Не удалось скачать %s за %d попыток %s" url !count e.Message)
+                        continueLooping <- false
+                    else
+                        incr count
+
+                    Thread.Sleep(3000)
+
+        s
+        
     let DownloadStringBot url =
         let mutable s = null
         let count = ref 0
