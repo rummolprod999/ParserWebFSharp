@@ -262,7 +262,7 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
                 | true -> incr TenderRtsGen.tenderUpCount
                 | false -> incr TenderRtsGen.tenderCount
 
-                this.GetAttachments(con, !idTender, tn.PurNum, htmlDoc)
+                //this.GetAttachments(con, !idTender, tn.PurNum, htmlDoc)
                 this.GetLots(con, !idTender, htmlDoc)
                 this.AddVerNumber con tn.PurNum stn typeFz
                 this.TenderKwords con (!idTender) stn
