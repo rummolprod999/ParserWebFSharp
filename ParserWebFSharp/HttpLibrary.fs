@@ -73,6 +73,8 @@ module Download =
 
             wr.UserAgent <-
                 "Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots) Gecko/20100101 Firefox/55.0"
+            let cookie = "ASP.NET_SessionId=" + Settings.RtsSessionId + "; " + "223_SecurityTokenKey=" + Settings.RtsSecToken + "; " + ".223=" + Settings.Rts223
+            wr.Headers.Add("Cookie", cookie)
             wr.Headers.Add("X-JwtToken-TradeDocumentsForGrid", token)
 
             wr.AutomaticDecompression <-
