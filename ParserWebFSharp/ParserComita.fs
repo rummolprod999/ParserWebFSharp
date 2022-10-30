@@ -55,7 +55,14 @@ type ParserComita(stn: Settings.T) =
         |> ignore
 
         driver.SwitchTo().DefaultContent() |> ignore
+        let jse = driver :> IJavaScriptExecutor
 
+        jse.ExecuteScript(
+            "document.querySelector('button[ng-class=\"{true: \\'active\\'}[$ctrl.paginator.itemsPerPage == \\'100\\']\"').click()",
+            ""
+        )
+        |> ignore
+        Thread.Sleep(5000)
         let tenders =
             driver.FindElementsByXPath("//div[contains(@class, 'procedure-item') and contains(@class, 'ng-scope')]")
 

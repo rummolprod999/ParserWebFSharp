@@ -1,11 +1,14 @@
 namespace ParserWeb
 
+open System.Collections.Generic
 open MySql.Data.MySqlClient
 open System
 open System.Data
 open System.Threading
+open Newtonsoft.Json.Linq
 open TypeE
 open OpenQA.Selenium.Chrome
+open NewtonExt
 
 type TenderComita(stn: Settings.T, tn: ComitaRec, typeFz: int, etpName: string, etpUrl: string, driver: ChromeDriver) =
     inherit Tender(etpName, etpUrl)
@@ -92,7 +95,17 @@ type TenderComita(stn: Settings.T, tn: ComitaRec, typeFz: int, etpName: string, 
             driver.Navigate().GoToUrl(tn.Href)
             Thread.Sleep(5000)
             driver.SwitchTo().DefaultContent() |> ignore
-
+            
+            let Page = Download.DownloadString (tn.Href.Replace("openProcedure", "rest"))
+            let s =
+                match Page with
+                | null
+                | "" ->
+                    raise
+                    <| Exception(sprintf "cannot get Page %s" tn.Href)
+                | s -> s
+            let t = JObject.Parse(s)
+            
             let OrgName =
                 match driver.findElementWithoutException ("//div[span[contains(., 'Опубликовано:')]]") with
                 | "" -> ""
@@ -141,7 +154,7 @@ type TenderComita(stn: Settings.T, tn: ComitaRec, typeFz: int, etpName: string, 
                         | "" -> ""
                         | x -> x.Replace("Электронная почта:", "").Trim()
 
-                    let inn = ""
+                    let inn = GetStringFromJtoken t "result.customer.inn"
 
                     let cmd5 =
                         new MySqlCommand(addOrganizer, con)
@@ -266,7 +279,11 @@ type TenderComita(stn: Settings.T, tn: ComitaRec, typeFz: int, etpName: string, 
             match updated with
             | true -> incr TenderComita.tenderUpCount
             | false -> incr TenderComita.tenderCount
-
+            
+            let docs = t.GetElements("result.files")
+            this.AddDocs(docs, !idTender, con)
+            let prot = t.GetElements("result.protocols")
+            this.AddProt(prot, !idTender, con, href)
             let idCustomer = ref 0
 
             let CusName =
@@ -302,7 +319,7 @@ type TenderComita(stn: Settings.T, tn: ComitaRec, typeFz: int, etpName: string, 
                             stn.Prefix
 
                     let RegNum = Guid.NewGuid().ToString()
-                    let inn = ""
+                    let inn = GetStringFromJtoken t "result.customer.inn"
 
                     let cmd14 =
                         new MySqlCommand(insertCustomer, con)
@@ -322,22 +339,14 @@ type TenderComita(stn: Settings.T, tn: ComitaRec, typeFz: int, etpName: string, 
                     idCustomer := int cmd14.LastInsertedId
 
             let lots =
-                driver.findElementsWithoutException (
-                    "//tbody[contains(@ng-repeat , 'data in dataTableLots')]/tr[td[@id]]"
-                )
+                t.GetElements("result.lots")
 
             let LotNum = ref 1
 
             for lot in lots do
-                let LotName =
-                    match lot.findElementWithoutException ("./td[@class = 'ng-binding'][2]") with
-                    | "" -> ""
-                    | x -> x.Trim()
+                let LotName = GetStringFromJtoken lot "name"
 
-                let Nmck =
-                    match lot.findElementWithoutException (".//td[contains(@class, 'price')]/span/span[1]") with
-                    | "" -> ""
-                    | x -> x.GetPriceFromStringKz().Replace("RUB", "").Trim()
+                let Nmck = GetDecimalFromJtoken lot "price"
 
                 let idLot = ref 0
 
@@ -363,31 +372,75 @@ type TenderComita(stn: Settings.T, tn: ComitaRec, typeFz: int, etpName: string, 
                 cmd12.ExecuteNonQuery() |> ignore
                 idLot := int cmd12.LastInsertedId
                 incr LotNum
+                
+                let purObj =  lot.GetElements("items")
+                if purObj.Count < 1 then
+                    let insertLotitem =
+                        sprintf
+                            "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum"
+                            stn.Prefix
 
-                let insertLotitem =
-                    sprintf
-                        "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum"
-                        stn.Prefix
+                    let cmd19 =
+                        new MySqlCommand(insertLotitem, con)
 
-                let cmd19 =
-                    new MySqlCommand(insertLotitem, con)
+                    cmd19.Prepare()
 
-                cmd19.Prepare()
+                    cmd19.Parameters.AddWithValue("@id_lot", !idLot)
+                    |> ignore
 
-                cmd19.Parameters.AddWithValue("@id_lot", !idLot)
-                |> ignore
+                    cmd19.Parameters.AddWithValue("@id_customer", !idCustomer)
+                    |> ignore
 
-                cmd19.Parameters.AddWithValue("@id_customer", !idCustomer)
-                |> ignore
+                    cmd19.Parameters.AddWithValue("@name", LotName)
+                    |> ignore
 
-                cmd19.Parameters.AddWithValue("@name", LotName)
-                |> ignore
+                    cmd19.Parameters.AddWithValue("@sum", Nmck)
+                    |> ignore
 
-                cmd19.Parameters.AddWithValue("@sum", Nmck)
-                |> ignore
+                    cmd19.ExecuteNonQuery() |> ignore
+                    ()
+                else
+                    for p in purObj do
+                        let okpd2 = GetStringFromJtoken p "okpd2Code"
+                        let okpd2Name = GetStringFromJtoken p "okpd2Name"
+                        let name = GetStringFromJtoken p "name"
+                        let insertLotitem =
+                                        sprintf
+                                            "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, okpd_name = @okpd_name, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, okpd2_code = @okpd2_code"
+                                            stn.Prefix
 
-                cmd19.ExecuteNonQuery() |> ignore
-                ()
+                        let cmd19 =
+                            new MySqlCommand(insertLotitem, con)
+
+                        cmd19.Prepare()
+
+                        cmd19.Parameters.AddWithValue("@id_lot", !idLot)
+                        |> ignore
+
+                        cmd19.Parameters.AddWithValue("@id_customer", !idCustomer)
+                        |> ignore
+
+                        cmd19.Parameters.AddWithValue("@name", name)
+                        |> ignore
+
+                        cmd19.Parameters.AddWithValue("@okpd_name", okpd2Name)
+                        |> ignore
+
+                        cmd19.Parameters.AddWithValue("@quantity_value", "")
+                        |> ignore
+
+                        cmd19.Parameters.AddWithValue("@customer_quantity_value", "")
+                        |> ignore
+
+                        cmd19.Parameters.AddWithValue("@okei", "")
+                        |> ignore
+
+                        cmd19.Parameters.AddWithValue("@okpd2_code", okpd2)
+                        |> ignore
+
+                        cmd19.ExecuteNonQuery() |> ignore
+                        ()
+                        ()
 
             try
                 this.AddVerNumber con tn.PurNum stn typeFz
@@ -403,4 +456,66 @@ type TenderComita(stn: Settings.T, tn: ComitaRec, typeFz: int, etpName: string, 
                     Logging.Log.logger "Ошибка добавления kwords тендера"
                     Logging.Log.logger ex
 
+            ()
+    
+    member private this.AddDocs(docs, idTender, con: MySqlConnection) =
+        for d in docs do
+            let docUrl = GetStringFromJtoken d "url"
+
+            let docName =
+                GetStringFromJtoken d "fileName"
+
+            let addAttach =
+                    sprintf
+                        "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url, description = @description"
+                        stn.Prefix
+
+            let cmd5 = new MySqlCommand(addAttach, con)
+
+            cmd5.Parameters.AddWithValue("@id_tender", idTender)
+            |> ignore
+
+            cmd5.Parameters.AddWithValue("@file_name", docName)
+            |> ignore
+
+            cmd5.Parameters.AddWithValue("@url", docUrl)
+            |> ignore
+
+            cmd5.Parameters.AddWithValue("@description", "")
+            |> ignore
+
+            cmd5.ExecuteNonQuery() |> ignore
+            ()
+    
+    member private this.AddProt(docs, idTender, con: MySqlConnection, href) =
+        for d in docs do
+            let id = GetStringFromJtoken d "id"
+            
+            let prot = d.GetElements("files")
+            for p in prot do
+                let id2 = GetStringFromJtoken p "id"
+                let docName =
+                    GetStringFromJtoken p "fileName"
+                let url = href.Replace("openProcedure", "rest/fs/file") + "/protocols/"  + id + "/files/" + id2
+
+                let addAttach =
+                        sprintf
+                            "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url, description = @description"
+                            stn.Prefix
+
+                let cmd5 = new MySqlCommand(addAttach, con)
+
+                cmd5.Parameters.AddWithValue("@id_tender", idTender)
+                |> ignore
+
+                cmd5.Parameters.AddWithValue("@file_name", docName)
+                |> ignore
+
+                cmd5.Parameters.AddWithValue("@url", url)
+                |> ignore
+
+                cmd5.Parameters.AddWithValue("@description", "")
+                |> ignore
+
+                cmd5.ExecuteNonQuery() |> ignore
             ()
