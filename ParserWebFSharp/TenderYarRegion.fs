@@ -487,9 +487,10 @@ type TenderYarRegion
                     po.findElementWithoutException ("./td[6]/div")
 
                 let quantP =
-                    quantT.Get2ListRegexp(@"(\d+)\s+-\s+(.+)")
+                    quantT.Get2ListRegexp(@"([\d+,])\s+-\s+(.+)")
 
-                let quant = quantP.[0]
+                let mutable quant = quantP.[0]
+                if quant <> "" then quant <- quant.Replace(",", ".")
                 let okei = quantP.[1]
 
                 let okpd2F =
