@@ -202,7 +202,7 @@
         <PackageReference Include="HtmlAgilityPack" Version="1.8.4" />
         <PackageReference Include="Microsoft.NETCore.App" Version="2.1.1" />
         <PackageReference Include="MySql.Data" Version="8.0.11" />
-        <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
         <PackageReference Include="RandomUserAgent" Version="1.1.2" />
         <PackageReference Include="Selenium.WebDriver" Version="3.13.0" />
         <PackageReference Update="FSharp.Core" Version="4.5.0" />
