@@ -20,7 +20,7 @@ type ParserVtbConnect(stn: Settings.T) =
     let options = ChromeOptions()
 
     do
-        options.AddArguments("headless")
+        //options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
         options.AddArguments("disable-dev-shm-usage")
@@ -53,7 +53,7 @@ type ParserVtbConnect(stn: Settings.T) =
         wait.Until (fun dr ->
             dr
                 .FindElement(
-                    By.XPath("//input[@placeholder = 'Введите имя пользователя']")
+                    By.XPath("//input[@placeholder = 'Введите адрес эл. почты']")
                 )
                 .Displayed)
         |> ignore
@@ -120,13 +120,13 @@ type ParserVtbConnect(stn: Settings.T) =
         wait.Until (fun dr ->
             dr
                 .FindElement(
-                    By.XPath("//input[@placeholder = 'Введите имя пользователя']")
+                    By.XPath("//input[@placeholder = 'Введите адрес эл. почты']")
                 )
                 .Displayed)
         |> ignore
 
         driver
-            .FindElement(By.XPath("//input[@placeholder = 'Введите имя пользователя']"))
+            .FindElement(By.XPath("//input[@placeholder = 'Введите адрес эл. почты']"))
             .SendKeys(Settings.UserVtb)
 
         driver
@@ -136,7 +136,7 @@ type ParserVtbConnect(stn: Settings.T) =
         wait.Until (fun dr ->
             dr
                 .FindElement(
-                    By.XPath("//input[@placeholder = 'Введите имя пользователя']")
+                    By.XPath("//input[@placeholder = 'Введите адрес эл. почты']")
                 )
                 .Enabled)
         |> ignore
