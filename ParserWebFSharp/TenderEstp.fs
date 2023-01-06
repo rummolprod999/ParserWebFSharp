@@ -314,7 +314,7 @@ type TenderEstp(stn: Settings.T, tn: EstpRec, typeFz: int, etpName: string, etpU
 
         cmd12.ExecuteNonQuery() |> ignore
         idLot := int cmd12.LastInsertedId
-        let specUrl = sprintf "%slots/" tn.Href
+        let specUrl = tn.Href.Replace("main", "lots")
 
         if specUrl <> "" then
             let Page =
@@ -331,15 +331,15 @@ type TenderEstp(stn: Settings.T, tn: EstpRec, typeFz: int, etpName: string, etpU
                 (htmlDoc.CreateNavigator()) :?> HtmlNodeNavigator
 
             let lots =
-                htmlDoc.DocumentNode.SelectNodes("//table[contains(., 'Позиции лота')]//tr[position() > 2]")
+                htmlDoc.DocumentNode.SelectNodes("//h3[. = 'Позиции лота']/following-sibling::div//div[contains(@class, 'LotsPurchaseTab_itemHidden') and (contains(., 'ОКВЭД2'))]")
 
             if lots <> null then
                 for l in lots do
                     let lotName = tn.PurName
-                    let quantity = l.Gsn("./td[4]")
+                    let quantity = l.Gsn(".//dt[. = 'Кол-во, объём']/following-sibling::dd")
                     let quantity = quantity.HtmlDecode()
-                    let okei = l.Gsn("./td[5]")
-                    let okpdName = l.Gsn("./td[3]/text()[2]")
+                    let okei = l.Gsn(".//dt[. = 'Код единиц измерения']/following-sibling::dd")
+                    let okpdName = l.Gsn(".//dt[. = 'ОКПД2']/following-sibling::dd")
                     let price = ""
                     let sum = tn.Price
 
@@ -386,7 +386,7 @@ type TenderEstp(stn: Settings.T, tn: EstpRec, typeFz: int, etpName: string, etpU
                     cmd19.ExecuteNonQuery() |> ignore
 
             let delivPlace =
-                InlineHtmlNavigator nav "//td[. = 'Место поставки (адрес)']/following-sibling::td"
+                InlineHtmlNavigator nav "//dt[. = 'Регион']/following-sibling::dd"
 
             if delivPlace <> "" || delivTerm <> "" then
                 let insertCustomerRequirement =
@@ -424,7 +424,7 @@ type TenderEstp(stn: Settings.T, tn: EstpRec, typeFz: int, etpName: string, etpU
         ()
 
     member private this.GetAttachments(con: MySqlConnection, idTender: int) =
-        let specUrl = sprintf "%sdocuments/" tn.Href
+        let specUrl = tn.Href.Replace("main", "docs")
 
         if specUrl <> "" then
             let Page =
@@ -438,14 +438,12 @@ type TenderEstp(stn: Settings.T, tn: EstpRec, typeFz: int, etpName: string, etpU
             htmlDoc.LoadHtml(Page)
 
             let docs =
-                htmlDoc.DocumentNode.SelectNodes("//a[contains(@href, '/file/download/')]")
+                htmlDoc.DocumentNode.SelectNodes("//div[contains(@class, 'DocsPurchaseTab_title')]/a")
 
             if docs <> null then
                 for d in docs do
                     let docName =
-                        d
-                            .Gsn("./parent::td/preceding-sibling::td[3]")
-                            .RegexCutWhitespace()
+                        d.GsnAtr "." "title"
 
                     let mutable docUrl = d.GsnAtr "." "href"
                     docUrl <- sprintf "http://estp.ru%s" docUrl
