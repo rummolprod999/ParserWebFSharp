@@ -11,7 +11,7 @@ type ParserMetodholding(stn: Settings.T) =
     let set = stn
 
     let urls =
-        [| "http://metholding.com/partners/purchase/SRM/status/" |]
+        [| "http://www.metholding.ru/partners/purchase/SRM/status/" |]
 
     override __.Parsing() =
         for url in urls do
