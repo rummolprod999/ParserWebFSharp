@@ -47,6 +47,11 @@ module NewtonExt =
             match this.SelectToken(path) with
             | null -> Error err
             | x -> Success(((string) x).Trim())
+        
+        member this.StDStringOrEmpty (path: string) (err: string) =
+            match this.SelectToken(path) with
+            | null -> Success("")
+            | x -> Success(((string) x).Trim())
 
         member this.StDInt (path: string) (err: string) =
             match this.SelectToken(path) with

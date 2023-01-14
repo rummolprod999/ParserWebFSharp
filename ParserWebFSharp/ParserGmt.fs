@@ -1,16 +1,20 @@
 namespace ParserWeb
 
+open Newtonsoft.Json.Linq
 open TypeE
 open AngleSharp.Dom
+open NewtonExt
+open Newtonsoft.Json.Linq
 open AngleSharp.Parser.Html
 open System.Linq
+open DocumentBuilderNewton
 
 type ParserGmt(stn: Settings.T) =
     inherit Parser()
     let set = stn
 
     let urls =
-        [| "http://gazprom-gmt.ru/purchase/current" |]
+        [| "https://gmt.gazprom.ru/IMP-tenders?p=0&type=active&is_days_homepage=true" |]
 
     override __.Parsing() =
         for url in urls do
@@ -29,15 +33,10 @@ type ParserGmt(stn: Settings.T) =
         | null
         | "" -> Logging.Log.logger ("Dont get page", url)
         | s ->
-            let parser = HtmlParser()
-            let documents = parser.Parse(s)
+            let j = JObject.Parse(Page)
+            let tenders = j.GetElements("content.main.tenders")
 
-            let tens =
-                documents
-                    .QuerySelectorAll("tr.tendertable_tr")
-                    .ToList()
-
-            for t in tens do
+            for t in tenders do
                 try
                     __.ParsingTender t url
                 with
@@ -47,58 +46,79 @@ type ParserGmt(stn: Settings.T) =
 
         ()
 
-    member private __.ParsingTender (t: IElement) (url: string) =
+    member private __.ParsingTender (t: JToken) (url: string) =
         let builder = DocumentBuilder()
 
         let res =
             builder {
                 let! purName =
-                    t.GsnDocWithError "a.tenders_link"
-                    <| sprintf "purName not found %s %s " url (t.TextContent)
+                    t.StDString "description"
+                    <| sprintf "purName not found %s" (t.ToString())
 
                 let! href =
-                    t.GsnAtrDocWithError "a.tenders_link" "href"
-                    <| sprintf "href not found %s %s " url (t.TextContent)
+                    t.StDString "href"
+                    <| sprintf "href not found %s" (t.ToString())
 
                 let href =
-                    sprintf "http://gazprom-gmt.ru%s" href
+                    sprintf "https://gmt.gazprom.ru%s" href
 
                 let! purNum =
-                    t.GsnDocWithError "td.tendertable_td-number"
-                    <| sprintf "purNum not found %s %s " url (t.TextContent)
+                    t.StDString "name"
+                    <| sprintf "purNum not found %s" (t.ToString())
 
                 let purNum = purNum.Replace("№", "").Trim()
 
                 let! pwName =
-                    t.GsnDocWithError "td.tendertable_td-type"
-                    <| sprintf "purNum not found %s %s " url (t.TextContent)
+                     t.StDStringOrEmpty "tenderType.name"
+                    <| sprintf "pwName not found %s" (t.ToString())
 
-                let pwName =
-                    pwName.Replace("Способ закупки", "").Trim()
+                let! datePubTY =
+                    t.StDString "dateStart.year"
+                    <| sprintf "dateStart.year not found %s" (t.ToString())
+                
+                let! datePubTM =
+                    t.StDString "dateStart.month"
+                    <| sprintf "dateStart.month not found %s" (t.ToString())
+                let! datePubTD =
+                    t.StDString "dateStart.day"
+                    <| sprintf "dateStart.day not found %s" (t.ToString())
+                let! datePubTH =
+                    t.StDString "dateStart.hour"
+                    <| sprintf "dateStart.hour not found %s" (t.ToString())
+                let! datePubTMin =
+                    t.StDString "dateStart._minute"
+                    <| sprintf "dateStart._minute not found %s" (t.ToString())
+                let! datePubTSec =
+                    t.StDString "dateStart._second"
+                    <| sprintf "dateStart._second not found %s" (t.ToString())
+                let datePubT = sprintf "%s.%s.%s %s:%s:%s" datePubTD datePubTM datePubTY datePubTH datePubTMin datePubTSec
 
-                let! datePubT =
-                    t.GsnDocWithError "td.tendertable_td-start"
-                    <| sprintf "datePubT not found %s %s " url (t.TextContent)
+                let datePub =
+                    datePubT.DateFromStringOrMin("d.M.yyyy H:m:ss")
 
-                let datePubT =
-                    datePubT
-                        .Replace("Дата начала подачи заявок", "")
-                        .Trim()
+                let! dateEndTY =
+                    t.StDString "dateEnd.year"
+                    <| sprintf "dateEnd.year not found %s" (t.ToString())
+                
+                let! dateEndTM =
+                    t.StDString "dateEnd.month"
+                    <| sprintf "dateStart.month not found %s" (t.ToString())
+                let! dateEndTD =
+                    t.StDString "dateEnd.day"
+                    <| sprintf "dateEnd.day not found %s" (t.ToString())
+                let! dateEndTH =
+                    t.StDString "dateEnd.hour"
+                    <| sprintf "dateEnd.hour not found %s" (t.ToString())
+                let! dateEndTMin =
+                    t.StDString "dateEnd._minute"
+                    <| sprintf "dateEnd._minute not found %s" (t.ToString())
+                let! dateEndTSec =
+                    t.StDString "dateEnd._second"
+                    <| sprintf "dateEnd._second not found %s" (t.ToString())
+                let dateEndT = sprintf "%s.%s.%s %s:%s:%s" dateEndTD dateEndTM dateEndTY dateEndTH dateEndTMin dateEndTSec
 
-                let! datePub =
-                    datePubT.DateFromStringDoc("dd.MM.yyyy", sprintf "datePub not found %s %s " href datePubT)
-
-                let! dateEndT =
-                    t.GsnDocWithError "td.tendertable_td-end"
-                    <| sprintf "dateEndT not found %s %s " url (t.TextContent)
-
-                let dateEndT =
-                    dateEndT
-                        .Replace("Дата окончания подачи заявок", "")
-                        .Trim()
-
-                let! dateEnd =
-                    dateEndT.DateFromStringDoc("dd.MM.yyyy", sprintf "dateEnd not found %s %s " href dateEndT)
+                let dateEnd =
+                    dateEndT.DateFromStringOrMin("d.M.yyyy H:m:ss")
 
                 let tend =
                     { GmtRec.Href = href
@@ -116,8 +136,8 @@ type ParserGmt(stn: Settings.T) =
             }
 
         match res with
-        | Succ _ -> ()
-        | Err e when e = "" -> ()
-        | Err r -> Logging.Log.logger r
+        | Success _ -> ()
+        | Error e when e = "" -> ()
+        | Error r -> Logging.Log.logger r
 
         ()

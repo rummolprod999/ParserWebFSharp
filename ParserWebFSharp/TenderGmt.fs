@@ -53,7 +53,7 @@ type TenderGmt(stn: Settings.T, tn: GmtRec, typeFz: int, etpName: string, etpUrl
                 let dateUpd = DateTime.Now
 
                 let Page =
-                    Download.DownloadStringRts tn.Href
+                    Download.DownloadString tn.Href
 
                 if Page = "" || Page = null then
                     return! Err(sprintf "%s" tn.Href)
