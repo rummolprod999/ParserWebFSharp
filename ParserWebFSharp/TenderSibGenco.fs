@@ -80,7 +80,7 @@ type TenderSibGenco(stn: Settings.T, tn: SibGencoRec, typeFz: int, etpName: stri
                 let orgName =
                     InlineHtmlNavigator
                         nav
-                        "//div[@class = 'info-table__label h4' and .  = 'Организатор:']/following-sibling::div"
+                        "//td[contains(., 'Организатор:')]/following-sibling::td"
 
                 let IdOrg = ref 0
 
@@ -112,7 +112,7 @@ type TenderSibGenco(stn: Settings.T, tn: SibGencoRec, typeFz: int, etpName: stri
                         let contactPerson =
                             InlineHtmlNavigator
                                 nav
-                                "//div[@class = 'info-table__label h4' and .  = 'Контактное лицо:']/following-sibling::div"
+                                "//td[contains(., 'Контактное лицо:')]/following-sibling::td"
 
                         let postAddress = ""
                         let factAddress = ""
@@ -120,14 +120,14 @@ type TenderSibGenco(stn: Settings.T, tn: SibGencoRec, typeFz: int, etpName: stri
                         let phone =
                             InlineHtmlNavigator
                                 nav
-                                "//div[@class = 'info-table__label h4' and .  = 'Контактный телефон:']/following-sibling::div"
+                                "//td[contains(., 'Телефон:')]/following-sibling::td"
 
                         let inn = ""
 
                         let email =
                             InlineHtmlNavigator
                                 nav
-                                "//div[@class = 'info-table__label h4' and .  = 'E-mail:']/following-sibling::div"
+                                "//td[contains(., 'Эл. почта:')]/following-sibling::td"
 
                         let cmd5 =
                             new MySqlCommand(addOrganizer, con)
@@ -234,7 +234,7 @@ type TenderSibGenco(stn: Settings.T, tn: SibGencoRec, typeFz: int, etpName: stri
                 cmd9.Parameters.AddWithValue("@num_version", numVersion)
                 |> ignore
 
-                cmd9.Parameters.AddWithValue("@notice_version", status)
+                cmd9.Parameters.AddWithValue("@notice_version", tn.Status)
                 |> ignore
 
                 cmd9.Parameters.AddWithValue("@xml", tn.Href)
@@ -256,7 +256,7 @@ type TenderSibGenco(stn: Settings.T, tn: SibGencoRec, typeFz: int, etpName: stri
                 let idCustomer = ref 0
 
                 let cusName =
-                    InlineHtmlNavigator nav "//td[. = 'Наименование организации']/following-sibling::td"
+                    InlineHtmlNavigator nav "//td[contains(., 'Заказчик:')]/following-sibling::td"
 
                 let cusName =
                     HttpUtility.HtmlDecode(cusName)
@@ -322,14 +322,12 @@ type TenderSibGenco(stn: Settings.T, tn: SibGencoRec, typeFz: int, etpName: stri
 
     member private this.GetAttachments(con: MySqlConnection, idTender: int, doc: HtmlDocument) =
         let documents =
-            doc.DocumentNode.SelectNodes("//a[@class = 'doc link']")
+            doc.DocumentNode.SelectNodes("//a[@class = 'document-list__inner']")
 
         if documents <> null then
-            let documents = documents.Skip(1)
-
             for d in documents do
                 let docName =
-                    d.Gsn(".//div[@class = 'doc__title']")
+                    d.Gsn(".//div[@class = 'document-list__title']")
 
                 let docUrl = d.GsnAtr "." "href"
 

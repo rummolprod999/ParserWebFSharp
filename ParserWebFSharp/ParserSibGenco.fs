@@ -2,6 +2,7 @@ namespace ParserWeb
 
 open System.Web
 open TypeE
+open System
 open HtmlAgilityPack
 open System.Linq
 
@@ -37,7 +38,7 @@ type ParserSibGenco(stn: Settings.T) =
                 nav
                     .CurrentDocument
                     .DocumentNode
-                    .SelectNodesOrEmpty("//table[@class = 'tender-table']//tbody/tr")
+                    .SelectNodesOrEmpty("//div[@class = 'tenders__table-inner']//li[position() > 1]/div")
                     .ToList()
 
             tens.Reverse()
@@ -58,11 +59,11 @@ type ParserSibGenco(stn: Settings.T) =
         let res =
             builder {
                 let! purName =
-                    t.GsnDocWithError "./td[3]/a"
+                    t.GsnDocWithError "./div[3]/a"
                     <| sprintf "purName not found %s %s " url (t.InnerText)
 
                 let! hrefT =
-                    t.GsnAtrDocWithError "./td[3]/a"
+                    t.GsnAtrDocWithError "./div[3]/a"
                     <| "href"
                     <| sprintf "hrefT not found %s %s " url (t.InnerText)
 
@@ -70,46 +71,50 @@ type ParserSibGenco(stn: Settings.T) =
                     sprintf "https://sibgenco.ru%s" hrefT
 
                 let! purNum =
-                    t.GsnDocWithError "./td[2]"
+                    t.GsnDocWithError "./div[2]"
                     <| sprintf "purNum not found %s %s " url (t.InnerText)
-
+                let purNum = match purNum with
+                    | x when (not <| String.IsNullOrEmpty(x)) -> purNum
+                    | _ -> Tools.createMD5 purName
                 let! status =
-                    t.GsnDocWithError "./td[4]"
+                    t.GsnDocWithError "./div[5]"
                     <| sprintf "status not found %s %s " url (t.InnerText)
 
                 let! pwName =
-                    t.GsnDocWithError "./td[1]"
+                    t.GsnDocWithError "./div[4]"
                     <| sprintf "pwName not found %s %s " url (t.InnerText)
 
                 let! datePubT =
                     t.GsnDocWithError
-                        ".//div[@class = 'date-list']/div[@class = 'date-list__item'][1]//div[@class = 'date-list__text h5']"
+                        ".//div[contains(@class, 'tenders-table__cell--date')]/div[1]"
                     <| sprintf "datePubT not found %s %s " url (t.InnerText)
 
                 let! datePubT =
                     datePubT
                         .ReplaceDateSib()
-                        .Replace("По Мск", "")
-                        .Get1Doc "(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2})"
+                        .RegexCutWhitespace()
+                        .Replace("(МСК+4)", "")
+                        .Get1Doc "(\d{2}:\d{2}\s+\d{2}\.\d{2}\.\d{4})"
                     <| sprintf "datePubT not found %s %s " url (datePubT)
-
+    
                 let datePub =
-                    datePubT.DateFromStringOrMin("dd.MM.yyyy HH:mm")
+                    datePubT.DateFromStringOrMin("HH:mm dd.MM.yyyy")
 
                 let! dateEndT =
                     t.GsnDocWithError
-                        ".//div[@class = 'date-list']/div[@class = 'date-list__item'][2]//div[@class = 'date-list__text h5']"
+                        ".//div[contains(@class, 'tenders-table__cell--date')]/div[2]"
                     <| sprintf "dateEndT not found %s %s " url (t.InnerText)
 
                 let! dateEndT =
                     dateEndT
                         .ReplaceDateSib()
-                        .Replace("По Мск", "")
-                        .Get1Doc "(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2})"
+                        .RegexCutWhitespace()
+                        .Replace("(МСК+4)", "")
+                        .Get1Doc "(\d{2}:\d{2}\s+\d{2}\.\d{2}\.\d{4})"
                     <| sprintf "dateEndT not found %s %s " url (datePubT)
 
                 let dateEnd =
-                    dateEndT.DateFromStringOrMin("dd.MM.yyyy HH:mm")
+                    dateEndT.DateFromStringOrMin("HH:mm dd.MM.yyyy")
 
                 let tend =
                     { Href = href
