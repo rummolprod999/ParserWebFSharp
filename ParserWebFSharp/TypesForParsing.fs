@@ -146,7 +146,8 @@ type AeroRec =
       PwayName: string
       DatePub: DateTime
       DateEnd: DateTime
-      status: string }
+      status: string
+      DocList: List<IElement> }
 
 type AsgorRec =
     { Href: string

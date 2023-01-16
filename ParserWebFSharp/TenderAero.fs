@@ -84,18 +84,6 @@ type TenderAero(stn: Settings.T, tn: AeroRec, typeFz: int, etpName: string, etpU
         else
             reader.Close()
 
-            let Page =
-                Download.DownloadStringBot tn.Href
-
-            match Page with
-            | null
-            | "" ->
-                raise
-                <| Exception(sprintf "cannot download page %s" tn.Href)
-            | _ -> ()
-
-            let parser = HtmlParser()
-            let doc = parser.Parse(Page)
             let mutable cancelStatus = 0
             let mutable updated = false
 
@@ -284,19 +272,8 @@ type TenderAero(stn: Settings.T, tn: AeroRec, typeFz: int, etpName: string, etpU
             | true -> incr TenderAero.tenderUpCount
             | false -> incr TenderAero.tenderCount
 
-            let documents =
-                doc.QuerySelectorAll("span:contains('Приложенные документы') + table tbody tr")
-
-            documents
-            |> Seq.iter (this.ParsingDocs con !idTender)
-
-            let CustomerName =
-                match
-                    doc.QuerySelector
-                        ("span:contains('Дополнительная информация') + table td:contains('Заказчик:') + td")
-                    with
-                | null -> ""
-                | ur -> ur.TextContent.Trim()
+            this.GetAttachments(con, !idTender)
+            let CustomerName = OrgName
 
             let idCustomer = ref 0
 
@@ -349,10 +326,7 @@ type TenderAero(stn: Settings.T, tn: AeroRec, typeFz: int, etpName: string, etpU
 
             let idLot = ref 0
 
-            let priceT =
-                match doc.QuerySelector("td:contains('Начальная цена:') + td") with
-                | null -> ""
-                | ur -> ur.TextContent.Trim()
+            let priceT = ""
 
             let maxPrice =
                 match priceT.Get1FromRegexp @"^([\d\.,]+)" with
@@ -386,10 +360,7 @@ type TenderAero(stn: Settings.T, tn: AeroRec, typeFz: int, etpName: string, etpU
             cmd12.ExecuteNonQuery() |> ignore
             idLot := int cmd12.LastInsertedId
 
-            let delivTerm =
-                match doc.QuerySelector("td:contains('Специальные требования / условия:') + td") with
-                | null -> ""
-                | ur -> ur.TextContent.Trim()
+            let delivTerm = ""
 
             if delivTerm <> "" then
                 let insertCustomerRequirement =
@@ -413,10 +384,7 @@ type TenderAero(stn: Settings.T, tn: AeroRec, typeFz: int, etpName: string, etpU
 
                 cmd16.ExecuteNonQuery() |> ignore
 
-            let quantT =
-                match doc.QuerySelector("td:contains('Количество:') + td") with
-                | null -> ""
-                | ur -> ur.TextContent.Trim()
+            let quantT = ""
 
             let quantity =
                 match quantT.Get1FromRegexp @"^([\d\.,]+)" with
@@ -476,3 +444,34 @@ type TenderAero(stn: Settings.T, tn: AeroRec, typeFz: int, etpName: string, etpU
                     Logging.Log.logger ex
 
             ()
+
+    
+    member private this.GetAttachments(con: MySqlConnection, idTender: int) =
+        for doc in tn.DocList do
+            let urlDoc = doc.GetAttribute("href").Trim()
+
+            let url =
+                sprintf "https://www.aeroflot.ru%s" urlDoc
+
+            let name = doc.TextContent.Trim()
+
+            let addAttach =
+                sprintf
+                    "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url, description = @description"
+                    stn.Prefix
+
+            let cmd5 = new MySqlCommand(addAttach, con)
+
+            cmd5.Parameters.AddWithValue("@id_tender", idTender)
+            |> ignore
+
+            cmd5.Parameters.AddWithValue("@file_name", name)
+            |> ignore
+
+            cmd5.Parameters.AddWithValue("@url", url)
+            |> ignore
+
+            cmd5.Parameters.AddWithValue("@description", "")
+            |> ignore
+
+            cmd5.ExecuteNonQuery() |> ignore

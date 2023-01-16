@@ -4,6 +4,7 @@ open AngleSharp.Dom
 open AngleSharp.Parser.Html
 open System
 open TypeE
+open System.Linq
 
 type ParserAero(stn: Settings.T) =
     inherit Parser()
@@ -11,12 +12,9 @@ type ParserAero(stn: Settings.T) =
     let _ = 10
 
     override this.Parsing() =
-        for i in 1..10 do
+        for i in 1..1 do
             try
-                let url =
-                    sprintf
-                        "https://www.aeroflot.ru/ru-ru/about/retail_center/etp/active?page=%d&order_by=field_datetime_range&sort=desc"
-                        i
+                let url = "https://www.aeroflot.ru/ru-ru/about/retail_center/monitoring-cen"
 
                 this.ParsingPage url
             with
@@ -32,89 +30,54 @@ type ParserAero(stn: Settings.T) =
             let parser = HtmlParser()
             let documents = parser.Parse(s)
 
-            let tens =
-                documents.QuerySelectorAll("div.view-content table.list tbody tr")
-
-            for t in tens do
-                try
-                    this.ParsingTender t url
-                with
-                    | ex -> Logging.Log.logger ex
+            let mutable tens =
+                documents.QuerySelectorAll("afl-component div.row")
+            if tens.Length > 0 then
+                let tensN = tens.Skip(1).Reverse()
+                for t in tensN do
+                    try
+                        this.ParsingTender t url
+                    with
+                        | ex -> Logging.Log.logger ex
 
             ()
 
     member private this.ParsingTender (t: IElement) (url: string) =
-        let HrefDocT =
-            match t.QuerySelector("td.views-field-title a") with
-            | null -> ""
-            | ur -> ur.GetAttribute("href").Trim()
-
-        match HrefDocT with
-        | ""
-        | null ->
-            raise
-            <| NullReferenceException(sprintf "HrefDocT not found in %s" url)
-        | _ -> ()
-
+        
         let HrefDoc =
-            sprintf "https://www.aeroflot.ru%s" HrefDocT
+            "https://www.aeroflot.ru/ru-ru/about/retail_center/monitoring-cen"
 
         let PurName =
-            match t.QuerySelector("td.views-field-title a") with
+            match t.QuerySelector("div.col--12 p:nth-of-type(2)") with
             | null ->
                 raise
                 <| NullReferenceException(sprintf "PurName not found in %s" url)
             | ur -> ur.TextContent.Trim()
+        let purNum = Tools.createMD5 PurName
+        let pWay = ""
 
-        let mutable FullN =
-            match t.QuerySelector("td.views-field-title") with
-            | null ->
-                raise
-                <| NullReferenceException(sprintf "FullN not found in %s" url)
-            | ur -> ur.TextContent.Trim()
-
-        FullN <- FullN.Replace(PurName, "")
-
-        let purNum =
-            match FullN.Get1FromRegexp @"№\s*(\d+)," with
-            | Some x -> x.Trim()
-            | None ->
-                raise
-                <| NullReferenceException(sprintf "purNum not found in %s %s" url PurName)
-
-        let pWay =
-            match FullN.Get1FromRegexp @"(.+?)," with
-            | Some x -> x.Trim()
-            | None -> ""
-
-        let status =
-            match t.QuerySelector("td:nth-child(4)") with
-            | null -> ""
-            | ur -> ur.TextContent.Trim()
+        let status = ""
 
         let PubDateT =
-            match t.QuerySelector("td:nth-child(2) span") with
+            match t.QuerySelector("div:nth-of-type(1) p:nth-of-type(2)") with
             | null ->
                 raise
                 <| NullReferenceException(sprintf "PubDateT not found in %s" url)
             | ur -> ur.TextContent.Trim()
 
         let datePub =
-            match PubDateT.DateFromString("dd.MM.yyyy - HH:mm") with
+            match PubDateT.DateFromString("dd.MM.yyyy") with
             | Some d -> d
             | None ->
                 raise
                 <| Exception(sprintf "cannot parse datePub %s" PubDateT)
 
-        let EndDateT =
-            match t.QuerySelector("td:nth-child(3) span") with
-            | null -> ""
-            | ur -> ur.TextContent.Trim()
+        let EndDateT = ""
 
         let dateEnd =
-            match EndDateT.DateFromString("dd.MM.yyyy - HH:mm") with
-            | Some d -> d
-            | None -> DateTime.MinValue
+            EndDateT.DateFromStringOrPubPlus2("dd.MM.yyyy HH:mm", datePub)
+        let docs =
+                    t.QuerySelectorAll("div:nth-of-type(3) a").ToList()
 
         let ten =
             { Href = HrefDoc
@@ -123,7 +86,8 @@ type ParserAero(stn: Settings.T) =
               PwayName = pWay
               DatePub = datePub
               DateEnd = dateEnd
-              status = status }
+              status = status 
+              DocList = docs }
 
         try
             let T =

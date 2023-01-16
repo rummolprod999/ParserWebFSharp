@@ -74,8 +74,8 @@ type ParserSibGenco(stn: Settings.T) =
                     t.GsnDocWithError "./div[2]"
                     <| sprintf "purNum not found %s %s " url (t.InnerText)
                 let purNum = match purNum with
-                    | x when (not <| String.IsNullOrEmpty(x)) -> purNum
-                    | _ -> Tools.createMD5 purName
+                                | x when (not <| String.IsNullOrEmpty(x)) -> purNum
+                                | _ -> Tools.createMD5 purName
                 let! status =
                     t.GsnDocWithError "./div[5]"
                     <| sprintf "status not found %s %s " url (t.InnerText)
