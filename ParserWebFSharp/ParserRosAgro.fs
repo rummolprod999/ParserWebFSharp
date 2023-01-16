@@ -46,40 +46,40 @@ type ParserRosAgro(stn: Settings.T) =
         let res =
             builder {
                 let! href =
-                    t.GsnAtrDocWithError "td:nth-of-type(2) > a" "href"
+                    t.GsnAtrDocWithError "td:nth-of-type(1) > a" "href"
                     <| sprintf "href not found %s %s " url (t.TextContent)
 
                 let href =
                     sprintf "https://www.rosagroleasing.ru/company/tenders/%s" href
 
                 let! purName =
-                    t.GsnDocWithError "td:nth-of-type(2) > a"
+                    t.GsnDocWithError "td:nth-of-type(1) > a"
                     <| sprintf "purName not found %s %s " url (t.TextContent)
 
                 let! pwName =
-                    t.GsnDocWithError "td:nth-of-type(4)"
+                    t.GsnDocWithError "td:nth-of-type(3)"
                     <| sprintf "pwName not found %s %s " url (t.TextContent)
 
                 let! purNum =
-                    href.Get1Doc "/(\d+)/$"
-                    <| sprintf "purNum not found %s %s " url (t.TextContent)
+                    t.GsnAtrDocWithError "td:nth-of-type(1) > a" "href" <| sprintf "href not found %s %s " url (t.TextContent)
+                let purNum = purNum.Replace("/", "")
 
                 let! dateEndT =
-                    t.GsnDocWithError "td:nth-of-type(6)"
+                    t.GsnDocWithError "td:nth-of-type(5)"
                     <| sprintf "dateEndT not found %s %s " url (t.TextContent)
 
                 let! dateEnd =
                     dateEndT.DateFromStringDoc("yyyy-MM-dd HH:mm:ss", sprintf "dateEnd not found %s %s " href dateEndT)
 
                 let! datePubT =
-                    t.GsnDocWithError "td:nth-of-type(8)"
+                    t.GsnDocWithError "td:nth-of-type(7)"
                     <| sprintf "datePubT not found %s %s " url (t.TextContent)
 
                 let! datePub =
                     datePubT.DateFromStringDoc("dd.MM.yyyy", sprintf "datePub not found %s %s " href datePubT)
 
                 let! nmck =
-                    t.GsnDocWithError "td:nth-of-type(5)"
+                    t.GsnDocWithError "td:nth-of-type(4)"
                     <| sprintf "nmck not found %s %s " url (t.TextContent)
 
                 let nmck = nmck.GetPriceFromStringKz()
