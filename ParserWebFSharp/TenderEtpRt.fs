@@ -53,7 +53,7 @@ type TenderEtpRt(stn: Settings.T, tn: EtpRtRec, typeFz: int, etpName: string, et
                     <| sprintf "dateEndT2 not found %s" tn.Href
 
                 let dateEndT =
-                    sprintf "%s %s" dateEndT1 dateEndT2
+                    sprintf "%s %s" dateEndT1 <| dateEndT2.Replace("(МСК)", "").Trim()
 
                 let! dateEnd =
                     dateEndT.DateFromStringDoc(
@@ -358,30 +358,34 @@ type TenderEtpRt(stn: Settings.T, tn: EtpRtRec, typeFz: int, etpName: string, et
                 for d in docs do
                     let docName = d.Gsn(".")
                     let mutable docUrl = d.GsnAtr "." "href"
+                    
+                    if not (docUrl.Contains("?sign=1")) then
 
-                    if not (docUrl.StartsWith("http://zakupki.gov.ru")) then
-                        docUrl <- sprintf "https://etp-rt.ru%s" docUrl
+                        if not (docUrl.StartsWith("http://zakupki.gov.ru")) then
+                            docUrl <- sprintf "https://etp-rt.ru%s" docUrl
 
-                    if docUrl <> "" then
-                        let addAttach =
-                            sprintf
-                                "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url"
-                                stn.Prefix
+                        if docUrl <> "" then
+                            let addAttach =
+                                sprintf
+                                    "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url"
+                                    stn.Prefix
 
-                        let cmd5 = new MySqlCommand(addAttach, con)
+                            let cmd5 = new MySqlCommand(addAttach, con)
 
-                        cmd5.Parameters.AddWithValue("@id_tender", idTender)
-                        |> ignore
+                            cmd5.Parameters.AddWithValue("@id_tender", idTender)
+                            |> ignore
 
-                        cmd5.Parameters.AddWithValue("@file_name", docName)
-                        |> ignore
+                            cmd5.Parameters.AddWithValue("@file_name", docName)
+                            |> ignore
 
-                        cmd5.Parameters.AddWithValue("@url", docUrl)
-                        |> ignore
+                            cmd5.Parameters.AddWithValue("@url", docUrl)
+                            |> ignore
 
-                        cmd5.ExecuteNonQuery() |> ignore
+                            cmd5.ExecuteNonQuery() |> ignore
 
-                    ()
+                        ()
+                    else
+                        ()
 
         ()
 
