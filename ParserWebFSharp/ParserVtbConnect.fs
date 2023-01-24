@@ -164,10 +164,25 @@ type ParserVtbConnect(stn: Settings.T) =
 
         let res =
             builder {
+                let! hrefT =
+                    i.findWElementWithoutException (
+                        ".//a[. = 'Подробнее']",
+                        sprintf "hrefT not found, text the element - %s" i.Text
+                    )
+
+                let! href = hrefT.findAttributeWithoutException ("href", "href not found")
+
+                let! purNum =
+                    i.findElementWithoutException (
+                        ".//p[@class = 'auction_item_number']",
+                        sprintf "purNum not found %s" i.Text
+                    )
+
+                let purNum = purNum.Replace("№", "")
                 let! pubDateT =
                     i.findElementWithoutException (
                         ".//li[contains(., 'Дата публикации')]",
-                        sprintf "pubDateT not found %s" i.Text
+                        sprintf "pubDateT not found %s num %s" i.Text purNum
                     )
 
                 let pubDateT =
@@ -175,6 +190,7 @@ type ParserVtbConnect(stn: Settings.T) =
                         .Replace("Дата публикации", "")
                         .Replace(":", "")
                         .Trim()
+                        .RegexDeleteWhitespace()
 
                 let! datePub = pubDateT.DateFromString("dd.MM.yyyy", sprintf "datePub not parse %s" pubDateT)
 
@@ -192,21 +208,6 @@ type ParserVtbConnect(stn: Settings.T) =
 
                 let! dateEnd = dateEndT.DateFromString("dd.MM.yyyy", sprintf "endDate not parse %s" dateEndT)
 
-                let! hrefT =
-                    i.findWElementWithoutException (
-                        ".//a[. = 'Подробнее']",
-                        sprintf "hrefT not found, text the element - %s" i.Text
-                    )
-
-                let! href = hrefT.findAttributeWithoutException ("href", "href not found")
-
-                let! purNum =
-                    i.findElementWithoutException (
-                        ".//p[@class = 'auction_item_number']",
-                        sprintf "purNum not found %s" i.Text
-                    )
-
-                let purNum = purNum.Replace("№", "")
 
                 let! purName =
                     i.findElementWithoutException (
