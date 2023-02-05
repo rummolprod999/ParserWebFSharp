@@ -215,6 +215,8 @@ module Settings =
         let mutable LogPathTendersTulaRegion = ""
         let mutable TempPathTendersSngb = ""
         let mutable LogPathTendersSngb = ""
+        let mutable TempPathTendersSevZakaz = ""
+        let mutable LogPathTendersSevZakaz = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -708,6 +710,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_sngb" then
                     LogPathTendersSngb <-
                         sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
+                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_sevzakaz" then
+                    TempPathTendersSevZakaz <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_sevzakaz" then
+                    LogPathTendersSevZakaz <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then
                     Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then
@@ -852,6 +860,7 @@ module Settings =
                 | Barnaultm -> TempPathTendersBarnaulTm
                 | Tularegion -> TempPathTendersTulaRegion
                 | Sngb -> TempPathTendersSngb
+                | Sevzakaz -> TempPathTendersSevZakaz
 
             let LogPathTenders =
                 match arg with
@@ -935,6 +944,7 @@ module Settings =
                 | Barnaultm -> LogPathTendersBarnaulTm
                 | Tularegion -> LogPathTendersTulaRegion
                 | Sngb -> LogPathTendersSngb
+                | Sevzakaz -> LogPathTendersSevZakaz
 
             { Database = Database
               TempPathTenders = TempPathTenders

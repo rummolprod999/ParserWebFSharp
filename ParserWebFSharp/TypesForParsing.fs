@@ -89,6 +89,7 @@ type Arguments =
     | Barnaultm
     | Tularegion
     | Sngb
+    | Sevzakaz
 
 type SlavNeft =
     | MEGION

@@ -192,6 +192,8 @@
         <Compile Include="ParserBarnaulTm.fs" />
         <Compile Include="TenderSngb.fs" />
         <Compile Include="ParserSngb.fs" />
+        <Compile Include="TenderSevZakaz.fs" />
+        <Compile Include="ParserSevZakaz.fs" />
         <Compile Include="Init.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
