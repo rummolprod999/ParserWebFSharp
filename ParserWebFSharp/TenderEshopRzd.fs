@@ -69,7 +69,7 @@ type TenderEshopRzd
             wait.Until (fun dr ->
                 dr
                     .FindElement(
-                        By.XPath("//td[contains(., 'Дата публикации')]/following-sibling::td")
+                        By.XPath("//div[contains(., 'Дата публикации')]/following-sibling::div")
                     )
                     .Displayed)
             |> ignore
@@ -422,11 +422,11 @@ type TenderEshopRzd
                 ()
 
             let delivPlace =
-                driver.findElementWithoutException ("//td[contains(., 'Адрес поставки')]/following-sibling::td")
+                driver.findElementWithoutException ("//div[contains(., 'Адрес поставки')]/following-sibling::div")
 
             let delivTerm =
                 driver.findElementWithoutException (
-                    "//td[contains(., 'Планируемый месяц исполнения договора')]/following-sibling::td"
+                    "//div[contains(., 'Планируемый месяц исполнения договора')]/following-sibling::div"
                 )
 
             if delivPlace <> "" || delivTerm <> "" then
@@ -456,7 +456,7 @@ type TenderEshopRzd
 
             let requirement =
                 driver.findElementWithoutException (
-                    "//td[contains(., 'Минимально необходимые требования')]/following-sibling::td"
+                    "//div[contains(., 'Минимально необходимые требования')]/following-sibling::div"
                 )
 
             if requirement <> "" then
