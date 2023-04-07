@@ -9,7 +9,7 @@ type ParserDomRu(stn: Settings.T) =
     inherit Parser()
     let set = stn
 
-    let urls = [| "https://zakupki.domru.ru/" |]
+    let urls = [| "https://zakupki.ertelecom.ru/" |]
 
     override __.Parsing() =
         for url in urls do

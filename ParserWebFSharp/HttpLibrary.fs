@@ -138,6 +138,7 @@ module Download =
         let mutable s = null
         let count = ref 0
         let mutable continueLooping = true
+        ServicePointManager.ServerCertificateValidationCallback <- fun sender certificate chain sslPolicyErrors -> true
 
         while continueLooping do
             try
@@ -166,6 +167,7 @@ module Download =
         let mutable s = null
         let count = ref 0
         let mutable continueLooping = true
+        ServicePointManager.ServerCertificateValidationCallback <- fun sender certificate chain sslPolicyErrors -> true
 
         while continueLooping do
             try

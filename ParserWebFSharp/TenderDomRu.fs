@@ -407,7 +407,7 @@ type TenderDomRu(stn: Settings.T, tn: DomRuRec, typeFz: int, etpName: string, et
                 let docUrl = d.GsnAtr "./td[1]/a" "href"
 
                 let docUrl =
-                    sprintf "https://zakupki.domru.ru%s" docUrl
+                    sprintf "https://zakupki.ertelecom.ru%s" docUrl
 
                 if docUrl <> "" then
                     let addAttach =
