@@ -1,6 +1,11 @@
 namespace ParserWeb
 
 open System
+open System.Collections.Generic
+open System.Threading
+open OpenQA.Selenium
+open OpenQA.Selenium.Chrome
+open OpenQA.Selenium.Support.UI
 open TypeE
 open AngleSharp.Dom
 open AngleSharp.Parser.Html
@@ -10,71 +15,120 @@ type ParserUni(stn: Settings.T) =
     inherit Parser()
     let set = stn
 
-    let urls =
-        [| "https://unistream.ru/bank/about/tenders/" |]
+    let timeoutB = TimeSpan.FromSeconds(60.)
+    let listTenders = List<UniRec>()
+    let options = ChromeOptions()
+    
+    let url =
+            "https://unistream.ru/bank/about/tenders/"
 
+    do
+        options.AddArguments("headless")
+        options.AddArguments("disable-gpu")
+        options.AddArguments("no-sandbox")
+        options.AddArguments("disable-dev-shm-usage")
+    //options.AddArguments("window-size=1920,1080")
     override __.Parsing() =
-        for url in urls do
+        let driver =
+            new ChromeDriver("/usr/local/bin", options)
+
+        driver.Manage().Timeouts().PageLoad <- timeoutB
+        //driver.Manage().Window.Maximize()
+        try
             try
-                __.ParsingPage(url)
+                __.ParserSelen driver
+                driver.Manage().Cookies.DeleteAllCookies()
             with
                 | ex -> Logging.Log.logger ex
+        finally
+            driver.Quit()
 
         ()
 
+    member private __.ParserSelen(driver: ChromeDriver) =
+        let wait = WebDriverWait(driver, timeoutB)
 
-    member private __.ParsingPage(url: string) =
-        let Page = Download.DownloadString url
+        driver
+            .Navigate()
+            .GoToUrl(url)
+        driver.SwitchTo().DefaultContent() |> ignore
 
-        match Page with
-        | null
-        | "" -> Logging.Log.logger ("Dont get page", url)
-        | s ->
-            let parser = HtmlParser()
-            let documents = parser.Parse(s)
+        Thread.Sleep(3000)
+        driver.SwitchTo().DefaultContent() |> ignore
 
-            let tens =
-                documents
-                    .QuerySelectorAll("div.item.document-list__item")
-                    .ToList()
+        wait.Until (fun dr ->
+            dr
+                .FindElement(
+                    By.XPath("//div[@class = 'content document-list__content']")
+                )
+                .Displayed)
+        |> ignore
 
-            for t in tens do
-                try
-                    __.ParsingTender t url
-                with
-                    | ex -> Logging.Log.logger ex
+        driver.SwitchTo().DefaultContent() |> ignore
+        __.ParserListTenders(driver)
 
-            ()
+        for t in listTenders do
+            try
+                __.ParserTendersList driver t
+            with
+                | ex -> Logging.Log.logger (ex)
 
         ()
 
-    member private __.ParsingTender (t: IElement) (url: string) =
-        let builder = DocumentBuilder()
+    member private this.ParserTendersList (driver: ChromeDriver) (t: UniRec) =
+        try
+            let T =
+                TenderUni(set, t, 243, "АО КБ «Юнистрим»", "https://unistream.ru/")
+
+            T.Parsing()
+        with
+            | ex -> Logging.Log.logger (ex, t.Href)
+
+        ()
+
+    member private this.ParserListTenders(driver: ChromeDriver) =
+        driver.SwitchTo().DefaultContent() |> ignore
+
+        let tenders =
+            driver.FindElementsByXPath("//div[@class = 'content document-list__content']")
+
+        for t in tenders do
+            this.ParserTenders t
+
+        ()
+
+    member private this.ParserTenders(i: IWebElement) =
+        let builder = TenderBuilder()
 
         let res =
             builder {
-                let! href =
-                    t.GsnAtrDocWithError "div a" "href"
-                    <| sprintf "href not found %s %s " url (t.TextContent)
-
-                let href =
-                    sprintf "https://unistream.ru%s" href
-
                 let! purName =
-                    t.GsnDocWithError "div a"
-                    <| sprintf "purName not found %s %s " url (t.TextContent)
+                    i.findElementWithoutException (
+                        ".//a",
+                        sprintf "purName not found %s" i.Text
+                    )
+
+                let! hrefT =
+                    i.findWElementWithoutException (
+                        ".//a",
+                        sprintf "hrefT not found, text the element - %s" i.Text
+                    )
+
+                let! href = hrefT.findAttributeWithoutException ("href", "href not found")
 
                 let purNum = Tools.createMD5 href
                 let datePub = DateTime.Now
 
-                let! dateEndT =
-                    t.GsnDocWithError "div.description.document-list__description"
-                    <| sprintf "dateEndT not found %s %s " url (t.TextContent)
+                let! endDateT =
+                    i.findElementWithoutException (
+                        ".//div[@class = 'description document-list__description']",
+                        sprintf "endDateT not found %s" i.Text
+                    )
 
-                let! endDateT = dateEndT.Get1OptionalDoc "(?<=\s)(\d{2}.\d{2}.\d{4})"
+                let! endDateT = endDateT.Get1Optional "(?<=\s)(\d{2}.\d{2}.\d{4})"
 
                 let! dateEnd =
-                    endDateT.DateFromStringDoc("dd.MM.yyyy", sprintf "dateEnd not found %s %s " href endDateT)
+                    endDateT.DateFromString("dd.MM.yyyy", sprintf "dateEnd not found %s %s " href endDateT)
 
                 let tend =
                     { UniRec.Href = href
@@ -83,16 +137,13 @@ type ParserUni(stn: Settings.T) =
                       PurNum = purNum
                       PurName = purName }
 
-                let T =
-                    TenderUni(set, tend, 243, "АО КБ «Юнистрим»", "https://unistream.ru/")
-
-                T.Parsing()
+                listTenders.Add(tend)
                 return ""
             }
 
         match res with
-        | Succ _ -> ()
-        | Err e when e = "" -> ()
-        | Err r -> Logging.Log.logger r
+        | Success _ -> ()
+        | Error e when e = "" -> ()
+        | Error r -> Logging.Log.logger r
 
         ()
