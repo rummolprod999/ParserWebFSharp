@@ -22,6 +22,7 @@ type ParserSamolet(stn: Settings.T) =
         options.AddArguments("no-sandbox")
         options.AddArguments("disable-dev-shm-usage")
         options.AddArguments("ignore-certificate-errors")
+        options.AddArguments("window-size=1920,1080")
 
     override this.Parsing() =
         let driver =
@@ -37,6 +38,25 @@ type ParserSamolet(stn: Settings.T) =
                 | ex -> Logging.Log.logger ex
         finally
             driver.Quit()
+
+        ()
+    
+    member private __.Auth(driver: ChromeDriver) =
+        driver
+            .FindElement(By.XPath("//input[@formcontrolname = 'login']"))
+            .SendKeys(Settings.UserSamolet)
+
+        driver
+            .FindElement(By.XPath("//input[@type = 'password']"))
+            .SendKeys(Settings.PassSamolet)
+
+        Thread.Sleep(3000)
+
+        driver
+            .FindElement(By.XPath("//button[contains(., 'ДАЛЕЕ')]"))
+            .Click()
+
+        Thread.Sleep(3000)
 
         ()
 
@@ -55,7 +75,33 @@ type ParserSamolet(stn: Settings.T) =
         |> ignore
 
         this.ParserListTenders driver
+        driver.Navigate().GoToUrl(url)
+        driver.SwitchTo().DefaultContent() |> ignore
+        wait.Until (fun dr ->
+            dr
+                .FindElement(
+                    By.XPath("//button[contains(., 'Войти')]")
+                )
+                .Displayed)
+        |> ignore
+        driver.SwitchTo().DefaultContent() |> ignore
 
+        driver
+            .FindElement(By.XPath("//button[contains(., 'Войти')]"))
+            .Click()
+        Thread.Sleep(3000)
+        driver.SwitchTo().DefaultContent() |> ignore
+        wait.Until (fun dr ->
+            dr
+                .FindElement(
+                    By.XPath("//input[@formcontrolname = 'login']")
+                )
+                .Displayed)
+        |> ignore
+
+        this.Auth(driver)
+        driver.SwitchTo().DefaultContent() |> ignore
+        Thread.Sleep(3000)
         for t in listTenders do
             try
                 this.ParserTendersList driver t

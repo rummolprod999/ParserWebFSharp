@@ -21,6 +21,8 @@ module Settings =
     let mutable internal PassCisLink = ""
     let mutable internal UserBidMart = ""
     let mutable internal PassBidMart = ""
+    let mutable internal UserSamolet = ""
+    let mutable internal PassSamolet = ""
     let mutable internal UserMedic = ""
     let mutable internal PassMedic = ""
     let mutable internal UserBidZaar = ""
@@ -734,6 +736,10 @@ module Settings =
                     UserBidMart <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passbidmart" then
                     PassBidMart <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "usersamolet" then
+                    UserSamolet <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "passsamolet" then
+                    PassSamolet <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "usermedic" then
                     UserMedic <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passmedic" then

@@ -28,7 +28,13 @@ type TenderSamolet(stn: Settings.T, tn: SamoletRec, typeFz: int, etpName: string
             ))
                 .Displayed)
         |> ignore
-
+        wait.Until (fun dr ->
+            (dr.FindElement(
+                By.XPath("//div[. = 'Окончание представления предложений']/following-sibling::div")
+            ))
+                .Displayed)
+        |> ignore
+        driver.SwitchTo().DefaultContent() |> ignore
         let dateEndT =
             driver.findElementWithoutException (
                 "//div[. = 'Окончание представления предложений']/following-sibling::div"
@@ -42,11 +48,11 @@ type TenderSamolet(stn: Settings.T, tn: SamoletRec, typeFz: int, etpName: string
                 dateEndT.Replace("Сегодня в", DateTime.Now.ToString("dd.MM.yyyy"))
             | _ -> dateEndT
 
-        let dateEndT =
+        let dateEndP =
             dateEndT.Get1FromRegexpOrDefaul("(\d{2}.\d{2}.\d{4} \d{2}:\d{2})")
 
         let dateEnd =
-            match dateEndT.DateFromString("dd.MM.yyyy HH:mm") with
+            match dateEndP.DateFromString("dd.MM.yyyy HH:mm") with
             | Some d -> d
             | None ->
                 raise
