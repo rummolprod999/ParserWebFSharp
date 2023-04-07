@@ -10,6 +10,7 @@ open OpenQA.Selenium
 open OpenQA.Selenium.Chrome
 open OpenQA.Selenium.Support.UI
 open TypeE
+open System.Linq
 
 type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string, etpUrl: string, driver: ChromeDriver) =
     inherit Tender(etpName, etpUrl)
@@ -300,7 +301,7 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
 
                         cmd14.ExecuteNonQuery() |> ignore
                         idCustomer := int cmd14.LastInsertedId
-
+                driver.SwitchTo().DefaultContent() |> ignore
                 let! deviPlace = body.findElementWithoutExceptionOptional ("//div[@class = 'address-column text-column']", "")
                 let rules =
                     body.findElementsWithoutException ("//cgn-pl-request-participant-rules//div[@class = 'parameter-row']")
@@ -329,7 +330,7 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
                     |> ignore
 
                     cmd16.ExecuteNonQuery() |> ignore
-
+                driver.SwitchTo().DefaultContent() |> ignore
                 let por =
                     body.FindElements(
                         By.XPath("//a[contains(@href, '/positions')]")
@@ -397,8 +398,10 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
 
             let purObjects =
                 body.findElementsWithoutException ("//cgn-pl-positions-table-dialog//tbody/tr[position()>0]")
-
-            for p in purObjects do
+            let ppo = purObjects.ToList()
+            let ppo2 = body.findElementsWithoutException ("//cgn-pl-positions-dialog-table//tbody/tr[position()>0]")
+            ppo.AddRange(ppo2)
+            for p in ppo do
                 let name =
                     p.findElementWithoutException ("./td[2]")
 
