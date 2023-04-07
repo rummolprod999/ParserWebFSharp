@@ -1,5 +1,11 @@
 namespace ParserWeb
 
+open System
+open System.Collections.Generic
+open System.Threading
+open OpenQA.Selenium
+open OpenQA.Selenium.Chrome
+open OpenQA.Selenium.Support.UI
 open TypeE
 open AngleSharp.Dom
 open AngleSharp.Parser.Html
@@ -10,102 +16,133 @@ type ParserGoldenSeed(stn: Settings.T) =
     let set = stn
 
     let url =
-        "https://www.goldenseed.ru/tenders/?PAGEN_2="
+        "https://www.goldenseed.ru/tenders/"
+
+    let timeoutB = TimeSpan.FromSeconds(60.)
+    let listTenders = List<SamaraGoldenSeedRec>()
+    let options = ChromeOptions()
+
+    do
+        options.AddArguments("headless")
+        options.AddArguments("disable-gpu")
+        options.AddArguments("no-sandbox")
+        options.AddArguments("disable-dev-shm-usage")
+        options.AddArguments("window-size=1920,1080")
 
     override __.Parsing() =
-        for i in 5..-1..1 do
+        let driver =
+            new ChromeDriver("/usr/local/bin", options)
+
+        driver.Manage().Timeouts().PageLoad <- timeoutB
+        //driver.Manage().Window.Maximize()
+        try
             try
-                __.ParsingPage(sprintf "%s%d" url i)
+                driver.Manage().Cookies.DeleteAllCookies()
+                __.ParserSelen driver
+                driver.Manage().Cookies.DeleteAllCookies()
             with
                 | ex -> Logging.Log.logger ex
+        finally
+            driver.Quit()
 
         ()
 
+    member private __.ParserSelen(driver: ChromeDriver) =
+        let wait = WebDriverWait(driver, timeoutB)
+        driver.Navigate().GoToUrl(url)
+        Thread.Sleep(5000)
+        driver.SwitchTo().DefaultContent() |> ignore
 
-    member private __.ParsingPage(url: string) =
-        let Page = Download.DownloadString url
+        wait.Until (fun dr ->
+            dr
+                .FindElement(
+                    By.XPath("(//div[ul and div and starts-with(@class, 'sc')])[2]")
+                )
+                .Displayed)
+        |> ignore
+        driver.SwitchTo().DefaultContent() |> ignore
+        __.ParserListTenders(driver)
 
-        match Page with
-        | null
-        | "" -> Logging.Log.logger ("Dont get page", url)
-        | s ->
-            let parser = HtmlParser()
-            let documents = parser.Parse(s)
-
-            let tens =
-                documents
-                    .QuerySelectorAll("div.vacancy-filter-result-item-left")
-                    .ToList()
-
-            for t in tens do
-                try
-                    __.ParsingTender t url
-                with
-                    | ex -> Logging.Log.logger ex
-
-            ()
+        for t in listTenders do
+            try
+                __.ParserTendersList driver t
+            with
+                | ex -> Logging.Log.logger (ex)
 
         ()
 
-    member private __.ParsingTender (t: IElement) (url: string) =
-        let builder = DocumentBuilder()
+    member private this.ParserTendersList (driver: ChromeDriver) (t: SamaraGoldenSeedRec) =
+        try
+            let T =
+                TenderGoldenSeed(set, t, 283, "ГК «Юг Руси»", "https://www.goldenseed.ru/")
+
+            T.Parsing()
+        with
+            | ex -> Logging.Log.logger (ex, t.Href)
+
+        ()
+
+    member private this.ParserListTenders(driver: ChromeDriver) =
+        driver.SwitchTo().DefaultContent() |> ignore
+
+        let tenders =
+            driver.FindElementsByXPath("//div[ul and div and starts-with(@class, 'sc')]")
+        let tensN = tenders.Skip(1).Reverse()
+        for t in tensN do
+            this.ParserTenders t
+
+        ()
+
+    member private this.ParserTenders(i: IWebElement) =
+        let builder = TenderBuilder()
 
         let res =
             builder {
+                let href = url
                 let! purName =
-                    t.GsnDocWithError "div.vacancy-filter-result-item-title > a"
-                    <| sprintf "purName not found %s %s " url (t.TextContent)
+                    i.findElementWithoutException (
+                        "./div[1]",
+                        sprintf "purName not found %s" i.Text
+                    )
 
-                let purNum = Tools.createMD5 purName
-
-                let! status =
-                    t.GsnDocWithError "ul.vacancy-filter-result-item-tags li:nth-child(2) a"
-                    <| sprintf "status not found %s %s " url (t.TextContent)
-
+                let purNum = Tools.createMD5 (purName)
                 let! dates =
-                    t.GsnDocWithError "ul.vacancy-filter-result-item-tags li:nth-child(1) a"
-                    <| sprintf "dates not found %s %s " url (t.TextContent)
+                    i.findElementWithoutException (
+                        "./ul/ul[1]",
+                        sprintf "dates not found %s num %s" <| i.Text.RegexCutWhitespace() <| purNum
+                    )
 
-                let! dateEndT =
-                    dates.Get1Doc "(\d{2}\.\d{2}\.\d{4})$"
-                    <| sprintf "dateEndT not found %s %s " url (dates)
+                let! (pubd, endd) =
+                    dates.Get2FromRegexpOptional("(\d{4}\-\d{2}\-\d{2}).+(\d{4}\-\d{2}\-\d{2})", "date and time not found")
 
-                let dateEnd =
-                    dateEndT.DateFromStringOrMin("dd.MM.yyyy")
+                let! datePub = pubd.DateFromString("yyyy-MM-dd", sprintf "datePub not parse %s" pubd)
 
-                let! datePubT =
-                    dates.Get1Doc "^(\d{2}\.\d{2}\.\d{4})"
-                    <| sprintf "datePubT not found %s %s " url (dates)
+                let! dateEnd = endd.DateFromString("yyyy-MM-dd", sprintf "dateEnd not parse %s" endd)
 
-                let datePub =
-                    datePubT.DateFromStringOrMin("dd.MM.yyyy")
-
-                let! typeT =
-                    t.GsnDocWithError "ul.vacancy-filter-result-item-tags li:nth-child(3) a"
-                    <| sprintf "typeT not found %s %s " url (t.TextContent)
-
-                let! cusName = purName.Get1OptionalDoc "для нужд\s*(?:[ф|Ф]илиала)*\s*(.+)$"
+                let orgName = "УМТС ООО «МЭЗ Юг Руси»"
+                let! status =
+                    i.findElementWithoutException (
+                        "./ul/ul[2]",
+                        sprintf "status not found %s" i.Text
+                    )
 
                 let tend =
                     { Href = url
                       PurName = purName
                       PurNum = purNum
-                      CusName = cusName
-                      Type = typeT
+                      CusName = orgName
+                      Type = ""
                       DateEnd = dateEnd
                       DatePub = datePub
                       Status = status }
 
-                let T =
-                    TenderGoldenSeed(set, tend, 283, "ГК «Юг Руси»", "https://www.goldenseed.ru/")
-
-                T.Parsing()
+                listTenders.Add(tend)
                 return ""
             }
 
         match res with
-        | Succ _ -> ()
-        | Err e when e = "" -> ()
-        | Err r -> Logging.Log.logger r
+        | Success _ -> ()
+        | Error e when e = "" -> ()
+        | Error r -> Logging.Log.logger r
 
         ()
