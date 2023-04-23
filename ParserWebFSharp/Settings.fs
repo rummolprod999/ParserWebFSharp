@@ -219,6 +219,8 @@ module Settings =
         let mutable LogPathTendersSngb = ""
         let mutable TempPathTendersSevZakaz = ""
         let mutable LogPathTendersSevZakaz = ""
+        let mutable TempPathTendersDfSamara = ""
+        let mutable LogPathTendersDfSamara = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -712,11 +714,17 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_sngb" then
                     LogPathTendersSngb <-
                         sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
-                 elif (xnode :?> XmlNode).Name = "tempdir_tenders_sevzakaz" then
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_sevzakaz" then
                     TempPathTendersSevZakaz <-
                         sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_sevzakaz" then
                     LogPathTendersSevZakaz <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_dfsamara" then
+                    TempPathTendersDfSamara <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_dfsamara" then
+                    LogPathTendersDfSamara <-
                         sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then
                     Prefix <- (xnode :?> XmlNode).InnerText
@@ -867,6 +875,7 @@ module Settings =
                 | Tularegion -> TempPathTendersTulaRegion
                 | Sngb -> TempPathTendersSngb
                 | Sevzakaz -> TempPathTendersSevZakaz
+                | DfSamara -> TempPathTendersDfSamara
 
             let LogPathTenders =
                 match arg with
@@ -951,6 +960,7 @@ module Settings =
                 | Tularegion -> LogPathTendersTulaRegion
                 | Sngb -> LogPathTendersSngb
                 | Sevzakaz -> LogPathTendersSevZakaz
+                | DfSamara -> LogPathTendersDfSamara
 
             { Database = Database
               TempPathTenders = TempPathTenders

@@ -90,6 +90,7 @@ type Arguments =
     | Tularegion
     | Sngb
     | Sevzakaz
+    | DfSamara
 
 type SlavNeft =
     | MEGION
