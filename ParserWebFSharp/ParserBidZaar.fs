@@ -68,9 +68,9 @@ type ParserBidZaar(stn: Settings.T) =
         driver.Navigate().GoToUrl(url)
         Thread.Sleep(3000)
         driver.SwitchTo().DefaultContent() |> ignore
-        driver
+        (*driver
             .FindElement(By.XPath("//button[contains(., ' Дата публикации ')]"))
-            .Click()
+            .Click()*)
 
         Thread.Sleep(3000)
 
