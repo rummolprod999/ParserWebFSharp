@@ -79,7 +79,7 @@ type ParserRtsGen(stn: Settings.T) =
     member private __.Auth(driver: ChromeDriver) =
         let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl("https://223.rts-tender.ru/supplier/sso/Login.aspx")
-        Thread.Sleep(3000)
+        Thread.Sleep(10000)
         driver.SwitchTo().DefaultContent() |> ignore
 
         driver
