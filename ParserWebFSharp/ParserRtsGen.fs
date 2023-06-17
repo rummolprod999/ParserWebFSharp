@@ -18,14 +18,22 @@ type ParserRtsGen(stn: Settings.T) =
 
     let listTenders = List<RtsGenRec>()
     let options = ChromeOptions()
-    let timeoutB = TimeSpan.FromSeconds(60.)
+    let timeoutB = TimeSpan.FromSeconds(120.)
     let mutable wait = None
 
     do
-        options.AddArguments("headless")
+        //options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
         options.AddArguments("disable-dev-shm-usage")
+        options.AddArguments("disable-infobars")
+        options.AddArguments("lang=ru, ru-RU")
+        options.AddArguments("window-size=1920,1080")
+        options.AddArguments("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36")
+        //options.AddArguments("incognito")
+        options.AddAdditionalCapability("useAutomationExtension", false)
+        options.AddExcludedArgument("enable-automation")
+        ()
 
     override __.Parsing() =
         let driver =
@@ -78,8 +86,101 @@ type ParserRtsGen(stn: Settings.T) =
 
     member private __.Auth(driver: ChromeDriver) =
         let wait = WebDriverWait(driver, timeoutB)
+       
         driver.Navigate().GoToUrl("https://223.rts-tender.ru/supplier/sso/Login.aspx")
-        Thread.Sleep(10000)
+        driver.Manage().Cookies.AddCookie(Cookie("DegNfAg_R6vnDrWdqz5R6XXai3k", "iLoAgVhJgMC83oPohdUsJBA2tV4"))
+        driver.Manage().Cookies.AddCookie(Cookie("zOo670hhNpgzXhiFuXzjx1J8rf8", "1687009571"))
+        driver.Manage().Cookies.AddCookie(Cookie("BryFslw-y40WJ8mFbPrN73Y7G80", "1687045571"))
+        driver.Manage().Cookies.AddCookie(Cookie("dV_KHmgiyXAFyB1PfdXtBUHwkI8", "q2IrMigwl6ejpu7ullqmyHkVV8U"))
+        driver.Manage().Cookies.AddCookie(Cookie("c_u4GOsYObqqk5Eu2mb7tOev0z8", "8Qx5HGj03_Ce-Wgp7vkIipSMbxs"))
+        driver.Manage().Cookies.AddCookie(Cookie("c_u4GOsYObqqk5Eu2mb7tOev0z8", "8Qx5HGj03_Ce-Wgp7vkIipSMbxs"))
+        driver.Manage().Cookies.AddCookie(Cookie("4VVJzGgcPwgz_r3y1c_ZdyhvRO8", "1687009621"))
+        driver.Manage().Cookies.AddCookie(Cookie("9Sc1sxbs9Lt-xP4_2il6eCz14N0", "1687045621"))
+        driver.Manage().Cookies.AddCookie(Cookie("eBSrrHtm9fpOH0UFlcWCI6R-a1U", "7rMqPid4z1Cb8E4qpotjbLh7gHI"))
+        let jse = driver :> IJavaScriptExecutor
+        try
+            jse.ExecuteScript(
+                "Object.defineProperty(navigator, 'languages', {
+  get: function() {
+    return ['ru-RU', 'ru'];
+  },
+});
+
+// overwrite the `plugins` property to use a custom getter
+Object.defineProperty(navigator, 'plugins', {
+  get: function() {
+    // this just needs to have `length > 0`, but we could mock the plugins too
+    return [1, 2, 3, 4, 5];
+  },
+});",
+                ""
+                
+            ) |> ignore
+            jse.ExecuteScript(
+                "const getParameter = WebGLRenderingContext.getParameter;
+WebGLRenderingContext.prototype.getParameter = function(parameter) {
+  // UNMASKED_VENDOR_WEBGL
+  if (parameter === 37445) {
+    return 'Intel Open Source Technology Center';
+  }
+  // UNMASKED_RENDERER_WEBGL
+  if (parameter === 37446) {
+    return 'Mesa DRI Intel(R) Ivybridge Mobile ';
+  }
+
+  return getParameter(parameter);
+};",
+                ""
+                
+            ) |> ignore
+            jse.ExecuteScript(
+                "['height', 'width'].forEach(property => {
+  // store the existing descriptor
+  const imageDescriptor = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, property);
+
+  // redefine the property with a patched descriptor
+  Object.defineProperty(HTMLImageElement.prototype, property, {
+    ...imageDescriptor,
+    get: function() {
+      // return an arbitrary non-zero dimension if the image failed to load
+      if (this.complete && this.naturalHeight == 0) {
+        return 20;
+      }
+      // otherwise, return the actual dimension
+      return imageDescriptor.get.apply(this);
+    },
+  });
+});",
+                ""
+                
+            ) |> ignore
+            jse.ExecuteScript(
+                "const elementDescriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetHeight');
+
+// redefine the property with a patched descriptor
+Object.defineProperty(HTMLDivElement.prototype, 'offsetHeight', {
+  ...elementDescriptor,
+  get: function() {
+    if (this.id === 'modernizr') {
+        return 1;
+    }
+    return elementDescriptor.get.apply(this);
+  },
+});",
+                ""
+                
+            ) |> ignore
+            
+        with
+            | ex -> Logging.Log.logger ex
+        wait.Until (fun dr ->
+            dr
+                .FindElement(
+                    By.XPath("//input[@value = 'Войти']")
+                )
+                .Displayed)
+        |> ignore
+        
         driver.SwitchTo().DefaultContent() |> ignore
 
         driver
