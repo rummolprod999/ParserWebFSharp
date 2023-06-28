@@ -86,17 +86,13 @@ type ParserRtsGen(stn: Settings.T) =
 
     member private __.Auth(driver: ChromeDriver) =
         let wait = WebDriverWait(driver, timeoutB)
+        let cc = Settings.RtsCookies.Split(";")
        
         driver.Navigate().GoToUrl("https://223.rts-tender.ru/supplier/sso/Login.aspx")
-        driver.Manage().Cookies.AddCookie(Cookie("DegNfAg_R6vnDrWdqz5R6XXai3k", "iLoAgVhJgMC83oPohdUsJBA2tV4"))
-        driver.Manage().Cookies.AddCookie(Cookie("zOo670hhNpgzXhiFuXzjx1J8rf8", "1687009571"))
-        driver.Manage().Cookies.AddCookie(Cookie("BryFslw-y40WJ8mFbPrN73Y7G80", "1687045571"))
-        driver.Manage().Cookies.AddCookie(Cookie("dV_KHmgiyXAFyB1PfdXtBUHwkI8", "q2IrMigwl6ejpu7ullqmyHkVV8U"))
-        driver.Manage().Cookies.AddCookie(Cookie("c_u4GOsYObqqk5Eu2mb7tOev0z8", "8Qx5HGj03_Ce-Wgp7vkIipSMbxs"))
-        driver.Manage().Cookies.AddCookie(Cookie("c_u4GOsYObqqk5Eu2mb7tOev0z8", "8Qx5HGj03_Ce-Wgp7vkIipSMbxs"))
-        driver.Manage().Cookies.AddCookie(Cookie("4VVJzGgcPwgz_r3y1c_ZdyhvRO8", "1687009621"))
-        driver.Manage().Cookies.AddCookie(Cookie("9Sc1sxbs9Lt-xP4_2il6eCz14N0", "1687045621"))
-        driver.Manage().Cookies.AddCookie(Cookie("eBSrrHtm9fpOH0UFlcWCI6R-a1U", "7rMqPid4z1Cb8E4qpotjbLh7gHI"))
+        for s in cc do
+            let c = s.Split("=")
+            driver.Manage().Cookies.AddCookie(Cookie(c.[0].Trim(), c.[1].Trim()))
+            ()
         let jse = driver :> IJavaScriptExecutor
         try
             jse.ExecuteScript(

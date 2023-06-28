@@ -43,6 +43,8 @@ module Settings =
     let mutable internal Rts223 = ""
     let mutable internal ProxyPath = "proxy.txt"
     let mutable internal UseProxy = false
+    
+    let mutable internal RtsCookies = ""
 
     type T =
         { Database: string
@@ -225,6 +227,7 @@ module Settings =
         let mutable UserDb = ""
         let mutable PassDb = ""
         let mutable Server = ""
+       
         let mutable Port = 3306
         let xDoc = XmlDocument()
         xDoc.Load(sprintf "%s%csetting_tenders.xml" PathProgram Path.DirectorySeparatorChar)
@@ -776,6 +779,8 @@ module Settings =
                     UserRts <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "passrts" then
                     PassRts <- (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "rstcookies" then
+                    RtsCookies <- (xnode :?> XmlNode).InnerText
                 else if (xnode :?> XmlNode).Name = "port" then
                     Port <- Int32.Parse((xnode :?> XmlNode).InnerText)
                 else if (xnode :?> XmlNode).Name = "use_proxy" then
