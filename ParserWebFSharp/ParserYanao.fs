@@ -111,7 +111,7 @@ type ParserYanao(stn: Settings.T) =
 
     member private this.ParserListTenders(driver: ChromeDriver) =
         let tenders =
-            driver.FindElementsByXPath("//table[@class = 'x-grid-item']")
+            driver.FindElementsByXPath("//table[contains(@class, 'x-grid-item')]")
 
         let c = ref 0
 
