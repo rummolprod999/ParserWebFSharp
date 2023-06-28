@@ -91,6 +91,7 @@ type Arguments =
     | Sngb
     | Sevzakaz
     | DfSamara
+    | Yanao
 
 type SlavNeft =
     | MEGION

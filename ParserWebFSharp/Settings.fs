@@ -223,6 +223,8 @@ module Settings =
         let mutable LogPathTendersSevZakaz = ""
         let mutable TempPathTendersDfSamara = ""
         let mutable LogPathTendersDfSamara = ""
+        let mutable TempPathTendersYanao = ""
+        let mutable LogPathTendersYanao = ""
         let mutable Prefix = ""
         let mutable UserDb = ""
         let mutable PassDb = ""
@@ -729,6 +731,12 @@ module Settings =
                 elif (xnode :?> XmlNode).Name = "logdir_tenders_dfsamara" then
                     LogPathTendersDfSamara <-
                         sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "tempdir_tenders_yanao" then
+                    TempPathTendersYanao <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
+                elif (xnode :?> XmlNode).Name = "logdir_tenders_yanao" then
+                    LogPathTendersYanao <-
+                        sprintf "%s%c%s" PathProgram Path.DirectorySeparatorChar (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "prefix" then
                     Prefix <- (xnode :?> XmlNode).InnerText
                 elif (xnode :?> XmlNode).Name = "userdb" then
@@ -881,6 +889,7 @@ module Settings =
                 | Sngb -> TempPathTendersSngb
                 | Sevzakaz -> TempPathTendersSevZakaz
                 | DfSamara -> TempPathTendersDfSamara
+                | Yanao -> TempPathTendersYanao
 
             let LogPathTenders =
                 match arg with
@@ -966,6 +975,7 @@ module Settings =
                 | Sngb -> LogPathTendersSngb
                 | Sevzakaz -> LogPathTendersSevZakaz
                 | DfSamara -> LogPathTendersDfSamara
+                | Yanao -> LogPathTendersYanao
 
             { Database = Database
               TempPathTenders = TempPathTenders

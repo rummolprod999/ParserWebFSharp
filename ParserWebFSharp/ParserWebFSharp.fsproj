@@ -196,6 +196,8 @@
         <Compile Include="ParserSevZakaz.fs" />
         <Compile Include="TenderDfSamara.fs" />
         <Compile Include="ParserDfSamara.fs" />
+        <Compile Include="TenderYanao.fs" />
+        <Compile Include="ParserYanao.fs" />
         <Compile Include="Init.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
