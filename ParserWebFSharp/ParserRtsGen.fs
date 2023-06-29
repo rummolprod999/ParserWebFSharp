@@ -22,7 +22,7 @@ type ParserRtsGen(stn: Settings.T) =
     let mutable wait = None
 
     do
-        //options.AddArguments("headless")
+        options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
         options.AddArguments("disable-dev-shm-usage")
@@ -90,8 +90,11 @@ type ParserRtsGen(stn: Settings.T) =
        
         driver.Navigate().GoToUrl("https://223.rts-tender.ru/supplier/sso/Login.aspx")
         for s in cc do
-            let c = s.Split("=")
-            driver.Manage().Cookies.AddCookie(Cookie(c.[0].Trim(), c.[1].Trim()))
+            try
+                let c = s.Split("=")
+                driver.Manage().Cookies.AddCookie(Cookie(c.[0].Trim(), c.[1].Trim()))
+            with
+            | ex -> Logging.Log.logger ex
             ()
         let jse = driver :> IJavaScriptExecutor
         try
