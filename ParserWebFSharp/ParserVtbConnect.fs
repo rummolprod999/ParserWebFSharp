@@ -195,7 +195,7 @@ type ParserVtbConnect(stn: Settings.T) =
                 let! datePub = pubDateT.DateFromString("dd.MM.yyyy", sprintf "datePub not parse %s" pubDateT)
 
                 let! dateEndT =
-                    i.findElementWithoutException (
+                    i.findElementWithoutExceptionOptional (
                         ".//li[contains(., 'Дата окончания приёма предложений')]",
                         sprintf "dateEndT not found %s" i.Text
                     )
@@ -206,7 +206,7 @@ type ParserVtbConnect(stn: Settings.T) =
                         .Replace(":", "")
                         .Trim()
 
-                let! dateEnd = dateEndT.DateFromString("dd.MM.yyyy", sprintf "endDate not parse %s" dateEndT)
+                let dateEnd = dateEndT.DateFromStringOrPubPlus2("dd.MM.yyyy", datePub)
 
 
                 let! purName =
