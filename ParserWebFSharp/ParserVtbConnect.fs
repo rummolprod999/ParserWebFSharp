@@ -13,7 +13,7 @@ type ParserVtbConnect(stn: Settings.T) =
     let set = stn
 
     let url =
-        "https://www.smbconnect.ru/login?redirect=https://www.vtbconnect.ru/trades/vtb/"
+        "https://www.smbconnect.ru/login?redirect=https://www.vtbconnect.ru/trades"
 
     let timeoutB = TimeSpan.FromSeconds(60.)
     let listTenders = List<VtbConnectRec>()
