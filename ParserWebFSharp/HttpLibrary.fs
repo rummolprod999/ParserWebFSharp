@@ -19,7 +19,7 @@ module Download =
                 ``base``.GetWebRequest(address) :?> HttpWebRequest
 
             wr.Timeout <- 60000
-            wr.UserAgent <- "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:55.0) Gecko/20100101 Firefox/55.0"
+            wr.UserAgent <- "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
             wr :> WebRequest
 
     type TimedWebClientBot() =
