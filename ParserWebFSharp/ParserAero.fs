@@ -31,7 +31,7 @@ type ParserAero(stn: Settings.T) =
             let documents = parser.Parse(s)
 
             let mutable tens =
-                documents.QuerySelectorAll("afl-component div.row")
+                documents.QuerySelectorAll("div.main-module__wrapper div.main-module__row")
             if tens.Length > 0 then
                 let tensN = tens.Skip(1).Reverse()
                 for t in tensN do
