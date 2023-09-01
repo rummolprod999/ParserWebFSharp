@@ -187,7 +187,7 @@ type ParserBidZaar(stn: Settings.T) =
 
                 let! purName =
                     i.findElementWithoutException (
-                        ".//div[@class = 'body']/div[@class = 'name']",
+                        ".//div[@class = 'link-header']/div[@class = 'name']",
                         sprintf "purName not found %s" i.Text
                     )
 
