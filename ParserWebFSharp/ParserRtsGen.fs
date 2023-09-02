@@ -29,6 +29,7 @@ type ParserRtsGen(stn: Settings.T) =
         options.AddArguments("disable-infobars")
         options.AddArguments("lang=ru, ru-RU")
         options.AddArguments("window-size=1920,1080")
+        options.AddArguments("disable-blink-features=AutomationControlled")
         options.AddArguments("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36")
         //options.AddArguments("incognito")
         options.AddAdditionalCapability("useAutomationExtension", false)
