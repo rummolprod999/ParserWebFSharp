@@ -14,7 +14,7 @@ type ParserComitaZmo(stn: Settings.T) =
     let timeoutB = TimeSpan.FromSeconds(120.)
 
     let url =
-        "https://etp.comita.ru/publicProceduresSOC"
+        ["https://etp.comita.ru/publicProceduresSOC"; "https://etp.comita.ru/publicProcedures"]
 
     let listTenders = List<ComitaRec>()
     let options = ChromeOptions()
@@ -43,28 +43,30 @@ type ParserComitaZmo(stn: Settings.T) =
 
     member private this.ParserSelen(driver: ChromeDriver) =
         let wait = WebDriverWait(driver, timeoutB)
-        driver.Navigate().GoToUrl(url)
-        Thread.Sleep(5000)
+        for u in url do
+            driver.Navigate().GoToUrl(u)
+            Thread.Sleep(5000)
 
-        wait.Until (fun dr ->
-            dr
-                .FindElement(
-                    By.XPath("//div[contains(@class, 'procedure-item') and contains(@class, 'ng-scope')]")
-                )
-                .Displayed)
-        |> ignore
+            wait.Until (fun dr ->
+                dr
+                    .FindElement(
+                        By.XPath("//div[contains(@class, 'procedure-item') and contains(@class, 'ng-scope')]")
+                    )
+                    .Displayed)
+            |> ignore
 
-        driver.SwitchTo().DefaultContent() |> ignore
+            driver.SwitchTo().DefaultContent() |> ignore
 
-        let tenders =
-            driver.FindElementsByXPath("//div[contains(@class, 'procedure-item') and contains(@class, 'ng-scope')]")
+            let tenders =
+                driver.FindElementsByXPath("//div[contains(@class, 'procedure-item') and contains(@class, 'ng-scope')]")
 
-        for t in tenders do
-            try
-                this.ParserTenders driver t
-            with
-                | ex -> Logging.Log.logger (ex)
-
+            for t in tenders do
+                try
+                    this.ParserTenders driver t
+                with
+                    | ex -> Logging.Log.logger (ex)
+                ()
+        
         for t in listTenders do
             try
                 this.ParserTendersList driver t
