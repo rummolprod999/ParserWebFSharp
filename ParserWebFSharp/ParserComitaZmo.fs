@@ -46,7 +46,17 @@ type ParserComitaZmo(stn: Settings.T) =
         for u in url do
             driver.Navigate().GoToUrl(u)
             Thread.Sleep(5000)
+            let jse = driver :> IJavaScriptExecutor
+            try
+                jse.ExecuteScript(
+                    "var s = document.querySelector('button[ng-click=\"$ctrl.changeItemsPerPage(100)\"]'); s.click();",
+                    ""
+                )
+                |> ignore
+            with
+                | ex -> Logging.Log.logger ex
 
+            Thread.Sleep(5000)
             wait.Until (fun dr ->
                 dr
                     .FindElement(
