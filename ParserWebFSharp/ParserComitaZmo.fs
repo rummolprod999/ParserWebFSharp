@@ -14,7 +14,7 @@ type ParserComitaZmo(stn: Settings.T) =
     let timeoutB = TimeSpan.FromSeconds(120.)
 
     let url =
-        ["https://etp.comita.ru/publicProceduresSOC"; "https://etp.comita.ru/publicProcedures"; "https://etp.comita.ru/commercialProcedures"]
+        ["https://etp.comita.ru/publicProceduresSOC"]
 
     let listTenders = List<ComitaRec>()
     let options = ChromeOptions()

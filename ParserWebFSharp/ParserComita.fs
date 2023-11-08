@@ -14,7 +14,7 @@ type ParserComita(stn: Settings.T) =
     let timeoutB = TimeSpan.FromSeconds(120.)
 
     let url =
-        "https://etp.comita.ru/commercialProcedures"
+        ["https://etp.comita.ru/publicProcedures"; "https://etp.comita.ru/commercialProcedures"]
 
     let listTenders = List<ComitaRec>()
     let options = ChromeOptions()
@@ -43,34 +43,46 @@ type ParserComita(stn: Settings.T) =
 
     member private this.ParserSelen(driver: ChromeDriver) =
         let wait = WebDriverWait(driver, timeoutB)
-        driver.Navigate().GoToUrl(url)
-        Thread.Sleep(5000)
-
-        wait.Until (fun dr ->
-            dr
-                .FindElement(
-                    By.XPath("//div[contains(@class, 'procedure-item') and contains(@class, 'ng-scope')]")
-                )
-                .Displayed)
-        |> ignore
-
-        driver.SwitchTo().DefaultContent() |> ignore
-        let jse = driver :> IJavaScriptExecutor
-
-        jse.ExecuteScript(
-            "document.querySelector('button[ng-class=\"{true: \\'active\\'}[$ctrl.paginator.itemsPerPage == \\'100\\']\"').click()",
-            ""
-        )
-        |> ignore
-        Thread.Sleep(5000)
-        let tenders =
-            driver.FindElementsByXPath("//div[contains(@class, 'procedure-item') and contains(@class, 'ng-scope')]")
-
-        for t in tenders do
+        for u in url do
+            driver.Navigate().GoToUrl(u)
+            Thread.Sleep(5000)
+            let jse = driver :> IJavaScriptExecutor
             try
-                this.ParserTenders driver t
+                jse.ExecuteScript(
+                    "var s = document.querySelector('button[ng-click=\"$ctrl.changeItemsPerPage(100)\"]'); s.click();",
+                    ""
+                )
+                |> ignore
             with
-                | ex -> Logging.Log.logger (ex)
+                | ex -> Logging.Log.logger ex
+
+            Thread.Sleep(5000)
+
+            wait.Until (fun dr ->
+                dr
+                    .FindElement(
+                        By.XPath("//div[contains(@class, 'procedure-item') and contains(@class, 'ng-scope')]")
+                    )
+                    .Displayed)
+            |> ignore
+
+            driver.SwitchTo().DefaultContent() |> ignore
+            let jse = driver :> IJavaScriptExecutor
+
+            jse.ExecuteScript(
+                "document.querySelector('button[ng-class=\"{true: \\'active\\'}[$ctrl.paginator.itemsPerPage == \\'100\\']\"').click()",
+                ""
+            )
+            |> ignore
+            Thread.Sleep(5000)
+            let tenders =
+                driver.FindElementsByXPath("//div[contains(@class, 'procedure-item') and contains(@class, 'ng-scope')]")
+
+            for t in tenders do
+                try
+                    this.ParserTenders driver t
+                with
+                    | ex -> Logging.Log.logger (ex)
 
         for t in listTenders do
             try
