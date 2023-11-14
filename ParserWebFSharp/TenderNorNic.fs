@@ -251,7 +251,26 @@ type TenderNorNic(stn: Settings.T, tn: NorNicRec, typeFz: int, etpName: string, 
             match updated with
             | true -> incr TenderNorNic.tenderUpCount
             | false -> incr TenderNorNic.tenderCount
+            (*let addAttach =
+                sprintf
+                    "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url, description = @description"
+                    stn.Prefix
 
+            let cmd5 = new MySqlCommand(addAttach, con)
+
+            cmd5.Parameters.AddWithValue("@id_tender", idTender)
+            |> ignore
+
+            cmd5.Parameters.AddWithValue("@file_name", "Скачать документацию")
+            |> ignore
+
+            cmd5.Parameters.AddWithValue("@url", tn.Href)
+            |> ignore
+
+            cmd5.Parameters.AddWithValue("@description", "")
+            |> ignore
+
+            cmd5.ExecuteNonQuery() |> ignore*)
             let idCustomer = ref 0
 
             if tn.CusName <> "" then

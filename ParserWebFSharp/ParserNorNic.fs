@@ -55,34 +55,16 @@ type ParserNorNic(stn: Settings.T) =
     member private this.ParserUrl (url: string) (driver: ChromeDriver) =
         let wait = WebDriverWait(driver, timeoutB)
         driver.Navigate().GoToUrl(url)
-        Thread.Sleep(5000)
-        driver.SwitchTo().DefaultContent() |> ignore
-
-        let _ =
-            driver
-                .FindElement(By.XPath("//span[@class = 'select2-selection__rendered']"))
-                .Click()
-
-        Thread.Sleep(3000)
-        driver.SwitchTo().DefaultContent() |> ignore
         //let hundr = driver.FindElement(By.XPath("//li[. = '100']")).Click()
         Thread.Sleep(3000)
         driver.SwitchTo().DefaultContent() |> ignore
 
-        wait.Until (fun dr ->
-            dr
-                .FindElement(
-                    By.XPath("//div[@class = 'data-table-scroll']/table/tbody/tr")
-                )
-                .Displayed)
-        |> ignore
-
         this.ParserListTenders driver
-        (*for i in 1..5 do
+        for i in 1..2 do
             try
                 this.GetNextPage driver wait
                 ()
-            with ex -> Logging.Log.logger (ex)*)
+            with ex -> Logging.Log.logger (ex)
         for t in listTenders do
             try
                 this.ParserTendersList t
@@ -107,20 +89,25 @@ type ParserNorNic(stn: Settings.T) =
             let pag =
                 driver.FindElement(
                     By.XPath(
-                        "//a[contains(@class, 'paginate_button') and contains(@class, 'next') and not(contains(@class, 'disabled'))]"
+                        "//button[contains(., 'Загрузить ещё')]"
                     )
                 )
 
             match pag with
             | null -> ()
             | x ->
-                x.Click()
+                let jse = driver :> IJavaScriptExecutor
+                jse.ExecuteScript(
+                    "var s = document.querySelector('#app > main > div.main__container.container > div.main__wrapper > div > div > div.z-pagination > div > button'); s.click();",
+                    ""
+                )
+                |> ignore
                 driver.SwitchTo().DefaultContent() |> ignore
 
                 wait.Until (fun dr ->
                     dr
                         .FindElement(
-                            By.XPath("//div[@class = 'data-table-scroll']/table/tbody/tr")
+                            By.XPath("//div[@class = 'central-tenders-card']")
                         )
                         .Displayed)
                 |> ignore
@@ -135,7 +122,7 @@ type ParserNorNic(stn: Settings.T) =
         driver.SwitchTo().DefaultContent() |> ignore
 
         let tenders =
-            driver.FindElementsByXPath("//div[@class = 'data-table-scroll']/table/tbody/tr")
+            driver.FindElementsByXPath("//div[@class = 'central-tenders-card']")
 
         for i in tenders do
             try
@@ -150,35 +137,34 @@ type ParserNorNic(stn: Settings.T) =
 
         let result =
             builder {
-                let! purName = el.findElementWithoutException (".//span/a", sprintf "purName not found %s" el.Text)
+                let! purName = el.findElementWithoutException (".//p[@class = 'central-tenders-card__text']", sprintf "purName not found %s" el.Text)
 
                 let! href =
                     el
-                        .FindElement(By.XPath(".//span/a"))
+                        .FindElement(By.XPath(".//div[@class = 'central-tenders-card__file-wrapper']//a"))
                         .findAttributeWithoutException ("href", sprintf "href not found %s" purName)
 
                 let pwName =
-                    Tools.InlineFEWE el "./td[position() = 2]"
-
-                let purNum = Tools.createMD5 purName
+                    Tools.InlineFEWE el ".//span[@class = 'central-tenders-card__tag']"
+                let! purNum = purName.Get1OptionalOrDefault("^([\d/]+):", (Tools.createMD5 purName))
                 let datePub = DateTime.Now
 
                 let! dateEndT =
-                    el.findElementWithoutException ("./td[position() = 3]/nobr", sprintf "dates not found %s" purName)
+                    el.findElementWithoutException (".//span[contains(@class, 'central-tenders-card__date-value')]", sprintf "dates not found %s" purName)
 
                 let! dateEnd = dateEndT.DateFromString("dd.MM.yyyy", sprintf "dateEnd not parse %s" dateEndT)
 
                 let cusName =
-                    Tools.InlineFEWE el "./td[position() = 5]"
+                    Tools.InlineFEWE el ".//span[contains(., 'Заказчик')]/following-sibling::div/span"
 
                 let cusAddress =
-                    Tools.InlineFEWE el "./td[position() = 6]"
+                    Tools.InlineFEWE el ".//span[contains(., 'Адрес заказчика')]/following-sibling::div/span"
 
                 let orgName =
-                    Tools.InlineFEWE el "./td[position() = 7]"
+                    Tools.InlineFEWE el ".//span[contains(., 'Организатор')]/following-sibling::div/span"
 
                 let personEmail =
-                    Tools.InlineFEWE el "./td[position() = 8]/a"
+                    Tools.InlineFEWE el ".//span[contains(., 'Контакты')]/following-sibling::div/span"
 
                 let personTel =
                     Tools.InlineFEWE el "./td[position() = 8]/span"

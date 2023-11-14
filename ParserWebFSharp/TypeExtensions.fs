@@ -74,6 +74,11 @@ module TypeE =
             match this.Get1FromRegexp(regex) with
             | None -> Success("")
             | Some e -> Success(e.Trim())
+        
+        member this.Get1OptionalOrDefault(regex: string, def: string) =
+            match this.Get1FromRegexp(regex) with
+            | None -> Success(def)
+            | Some e -> Success(e.Trim())
 
         member this.Get1OptionalDoc(regex: string) =
             match this.Get1FromRegexp(regex) with
