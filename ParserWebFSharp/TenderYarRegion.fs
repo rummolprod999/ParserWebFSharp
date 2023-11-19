@@ -144,8 +144,10 @@ type TenderYarRegion
                 driver.findElementWithoutException ("//h2/p")
 
             let CusName =
-                driver.findElementWithoutException ("//div[. = 'Заказчик']/following-sibling::div/p")
-
+                driver.findElementWithoutException ("//div[. = 'Заказчик \ ИНН']/following-sibling::div/p")
+            let CusNameA = CusName.Split("\\")
+            let CusName = CusNameA.[0].Trim()
+            let CusINN = CusNameA.[1].Trim()
             if CusName <> "" then
                 let selectOrg =
                     sprintf "SELECT id_organizer FROM %sorganizer WHERE full_name = @full_name" stn.Prefix
@@ -200,7 +202,7 @@ type TenderYarRegion
                     cmd5.Parameters.AddWithValue("@contact_phone", phone)
                     |> ignore
 
-                    cmd5.Parameters.AddWithValue("@inn", inn)
+                    cmd5.Parameters.AddWithValue("@inn", CusINN)
                     |> ignore
 
                     cmd5.Parameters.AddWithValue("@kpp", kpp)

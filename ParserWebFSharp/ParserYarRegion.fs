@@ -14,7 +14,7 @@ type ParserYarRegion(stn: Settings.T) =
     let timeoutB = TimeSpan.FromSeconds(60.)
 
     let url =
-        "https://zakupki.yarregion.ru/purchasesoflowvolume-asp/"
+        "https://zakupki.yarregion.ru/postavshchikam/elektronnyj-magazin-zakupok-malogo-obema"
 
     let listTenders = List<YarRegionRec>()
     let options = ChromeOptions()
@@ -23,6 +23,10 @@ type ParserYarRegion(stn: Settings.T) =
         options.AddArguments("headless")
         options.AddArguments("disable-gpu")
         options.AddArguments("no-sandbox")
+        options.AddArguments("disable-infobars")
+        options.AddArguments("lang=ru, ru-RU")
+        options.AddArguments("window-size=1920,1080")
+        options.AddArguments("disable-blink-features=AutomationControlled")
     //options.AddArguments("disable-dev-shm-usage")
 
     override this.Parsing() =
