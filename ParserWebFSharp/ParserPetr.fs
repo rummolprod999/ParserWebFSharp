@@ -157,7 +157,7 @@ type ParserPetr(stn: Settings.T) =
 
                 let! nameCusT =
                     t.findElementWithoutExceptionOptional (
-                        ".//div[contains(., 'Заказчик:') and @class = 'ng-binding']",
+                        ".//div[contains(., 'Заказчик:') and @class = 'panel-heading__text__small']",
                         ""
                     )
 
@@ -166,7 +166,7 @@ type ParserPetr(stn: Settings.T) =
 
                 let! datePubT =
                     t.findElementWithoutException (
-                        ".//small[@class = 'calendarSmall ng-binding']",
+                        ".//small[@class = 'calendarSmall']",
                         "datePubT not found"
                     )
 
