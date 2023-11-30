@@ -49,7 +49,7 @@ type ParserYanao(stn: Settings.T) =
         Thread.Sleep(8000)
         driver.SwitchTo().DefaultContent() |> ignore
 
-        wait.Until (fun dr ->
+        (*wait.Until (fun dr ->
             dr
                 .FindElement(
                     By.XPath("//a//span[. = 'Таблица']")
@@ -62,13 +62,13 @@ type ParserYanao(stn: Settings.T) =
             .FindElement(By.XPath("//a//span[. = 'Таблица']"))
             .Click()
 
-        Thread.Sleep(10000)
+        Thread.Sleep(10000)*)
         driver.SwitchTo().DefaultContent() |> ignore
 
         wait.Until (fun dr ->
             dr
                 .FindElement(
-                    By.XPath("//table[@class = 'x-grid-item']")
+                    By.XPath("//table[contains(@class, 'all-cont')]")
                 )
                 .Displayed)
         |> ignore
@@ -111,7 +111,7 @@ type ParserYanao(stn: Settings.T) =
 
     member private this.ParserListTenders(driver: ChromeDriver) =
         let tenders =
-            driver.FindElementsByXPath("//table[contains(@class, 'x-grid-item')]")
+            driver.FindElementsByXPath("//table[contains(@class, 'all-cont')]")
 
         let c = ref 0
 
@@ -133,7 +133,7 @@ type ParserYanao(stn: Settings.T) =
             builder {
                 let! x =
                     driver.findElementWithoutException (
-                        sprintf "(//span[@class = 'indicator-icon icon-circle-green'])[%d]" t,
+                        sprintf "(//span[@class = 'indicator-icon icon-circle-green'])[%d]" (t+1),
                         "red tender"
                     )
 
