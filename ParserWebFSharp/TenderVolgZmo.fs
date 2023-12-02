@@ -357,17 +357,17 @@ type TenderVolgZmo(stn: Settings.T, tn: VolgZmoRec, typeFz: int, etpName: string
         | null -> ()
         | _ ->
             for po in purObjs do
-                let objName = po.Gsn "./td[1]"
-                let quanval = po.Gsn "./td[4]"
-                let okei = po.Gsn "./td[3]"
+                let objName = po.Gsn "./td[3]"
+                let quanval = po.Gsn "./td[7]"
+                let okei = po.Gsn "./td[6]"
 
                 let price =
-                    (po.Gsn "./td[5]").GetPriceFromStringKz()
+                    (po.Gsn "./td[8]").GetPriceFromStringKz()
 
                 let sum =
-                    (po.Gsn "./td[6]").GetPriceFromStringKz()
+                    (po.Gsn "./td[9]").GetPriceFromStringKz()
 
-                let okpd2 = po.Gsn "./td[2]"
+                let okpd2 = po.Gsn "./td[5]"
 
                 if objName <> "" then
                     let insertLotitem =

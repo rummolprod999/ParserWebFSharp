@@ -65,27 +65,27 @@ type ParserVolgZmo(stn: Settings.T) =
                     <| sprintf "cusName not found %s %s " url (t.TextContent)
 
                 let! nmck =
-                    t.GsnDocWithError "td:nth-of-type(5)"
+                    t.GsnDocWithError "td:nth-of-type(7)"
                     <| sprintf "nmck not found %s %s " url (t.TextContent)
 
                 let nmck = nmck.GetPriceFromStringKz()
 
                 let! datePubT =
-                    t.GsnDocWithError "td:nth-of-type(6)"
+                    t.GsnDocWithError "td:nth-of-type(8)"
                     <| sprintf "datePubT not found %s %s " url (t.TextContent)
 
                 let! datePub =
                     datePubT.DateFromStringDoc("dd.MM.yyyy", sprintf "datePub not found %s %s " href datePubT)
 
                 let! endDateT =
-                    t.GsnDocWithError "td:nth-of-type(7)"
+                    t.GsnDocWithError "td:nth-of-type(9)"
                     <| sprintf "endDateT not found %s %s " url (t.TextContent)
 
                 let! dateEnd =
                     endDateT.DateFromStringDoc("dd.MM.yyyy HH:mm", sprintf "dateEnd not found %s %s " href endDateT)
 
                 let! status =
-                    t.GsnAtrDoc "td:nth-of-type(8)"
+                    t.GsnAtrDoc "td:nth-of-type(10)"
                     <| sprintf "status not found %s %s " url (t.TextContent)
 
                 let tend =
