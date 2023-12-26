@@ -82,14 +82,11 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
 
                 let cmd5 = new MySqlCommand(addAttach, con)
 
-                cmd5.Parameters.AddWithValue("@id_tender", idTender)
-                |> ignore
+                cmd5.Parameters.AddWithValue("@id_tender", idTender) |> ignore
 
-                cmd5.Parameters.AddWithValue("@file_name", x)
-                |> ignore
+                cmd5.Parameters.AddWithValue("@file_name", x) |> ignore
 
-                cmd5.Parameters.AddWithValue("@url", href)
-                |> ignore
+                cmd5.Parameters.AddWithValue("@url", href) |> ignore
 
                 cmd5.ExecuteNonQuery() |> ignore
 
@@ -108,26 +105,24 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
         let doc = parser.Parse(p)
         let purName = tn.PurName
 
-        let pubDateT =
+        let mutable pubDateT =
             doc.QuerySelector("td:contains('Публикация извещения') + td > p")
 
+        if pubDateT = null then
+            pubDateT <- doc.QuerySelector("div.steps__item.steps__item--1.steps__item--passed div.steps__description p")
+
         match pubDateT with
-        | null ->
-            raise
-            <| NullReferenceException(sprintf "pubDate not found in %s" tn.Href)
+        | null -> raise <| NullReferenceException(sprintf "pubDate not found in %s" tn.Href)
         | _ -> ()
 
-        let mutable pubDateS =
-            pubDateT.TextContent.Trim()
+        let mutable pubDateS = pubDateT.TextContent.Trim()
 
         match this.GetDateS(pubDateS) with
         | Some dtP -> pubDateS <- dtP
         | None ->
             match this.GetDateS1(pubDateS) with
             | Some dtP -> pubDateS <- dtP
-            | None ->
-                raise
-                <| Exception(sprintf "cannot apply regex to datePub %s" tn.Href)
+            | None -> raise <| Exception(sprintf "cannot apply regex to datePub %s" tn.Href)
 
         let datePub =
             match pubDateS.DateFromString("dd.MM.yy HH:mm:ss") with
@@ -135,12 +130,9 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
             | None ->
                 match pubDateS.DateFromString("dd.MM.yy") with
                 | Some d -> d
-                | None ->
-                    raise
-                    <| Exception(sprintf "cannot parse datePub %s" pubDateS)
+                | None -> raise <| Exception(sprintf "cannot parse datePub %s" pubDateS)
 
-        let mutable endDateT =
-            doc.QuerySelector("td:contains('Приём заявок') + td > p")
+        let mutable endDateT = doc.QuerySelector("td:contains('Приём заявок') + td > p")
 
         if endDateT = null then
             endDateT <- doc.QuerySelector("td:contains('Прием заявок') + td > p")
@@ -166,8 +158,7 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
 
         let dateUpd = DateTime.Now
 
-        let biddingDateT =
-            doc.QuerySelector("td:contains('Проведение торгов') + td > p")
+        let biddingDateT = doc.QuerySelector("td:contains('Проведение торгов') + td > p")
 
         let mutable biddingDateS =
             match biddingDateT with
@@ -183,8 +174,7 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
             | Some d -> d
             | None -> DateTime.MinValue
 
-        let scoringDateT =
-            doc.QuerySelector("td:contains('Рассмотрение заявок') + td > p")
+        let scoringDateT = doc.QuerySelector("td:contains('Рассмотрение заявок') + td > p")
 
         let mutable scoringDateS =
             match scoringDateT with
@@ -213,34 +203,25 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
                 "SELECT id_tender FROM %stender WHERE purchase_number = @purchase_number AND type_fz = @type_fz AND end_date = @end_date AND scoring_date = @scoring_date AND doc_publish_date = @doc_publish_date AND bidding_date = @bidding_date AND notice_version = @notice_version"
                 stn.Prefix
 
-        let cmd: MySqlCommand =
-            new MySqlCommand(selectTend, con)
+        let cmd: MySqlCommand = new MySqlCommand(selectTend, con)
 
         cmd.Prepare()
 
-        cmd.Parameters.AddWithValue("@purchase_number", tn.PurNum)
-        |> ignore
+        cmd.Parameters.AddWithValue("@purchase_number", tn.PurNum) |> ignore
 
-        cmd.Parameters.AddWithValue("@type_fz", typeFz)
-        |> ignore
+        cmd.Parameters.AddWithValue("@type_fz", typeFz) |> ignore
 
-        cmd.Parameters.AddWithValue("@end_date", endDate)
-        |> ignore
+        cmd.Parameters.AddWithValue("@end_date", endDate) |> ignore
 
-        cmd.Parameters.AddWithValue("@scoring_date", scoringDate)
-        |> ignore
+        cmd.Parameters.AddWithValue("@scoring_date", scoringDate) |> ignore
 
-        cmd.Parameters.AddWithValue("@doc_publish_date", datePub)
-        |> ignore
+        cmd.Parameters.AddWithValue("@doc_publish_date", datePub) |> ignore
 
-        cmd.Parameters.AddWithValue("@bidding_date", biddingDate)
-        |> ignore
+        cmd.Parameters.AddWithValue("@bidding_date", biddingDate) |> ignore
 
-        cmd.Parameters.AddWithValue("@notice_version", status)
-        |> ignore
+        cmd.Parameters.AddWithValue("@notice_version", status) |> ignore
 
-        let reader: MySqlDataReader =
-            cmd.ExecuteReader()
+        let reader: MySqlDataReader = cmd.ExecuteReader()
 
         if reader.HasRows then
             reader.Close()
@@ -254,16 +235,13 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
                     "SELECT id_tender, date_version, cancel FROM %stender WHERE purchase_number = @purchase_number AND type_fz = @type_fz"
                     stn.Prefix
 
-            let cmd2 =
-                new MySqlCommand(selectDateT, con)
+            let cmd2 = new MySqlCommand(selectDateT, con)
 
             cmd2.Prepare()
 
-            cmd2.Parameters.AddWithValue("@purchase_number", tn.PurNum)
-            |> ignore
+            cmd2.Parameters.AddWithValue("@purchase_number", tn.PurNum) |> ignore
 
-            cmd2.Parameters.AddWithValue("@type_fz", typeFz)
-            |> ignore
+            cmd2.Parameters.AddWithValue("@type_fz", typeFz) |> ignore
 
             let adapter = new MySqlDataAdapter()
             adapter.SelectCommand <- cmd2
@@ -277,8 +255,7 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
                 | true -> row.["cancel"] <- 1
                 | false -> cancelStatus <- 1
 
-            let commandBuilder =
-                new MySqlCommandBuilder(adapter)
+            let commandBuilder = new MySqlCommandBuilder(adapter)
 
             commandBuilder.ConflictOption <- ConflictOption.OverwriteChanges
             adapter.Update(dt) |> ignore
@@ -298,8 +275,7 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
                 let cmd3 = new MySqlCommand(selectOrg, con)
                 cmd3.Prepare()
 
-                cmd3.Parameters.AddWithValue("@full_name", OrgName)
-                |> ignore
+                cmd3.Parameters.AddWithValue("@full_name", OrgName) |> ignore
 
                 let reader = cmd3.ExecuteReader()
 
@@ -321,23 +297,17 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
                     let factAddress = ""
                     let phone = ""
 
-                    let cmd5 =
-                        new MySqlCommand(addOrganizer, con)
+                    let cmd5 = new MySqlCommand(addOrganizer, con)
 
-                    cmd5.Parameters.AddWithValue("@full_name", OrgName)
-                    |> ignore
+                    cmd5.Parameters.AddWithValue("@full_name", OrgName) |> ignore
 
-                    cmd5.Parameters.AddWithValue("@contact_person", contactPerson)
-                    |> ignore
+                    cmd5.Parameters.AddWithValue("@contact_person", contactPerson) |> ignore
 
-                    cmd5.Parameters.AddWithValue("@post_address", postAddress)
-                    |> ignore
+                    cmd5.Parameters.AddWithValue("@post_address", postAddress) |> ignore
 
-                    cmd5.Parameters.AddWithValue("@fact_address", factAddress)
-                    |> ignore
+                    cmd5.Parameters.AddWithValue("@fact_address", factAddress) |> ignore
 
-                    cmd5.Parameters.AddWithValue("@contact_phone", phone)
-                    |> ignore
+                    cmd5.Parameters.AddWithValue("@contact_phone", phone) |> ignore
 
                     cmd5.ExecuteNonQuery() |> ignore
                     IdOrg := int cmd5.LastInsertedId
@@ -351,29 +321,24 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
 
             match PlacingWayName with
             | "" -> ()
-            | _ ->
-                idPlacingWay
-                := this.GetPlacingWay con PlacingWayName settings
+            | _ -> idPlacingWay := this.GetPlacingWay con PlacingWayName settings
 
             let idEtp = this.GetEtp con settings
             let numVersion = 1
             let mutable idRegion = 0
 
             let region =
-                this.GetDefaultFromNull
-                <| doc.QuerySelector("p[title*='Регион заказчика']")
+                this.GetDefaultFromNull <| doc.QuerySelector("p[title*='Регион заказчика']")
 
             let regionS = Tools.GetRegionString(region)
 
             if regionS <> "" then
-                let selectReg =
-                    sprintf "SELECT id FROM %sregion WHERE name LIKE @name" stn.Prefix
+                let selectReg = sprintf "SELECT id FROM %sregion WHERE name LIKE @name" stn.Prefix
 
                 let cmd46 = new MySqlCommand(selectReg, con)
                 cmd46.Prepare()
 
-                cmd46.Parameters.AddWithValue("@name", "%" + regionS + "%")
-                |> ignore
+                cmd46.Parameters.AddWithValue("@name", "%" + regionS + "%") |> ignore
 
                 let reader36 = cmd46.ExecuteReader()
 
@@ -392,67 +357,47 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
                     stn.Prefix
                 )
 
-            let cmd9 =
-                new MySqlCommand(insertTender, con)
+            let cmd9 = new MySqlCommand(insertTender, con)
 
             cmd9.Prepare()
 
-            cmd9.Parameters.AddWithValue("@id_xml", tn.PurNum)
-            |> ignore
+            cmd9.Parameters.AddWithValue("@id_xml", tn.PurNum) |> ignore
 
-            cmd9.Parameters.AddWithValue("@purchase_number", tn.PurNum)
-            |> ignore
+            cmd9.Parameters.AddWithValue("@purchase_number", tn.PurNum) |> ignore
 
-            cmd9.Parameters.AddWithValue("@doc_publish_date", datePub)
-            |> ignore
+            cmd9.Parameters.AddWithValue("@doc_publish_date", datePub) |> ignore
 
-            cmd9.Parameters.AddWithValue("@href", href)
-            |> ignore
+            cmd9.Parameters.AddWithValue("@href", href) |> ignore
 
-            cmd9.Parameters.AddWithValue("@purchase_object_info", purName)
-            |> ignore
+            cmd9.Parameters.AddWithValue("@purchase_object_info", purName) |> ignore
 
-            cmd9.Parameters.AddWithValue("@type_fz", typeFz)
-            |> ignore
+            cmd9.Parameters.AddWithValue("@type_fz", typeFz) |> ignore
 
-            cmd9.Parameters.AddWithValue("@id_organizer", !IdOrg)
-            |> ignore
+            cmd9.Parameters.AddWithValue("@id_organizer", !IdOrg) |> ignore
 
-            cmd9.Parameters.AddWithValue("@id_placing_way", !idPlacingWay)
-            |> ignore
+            cmd9.Parameters.AddWithValue("@id_placing_way", !idPlacingWay) |> ignore
 
-            cmd9.Parameters.AddWithValue("@id_etp", idEtp)
-            |> ignore
+            cmd9.Parameters.AddWithValue("@id_etp", idEtp) |> ignore
 
-            cmd9.Parameters.AddWithValue("@end_date", endDate)
-            |> ignore
+            cmd9.Parameters.AddWithValue("@end_date", endDate) |> ignore
 
-            cmd9.Parameters.AddWithValue("@scoring_date", scoringDate)
-            |> ignore
+            cmd9.Parameters.AddWithValue("@scoring_date", scoringDate) |> ignore
 
-            cmd9.Parameters.AddWithValue("@bidding_date", biddingDate)
-            |> ignore
+            cmd9.Parameters.AddWithValue("@bidding_date", biddingDate) |> ignore
 
-            cmd9.Parameters.AddWithValue("@cancel", cancelStatus)
-            |> ignore
+            cmd9.Parameters.AddWithValue("@cancel", cancelStatus) |> ignore
 
-            cmd9.Parameters.AddWithValue("@date_version", dateUpd)
-            |> ignore
+            cmd9.Parameters.AddWithValue("@date_version", dateUpd) |> ignore
 
-            cmd9.Parameters.AddWithValue("@num_version", numVersion)
-            |> ignore
+            cmd9.Parameters.AddWithValue("@num_version", numVersion) |> ignore
 
-            cmd9.Parameters.AddWithValue("@notice_version", status)
-            |> ignore
+            cmd9.Parameters.AddWithValue("@notice_version", status) |> ignore
 
-            cmd9.Parameters.AddWithValue("@xml", href)
-            |> ignore
+            cmd9.Parameters.AddWithValue("@xml", href) |> ignore
 
-            cmd9.Parameters.AddWithValue("@print_form", Printform)
-            |> ignore
+            cmd9.Parameters.AddWithValue("@print_form", Printform) |> ignore
 
-            cmd9.Parameters.AddWithValue("@id_region", idRegion)
-            |> ignore
+            cmd9.Parameters.AddWithValue("@id_region", idRegion) |> ignore
 
             cmd9.ExecuteNonQuery() |> ignore
             idTender := int cmd9.LastInsertedId
@@ -485,23 +430,18 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
                 | 348 -> incr TenderRossel.tenderCountBus
                 | _ -> incr TenderRossel.tenderAllCount
 
-            let documents =
-                doc.QuerySelectorAll("ul.documents__list > li > a")
+            let documents = doc.QuerySelectorAll("ul.documents__list > li > a")
 
-            documents
-            |> Seq.iter (this.ParsingDocs con !idTender)
+            documents |> Seq.iter (this.ParsingDocs con !idTender)
 
             let lotNumber = ref 1
 
-            let lots =
-                doc.QuerySelectorAll("div.lot-item")
+            let lots = doc.QuerySelectorAll("div.lot-item")
 
             for l in lots do
                 let idLot = ref 0
 
-                let priceT =
-                    this.GetDefaultFromNull
-                    <| l.QuerySelector("div.lot-item__sum")
+                let priceT = this.GetDefaultFromNull <| l.QuerySelector("div.lot-item__sum")
 
                 let price =
                     match this.GetPrice(priceT) with
@@ -520,17 +460,13 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
 
                 let cmd12 = new MySqlCommand(insertLot, con)
 
-                cmd12.Parameters.AddWithValue("@id_tender", !idTender)
-                |> ignore
+                cmd12.Parameters.AddWithValue("@id_tender", !idTender) |> ignore
 
-                cmd12.Parameters.AddWithValue("@lot_number", !lotNumber)
-                |> ignore
+                cmd12.Parameters.AddWithValue("@lot_number", !lotNumber) |> ignore
 
-                cmd12.Parameters.AddWithValue("@max_price", price)
-                |> ignore
+                cmd12.Parameters.AddWithValue("@max_price", price) |> ignore
 
-                cmd12.Parameters.AddWithValue("@currency", currency)
-                |> ignore
+                cmd12.Parameters.AddWithValue("@currency", currency) |> ignore
 
                 cmd12.ExecuteNonQuery() |> ignore
                 idLot := int cmd12.LastInsertedId
@@ -544,13 +480,11 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
                     let selectCustomer =
                         sprintf "SELECT id_customer FROM %scustomer WHERE full_name = @full_name" stn.Prefix
 
-                    let cmd3 =
-                        new MySqlCommand(selectCustomer, con)
+                    let cmd3 = new MySqlCommand(selectCustomer, con)
 
                     cmd3.Prepare()
 
-                    cmd3.Parameters.AddWithValue("@full_name", CustomerName)
-                    |> ignore
+                    cmd3.Parameters.AddWithValue("@full_name", CustomerName) |> ignore
 
                     let reader = cmd3.ExecuteReader()
 
@@ -569,36 +503,31 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
 
                         let RegNum = Guid.NewGuid().ToString()
 
-                        let inn =
-                            this.GetDefaultFromNull
-                            <| l.QuerySelector("td:contains('ИНН') + td > p")
+                        let inn = this.GetDefaultFromNull <| l.QuerySelector("td:contains('ИНН') + td > p")
 
-                        let cmd14 =
-                            new MySqlCommand(insertCustomer, con)
+                        let cmd14 = new MySqlCommand(insertCustomer, con)
 
                         cmd14.Prepare()
 
-                        cmd14.Parameters.AddWithValue("@reg_num", RegNum)
-                        |> ignore
+                        cmd14.Parameters.AddWithValue("@reg_num", RegNum) |> ignore
 
-                        cmd14.Parameters.AddWithValue("@full_name", CustomerName)
-                        |> ignore
+                        cmd14.Parameters.AddWithValue("@full_name", CustomerName) |> ignore
 
-                        cmd14.Parameters.AddWithValue("@inn", inn)
-                        |> ignore
+                        cmd14.Parameters.AddWithValue("@inn", inn) |> ignore
 
                         cmd14.ExecuteNonQuery() |> ignore
                         idCustomer := int cmd14.LastInsertedId
 
                 let purObjectsTr =
-                    doc.QuerySelectorAll("table.lot-item__data-table.data-table tr.data-table__item--underline")
+                    l.QuerySelectorAll("table.lot-item__data-table.data-table tr.data-table__item--underline")
 
                 let purObjects =
-                    doc.QuerySelector(
+                    l.QuerySelector(
                         "h4:contains('Информация о товаре, работе, услуге') + table.lot-item__data-table.data-table tbody"
                     )
+
                 if purObjects <> null then
-                    
+
                     let okpd2Test =
                         purObjects
                             .QuerySelectorAll("td:contains('Цифровой код по классификатору ОКПД2:') + td p")
@@ -610,59 +539,50 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
                                 "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name"
                                 stn.Prefix
 
-                        let cmd19 =
-                            new MySqlCommand(insertLotitem, con)
+                        let cmd19 = new MySqlCommand(insertLotitem, con)
 
                         cmd19.Prepare()
 
-                        cmd19.Parameters.AddWithValue("@id_lot", !idLot)
-                        |> ignore
+                        cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
 
-                        cmd19.Parameters.AddWithValue("@id_customer", !idCustomer)
-                        |> ignore
+                        cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
 
-                        cmd19.Parameters.AddWithValue("@name", purName)
-                        |> ignore
+                        cmd19.Parameters.AddWithValue("@name", purName) |> ignore
 
                         cmd19.ExecuteNonQuery() |> ignore
-                    else
+                    else if purObjectsTr.Length > 0 then
                         try
                             for p in 0 .. purObjectsTr.Length + 1 do
 
                                 let mutable name =
                                     try
                                         purObjects
-                                            .QuerySelectorAll(
-                                                "td:contains('Наименование:') + td p"
-                                            )
-                                            .ToList().[p]
-                                            .TextContent.Trim()
-                                    with
-                                        | e -> ""
-                                if String.IsNullOrEmpty(name) then name <- purName
+                                            .QuerySelectorAll("td:contains('Наименование:') + td p")
+                                            .ToList()
+                                            .[p].TextContent.Trim()
+                                    with e ->
+                                        ""
+
+                                if String.IsNullOrEmpty(name) then
+                                    name <- purName
+
                                 let okpd2 =
                                     purObjects
-                                        .QuerySelectorAll(
-                                            "td:contains('Цифровой код по классификатору ОКПД2:') + td p"
-                                        )
-                                        .ToList().[p]
-                                        .TextContent
+                                        .QuerySelectorAll("td:contains('Цифровой код по классификатору ОКПД2:') + td p")
+                                        .ToList()
+                                        .[p].TextContent
 
                                 let quant =
                                     purObjects
-                                        .QuerySelectorAll(
-                                            "td:contains('Количество:') + td p"
-                                        )
-                                        .ToList().[p]
-                                        .TextContent
+                                        .QuerySelectorAll("td:contains('Количество:') + td p")
+                                        .ToList()
+                                        .[p].TextContent
 
                                 let okei =
                                     purObjects
-                                        .QuerySelectorAll(
-                                            "td:contains('Ед. измерения:') + td p"
-                                        )
-                                        .ToList().[p]
-                                        .TextContent
+                                        .QuerySelectorAll("td:contains('Ед. измерения:') + td p")
+                                        .ToList()
+                                        .[p].TextContent
 
                                 if not <| String.IsNullOrEmpty(okpd2) then
                                     let insertLotitem =
@@ -670,60 +590,121 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
                                             "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, okpd_name = @okpd_name, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, okpd2_code = @okpd2_code"
                                             stn.Prefix
 
-                                    let cmd19 =
-                                        new MySqlCommand(insertLotitem, con)
+                                    let cmd19 = new MySqlCommand(insertLotitem, con)
 
                                     cmd19.Prepare()
 
-                                    cmd19.Parameters.AddWithValue("@id_lot", !idLot)
-                                    |> ignore
+                                    cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
 
-                                    cmd19.Parameters.AddWithValue("@id_customer", !idCustomer)
-                                    |> ignore
+                                    cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
 
-                                    cmd19.Parameters.AddWithValue("@name", name)
-                                    |> ignore
+                                    cmd19.Parameters.AddWithValue("@name", name) |> ignore
 
-                                    cmd19.Parameters.AddWithValue("@okpd_name", "")
-                                    |> ignore
+                                    cmd19.Parameters.AddWithValue("@okpd_name", "") |> ignore
 
-                                    cmd19.Parameters.AddWithValue("@quantity_value", quant)
-                                    |> ignore
+                                    cmd19.Parameters.AddWithValue("@quantity_value", quant) |> ignore
 
-                                    cmd19.Parameters.AddWithValue("@customer_quantity_value", quant)
-                                    |> ignore
+                                    cmd19.Parameters.AddWithValue("@customer_quantity_value", quant) |> ignore
 
-                                    cmd19.Parameters.AddWithValue("@okei", okei)
-                                    |> ignore
+                                    cmd19.Parameters.AddWithValue("@okei", okei) |> ignore
 
-                                    cmd19.Parameters.AddWithValue("@okpd2_code", okpd2)
-                                    |> ignore
+                                    cmd19.Parameters.AddWithValue("@okpd2_code", okpd2) |> ignore
 
                                     cmd19.ExecuteNonQuery() |> ignore
                                     ()
-                        with
-                            | ex -> ()
+                        with ex ->
+                            ()
+                    else if purObjectsTr.Length < 1 then
+                        try
+                            let mutable name =
+                                try
+                                    purObjects
+                                        .QuerySelectorAll("td:contains('Наименование:') + td p")
+                                        .ToList()
+                                        .[0].TextContent.Trim()
+                                with e ->
+                                    ""
+
+                            if String.IsNullOrEmpty(name) then
+                                name <- purName
+
+                            let okpd2 =
+                                try
+                                    purObjects
+                                        .QuerySelectorAll("td:contains('Цифровой код по классификатору ОКПД2:') + td p")
+                                        .ToList()
+                                        .[0].TextContent
+                                with e ->
+                                    ""
+
+                            let quant =
+                                
+                                try
+                                   purObjects
+                                    .QuerySelectorAll("td:contains('Количество:') + td p")
+                                    .ToList()
+                                    .[0].TextContent
+                                with e ->
+                                    ""
+
+                            let okei =
+                                
+                                try
+                                   purObjects
+                                    .QuerySelectorAll("td:contains('Ед. измерения:') + td p")
+                                    .ToList()
+                                    .[0].TextContent
+                                with e ->
+                                    ""
+
+                            if not <| String.IsNullOrEmpty(okpd2) then
+                                let insertLotitem =
+                                    sprintf
+                                        "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, okpd_name = @okpd_name, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, okpd2_code = @okpd2_code"
+                                        stn.Prefix
+
+                                let cmd19 = new MySqlCommand(insertLotitem, con)
+
+                                cmd19.Prepare()
+
+                                cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
+
+                                cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
+
+                                cmd19.Parameters.AddWithValue("@name", name) |> ignore
+
+                                cmd19.Parameters.AddWithValue("@okpd_name", "") |> ignore
+
+                                cmd19.Parameters.AddWithValue("@quantity_value", quant) |> ignore
+
+                                cmd19.Parameters.AddWithValue("@customer_quantity_value", quant) |> ignore
+
+                                cmd19.Parameters.AddWithValue("@okei", okei) |> ignore
+
+                                cmd19.Parameters.AddWithValue("@okpd2_code", okpd2) |> ignore
+
+                                cmd19.ExecuteNonQuery() |> ignore
+                                ()
+                        with ex ->
+                            ()
                 else
-                        let insertLotitem =
-                            sprintf
-                                "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name"
-                                stn.Prefix
+                    let insertLotitem =
+                        sprintf
+                            "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name"
+                            stn.Prefix
 
-                        let cmd19 =
-                            new MySqlCommand(insertLotitem, con)
+                    let cmd19 = new MySqlCommand(insertLotitem, con)
 
-                        cmd19.Prepare()
+                    cmd19.Prepare()
 
-                        cmd19.Parameters.AddWithValue("@id_lot", !idLot)
-                        |> ignore
+                    cmd19.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
 
-                        cmd19.Parameters.AddWithValue("@id_customer", !idCustomer)
-                        |> ignore
+                    cmd19.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
 
-                        cmd19.Parameters.AddWithValue("@name", purName)
-                        |> ignore
+                    cmd19.Parameters.AddWithValue("@name", purName) |> ignore
 
-                        cmd19.ExecuteNonQuery() |> ignore
+                    cmd19.ExecuteNonQuery() |> ignore
+
                 let delivPlace =
                     this.GetDefaultFromNull
                     <| l.QuerySelector("td:contains('Место поставки') + td > p")
@@ -751,22 +732,17 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
                         "INSERT INTO %scustomer_requirement SET id_lot = @id_lot, id_customer = @id_customer, delivery_place = @delivery_place, max_price = @max_price, application_guarantee_amount = @application_guarantee_amount, contract_guarantee_amount = @contract_guarantee_amount"
                         stn.Prefix
 
-                let cmd16 =
-                    new MySqlCommand(insertCustomerRequirement, con)
+                let cmd16 = new MySqlCommand(insertCustomerRequirement, con)
 
                 cmd16.Prepare()
 
-                cmd16.Parameters.AddWithValue("@id_lot", !idLot)
-                |> ignore
+                cmd16.Parameters.AddWithValue("@id_lot", !idLot) |> ignore
 
-                cmd16.Parameters.AddWithValue("@id_customer", !idCustomer)
-                |> ignore
+                cmd16.Parameters.AddWithValue("@id_customer", !idCustomer) |> ignore
 
-                cmd16.Parameters.AddWithValue("@delivery_place", delivPlace)
-                |> ignore
+                cmd16.Parameters.AddWithValue("@delivery_place", delivPlace) |> ignore
 
-                cmd16.Parameters.AddWithValue("@max_price", price)
-                |> ignore
+                cmd16.Parameters.AddWithValue("@max_price", price) |> ignore
 
                 cmd16.Parameters.AddWithValue("@application_guarantee_amount", applGuarAmount)
                 |> ignore
@@ -779,16 +755,14 @@ type TenderRossel(stn: Settings.T, tn: RosSelRec, TypeFz: int) =
 
             try
                 this.AddVerNumber con tn.PurNum stn typeFz
-            with
-                | ex ->
-                    Logging.Log.logger "Ошибка добавления версий тендера"
-                    Logging.Log.logger ex
+            with ex ->
+                Logging.Log.logger "Ошибка добавления версий тендера"
+                Logging.Log.logger ex
 
             try
                 this.TenderKwords con (!idTender) stn
-            with
-                | ex ->
-                    Logging.Log.logger "Ошибка добавления kwords тендера"
-                    Logging.Log.logger ex
+            with ex ->
+                Logging.Log.logger "Ошибка добавления kwords тендера"
+                Logging.Log.logger ex
 
         ()
