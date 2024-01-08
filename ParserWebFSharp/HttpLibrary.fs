@@ -72,8 +72,11 @@ module Download =
             wr.Timeout <- 60000
 
             wr.UserAgent <-
-                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
-            let cookie = "ASP.NET_SessionId=" + Settings.RtsSessionId + "; " + "223_SecurityTokenKey=" + Settings.RtsSecToken + "; " + ".223=" + Settings.Rts223
+                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+            let mutable cookie = "ASP.NET_SessionId=" + Settings.RtsSessionId + "; " + "223_SecurityTokenKey=" + Settings.RtsSecToken + "; " + ".223=" + Settings.Rts223
+            let cc = Settings.RtsCookies.Split(";")
+            for s in cc do
+                if not (s.Contains("ASP.NET_SessionId")) then cookie <- cookie + ";" + s
             wr.Headers.Add("Cookie", cookie)
             wr.Headers.Add("X-JwtToken-TradeDocumentsForGrid", token)
 
