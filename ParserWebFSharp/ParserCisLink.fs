@@ -14,7 +14,7 @@ type ParserCisLink(stn: Settings.T) =
     let timeoutB = TimeSpan.FromSeconds(60.)
 
     let url =
-        "http://auction.cislink.com/account/login"
+        "https://ident.cislinketp.com/Account/Login"
 
     let listTenders = List<CisLinkRec>()
     let options = ChromeOptions()
@@ -52,7 +52,7 @@ type ParserCisLink(stn: Settings.T) =
         wait.Until (fun dr ->
             dr
                 .FindElement(
-                    By.XPath("//input[@class = 'input-block-level auth_login']")
+                    By.XPath("//input[@id = 'Username']")
                 )
                 .Displayed)
         |> ignore
@@ -62,14 +62,14 @@ type ParserCisLink(stn: Settings.T) =
 
         driver
             .Navigate()
-            .GoToUrl("http://auction.cislink.com/auction/schedule")
+            .GoToUrl("https://cislinketp.com/schedule")
 
         driver.SwitchTo().DefaultContent() |> ignore
 
         wait.Until (fun dr ->
             dr
                 .FindElement(
-                    By.XPath("//tbody[@data-bind = 'foreach: Auctions']")
+                    By.XPath("//mat-table//mat-row")
                 )
                 .Displayed)
         |> ignore
@@ -86,15 +86,15 @@ type ParserCisLink(stn: Settings.T) =
 
     member private this.Auth(driver: ChromeDriver) =
         driver
-            .FindElement(By.XPath("//input[@class = 'input-block-level auth_login']"))
+            .FindElement(By.XPath("//input[@id = 'Username']"))
             .SendKeys(Settings.UserCisLink)
 
         driver
-            .FindElement(By.XPath("//input[@class = 'input-block-level auth_pass']"))
+            .FindElement(By.XPath("//input[@id = 'Password']"))
             .SendKeys(Settings.PassCisLink)
 
         driver
-            .FindElement(By.XPath("//input[@id = 'login-button']"))
+            .FindElement(By.XPath("//button[@value = 'login']"))
             .Click()
 
         Thread.Sleep(3000)
@@ -115,7 +115,7 @@ type ParserCisLink(stn: Settings.T) =
         driver.SwitchTo().DefaultContent() |> ignore
 
         let tenders =
-            driver.FindElementsByXPath("//tbody[@data-bind = 'foreach: Auctions']/tr")
+            driver.FindElementsByXPath("//mat-table//mat-row")
 
         for t in tenders do
             this.ParserTenders t
@@ -129,21 +129,21 @@ type ParserCisLink(stn: Settings.T) =
             builder {
                 let! orgName =
                     i.findElementWithoutException (
-                        ".//td[@data-bind = 'text: OrganizierName']",
+                        "./mat-cell[1]",
                         sprintf "orgName not found %s" i.Text
                     )
 
-                let! purName = i.findElementWithoutException (".//td[2]", sprintf "purName not found %s" i.Text)
+                let! purName = i.findElementWithoutException ("./mat-cell[2]", sprintf "purName not found %s" i.Text)
                 let purNum = Tools.createMD5 purName
 
                 let mutable href =
-                    i.findWElementAttrOrEmpty (".//td[2]/a", "href")
+                    i.findWElementAttrOrEmpty ("./mat-cell[2]//a", "href")
 
                 if href = "" then
-                    href <- "http://auction.cislink.com/auction/schedule"
+                    href <- "https://cislinketp.com/schedule"
 
-                let! pubDateT = i.findElementWithoutException (".//td[3]", sprintf "pubDateT not found %s" i.Text)
-                let! datePub = pubDateT.DateFromString("dd.MM.yyyy HH:mm", sprintf "datePub not parse %s" pubDateT)
+                let! pubDateT = i.findElementWithoutException ("./mat-cell[5]", sprintf "pubDateT not found %s" i.Text)
+                let! datePub = pubDateT.DateFromString("dd.MM.yyyy HH:mm:ss", sprintf "datePub not parse %s" pubDateT)
 
                 let ten =
                     { CisLinkRec.Href = href

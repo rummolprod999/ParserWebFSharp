@@ -1,9 +1,15 @@
 namespace ParserWeb
 
+open System.Collections.ObjectModel
+open System.Text.RegularExpressions
+open System.Threading
 open MySql.Data.MySqlClient
 open System
 open System.Data
+open OpenQA.Selenium
 open OpenQA.Selenium.Chrome
+open OpenQA.Selenium.Support.UI
+open TypeE
 
 type TenderCisLink(stn: Settings.T, tn: CisLinkRec, typeFz: int, etpName: string, etpUrl: string, _driver: ChromeDriver) =
     inherit Tender(etpName, etpUrl)
@@ -55,7 +61,11 @@ type TenderCisLink(stn: Settings.T, tn: CisLinkRec, typeFz: int, etpName: string
 
                 let Printform = tn.Href
                 let IdOrg = ref 0
-
+                _driver.Navigate().GoToUrl(tn.Href)
+                Thread.Sleep(2000)
+                _driver.SwitchTo().DefaultContent() |> ignore
+                let wait = WebDriverWait(_driver, TimeSpan.FromSeconds(30.))
+                let z = tn.Href <> "https://cislinketp.com/schedule"
                 if tn.OrgName <> "" then
                     let selectOrg =
                         sprintf "SELECT id_organizer FROM %sorganizer WHERE full_name = @full_name" stn.Prefix
@@ -192,7 +202,8 @@ type TenderCisLink(stn: Settings.T, tn: CisLinkRec, typeFz: int, etpName: string
                 match updated with
                 | true -> incr TenderCisLink.tenderUpCount
                 | false -> incr TenderCisLink.tenderCount
-
+                let docs = _driver.FindElementsByXPath("//l-uploaded-file//a")
+                this.ParsingDocs con !idTender docs
                 let idCustomer = ref 0
 
                 if tn.OrgName <> "" then
@@ -265,42 +276,47 @@ type TenderCisLink(stn: Settings.T, tn: CisLinkRec, typeFz: int, etpName: string
 
                 cmd12.ExecuteNonQuery() |> ignore
                 idLot := int cmd12.LastInsertedId
+                let positions = _driver.FindElementsByXPath("//mat-table//mat-row")
+                if positions.Count < 1 || not z then
+                    let insertLotitem =
+                        sprintf
+                            "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum, price = @price, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei"
+                            stn.Prefix
 
-                let insertLotitem =
-                    sprintf
-                        "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum, price = @price, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei"
-                        stn.Prefix
+                    let cmd19 =
+                        new MySqlCommand(insertLotitem, con)
 
-                let cmd19 =
-                    new MySqlCommand(insertLotitem, con)
+                    cmd19.Prepare()
 
-                cmd19.Prepare()
+                    cmd19.Parameters.AddWithValue("@id_lot", !idLot)
+                    |> ignore
 
-                cmd19.Parameters.AddWithValue("@id_lot", !idLot)
-                |> ignore
+                    cmd19.Parameters.AddWithValue("@id_customer", idCustomer)
+                    |> ignore
 
-                cmd19.Parameters.AddWithValue("@id_customer", idCustomer)
-                |> ignore
+                    cmd19.Parameters.AddWithValue("@name", tn.PurName)
+                    |> ignore
 
-                cmd19.Parameters.AddWithValue("@name", tn.PurName)
-                |> ignore
+                    cmd19.Parameters.AddWithValue("@sum", "")
+                    |> ignore
 
-                cmd19.Parameters.AddWithValue("@sum", "")
-                |> ignore
+                    cmd19.Parameters.AddWithValue("@price", "")
+                    |> ignore
 
-                cmd19.Parameters.AddWithValue("@price", "")
-                |> ignore
+                    cmd19.Parameters.AddWithValue("@quantity_value", "")
+                    |> ignore
 
-                cmd19.Parameters.AddWithValue("@quantity_value", "")
-                |> ignore
+                    cmd19.Parameters.AddWithValue("@customer_quantity_value", "")
+                    |> ignore
 
-                cmd19.Parameters.AddWithValue("@customer_quantity_value", "")
-                |> ignore
+                    cmd19.Parameters.AddWithValue("@okei", "")
+                    |> ignore
 
-                cmd19.Parameters.AddWithValue("@okei", "")
-                |> ignore
-
-                cmd19.ExecuteNonQuery() |> ignore
+                    cmd19.ExecuteNonQuery() |> ignore
+                else if z then
+                    this.GetPurObjs( con, !idTender, positions, !idLot, !idCustomer)
+                else
+                    ()
                 this.AddVerNumber con tn.PurNum stn typeFz
                 this.TenderKwords con (!idTender) stn
                 return ""
@@ -312,6 +328,330 @@ type TenderCisLink(stn: Settings.T, tn: CisLinkRec, typeFz: int, etpName: string
         | Error r -> Logging.Log.logger r
 
         ()
+        
+     
+    member private this.GetPurObjs
+        (
+            con: MySqlConnection,
+            _: int,
+            pos: ReadOnlyCollection<IWebElement>,
+            idLot: int,
+            idCustomer: int
+        ) =
+        for p in pos do
+            let count = p.FindElements(By.XPath("./mat-cell")).Count
+            if count = 11 then
+                let name =
+                    p.findElementWithoutException ("./mat-cell[3]")
+
+                let QuantT =
+                    p.findElementWithoutException ("./mat-cell[4]")
+
+                let mutable Quantity =
+                    match QuantT.Get1FromRegexp @"([\d,| ]+)" with
+                    | Some x -> x.Trim()
+                    | None -> ""
+
+                Quantity <-
+                    Regex
+                        .Replace(Quantity.ToString(), @"\s+", "")
+                        .Replace(",", "")
+
+                let okei =
+                    p.findElementWithoutException ("./mat-cell[5]")
+
+                let PriceT =
+                    p.findElementWithoutException ("./mat-cell[6]")
+
+                let mutable Price =
+                    p.findElementWithoutException ("./mat-cell[6]")
+
+                Price <-
+                    Regex
+                        .Replace(Price.ToString(), @"\s+", "")
+                        .Replace(",", "")
+
+                let insertLotitem =
+                    sprintf
+                        "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, okpd_name = @okpd_name, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, sum = @sum"
+                        stn.Prefix
+
+                let cmd19 =
+                    new MySqlCommand(insertLotitem, con)
+
+                cmd19.Prepare()
+
+                cmd19.Parameters.AddWithValue("@id_lot", idLot)
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@id_customer", idCustomer)
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@name", name)
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@okpd_name", "")
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@quantity_value", Quantity)
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@customer_quantity_value", Quantity)
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@okei", okei)
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@sum", Price)
+                |> ignore
+
+                cmd19.ExecuteNonQuery() |> ignore
+                let delivPlace =
+                    p.findElementWithoutException ("./mat-cell[7]")
+                let delivterm =
+                    p.findElementWithoutException ("./mat-cell[9]")
+                if delivPlace <> "" then
+                    let insertCustomerRequirement =
+                        sprintf
+                            "INSERT INTO %scustomer_requirement SET id_lot = @id_lot, id_customer = @id_customer, delivery_place = @delivery_place, delivery_term = @delivery_term"
+                            stn.Prefix
+
+                    let cmd16 =
+                        new MySqlCommand(insertCustomerRequirement, con)
+
+                    cmd16.Prepare()
+
+                    cmd16.Parameters.AddWithValue("@id_lot", idLot)
+                    |> ignore
+
+                    cmd16.Parameters.AddWithValue("@id_customer", idCustomer)
+                    |> ignore
+
+                    cmd16.Parameters.AddWithValue("@delivery_place", delivPlace)
+                    |> ignore
+
+                    cmd16.Parameters.AddWithValue("@delivery_term", delivterm)
+                    |> ignore
+
+                    cmd16.ExecuteNonQuery() |> ignore
+            else if count = 6 then
+                let name =
+                    p.findElementWithoutException ("./mat-cell[1]")
+
+                let QuantT =
+                    p.findElementWithoutException ("./mat-cell[4]")
+
+                let mutable Quantity =
+                    match QuantT.Get1FromRegexp @"([\d,| ]+)" with
+                    | Some x -> x.Trim()
+                    | None -> ""
+
+                Quantity <-
+                    Regex
+                        .Replace(Quantity.ToString(), @"\s+", "")
+                        .Replace(",", "")
+
+                let okei =
+                    p.findElementWithoutException ("./mat-cell[5]")
+
+                let PriceT =
+                    p.findElementWithoutException ("./mat-cell[6]")
+
+                let mutable Price =
+                    p.findElementWithoutException ("./mat-cell[6]")
+
+                Price <-
+                    Regex
+                        .Replace(Price.ToString(), @"\s+", "")
+                        .Replace(",", "")
+
+                let insertLotitem =
+                    sprintf
+                        "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, okpd_name = @okpd_name, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, sum = @sum"
+                        stn.Prefix
+
+                let cmd19 =
+                    new MySqlCommand(insertLotitem, con)
+
+                cmd19.Prepare()
+
+                cmd19.Parameters.AddWithValue("@id_lot", idLot)
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@id_customer", idCustomer)
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@name", name)
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@okpd_name", "")
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@quantity_value", Quantity)
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@customer_quantity_value", Quantity)
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@okei", okei)
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@sum", Price)
+                |> ignore
+
+                cmd19.ExecuteNonQuery() |> ignore
+                let delivPlace =
+                    p.findElementWithoutException ("./mat-cell[7]")
+                let delivterm =
+                    p.findElementWithoutException ("./mat-cell[9]")
+                if delivPlace <> "" then
+                    let insertCustomerRequirement =
+                        sprintf
+                            "INSERT INTO %scustomer_requirement SET id_lot = @id_lot, id_customer = @id_customer, delivery_place = @delivery_place, delivery_term = @delivery_term"
+                            stn.Prefix
+
+                    let cmd16 =
+                        new MySqlCommand(insertCustomerRequirement, con)
+
+                    cmd16.Prepare()
+
+                    cmd16.Parameters.AddWithValue("@id_lot", idLot)
+                    |> ignore
+
+                    cmd16.Parameters.AddWithValue("@id_customer", idCustomer)
+                    |> ignore
+
+                    cmd16.Parameters.AddWithValue("@delivery_place", delivPlace)
+                    |> ignore
+
+                    cmd16.Parameters.AddWithValue("@delivery_term", delivterm)
+                    |> ignore
+
+                    cmd16.ExecuteNonQuery() |> ignore
+            else if count = 5 then
+                let name =
+                    p.findElementWithoutException ("./mat-cell[2]")
+
+                let QuantT =
+                    p.findElementWithoutException ("./mat-cell[3]")
+
+                let mutable Quantity =
+                    match QuantT.Get1FromRegexp @"([\d,| ]+)" with
+                    | Some x -> x.Trim()
+                    | None -> ""
+
+                Quantity <-
+                    Regex
+                        .Replace(Quantity.ToString(), @"\s+", "")
+                        .Replace(",", "")
+
+                let okei =
+                    p.findElementWithoutException ("./mat-cell[4]")
+
+                let PriceT =
+                    p.findElementWithoutException ("./mat-cell[100]")
+
+                let mutable Price =
+                    p.findElementWithoutException ("./mat-cell[100]")
+
+                Price <-
+                    Regex
+                        .Replace(Price.ToString(), @"\s+", "")
+                        .Replace(",", "")
+
+                let insertLotitem =
+                    sprintf
+                        "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, okpd_name = @okpd_name, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, sum = @sum"
+                        stn.Prefix
+
+                let cmd19 =
+                    new MySqlCommand(insertLotitem, con)
+
+                cmd19.Prepare()
+
+                cmd19.Parameters.AddWithValue("@id_lot", idLot)
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@id_customer", idCustomer)
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@name", name)
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@okpd_name", "")
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@quantity_value", Quantity)
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@customer_quantity_value", Quantity)
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@okei", okei)
+                |> ignore
+
+                cmd19.Parameters.AddWithValue("@sum", Price)
+                |> ignore
+
+                cmd19.ExecuteNonQuery() |> ignore
+                let delivPlace =
+                    p.findElementWithoutException ("./mat-cell[5]")
+                let delivterm =
+                    p.findElementWithoutException ("./mat-cell[9]")
+                if delivPlace <> "" then
+                    let insertCustomerRequirement =
+                        sprintf
+                            "INSERT INTO %scustomer_requirement SET id_lot = @id_lot, id_customer = @id_customer, delivery_place = @delivery_place, delivery_term = @delivery_term"
+                            stn.Prefix
+
+                    let cmd16 =
+                        new MySqlCommand(insertCustomerRequirement, con)
+
+                    cmd16.Prepare()
+
+                    cmd16.Parameters.AddWithValue("@id_lot", idLot)
+                    |> ignore
+
+                    cmd16.Parameters.AddWithValue("@id_customer", idCustomer)
+                    |> ignore
+
+                    cmd16.Parameters.AddWithValue("@delivery_place", delivPlace)
+                    |> ignore
+
+                    cmd16.Parameters.AddWithValue("@delivery_term", delivterm)
+                    |> ignore
+
+                    cmd16.ExecuteNonQuery() |> ignore
+            ()
+
+        ()
+    member private this.ParsingDocs (con: MySqlConnection) (idTender: int) (docs: ReadOnlyCollection<IWebElement>) =
+          for doc in docs do
+                let docName = doc.Text
+
+                match docName with
+                | "" -> ()
+                | x ->
+                    let href = doc.GetAttribute("href")
+
+                    let addAttach =
+                        sprintf
+                            "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url"
+                            stn.Prefix
+
+                    let cmd5 = new MySqlCommand(addAttach, con)
+
+                    cmd5.Parameters.AddWithValue("@id_tender", idTender)
+                    |> ignore
+
+                    cmd5.Parameters.AddWithValue("@file_name", x)
+                    |> ignore
+
+                    cmd5.Parameters.AddWithValue("@url", href)
+                    |> ignore
+
+                    cmd5.ExecuteNonQuery() |> ignore
+                ()
 
     member private this.SetCancelStatus(con: MySqlConnection, dateUpd: DateTime) =
         let mutable cancelStatus = 0
