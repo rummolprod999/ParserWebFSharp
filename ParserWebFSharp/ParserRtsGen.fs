@@ -38,7 +38,7 @@ type ParserRtsGen(stn: Settings.T) =
 
     override __.Parsing() =
         let driver =
-            new ChromeDriver("/usr/local/bin", options)
+            new ChromeDriver("/usr/local/bin/patched", options)
 
         driver.Manage().Timeouts().PageLoad <- timeoutB
         driver.Manage().Window.Maximize()
