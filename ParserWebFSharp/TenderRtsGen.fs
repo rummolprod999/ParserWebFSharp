@@ -1,5 +1,6 @@
 namespace ParserWeb
 
+open System.Threading
 open MySql.Data.MySqlClient
 open Newtonsoft.Json.Linq
 open System
@@ -59,6 +60,7 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
                     Download.DownloadStringRts tn.Href
 
                 if Page = "" || Page = null then
+                    Thread.Sleep(1000)
                     return! Err(sprintf "%s" tn.Href)
 
                 let htmlDoc = HtmlDocument()
