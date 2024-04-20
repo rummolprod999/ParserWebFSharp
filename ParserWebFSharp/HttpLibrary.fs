@@ -53,7 +53,7 @@ module Download =
             wr.UserAgent <-
                 "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
             let cookie = Settings.RtsFull
-            printfn "%s" cookie
+            //printfn "%s" cookie
             wr.Headers.Add("Cookie", cookie)
 
             (*wr.AutomaticDecompression <-
@@ -73,18 +73,15 @@ module Download =
             wr.Timeout <- 60000
 
             wr.UserAgent <-
-                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
-            let mutable cookie = "ASP.NET_SessionId=" + Settings.RtsSessionId + "; " + "223_SecurityTokenKey=" + Settings.RtsSecToken + "; " + ".223=" + Settings.Rts223
-            let cc = Settings.RtsCookies.Split(";")
-            for s in cc do
-                if not (s.Contains("ASP.NET_SessionId")) then cookie <- cookie + ";" + s
+                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+            let cookie = Settings.RtsFull
             wr.Headers.Add("Cookie", cookie)
             wr.Headers.Add("X-JwtToken-TradeDocumentsForGrid", token)
 
-            wr.AutomaticDecompression <-
+            (*wr.AutomaticDecompression <-
                 DecompressionMethods.GZip
                 ||| DecompressionMethods.Deflate
-                ||| DecompressionMethods.None
+                ||| DecompressionMethods.None*)
 
             wr :> WebRequest
 
