@@ -52,13 +52,14 @@ module Download =
 
             wr.UserAgent <-
                 "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
-            let cookie = "ASP.NET_SessionId=" + Settings.RtsSessionId + "; " + "223_SecurityTokenKey=" + Settings.RtsSecToken + "; " + ".223=" + Settings.Rts223 + "; " + Settings.RtsCookies
+            let cookie = Settings.RtsFull
+            printfn "%s" cookie
             wr.Headers.Add("Cookie", cookie)
 
-            wr.AutomaticDecompression <-
+            (*wr.AutomaticDecompression <-
                 DecompressionMethods.GZip
                 ||| DecompressionMethods.Deflate
-                ||| DecompressionMethods.None
+                ||| DecompressionMethods.None*)
 
             wr :> WebRequest
     

@@ -41,6 +41,8 @@ module Settings =
     let mutable internal RtsSessionId = ""
     let mutable internal RtsSecToken = ""
     let mutable internal Rts223 = ""
+    
+    let mutable internal RtsFull = ""
     let mutable internal ProxyPath = "proxy.txt"
     let mutable internal UseProxy = false
     

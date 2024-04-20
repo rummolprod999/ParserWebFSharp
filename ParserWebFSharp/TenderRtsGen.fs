@@ -60,7 +60,7 @@ type TenderRtsGen(stn: Settings.T, tn: RtsGenRec, typeFz: int, etpName: string, 
                     Download.DownloadStringRts tn.Href
 
                 if Page = "" || Page = null then
-                    Thread.Sleep(1000)
+                    Thread.Sleep(300)
                     return! Err(sprintf "%s" tn.Href)
 
                 let htmlDoc = HtmlDocument()

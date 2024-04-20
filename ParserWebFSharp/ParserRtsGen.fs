@@ -30,7 +30,7 @@ type ParserRtsGen(stn: Settings.T) =
         options.AddArguments("lang=ru, ru-RU")
         options.AddArguments("window-size=1920,1080")
         options.AddArguments("disable-blink-features=AutomationControlled")
-        options.AddArguments("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36")
+        options.AddArguments("user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36")
         //options.AddArguments("incognito")
         options.AddAdditionalCapability("useAutomationExtension", false)
         options.AddExcludedArgument("enable-automation")
@@ -214,8 +214,12 @@ Object.defineProperty(HTMLDivElement.prototype, 'offsetHeight', {
         Settings.RtsSessionId <- driver.Manage().Cookies.GetCookieNamed("ASP.NET_SessionId").Value
         Settings.RtsSecToken <- driver.Manage().Cookies.GetCookieNamed("223_SecurityTokenKey").Value
         Settings.Rts223 <- driver.Manage().Cookies.GetCookieNamed(".223").Value
+        let mutable cc = ""
+        //printfn "count %d" (driver.Manage().Cookies.AllCookies.Count)
+        for cookiesAllCookie in driver.Manage().Cookies.AllCookies do
+            cc <- cc + cookiesAllCookie.Name + "=" + cookiesAllCookie.Value + "; "
         ()
-        
+        Settings.RtsFull <- cc
     member __.GetNextpage(driver: ChromeDriver) =
         driver.SwitchTo().DefaultContent() |> ignore
         //__.Clicker driver "//td[@id = 'next_t_BaseMainContent_MainContent_jqgTrade_toppager']/span"
