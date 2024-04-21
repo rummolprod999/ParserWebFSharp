@@ -11,7 +11,7 @@ open OpenQA.Selenium.Support.UI
 type ParserRtsGen(stn: Settings.T) =
     inherit Parser()
     let set = stn
-    let pageC = 30
+    let pageC = 50
 
     let spage =
         "https://223.rts-tender.ru/supplier/auction/Trade/Search.aspx"
@@ -52,7 +52,7 @@ type ParserRtsGen(stn: Settings.T) =
                 | ex -> Logging.Log.logger ex
         finally
             driver.Quit()
-
+        Logging.Log.logger (sprintf "tender list size %d" listTenders.Count)
         for t in listTenders do
             try
                 __.ParserTendersList t
