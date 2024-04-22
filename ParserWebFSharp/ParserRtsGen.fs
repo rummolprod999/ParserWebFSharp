@@ -318,7 +318,7 @@ Object.defineProperty(HTMLDivElement.prototype, 'offsetHeight', {
 
         driver.SwitchTo().DefaultContent() |> ignore
 
-        for i in 1..10 do
+        for i in 2..11 do
             __.GetContentTender driver i
 
         ()
