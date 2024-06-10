@@ -14,7 +14,7 @@ type ParserBidZaar(stn: Settings.T) =
     let set = stn
 
     let url =
-        "https://bidzaar.com/procedures/public"
+        "https://bidzaar.com/requests/public/buy"
 
     let timeoutB = TimeSpan.FromSeconds(60.)
     let listTenders = List<BidzaarRec>()
@@ -106,7 +106,7 @@ type ParserBidZaar(stn: Settings.T) =
 
     member private __.Scroll(driver: ChromeDriver) (wait: WebDriverWait) =
 
-        for i in 1..50 do
+        for i in 1..500 do
             try
                 driver.SwitchTo().DefaultContent() |> ignore
                 __.ParserListTenders(driver)
@@ -114,7 +114,7 @@ type ParserBidZaar(stn: Settings.T) =
                 let jse = driver :> IJavaScriptExecutor
 
                 jse.ExecuteScript(
-                    "document.getElementsByClassName('cdk-virtual-scroll-viewport scroll-container cdk-virtual-scroll-orientation-vertical')[0].scrollBy(0, 1000)",
+                    "document.getElementsByClassName('cdk-virtual-scroll-viewport scroll-container cdk-virtual-scroll-orientation-vertical')[0].scrollBy(0, 500)",
                     ""
                 )
                 |> ignore
