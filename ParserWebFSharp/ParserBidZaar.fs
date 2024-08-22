@@ -181,14 +181,13 @@ type ParserBidZaar(stn: Settings.T) =
                         ".//a[contains(@class, 'link')]",
                         sprintf "hrefT not found, text the element - %s" i.Text
                     )
-
+                
                 let! href = hrefT.findAttributeWithoutException ("href", "href not found")
-                let! purNum = href.Get1("light/([a-z\d-]+)(?:/request)?", sprintf "purNum not found %s" i.Text)
-
+                let! purNum = href.Get1("light/([a-z\d-]+)(?:/request)?", sprintf "purNum not found %s" href)
                 let! purName =
                     i.findElementWithoutException (
-                        ".//div[@class = 'link-header']/div[@class = 'name']",
-                        sprintf "purName not found %s" i.Text
+                        ".//div[@class = 'link-header']//span[@class = 'name']",
+                        sprintf "purName not found %s" href
                     )
 
                 let pwName = ""
@@ -196,7 +195,7 @@ type ParserBidZaar(stn: Settings.T) =
                 let! cusName =
                     i.findElementWithoutException (
                         ".//bdz-cmp-name//div[@class = 'name ng-star-inserted']",
-                        sprintf "cusName not found %s" i.Text
+                        sprintf "cusName not found %s" href
                     )
 
                 let datePub = DateTime.Now
@@ -204,7 +203,7 @@ type ParserBidZaar(stn: Settings.T) =
                 let! endDateT =
                     i.findElementWithoutException (
                         ".//div[contains(@class, 'date ng-star-inserted')]",
-                        sprintf "endDateT not found %s" i.Text
+                        sprintf "endDateT not found %s" href
                     )
 
                 let! dateEnd1 =
