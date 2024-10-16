@@ -71,7 +71,7 @@ type TenderButb
             let idTender = ref 0
 
             this.Clicker driver
-            <| String.Format("//table[contains(@id, 'auctionList')]/tbody/tr[{0}]/td[2]/a", page)
+            <| String.Format("//table/tbody[@class = 'ui-datatable-data ui-widget-content']/tr[{0}]/td[2]/a", page)
 
             driver.SwitchTo().DefaultContent() |> ignore
 
@@ -129,7 +129,7 @@ type TenderButb
                 this.GetDefaultFromNullS
                 <| this.checkElement (
                     driver,
-                    "//tr[contains(., 'Сведения об организаторе')]/following-sibling::tr[contains(., 'Полное наименование')]/td[2]"
+                    "//span[contains(., 'Полное наименование')]/following-sibling::span[1]"
                 )
 
             match OrgName with
@@ -166,21 +166,21 @@ type TenderButb
                         this.GetDefaultFromNullS
                         <| this.checkElement (
                             driver,
-                            "//tr[contains(., 'Сведения об организаторе')]/following-sibling::tr[contains(., 'Место нахождения')]/td[2]"
+                            "//span[contains(., 'Место нахождения')]/following-sibling::span[1]"
                         )
 
                     let inn =
                         this.GetDefaultFromNullS
                         <| this.checkElement (
                             driver,
-                            "//tr[contains(., 'Сведения об организаторе')]/following-sibling::tr[contains(., 'УНП')]/td[2]"
+                            "//span[contains(., 'УНП')]/following-sibling::span[1]"
                         )
 
                     let email =
                         this.GetDefaultFromNullS
                         <| this.checkElement (
                             driver,
-                            "//tr[contains(., 'Сведения об организаторе')]/following-sibling::tr[contains(., 'Адрес электронной почты')]/td[2]"
+                            "//span[contains(., 'Адрес электронной почты')]/following-sibling::span[1]"
                         )
 
                     let cmd5 =
@@ -214,7 +214,7 @@ type TenderButb
                 this.GetDefaultFromNullS
                 <| this.checkElement (
                     driver,
-                    "//tr[contains(., 'Регистрационный номер')]/following-sibling::tr[contains(., 'Вид процедуры закупки')]/td[2]"
+                    "//span[contains(., 'Вид закупки')]/following-sibling::span[1]"
                 )
 
             match PlacingWayName with
@@ -231,11 +231,11 @@ type TenderButb
                 this.GetDefaultFromNullS
                 <| this.checkElement (
                     driver,
-                    "//tr[contains(., 'Вид закупки')]/following-sibling::tr[contains(., 'Наименование закупки')]/td[2]"
+                    "//span[contains(., 'Наименование закупки')]/following-sibling::span[1]"
                 )
 
             let href =
-                "http://zakupki.butb.by/auctions/viewinvitation.html"
+                "https://zakupki.butb.by/auctions/viewinvitation.html"
 
             let insertTender =
                 String.Format(
@@ -326,14 +326,14 @@ type TenderButb
                 this.GetDefaultFromNullS
                 <| this.checkElement (
                     driver,
-                    "//tr[contains(., 'Сведения о заказчике')]/following-sibling::tr[contains(., 'УНП')]/td[2]"
+                    "//span[. = 'УНП'][2]/following-sibling::span"
                 )
 
             let cusAddr =
                 this.GetDefaultFromNullS
                 <| this.checkElement (
                     driver,
-                    "//tr[contains(., 'Сведения о заказчике')]/following-sibling::tr[contains(., 'Место нахождения')]/td[2]"
+                    "//span[. = 'Место нахождения'][2]/following-sibling::span"
                 )
 
             let idCustomer = ref 0
@@ -345,7 +345,7 @@ type TenderButb
                     this.GetDefaultFromNullS
                     <| this.checkElement (
                         driver,
-                        "//tr[contains(., 'Сведения о заказчике')]/following-sibling::tr[contains(., 'Полное наименование')]/td[2]"
+                        "//span[. = 'Полное наименование'][2]/following-sibling::span"
                     )
 
                 if CustomerName <> "" then
@@ -396,7 +396,7 @@ type TenderButb
 
             let requirement =
                 this.GetDefaultFromNullS
-                <| this.checkElement (driver, "//tr[contains(., 'Требования к составу участников')]/td[2]//textarea")
+                <| this.checkElement (driver, "//tr[contains(., 'Требования к участникам')]/td[2]//textarea")
 
             let paginator =
                 this.GetDefaultFromNullS
@@ -406,7 +406,7 @@ type TenderButb
                 this.GetDefaultFromNullS
                 <| this.checkElement (
                     driver,
-                    "//table[contains(., 'СВЕДЕНИЯ О ЛОТЕ')]/following-sibling::table[contains(., 'Стоимость,')]/tbody/tr"
+                    "//span[contains(., 'СВЕДЕНИЯ О ЛОТЕ')]/following-sibling::table[contains(., 'Стоимость,')]/tbody/tr"
                 )
 
             let pricecheck =
@@ -431,7 +431,7 @@ type TenderButb
                         let lots =
                             driver.FindElements(
                                 By.XPath(
-                                    "//table[contains(., 'СВЕДЕНИЯ О ЛОТЕ')]/following-sibling::table[contains(., '№ лота')]/tbody/tr"
+                                    "//span[contains(., 'СВЕДЕНИЯ О ЛОТЕ')]/following-sibling::table[contains(., '№ лота')]/tbody/tr"
                                 )
                             )
 
@@ -460,7 +460,7 @@ type TenderButb
                                 let lots =
                                     driver.FindElements(
                                         By.XPath(
-                                            "//table[contains(., 'СВЕДЕНИЯ О ЛОТЕ')]/following-sibling::table[contains(., '№ лота')]/tbody/tr"
+                                            "//span[contains(., 'СВЕДЕНИЯ О ЛОТЕ')]/following-sibling::table[contains(., '№ лота')]/tbody/tr"
                                         )
                                     )
 
@@ -475,7 +475,7 @@ type TenderButb
                         let lots =
                             driver.FindElements(
                                 By.XPath(
-                                    "//table[contains(., 'СВЕДЕНИЯ О ЛОТЕ')]/following-sibling::table[contains(., '№ лота')]/tbody/tr"
+                                    "//span[contains(., 'СВЕДЕНИЯ О ЛОТЕ')]/following-sibling::table[contains(., '№ лота')]/tbody/tr"
                                 )
                             )
 

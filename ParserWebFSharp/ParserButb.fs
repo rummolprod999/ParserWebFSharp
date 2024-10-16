@@ -13,7 +13,7 @@ type ParserButb(stn: Settings.T) =
     let timeoutB = TimeSpan.FromSeconds(120.)
 
     let url =
-        "http://zakupki.butb.by/auctions/reestrauctions.html"
+        "https://zakupki.butb.by/auctions/reestrauctions.html"
 
     let options = ChromeOptions()
 
@@ -46,7 +46,7 @@ type ParserButb(stn: Settings.T) =
         wait.Until (fun dr ->
             dr
                 .FindElement(
-                    By.XPath("//table[contains(@id, 'auctionList')]//a[contains(., 'Дата публикации')]")
+                    By.XPath("//table//thead//span[contains(., 'Дата публикации')]")
                 )
                 .Displayed)
         |> ignore
@@ -55,7 +55,7 @@ type ParserButb(stn: Settings.T) =
 
         try
             jse.ExecuteScript(
-                "var s = document.querySelector('table.iceDatTbl thead th:nth-child(4) a'); s.click();",
+                "var s = document.querySelector('table thead th:nth-child(4)'); s.click();",
                 ""
             )
             |> ignore
@@ -67,7 +67,7 @@ type ParserButb(stn: Settings.T) =
         wait.Until (fun dr ->
             dr
                 .FindElement(
-                    By.XPath("//table[contains(@id, 'auctionList')]//a[contains(., 'Дата публикации')]")
+                    By.XPath("//table//thead//span[contains(., 'Дата публикации')]")
                 )
                 .Displayed)
         |> ignore
@@ -108,12 +108,12 @@ type ParserButb(stn: Settings.T) =
             wait.Until (fun dr ->
                 dr
                     .FindElement(
-                        By.XPath("//a[img[@title = 'Следующая страница']]")
+                        By.XPath("//a[span[. = 'Next']]")
                     )
                     .Displayed)
             |> ignore
 
-            this.Clicker driver "//a[img[@title = 'Следующая страница']]"
+            this.Clicker driver "//a[span[. = 'Next']]"
             driver.SwitchTo().DefaultContent() |> ignore
             tmp <- tmp - 1
             Thread.Sleep(5000)
@@ -128,14 +128,14 @@ type ParserButb(stn: Settings.T) =
         wait.Until (fun dr ->
             dr
                 .FindElement(
-                    By.XPath(String.Format("//table[contains(@id, 'auctionList')]/tbody/tr[{0}]/td[2]/a", s))
+                    By.XPath(String.Format("//table/tbody[@class = 'ui-datatable-data ui-widget-content']/tr[{0}]/td[2]/a", s))
                 )
                 .Displayed)
         |> ignore
 
         let purNumT =
             driver.FindElement(
-                By.XPath(String.Format("//table[contains(@id, 'auctionList')]/tbody/tr[{0}]/td[1]/span[1]", s))
+                By.XPath(String.Format("//table/tbody[@class = 'ui-datatable-data ui-widget-content']/tr[{0}]/td[1]/span[1]", s))
             )
 
         let purNum =
@@ -150,13 +150,13 @@ type ParserButb(stn: Settings.T) =
             this.GetDefaultFromNull
             <| this.checkElement (
                 driver,
-                String.Format("//table[contains(@id, 'auctionList')]/tbody/tr[{0}]/td[11]/span[1]", s)
+                String.Format("//table/tbody[@class = 'ui-datatable-data ui-widget-content']/tr[{0}]/td[10]/span[1]", s)
             )
 
         let datePubT =
             this.GetDefaultFromNull
             <| driver.FindElement(
-                By.XPath(String.Format("//table[contains(@id, 'auctionList')]/tbody/tr[{0}]/td[4]/span[1]", s))
+                By.XPath(String.Format("//table/tbody[@class = 'ui-datatable-data ui-widget-content']/tr[{0}]/td[4]/span[1]", s))
             )
 
         let datePubS =
@@ -177,7 +177,7 @@ type ParserButb(stn: Settings.T) =
         let endDateT =
             this.GetDefaultFromNull
             <| driver.FindElement(
-                By.XPath(String.Format("//table[contains(@id, 'auctionList')]/tbody/tr[{0}]/td[8]/span[1]", s))
+                By.XPath(String.Format("//table/tbody[@class = 'ui-datatable-data ui-widget-content']/tr[{0}]/td[8]/span[1]", s))
             )
 
         let endDateS =
@@ -199,7 +199,7 @@ type ParserButb(stn: Settings.T) =
             this.GetDefaultFromNull
             <| this.checkElement (
                 driver,
-                String.Format("//table[contains(@id, 'auctionList')]/tbody/tr[{0}]/td[10]/span[1]", s)
+                String.Format("//table/tbody[@class = 'ui-datatable-data ui-widget-content']/tr[{0}]/td[9]/span[1]", s)
             )
 
         let biddingDateS =
