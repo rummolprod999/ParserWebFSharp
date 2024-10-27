@@ -346,15 +346,15 @@ type TenderOsnova(stn: Settings.T, tn: OsnovaRec, typeFz: int, etpName: string, 
 
             cmd16.ExecuteNonQuery() |> ignore
 
-            try
-                this.GetPurchaseObjects(con, idCustomer, !idLot)
-            with
-                | ex -> Logging.Log.logger ex
+        try
+            this.GetPurchaseObjects(con, idCustomer, !idLot)
+        with
+            | ex -> Logging.Log.logger ex
 
-            try
-                this.GetDocs(con, idTender)
-            with
-                | ex -> Logging.Log.logger ex
+        try
+            this.GetDocs(con, idTender)
+        with
+            | ex -> Logging.Log.logger ex
 
         ()
 
@@ -425,18 +425,18 @@ type TenderOsnova(stn: Settings.T, tn: OsnovaRec, typeFz: int, etpName: string, 
 
         let purObjects =
             nav.CurrentDocument.DocumentNode.SelectNodesOrEmpty(
-                "//tr[contains(@class, 'treegrid-parent') and not (contains(@class, 'expanded'))]"
+                "//tr[contains(@class, 'regular-table__row_align-top')]"
             )
-
+        printfn "count %d" purObjects.Count
         for po in purObjects do
-            let objName = po.Gsn "./td[1]/span"
+            let objName = po.Gsn "./td[2]//span"
             let quanval = po.Gsn "./td[4]"
             let okei = po.Gsn "./td[3]"
             let price = ""
             let sum = ""
             let okpd2 = ""
 
-            if objName <> "" then
+            if objName <> "" && quanval <> "" && okei <> "" then
                 let insertLotitem =
                     sprintf
                         "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, sum = @sum, price = @price, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, okpd2_code = @okpd2_code"

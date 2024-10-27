@@ -36,7 +36,7 @@ type ParserOsnova(stn: Settings.T) =
                 nav
                     .CurrentDocument
                     .DocumentNode
-                    .SelectNodesOrEmpty("//div[@class = 'tender-head']")
+                    .SelectNodesOrEmpty("//div[contains(@class,'tender-head main-tender-head')]")
                     .ToList()
 
             tens.Reverse()
@@ -72,11 +72,11 @@ type ParserOsnova(stn: Settings.T) =
 
                 let! dates1 =
                     t.GsnDocWithError ".//div[@class = 'date__row-container'][1]"
-                    <| sprintf "dates not found %s %s " url (t.InnerText)
+                    <| sprintf "dates1 not found %s %s " url (t.InnerText)
 
                 let! dates2 =
                     t.GsnDocWithError ".//div[@class = 'date__row-container'][2]"
-                    <| sprintf "dates not found %s %s " url (t.InnerText)
+                    <| sprintf "dates2 not found %s %s " url (t.InnerText)
 
                 let! dateEndT =
                     dates2
