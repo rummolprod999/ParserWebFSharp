@@ -453,48 +453,57 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
         ()
 
     member private this.GetDelivTerm(con: MySqlConnection, dt: ReadOnlyCollection<_>): String =
-         let dtList =  List<string>()
-         for d in dt do
-             let name =
-                d.FindElement(By.XPath("./div[1]"))
-                    .Text.Trim()
-             dtList.Add(name)
-             let el =
-                d.FindElement(By.XPath("./div[2]"))
-                    .Text.Trim()
-             dtList.Add(el)
-             ()
-         String.Join(" | ", dtList.ToArray()).Trim()
+         try
+             let dtList =  List<string>()
+             for d in dt do
+                 let name =
+                    d.FindElement(By.XPath("./div[1]"))
+                        .Text.Trim()
+                 dtList.Add(name)
+                 let el =
+                    d.FindElement(By.XPath("./div[2]"))
+                        .Text.Trim()
+                 dtList.Add(el)
+                 ()
+             String.Join(" | ", dtList.ToArray()).Trim()
+         with
+         | ex -> Logging.Log.logger ex; ""
+
     member private this.GetAttachments(con: MySqlConnection, idTender: int, att: ReadOnlyCollection<_>) =
-        for doc in att do
-            let urlDoc = doc.GetAttribute("href").Trim()
-            let url = urlDoc
+        try 
+            for doc in att do
+                let urlDoc = doc.GetAttribute("href").Trim()
+                let url = urlDoc
 
-            let name =
-                doc
-                    .FindElement(By.XPath(".//div[@class = 'title']"))
-                    .Text.Trim()
+                let name =
+                    doc
+                        .FindElement(By.XPath(".//div[@class = 'title']"))
+                        .Text.Trim()
 
-            let addAttach =
-                sprintf
-                    "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url, description = @description"
-                    stn.Prefix
+                let addAttach =
+                    sprintf
+                        "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url, description = @description"
+                        stn.Prefix
 
-            let cmd5 = new MySqlCommand(addAttach, con)
+                let cmd5 = new MySqlCommand(addAttach, con)
 
-            cmd5.Parameters.AddWithValue("@id_tender", idTender)
-            |> ignore
+                cmd5.Parameters.AddWithValue("@id_tender", idTender)
+                |> ignore
 
-            cmd5.Parameters.AddWithValue("@file_name", name)
-            |> ignore
+                cmd5.Parameters.AddWithValue("@file_name", name)
+                |> ignore
 
-            cmd5.Parameters.AddWithValue("@url", url)
-            |> ignore
+                cmd5.Parameters.AddWithValue("@url", url)
+                |> ignore
 
-            cmd5.Parameters.AddWithValue("@description", "")
-            |> ignore
+                cmd5.Parameters.AddWithValue("@description", "")
+                |> ignore
 
-            cmd5.ExecuteNonQuery() |> ignore
+                cmd5.ExecuteNonQuery() |> ignore
+        with
+        | ex -> Logging.Log.logger ex
+
+        ()
 
     member private this.SetCancelStatus(con: MySqlConnection, dateUpd: DateTime) =
         let mutable cancelStatus = 0
