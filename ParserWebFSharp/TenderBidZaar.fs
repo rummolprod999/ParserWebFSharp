@@ -479,7 +479,8 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
                     doc
                         .FindElement(By.XPath(".//div[@class = 'title']"))
                         .Text.Trim()
-
+                let extension = doc.FindElement(By.XPath(".//span[@class = 'extension']")).Text.Trim().ToLower()
+                let name = name + "." + extension
                 let addAttach =
                     sprintf
                         "INSERT INTO %sattachment SET id_tender = @id_tender, file_name = @file_name, url = @url, description = @description"
