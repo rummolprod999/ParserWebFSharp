@@ -333,7 +333,7 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
                 driver.SwitchTo().DefaultContent() |> ignore
                 let por =
                     body.FindElements(
-                        By.XPath("//a[contains(@href, '/positions')]")
+                        By.XPath("//span[contains(., 'Открыть полную спецификацию')]")
                     )
 
                 if por.Count > 0 then
