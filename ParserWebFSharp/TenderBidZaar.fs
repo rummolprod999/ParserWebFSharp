@@ -222,7 +222,7 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
                 | false -> incr TenderBidZaar.tenderCount
                 driver.SwitchTo().DefaultContent() |> ignore
                 let attachments =
-                    body.findElementsWithoutException ("//a[contains(@href, '/api/filestorage/files/download/')]")
+                    body.findElementsWithoutException ("//a[contains(@href, '/api/filestorage/files/download')]")
 
                 this.GetAttachments(con, !idTender, attachments)
                 let idLot = ref 0
@@ -475,11 +475,15 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
                 let urlDoc = doc.GetAttribute("href").Trim()
                 let url = urlDoc
 
-                let name =
+                let mutable name =
                     doc
                         .FindElement(By.XPath(".//div[@class = 'title']"))
                         .Text.Trim()
-                let extension = doc.FindElement(By.XPath(".//span[@class = 'extension']")).Text.Trim().ToLower()
+                if String.IsNullOrEmpty name then
+                    name <- doc.FindElement(By.XPath(".//span")).Text.Trim()
+                let mutable extension = doc.FindElement(By.XPath(".//span[@class = 'extension']")).Text.Trim().ToLower()
+                if String.IsNullOrEmpty extension then
+                    extension <- "zip"
                 let name = name + "." + extension
                 let addAttach =
                     sprintf
