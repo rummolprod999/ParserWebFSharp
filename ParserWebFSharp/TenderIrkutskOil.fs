@@ -4,6 +4,7 @@ open AngleSharp.Parser.Html
 open MySql.Data.MySqlClient
 open System
 open System.Data
+open OpenQA.Selenium.Chrome
 open TypeE
 
 type TenderIrkutskOil(stn: Settings.T, urlT: string) =
@@ -12,9 +13,10 @@ type TenderIrkutskOil(stn: Settings.T, urlT: string) =
     let typeFz = 30
     static member val tenderCount = ref 0
     static member val tenderUpCount = ref 0
-
+    
     override this.Parsing() =
-        let Page = Download.DownloadString urlT
+        
+        let Page = Download.DownloadStringIrkutsk urlT
 
         match Page with
         | null

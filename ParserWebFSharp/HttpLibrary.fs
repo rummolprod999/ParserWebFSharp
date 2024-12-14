@@ -111,6 +111,7 @@ module Download =
 
     type TimedWebClientIrkutsk() =
         inherit WebClient()
+        static member val cIrk = ref ""
 
         override this.GetWebRequest(address: Uri) =
             let wr =
@@ -120,9 +121,10 @@ module Download =
             wr.KeepAlive <- true
 
             wr.UserAgent <-
-                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.56 Safari/537.36"
+                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
 
-            wr.Headers.Add("Referer", "https://tenders.irkutskoil.ru/")
+            wr.Headers.Add("Referer", "https://lkk.irkutskoil.ru/active-tenders/list")
+            wr.Headers.Add("cookie", TimedWebClientIrkutsk.cIrk.Value)
 
             wr.Headers.Add(
                 "Accept",
