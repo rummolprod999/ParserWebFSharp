@@ -61,9 +61,13 @@ type ParserYarRegion(stn: Settings.T) =
                 )
                 .Displayed)
         |> ignore
-
         try
-            //driver.FindElement(By.XPath("//label[. = 'Завершен']/preceding-sibling::span/input")).Click()
+            driver
+                .FindElement(By.XPath("//a//span[. = 'Таблица']"))
+                .Click()
+        with
+            | ex -> Logging.Log.logger (ex)
+        try
             let jse = driver :> IJavaScriptExecutor
 
             jse.ExecuteScript("document.querySelectorAll('#checkbox-1045-boxLabelEl')[0].click()", "")
@@ -75,12 +79,10 @@ type ParserYarRegion(stn: Settings.T) =
             |> ignore
 
             Thread.Sleep(1000)
-        //driver.FindElement(By.XPath("//label[. = 'Отменен']/preceding-sibling::span/input")).Click()
         with
             | ex -> Logging.Log.logger (ex)
 
         try
-            //driver.FindElement(By.XPath("//label[. = 'Завершен']/preceding-sibling::span/input")).Click()
             let jse = driver :> IJavaScriptExecutor
 
             jse.ExecuteScript("document.querySelectorAll('#datefield-1027-trigger-picker')[0].click()", "")
@@ -92,14 +94,9 @@ type ParserYarRegion(stn: Settings.T) =
             |> ignore
 
             Thread.Sleep(1000)
-        //driver.FindElement(By.XPath("//label[. = 'Отменен']/preceding-sibling::span/input")).Click()
         with
             | ex -> Logging.Log.logger (ex)
-
-        driver
-            .FindElement(By.XPath("//a//span[. = 'Таблица']"))
-            .Click()
-
+       
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
 
