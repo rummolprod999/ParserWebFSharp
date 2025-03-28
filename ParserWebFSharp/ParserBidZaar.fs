@@ -50,7 +50,7 @@ type ParserBidZaar(stn: Settings.T) =
 
         driver
             .Navigate()
-            .GoToUrl("https://bidzaar.com/auth/account/login")
+            .GoToUrl("https://bidzaar.com/auth/login")
 
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
@@ -138,17 +138,17 @@ type ParserBidZaar(stn: Settings.T) =
         wait.Until (fun dr ->
             dr
                 .FindElement(
-                    By.XPath("//input[contains(@name, 'Email')]")
+                    By.XPath("//input[contains(@name, 'email')]")
                 )
                 .Displayed)
         |> ignore
 
         driver
-            .FindElement(By.XPath("//input[contains(@name, 'Email')]"))
+            .FindElement(By.XPath("//input[contains(@name, 'email')]"))
             .SendKeys(Settings.UserBidZaar)
 
         driver
-            .FindElement(By.XPath("//input[contains(@name, 'Password')]"))
+            .FindElement(By.XPath("//input[contains(@name, 'password')]"))
             .SendKeys(Settings.PassBidZaar)
 
         Thread.Sleep(3000)
