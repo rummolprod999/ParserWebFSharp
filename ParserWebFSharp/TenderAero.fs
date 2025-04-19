@@ -1,7 +1,6 @@
 namespace ParserWeb
 
 open AngleSharp.Dom
-open AngleSharp.Parser.Html
 open MySql.Data.MySqlClient
 open System
 open System.Data

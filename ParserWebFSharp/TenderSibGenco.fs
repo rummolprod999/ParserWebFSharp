@@ -5,7 +5,6 @@ open MySql.Data.MySqlClient
 open System
 open System.Data
 open HtmlAgilityPack
-open System.Linq
 open TypeE
 open Tools
 

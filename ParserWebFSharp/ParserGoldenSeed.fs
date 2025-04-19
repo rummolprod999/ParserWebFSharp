@@ -7,8 +7,6 @@ open OpenQA.Selenium
 open OpenQA.Selenium.Chrome
 open OpenQA.Selenium.Support.UI
 open TypeE
-open AngleSharp.Dom
-open AngleSharp.Parser.Html
 open System.Linq
 
 type ParserGoldenSeed(stn: Settings.T) =

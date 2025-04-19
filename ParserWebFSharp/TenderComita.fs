@@ -1,6 +1,5 @@
 namespace ParserWeb
 
-open System.Collections.Generic
 open MySql.Data.MySqlClient
 open System
 open System.Data

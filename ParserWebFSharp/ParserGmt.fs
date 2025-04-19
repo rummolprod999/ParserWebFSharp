@@ -2,11 +2,7 @@ namespace ParserWeb
 
 open Newtonsoft.Json.Linq
 open TypeE
-open AngleSharp.Dom
 open NewtonExt
-open Newtonsoft.Json.Linq
-open AngleSharp.Parser.Html
-open System.Linq
 open DocumentBuilderNewton
 
 type ParserGmt(stn: Settings.T) =

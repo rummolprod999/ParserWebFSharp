@@ -4,7 +4,6 @@ open AngleSharp.Parser.Html
 open MySql.Data.MySqlClient
 open System
 open System.Data
-open OpenQA.Selenium.Chrome
 open TypeE
 
 type TenderIrkutskOil(stn: Settings.T, urlT: string) =
