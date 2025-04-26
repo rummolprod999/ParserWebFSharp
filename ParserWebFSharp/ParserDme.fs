@@ -36,7 +36,7 @@ type ParserDme(stn: Settings.T) =
                 nav
                     .CurrentDocument
                     .DocumentNode
-                    .SelectNodesOrEmpty("//table[@id = 'sale']//tr[@class = 'rows']")
+                    .SelectNodesOrEmpty("//table[@id = 'sale']//tr[contains(@class, 'rows d-none d-lg-table-row')]")
                     .ToList()
 
             tens.Reverse()
