@@ -51,7 +51,7 @@ type ParserVend(stn: Settings.T) =
             dr
                 .FindElement(
                     By.XPath(
-                        "//div[contains(@class, 'pagination-container')]/following-sibling::div[@class = 'divList']"
+                        "//div[contains(@class, 'pagination-container')]/following-sibling::table[@class = 'tableList']//tr[position() > 1]"
                     )
                 )
                 .Displayed)
@@ -94,7 +94,7 @@ type ParserVend(stn: Settings.T) =
                     dr
                         .FindElement(
                             By.XPath(
-                                "//div[contains(@class, 'pagination-container')]/following-sibling::div[@class = 'divList']"
+                                "//div[contains(@class, 'pagination-container')]/following-sibling::table[@class = 'tableList']//tr[position() > 1]"
                             )
                         )
                         .Displayed)
@@ -116,7 +116,7 @@ type ParserVend(stn: Settings.T) =
 
             let tenders =
                 driver.FindElementsByXPath(
-                    "//div[contains(@class, 'pagination-container')]/following-sibling::div[@class = 'divList']"
+                    "//div[contains(@class, 'pagination-container')]/following-sibling::table[@class = 'tableList']//tr[position() > 1]"
                 )
 
             try
@@ -143,49 +143,49 @@ type ParserVend(stn: Settings.T) =
 
         let result =
             builder {
-                let! purName = t.findElementWithoutException ("./span/a", sprintf "purName not found %s" t.Text)
+                let! purName = t.findElementWithoutException ("./td[4]/a", sprintf "purName not found %s" t.Text)
 
                 let hrefT =
-                    t.FindElement(By.XPath("./span/a[@class = 'caption']"))
+                    t.FindElement(By.XPath("./td[4]/a"))
 
                 let! href = hrefT.findAttributeWithoutException ("href", "href not found")
-                let! purNumT = t.findElementWithoutException (".//tr/td/div[@class = 'subtitle']", "purNumT not found")
+                let! purNumT = t.findElementWithoutException (".//td[2]", "purNumT not found")
 
                 let purNum =
                     purNumT.Replace("№", "").RegexDeleteWhitespace()
 
                 let orgNameFull =
                     t.findElementWithoutException (
-                        ".//td[contains(., 'Наименование заказчика')]/following-sibling::td/a"
+                        "./td[5]"
                     )
 
                 let innCus =
-                    orgNameFull.Get1FromRegexpOrDefaul(@"ИНН:.*(\d{10})")
+                    orgNameFull.Get1FromRegexpOrDefaul(@"/.*(\d{10})")
 
                 let! pwName =
                     t.findElementWithoutExceptionOptional (
-                        ".//td[contains(., 'Тип приглашения')]/following-sibling::td/label",
+                        ".//td[3]",
                         ""
                     )
 
                 let! dates =
                     t.findElementWithoutException (
-                        ".//td[contains(., 'Срок действия приглашения')]/following-sibling::td",
+                        ".//td[6]",
                         sprintf "dates not found %s" t.Text
                     )
 
                 let! datePubT =
                     dates.Get1(
-                        "от\s*(\d{2}\.\d{2}\.\d{4}\s\d{1,2}:\d{2}:\d{2})\sдо",
+                        "с\s*(\d{2}\.\d{2}\.\d{4}\s\d{1,2}:\d{2})\sпо",
                         sprintf "datePubT not found %s" dates
                     )
 
-                let! datePub = datePubT.DateFromString("dd.MM.yyyy H:mm:ss", sprintf "datePub not parse %s" datePubT)
+                let! datePub = datePubT.DateFromString("dd.MM.yyyy H:mm", sprintf "datePub not parse %s" datePubT)
 
                 let! dateEndT =
-                    dates.Get1("до\s*(\d{2}\.\d{2}\.\d{4}\s\d{1,2}:\d{2}:\d{2})", sprintf "dateEndT not found %s" dates)
+                    dates.Get1("по\s*(\d{2}\.\d{2}\.\d{4}\s\d{1,2}:\d{2})", sprintf "dateEndT not found %s" dates)
 
-                let! dateEnd = dateEndT.DateFromString("dd.MM.yyyy H:mm:ss", sprintf "dateEnd not parse %s" dateEndT)
+                let! dateEnd = dateEndT.DateFromString("dd.MM.yyyy H:mm", sprintf "dateEnd not parse %s" dateEndT)
 
                 let ten =
                     { Href = href
