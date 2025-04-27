@@ -60,7 +60,7 @@ type ParserNorNic(stn: Settings.T) =
         driver.SwitchTo().DefaultContent() |> ignore
 
         this.ParserListTenders driver
-        for i in 1..2 do
+        for i in 1..5 do
             try
                 this.GetNextPage driver wait
                 ()
