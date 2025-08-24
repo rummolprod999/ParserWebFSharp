@@ -37,6 +37,7 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
 
                 let body =
                     driver.FindElement(By.XPath("//body"))
+                Thread.Sleep(1000)
                 driver.SwitchTo().DefaultContent() |> ignore
                 wait.Until(fun dr -> dr.FindElement(By.XPath("//span[contains(., 'Код:')]")).Enabled)
                 |> ignore
@@ -336,8 +337,8 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
                         By.XPath("//span[contains(., 'Открыть полную спецификацию')]")
                     )
 
-                if por.Count > 0 then
-                    this.GetPurObjs(con, !idTender, driver, !idLot, !idCustomer)
+                if por.Count > 0 && this.GetPurObjs(con, !idTender, driver, !idLot, !idCustomer) then
+                    ()
                 else
                     let insertLotitem = sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, okpd_name = @okpd_name, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, sum = @sum" stn.Prefix
 
@@ -386,7 +387,7 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
 
         ()
 
-    member private this.GetPurObjs(con: MySqlConnection, _: int, driver: ChromeDriver, idLot: int, idCustomer: int) =
+    member private this.GetPurObjs(con: MySqlConnection, _: int, driver: ChromeDriver, idLot: int, idCustomer: int): bool =
         try
             let url = tn.Href + "/positions"
             driver.Navigate().GoToUrl(url)
@@ -447,10 +448,9 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
 
                 cmd19.ExecuteNonQuery() |> ignore
                 ()
+            true
         with
-            | ex -> Logging.Log.logger ex
-
-        ()
+            | ex -> Logging.Log.logger ex; false
 
     member private this.GetDelivTerm(con: MySqlConnection, dt: ReadOnlyCollection<_>): String =
          try

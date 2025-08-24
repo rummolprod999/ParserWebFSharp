@@ -16,7 +16,7 @@ type ParserBidZaar(stn: Settings.T) =
     let url =
         "https://bidzaar.com/requests/public/buy"
 
-    let timeoutB = TimeSpan.FromSeconds(60.)
+    let timeoutB = TimeSpan.FromSeconds(60. )
     let listTenders = List<BidzaarRec>()
     let options = ChromeOptions()
 
@@ -30,7 +30,7 @@ type ParserBidZaar(stn: Settings.T) =
 
     override __.Parsing() =
         let driver =
-            new ChromeDriver("/usr/local/bin", options)
+            new ChromeDriver("/usr/local/bin/patched", options)
 
         driver.Manage().Timeouts().PageLoad <- timeoutB
         //driver.Manage().Window.Maximize()
@@ -50,7 +50,7 @@ type ParserBidZaar(stn: Settings.T) =
 
         driver
             .Navigate()
-            .GoToUrl("https://bidzaar.com/auth/login")
+            .GoToUrl("https://bidzaar.com/auth/login" )
 
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
@@ -89,14 +89,14 @@ type ParserBidZaar(stn: Settings.T) =
                 __.ParserTendersList driver t
             with
                 | :? WebDriverException as e -> raise e
-                | ex -> Logging.Log.logger (ex)
+                | ex -> Logging.Log.logger (ex, t.Href)
 
         ()
 
     member private this.ParserTendersList (driver: ChromeDriver) (t: BidzaarRec) =
         try
             let T =
-                TenderBidZaar(set, t, 269, "Bidzaar", "https://bidzaar.com/", driver)
+                TenderBidZaar(set, t, 269, "Bidzaar", "https://bidzaar.com/", driver )
 
             T.Parsing()
         with
@@ -184,25 +184,28 @@ type ParserBidZaar(stn: Settings.T) =
                 
                 let! href = hrefT.findAttributeWithoutException ("href", "href not found")
                 let! purNum = href.Get1("light/([a-z\d-]+)(?:/request)?", sprintf "purNum not found %s" href)
-                let! purName =
-                    i.findElementWithoutException (
-                        ".//div[@class = 'link-header']//span[@class = 'name']",
-                        sprintf "purName not found %s" href
-                    )
+                
+                // ИСПРАВЛЕНО: Новый XPath для названия закупки
+                let! purName = i.findElementWithoutException (
+                    ".//cgn-prs-public-info//cgn-prs-name//span[contains(@class, 'ui-name')]",
+                    sprintf "purName not found %s" href
+                )
 
                 let pwName = ""
 
+                // ИСПРАВЛЕНО: Новый XPath для названия заказчика
                 let! cusName =
                     i.findElementWithoutException (
-                        ".//bdz-cmp-name//div[@class = 'name ng-star-inserted']",
+                        ".//cgn-prs-side-info//cgn-prs-company//bdz-cmp-name//div[contains(@class, 'name')]",
                         sprintf "cusName not found %s" href
                     )
 
                 let datePub = DateTime.Now
 
+                // ИСПРАВЛЕНО: Новый XPath для элемента с датой окончания
                 let! endDateT =
                     i.findElementWithoutException (
-                        ".//div[contains(@class, 'date ng-star-inserted')]",
+                        ".//cgn-prs-public-info//cgn-prs-public-status//div[contains(@class, 'date')]",
                         sprintf "endDateT not found %s" href
                     )
 
