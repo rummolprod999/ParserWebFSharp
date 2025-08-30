@@ -331,13 +331,8 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
                     |> ignore
 
                     cmd16.ExecuteNonQuery() |> ignore
-                driver.SwitchTo().DefaultContent() |> ignore
-                let por =
-                    body.FindElements(
-                        By.XPath("//span[contains(., 'Открыть полную спецификацию')]")
-                    )
 
-                if por.Count > 0 && this.GetPurObjs(con, !idTender, driver, !idLot, !idCustomer) then
+                if this.GetPurObjs(con, !idTender, driver, !idLot, !idCustomer, body) then
                     ()
                 else
                     let insertLotitem = sprintf "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, okpd_name = @okpd_name, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, sum = @sum" stn.Prefix
@@ -387,68 +382,76 @@ type TenderBidZaar(stn: Settings.T, tn: BidzaarRec, typeFz: int, etpName: string
 
         ()
 
-    member private this.GetPurObjs(con: MySqlConnection, _: int, driver: ChromeDriver, idLot: int, idCustomer: int): bool =
+    member private this.GetPurObjs(con: MySqlConnection, _: int, driver: ChromeDriver, idLot: int, idCustomer: int, body: IWebElement): bool =
         try
-            let url = tn.Href + "/positions"
-            driver.Navigate().GoToUrl(url)
-            Thread.Sleep(4000)
             driver.SwitchTo().DefaultContent() |> ignore
+            let por =
+                body.FindElements(
+                    By.XPath("//span[contains(., 'Открыть полную спецификацию')]")
+                )
+            if por.Count > 0 then
+                let url = tn.Href + "/positions"
+                driver.Navigate().GoToUrl(url)
+                Thread.Sleep(4000)
+                driver.SwitchTo().DefaultContent() |> ignore
 
-            let body =
-                driver.FindElement(By.XPath("//body"))
+                let body =
+                    driver.FindElement(By.XPath("//body"))
 
-            let purObjects =
-                body.findElementsWithoutException ("//cgn-pl-positions-table-dialog//tbody/tr[position()>0]")
-            let ppo = purObjects.ToList()
-            let ppo2 = body.findElementsWithoutException ("//cgn-pl-positions-dialog-table//tbody/tr[position()>0]")
-            ppo.AddRange(ppo2)
-            for p in ppo do
-                let name =
-                    p.findElementWithoutException ("./td[2]")
+                let purObjects =
+                    body.findElementsWithoutException ("//cgn-pl-positions-table-dialog//tbody/tr[position()>0]")
+                let ppo = purObjects.ToList()
+                let ppo2 = body.findElementsWithoutException ("//cgn-pl-positions-dialog-table//tbody/tr[position()>0]")
+                ppo.AddRange(ppo2)
+                for p in ppo do
+                    let name =
+                        p.findElementWithoutException ("./td[2]")
 
-                let okei =
-                    p.findElementWithoutException ("./td[5]")
+                    let okei =
+                        p.findElementWithoutException ("./td[5]")
 
-                let quant =
-                    p.findElementWithoutException ("./td[4]")
+                    let quant =
+                        p.findElementWithoutException ("./td[4]")
 
-                let insertLotitem =
-                    sprintf
-                        "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, okpd_name = @okpd_name, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, sum = @sum"
-                        stn.Prefix
+                    let insertLotitem =
+                        sprintf
+                            "INSERT INTO %spurchase_object SET id_lot = @id_lot, id_customer = @id_customer, name = @name, okpd_name = @okpd_name, quantity_value = @quantity_value, customer_quantity_value = @customer_quantity_value, okei = @okei, sum = @sum"
+                            stn.Prefix
 
-                let cmd19 =
-                    new MySqlCommand(insertLotitem, con)
+                    let cmd19 =
+                        new MySqlCommand(insertLotitem, con)
 
-                cmd19.Prepare()
+                    cmd19.Prepare()
 
-                cmd19.Parameters.AddWithValue("@id_lot", idLot)
-                |> ignore
+                    cmd19.Parameters.AddWithValue("@id_lot", idLot)
+                    |> ignore
 
-                cmd19.Parameters.AddWithValue("@id_customer", idCustomer)
-                |> ignore
+                    cmd19.Parameters.AddWithValue("@id_customer", idCustomer)
+                    |> ignore
 
-                cmd19.Parameters.AddWithValue("@name", name)
-                |> ignore
+                    cmd19.Parameters.AddWithValue("@name", name)
+                    |> ignore
 
-                cmd19.Parameters.AddWithValue("@okpd_name", "")
-                |> ignore
+                    cmd19.Parameters.AddWithValue("@okpd_name", "")
+                    |> ignore
 
-                cmd19.Parameters.AddWithValue("@quantity_value", quant)
-                |> ignore
+                    cmd19.Parameters.AddWithValue("@quantity_value", quant)
+                    |> ignore
 
-                cmd19.Parameters.AddWithValue("@customer_quantity_value", quant)
-                |> ignore
+                    cmd19.Parameters.AddWithValue("@customer_quantity_value", quant)
+                    |> ignore
 
-                cmd19.Parameters.AddWithValue("@okei", okei)
-                |> ignore
+                    cmd19.Parameters.AddWithValue("@okei", okei)
+                    |> ignore
 
-                cmd19.Parameters.AddWithValue("@sum", "")
-                |> ignore
+                    cmd19.Parameters.AddWithValue("@sum", "")
+                    |> ignore
 
-                cmd19.ExecuteNonQuery() |> ignore
-                ()
-            true
+                    cmd19.ExecuteNonQuery() |> ignore
+                true
+            else
+                false
+            
         with
             | ex -> Logging.Log.logger ex; false
 
