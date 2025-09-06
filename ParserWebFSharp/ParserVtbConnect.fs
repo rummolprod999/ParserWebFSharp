@@ -13,7 +13,7 @@ type ParserVtbConnect(stn: Settings.T) =
     let set = stn
 
     let url =
-        "https://www.smbconnect.ru/login?redirect=https://www.vtbconnect.ru/trades"
+        "https://www.smbconnect.ru/trades"
 
     let timeoutB = TimeSpan.FromSeconds(60.)
     let listTenders = List<VtbConnectRec>()
@@ -50,15 +50,15 @@ type ParserVtbConnect(stn: Settings.T) =
         Thread.Sleep(5000)
         driver.SwitchTo().DefaultContent() |> ignore
 
-        wait.Until (fun dr ->
+        (*wait.Until (fun dr ->
             dr
                 .FindElement(
                     By.XPath("//input[@placeholder = 'Введите адрес эл. почты']")
                 )
                 .Displayed)
-        |> ignore
+        |> ignore*)
 
-        __.Auth(driver)
+        // __.Auth(driver)
         driver.SwitchTo().DefaultContent() |> ignore
         Thread.Sleep(3000)
         driver.SwitchTo().DefaultContent() |> ignore
