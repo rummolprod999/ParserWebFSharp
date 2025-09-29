@@ -46,7 +46,7 @@ type ParserEshopRzd(stn: Settings.T) =
         wait.Until (fun dr ->
             dr
                 .FindElement(
-                    By.XPath("//div[contains(@class, 'purchase-item') and contains(@class, 'ng-scope')]")
+                    By.XPath("//div[contains(@class, 'purchase-item__row row')]")
                 )
                 .Displayed)
         |> ignore
@@ -73,7 +73,7 @@ type ParserEshopRzd(stn: Settings.T) =
                 wait.Until (fun dr ->
                     dr
                         .FindElement(
-                            By.XPath("//div[contains(@class, 'purchase-item') and contains(@class, 'ng-scope')]")
+                            By.XPath("//div[contains(@class, 'purchase-item__row row')]")
                         )
                         .Displayed)
                 |> ignore
@@ -88,7 +88,7 @@ type ParserEshopRzd(stn: Settings.T) =
         driver.SwitchTo().DefaultContent() |> ignore
 
         let tenders =
-            driver.FindElementsByXPath("//div[contains(@class, 'purchase-item') and contains(@class, 'ng-scope')]")
+            driver.FindElementsByXPath("//div[contains(@class, 'purchase-item__row row')]")
 
         for t in tenders do
             try
@@ -116,20 +116,20 @@ type ParserEshopRzd(stn: Settings.T) =
             builder {
                 let! purName =
                     t.findElementWithoutException (
-                        ".//a[contains(@class,'name') and contains(@ui-sref,'purchases.view({id:reg.id')]",
+                        ".//a[contains(@class,'name a-link')]",
                         "purName not found"
                     )
 
                 let hrefT =
                     t.FindElement(
-                        By.XPath(".//a[contains(@class,'name') and contains(@ui-sref,'purchases.view({id:reg.id')]")
+                        By.XPath(".//a[contains(@class,'name a-link')]")
                     )
 
                 let href = hrefT.GetAttribute("href")
 
                 let! purNumT =
                     t.findElementWithoutException (
-                        ".//a[contains(@class,'name') and contains(@ui-sref,'purchases.view({id:reg.id')]/span/span",
+                        ".//a[contains(@class,'name a-link')]/span/span",
                         "purNumT not found"
                     )
 
