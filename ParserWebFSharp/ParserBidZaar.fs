@@ -77,7 +77,7 @@ type ParserBidZaar(stn: Settings.T) =
         wait.Until (fun dr ->
             dr
                 .FindElement(
-                    By.XPath("//div[contains(@class, 'ng-star-inserted')]/div[@class = 'item-content'][position() = 1]")
+                    By.XPath("//div[contains(@class, 'list-item-wrapper')][position() = 1]")
                 )
                 .Displayed)
         |> ignore
@@ -106,7 +106,7 @@ type ParserBidZaar(stn: Settings.T) =
 
     member private __.Scroll(driver: ChromeDriver) (wait: WebDriverWait) =
 
-        for i in 1..500 do
+        for i in 1..750 do
             try
                 driver.SwitchTo().DefaultContent() |> ignore
                 __.ParserListTenders(driver)
@@ -119,7 +119,7 @@ type ParserBidZaar(stn: Settings.T) =
                 )
                 |> ignore
                 driver.SwitchTo().DefaultContent() |> ignore
-                wait.Until (fun driver -> driver.FindElement(By.XPath("//div[contains(@class, 'ng-star-inserted')]/div[@class = 'item-content'][position() = 1]")).Displayed)
+                wait.Until (fun driver -> driver.FindElement(By.XPath("//div[contains(@class, 'list-item-wrapper')][position() = 1]")).Displayed)
                 |> ignore
                 driver.SwitchTo().DefaultContent() |> ignore
             with
@@ -164,7 +164,7 @@ type ParserBidZaar(stn: Settings.T) =
         driver.SwitchTo().DefaultContent() |> ignore
 
         let tenders =
-            driver.FindElementsByXPath("//div[contains(@class, 'ng-star-inserted')]/div[@class = 'item-content']")
+            driver.FindElementsByXPath("//div[contains(@class, 'list-item-wrapper')]")
 
         for t in tenders do
             this.ParserTenders t
