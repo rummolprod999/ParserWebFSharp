@@ -53,7 +53,7 @@ type ParserSeverStal(stn: Settings.T) =
         wait.Until (fun dr ->
             dr
                 .FindElement(
-                    By.XPath("//h2[contains(., 'Текущие')]")
+                    By.XPath("//h1[contains(., 'Закупки через SRM')]")
                 )
                 .Displayed)
         |> ignore
@@ -78,7 +78,7 @@ type ParserSeverStal(stn: Settings.T) =
                 let jse = driver :> IJavaScriptExecutor
 
                 try
-                    jse.ExecuteScript("var s = document.querySelector('span.arrow.next'); s.click();", "")
+                    jse.ExecuteScript("var s = document.querySelector('span.arrow-button.small.next'); s.click();", "")
                     |> ignore
                 with
                     | ex -> Logging.Log.logger ex
@@ -104,7 +104,7 @@ type ParserSeverStal(stn: Settings.T) =
         driver.SwitchTo().DefaultContent() |> ignore
 
         let tenders =
-            driver.FindElementsByXPath("//a[@class = 'actual-item']")
+            driver.FindElementsByXPath("//div[@class = 'actual-item']")
 
         for t in tenders do
             this.ParserTenders t
@@ -127,19 +127,19 @@ type ParserSeverStal(stn: Settings.T) =
 
         let res =
             builder {
-                let! purName = i.findElementWithoutException (".//td[contains(@class, 'actual-item-table-name')]", sprintf "purName not found %s" i.Text)
-
-                let! href = i.findAttributeWithoutException ("href", "href not found")
+                let! purName = i.findElementWithoutException (".//td[contains(@class, 'col-name')]", sprintf "purName not found %s" i.Text)
+                let! crm = i.findWElementWithoutException (".//span[@class = 'button-inner-wrapper']/a", sprintf "crm not found %s" i.Text)
+                let! href = crm.findAttributeWithoutException ("href", "href not found")
 
                 let! purNum =
                     i.findElementWithoutException (
-                        ".//td[contains(@class, 'actual-item-table-number')]",
+                        ".//td[contains(@class, 'col-name')]/div",
                         sprintf "purNum not found, text the element - %s" i.Text
                     )
-
+                let purNameNew = purName.Replace(purNum, "").Trim()
                 let! dateEndT =
                     i.findElementWithoutException (
-                        ".//td[contains(@class, 'actual-item-table-deadline')]",
+                        ".//td[contains(@class, 'col-deadline')]",
                         sprintf "dateEndT not found %s" i.Text
                     )
 
@@ -147,20 +147,20 @@ type ParserSeverStal(stn: Settings.T) =
                     dateEndT.RegexCutWhitespace().Trim()
 
                 let dateEndT =
-                    dateEndT.Get1FromRegexpOrDefaul(@"(\d{2}\.\d{2}\.\d{4}\s+\d{2}:\d{2}:\d{2})")
+                    dateEndT.Get1FromRegexpOrDefaul(@"(\d{2}\.\d{2}\.\d{4}\s+\d{2}:\d{2})")
 
                 let dateEnd =
-                    dateEndT.DateFromStringOrMin("dd.MM.yyyy HH:mm:ss")
+                    dateEndT.DateFromStringOrMin("dd.MM.yyyy HH:mm")
 
                 let! addInfo =
                     i.findElementWithoutExceptionOptional (
-                        ".//td[contains(@class, 'actual-item-table-city')]",
+                        ".//td[contains(@class, 'col-city')]",
                         ""
                     )
 
                 let tend =
                     { Href = href
-                      PurName = purName
+                      PurName = purNameNew
                       PurNum = purNum
                       AddInfo = addInfo
                       DateEnd = dateEnd
